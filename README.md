@@ -1,2 +1,2 @@
-# Algorismes-Avanzats
+# Algorismes-Avançats
 Algorismes Avançats UIB
