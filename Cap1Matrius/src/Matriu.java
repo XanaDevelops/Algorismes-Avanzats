@@ -7,7 +7,14 @@ public class Matriu {
 
 
     public Matriu sumar(Matriu matriu) {
-        return null;
+        int n = this.matriu.length;
+       Matriu result = new Matriu(n, n );
+       for (int i = 0; i < n; i++) {
+           for (int j = 0; j < n; j++) {
+               result.set(i, j, matriu.get(i, j));
+           }
+       }
+        return result;
     }
 
     public Matriu multiplicar(Matriu matriu) {
@@ -21,6 +28,8 @@ public class Matriu {
     public int get(int i, int j) {
         return matriu[i][j];
     }
+
+
 
 }
 
