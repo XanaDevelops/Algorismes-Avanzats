@@ -7,10 +7,14 @@ public class Dades {
     private ArrayList<Long> tempsMult;
     private ArrayList<Integer> tamanyN;
 
+    private int N;
+
     public Dades() {
         tempsSuma = new ArrayList<>();
         tempsMult = new ArrayList<>();
         tamanyN = new ArrayList<>();
+
+//        N = 1;
     }
 
     public void buidar() {
@@ -53,5 +57,13 @@ public class Dades {
 
     public void setTamanyN(int n) {
         tamanyN.add(n);
+    }
+
+    public int getN() {
+        return N;
+    }
+
+    public void setN(int n) {
+        N = n;
     }
 }
