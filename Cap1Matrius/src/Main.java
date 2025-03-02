@@ -45,11 +45,21 @@ public class Main implements Comunicar {
             System.out.println("S" + n);
         } else if (s.startsWith("multiplicar:")) {
             System.out.println("M" + n);
+            registre.setN(n);
+            Comunicar multiplicar = new MultM(this);
+            procesos.add(multiplicar);
+
+
         }
 
     }
 
     public Dades getDades() {
         return registre;
+    }
+
+    //preguntar
+    public FinestraMatriu getFinestra() {
+        return finestra;
     }
 }
