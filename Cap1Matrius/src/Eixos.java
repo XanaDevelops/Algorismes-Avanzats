@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
+
 public class Eixos extends JPanel {
 
     private Main principal;
@@ -12,7 +13,7 @@ public class Eixos extends JPanel {
         this.setBounds(0, 0, w, h);
     }
 
-    public void pintar() {
+    public synchronized void pintar() {
         if (this.getGraphics() != null) {
             paintComponent(this.getGraphics());
         }
@@ -31,31 +32,40 @@ public class Eixos extends JPanel {
         g.drawLine(10, h - 10, w - 10, h - 10);
         if (dad != null) {
             int maxelement = 0;
-            for (int i = 0; i < dad.getSizeTamN(); i++) {
-                if (dad.getTamanyN(i) > maxelement) {
-                    maxelement = dad.getTamanyN(i);
+            for(Dades.Resultat r: dad.getSumes()){
+                if(r.getN() > maxelement){
+                    maxelement = r.getN();
                 }
             }
+            for(Dades.Resultat r: dad.getMult()){
+                if(r.getN() > maxelement){
+                    maxelement = r.getN();
+                }
+            }
+
             long maxtemps;
             int px, py, pax, pay;
             maxtemps = 0;
-            for (int i = 0; i < dad.getTamTempsSuma(); i++) {
-                if (dad.getTempsSuma(i) > maxtemps) {
-                    maxtemps = dad.getTempsSuma(i);
+            for (Dades.Resultat r: dad.getSumes()) {
+                if (r.getTemps() > maxtemps) {
+                    maxtemps = r.getTemps();
                 }
             }
-            for (int i = 0; i < dad.getTamTempsMult(); i++) {
-                if (dad.getTempsMult(i) > maxtemps) {
-                    maxtemps = dad.getTempsMult(i);
+            for (Dades.Resultat r: dad.getMult()) {
+                if (r.getTemps() > maxtemps) {
+                    maxtemps = r.getTemps();
                 }
             }
             // llistaSuma
             pax = 10;
             pay = h - 10;
-            for (int i = 0; i < dad.getTamTempsSuma(); i++) {
+            for (Dades.Resultat r: dad.getSumes()) {
+                if(maxelement == 0){
+                    break;
+                }
                 g.setColor(Color.green);
-                px = dad.getTamanyN(i) * (w - 20) / maxelement;
-                py = (h - 20) - ((int) (dad.getTempsSuma(i) * (h - 40) / maxtemps));
+                px = r.getN() * (w - 20) / maxelement;
+                py = (h - 20) - ((int) (r.getTemps() * (h - 40) / maxtemps));
                 g.fillOval(px - 3, py - 3, 7, 7);
                 g.drawLine(pax, pay, px, py);
                 g.setColor(Color.black);
@@ -66,10 +76,13 @@ public class Eixos extends JPanel {
             // llistaMult
             pax = 10;
             pay = h - 10;
-            for (int i = 0; i < dad.getTamTempsMult(); i++) {
+            for (Dades.Resultat r: dad.getMult()) {
+                if(maxelement == 0){
+                    break;
+                }
                 g.setColor(Color.red);
-                px = dad.getTamanyN(i) * (w - 20) / maxelement;
-                py = (h - 20) - ((int) (dad.getTempsMult(i) * (h - 40) / maxtemps));
+                px = r.getN() * (w - 20) / maxelement;
+                py = (h - 20) - ((int) (r.getTemps() * (h - 40) / maxtemps));
                 g.fillOval(px - 3, py - 3, 7, 7);
                 g.drawLine(pax, pay, px, py);
                 g.setColor(Color.black);
@@ -79,4 +92,6 @@ public class Eixos extends JPanel {
             }
         }
     }
+
+
 }

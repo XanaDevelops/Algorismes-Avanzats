@@ -12,24 +12,29 @@ public class SumaM extends Thread implements Comunicar{
 
         Dades data = principal.getDades();
         long time;
-        for (int i = 0; ( i<data.getSizeTamN()) && (!stop); i++) {
 
-           //generate two random matrices
-            int n = data.getTamanyN(i);
-            Matriu a = Matriu.generarMatriuRandom(n);
-            Matriu b = Matriu.generarMatriuRandom(n);
+       //generate two random matrices
+        int n = data.getMatriuN();
+
+        for (int i = 1; i <= Dades.N_STEP && !stop; i++) {
+
+            int size = (int)(n / (Dades.N_STEP / (double)i));
+
+            Matriu a = Matriu.generarMatriuRandom(size);
+            Matriu b = Matriu.generarMatriuRandom(size);
 
             //System.out.println( a.sumar(b).toString());
-            System.out.println("sumant n= " + n);
+            System.out.println("sumant n= " + size);
             time = System.nanoTime();
             a.sumar(b);
             if (!stop){
                 time = System.nanoTime() - time;
-                data.setTempsSuma(time);
-                data.setMatriuN(n);
+                data.addResultatSumar(time, size);
                 principal.comunicar("pintar");
             }
         }
+
+
 
     }
     @Override
