@@ -5,14 +5,14 @@ public class Dades {
 
     private ArrayList<Long> tempsSuma;
     private ArrayList<Long> tempsMult;
-    private ArrayList<Integer> tamanyN;
+    private ArrayList<Integer> tamanysN;
 
     private int N;
 
     public Dades() {
         tempsSuma = new ArrayList<>();
         tempsMult = new ArrayList<>();
-        tamanyN = new ArrayList<>();
+        tamanysN = new ArrayList<>();
 
 //        N = 1;
     }
@@ -20,7 +20,7 @@ public class Dades {
     public void buidar() {
         tempsSuma.clear();
         tempsMult.clear();
-        tamanyN.clear();
+        tamanysN.clear();
     }
 
     public int getTamTempsSuma() {
@@ -31,8 +31,8 @@ public class Dades {
         return tempsMult.size();
     }
 
-    public int getTamN() {
-        return tamanyN.size();
+    public int getSizeTamN() {
+        return tamanysN.size();
     }
 
     public long getTempsSuma(int i) {
@@ -44,7 +44,7 @@ public class Dades {
     }
 
     public int getTamanyN(int i) {
-        return tamanyN.get(i);
+        return tamanysN.get(i);
     }
 
     public void setTempsSuma(long t) {
@@ -55,15 +55,15 @@ public class Dades {
         tempsMult.add(t);
     }
 
-    public void setTamanyN(int n) {
-        tamanyN.add(n);
+    public void setTamanysN(int n) {
+        tamanysN.add(n);
     }
 
-    public int getN() {
+    public int getMatriuN() {
         return N;
     }
 
-    public void setN(int n) {
+    public void setMatriuN(int n) {
         N = n;
     }
 }

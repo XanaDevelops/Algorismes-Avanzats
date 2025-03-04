@@ -1,5 +1,3 @@
-import java.util.Random;
-
 public class MultM extends Thread implements Comunicar{{}
     private final Main principal;
     private boolean stop;
@@ -13,19 +11,22 @@ public class MultM extends Thread implements Comunicar{{}
 
         Dades data = principal.getDades();
         long time;
-        for (int i = 0;( i<data.getTamN()) && (!stop); i++) {
+        for (int i = 0; ( i<data.getSizeTamN()) && (!stop); i++) {
 
-            time = System.nanoTime();
+
             //generate two random matrices
             int n = data.getTamanyN(i);
             Matriu a = Matriu.generarMatriuRandom(n);
             Matriu b = Matriu.generarMatriuRandom(n);
 
             //System.out.println(a.multiplicar(b));
+            System.out.println("multiplicant n=" + n);
+            time = System.nanoTime();
+            a.multiplicar(b);
             if (!stop){
                 time = System.nanoTime() - time;
                 data.setTempsMult(time);
-                data.setN(n);
+                data.setMatriuN(n);
                 principal.comunicar("pintar");
             }
         }

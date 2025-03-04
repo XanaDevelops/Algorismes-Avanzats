@@ -17,7 +17,7 @@ public class Main implements Comunicar {
     private void inicio() {
         registre = new Dades();
         procesos = new ArrayList<>();
-        preparar();
+        preparar(0);
         JFrame frame = new JFrame("Gràfic Suma vs Mult Matrius");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestra = new FinestraMatriu(this);
@@ -27,22 +27,18 @@ public class Main implements Comunicar {
         frame.setVisible(true);
     }
 
-    private void preparar() {
+    private void preparar(int n) {
+        if(procesos != null && !procesos.isEmpty()) {
+            for(Comunicar comunicar : procesos) {
+                comunicar.comunicar("aturar");
+            }
+        }
         procesos = new ArrayList<>();
         registre.buidar();
-        //
-        registre.setTamanyN(1000);
-//        for (int i = 2000; i < 10000; i = i + 1000) {
-//            registre.setTamanyN(i);
-//        }
-        registre.setTamanyN(2000);
-//        registre.setTamanyN(3000);
-//        registre.setTamanyN(4000);
-//        registre.setTamanyN(5000);
 
-//        registre.setTamanyN(100);
-//        registre.setTamanyN(200);
-//        registre.setTamanyN(3000);
+        registre.setTamanysN(1000);
+        registre.setTamanysN(2000);
+        registre.setTamanysN(n);
     }
     /**
      * MIRAR ARRAY DE PRESOS, crec que falta boto per aturar
@@ -62,7 +58,7 @@ public class Main implements Comunicar {
                 }
             }
             if (vius == 0) {
-                preparar();
+                preparar(n);
                 procesos.add(new SumaM(this));
                 procesos.add(new MultM(this));
                 for (Comunicar proces : procesos) {
@@ -70,15 +66,16 @@ public class Main implements Comunicar {
                 }
             }
         } else if (s.startsWith("suma:")) {
-            preparar();
+            preparar(n);
 
-            registre.setN(n);
+            registre.setMatriuN(n);
             procesos.add(new SumaM(this));
 
             ((Thread) procesos.get(procesos.size() - 1)).start();
         } else if (s.startsWith("multiplicar:")) {
+            preparar(n);
 
-            registre.setN(n);
+            registre.setMatriuN(n);
             Comunicar multiplicar = new MultM(this);
             procesos.add(multiplicar);
             ((Thread) procesos.get(procesos.size() - 1)).start();
