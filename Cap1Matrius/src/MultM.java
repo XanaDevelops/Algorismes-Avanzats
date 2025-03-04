@@ -19,8 +19,8 @@ public class MultM extends Thread implements Comunicar{{}
             time = System.nanoTime();
             //generate two random matrices
             int n = data.getTamanyN(i);
-            Matriu a = new Matriu(n, n);
-            Matriu b = new Matriu(n, n);
+            Matriu a = new Matriu(n);
+            Matriu b = new Matriu(n);
             for (int j = 0; j < n; j++) {
                 for (int k = 0; k < n; k++) {
                     a.set(j, k, rand.nextInt(100000));

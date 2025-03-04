@@ -4,14 +4,14 @@ import java.util.Random;
 public class Matriu {
     private final int[][] matriu;
 
-    public Matriu(int m, int n) {
-        this.matriu = new int[m][n];
+    public Matriu(int n) {
+        this.matriu = new int[n][n];
     }
 
 
     public Matriu sumar(Matriu matriu) {
         int n = this.matriu.length;
-       Matriu result = new Matriu(n, n);
+       Matriu result = new Matriu(n);
        for (int i = 0; i < n; i++) {
            for (int j = 0; j < n; j++) {
                result.set(i, j, matriu.get(i, j));
@@ -24,7 +24,7 @@ public class Matriu {
         //suposam matrius quadrades NxN
         final int n = this.matriu.length;
 
-        Matriu ret = new Matriu(n, n);
+        Matriu ret = new Matriu(n);
 
         //multiplicar
         for (int i = 0; i < n; i++) {
@@ -49,8 +49,8 @@ public class Matriu {
     }
 
 
-    public Matriu generarMatriu(int n){
-        Matriu matrix = new Matriu(n, n);
+    public static Matriu generarMatriuRandom(int n){
+        Matriu matrix = new Matriu(n);
         Random rn = new Random();
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {

@@ -8,9 +8,9 @@ class MatriuTest {
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        a = new Matriu(3,3);
-        b = new Matriu(3,3);
-        c = new Matriu(3,3);
+        a = new Matriu(3);
+        b = new Matriu(3);
+        c = new Matriu(3);
 
         int[][] avals = new int[][]{{1,2,3}, {4,5,6}, {7,8,9}};
         int[][] bvals = new int[][]{{9,8,7}, {6,5,4}, {3,2,1}};
