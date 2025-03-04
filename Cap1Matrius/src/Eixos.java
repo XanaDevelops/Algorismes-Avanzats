@@ -31,7 +31,7 @@ public class Eixos extends JPanel {
         g.drawLine(10, h - 10, w - 10, h - 10);
         if (dad != null) {
             int maxelement = 0;
-            for (int i = 0; i < dad.getTamN(); i++) {
+            for (int i = 0; i < dad.getSizeTamN(); i++) {
                 if (dad.getTamanyN(i) > maxelement) {
                     maxelement = dad.getTamanyN(i);
                 }

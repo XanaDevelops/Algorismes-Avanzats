@@ -24,12 +24,13 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         JButton comencarBoto = new JButton("Començar");
         JButton sumaBoto = new JButton("Només Sumar");
         JButton multBoto = new JButton("Només Multiplicar");
-
+        JButton aturarBoto = new JButton("Aturar");
         topBar.add(nLabel);
         topBar.add(nField);
         topBar.add(comencarBoto);
         topBar.add(sumaBoto);
         topBar.add(multBoto);
+        topBar.add(aturarBoto);
 
         // Crear el panell principal
         JPanel mainPanel = new JPanel();
@@ -46,6 +47,7 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         comencarBoto.addActionListener(e -> enviar("comencar"));
         sumaBoto.addActionListener(e -> enviar("suma"));
         multBoto.addActionListener(e -> enviar("multiplicar"));
+        aturarBoto.addActionListener(e -> enviar("aturar"));
 
     }
 
@@ -67,6 +69,8 @@ public class FinestraMatriu extends JPanel implements Comunicar {
     public void comunicar(String s) {
         if (s.startsWith("pintar")) {
             dibuixMatrius.pintar();
+        }else{
+
         }
     }
 }
