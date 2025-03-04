@@ -3,10 +3,10 @@ import java.util.Random;
 public class SumaM extends Thread implements Comunicar{
     private final Main principal;
     private boolean stop;
-    private Random rand;
+
     public SumaM(Main p) {
         principal = p;
-        rand = new Random();
+
     }
 
     public void run() {
@@ -19,15 +19,10 @@ public class SumaM extends Thread implements Comunicar{
             time = System.nanoTime();
            //generate two random matrices
             int n = data.getTamanyN(i);
-            Matriu a = new Matriu(n);
-            Matriu b = new Matriu(n);
-            for (int j = 0; j < n; j++) {
-                for (int k = 0; k < n; k++) {
-                    a.set(j, k, rand.nextInt(100000));
-                    b.set(j, k, rand.nextInt(100000));
-                }
-            }
-            System.out.println( a.sumar(b).toString());
+            Matriu a = Matriu.generarMatriuRandom(n);
+            Matriu b = Matriu.generarMatriuRandom(n);
+
+            //System.out.println( a.sumar(b).toString());
             if (!stop){
                 time = System.nanoTime() - time;
                 data.setTempsSuma(time);
