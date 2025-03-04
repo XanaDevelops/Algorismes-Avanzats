@@ -17,7 +17,7 @@ public class Main implements Comunicar {
     private void inicio() {
         registre = new Dades();
         procesos = new ArrayList<>();
-        preparar(0);
+        preparar();
         JFrame frame = new JFrame("Gràfic Suma vs Mult Matrius");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestra = new FinestraMatriu(this);
@@ -27,18 +27,15 @@ public class Main implements Comunicar {
         frame.setVisible(true);
     }
 
-    private void preparar(int n) {
+    private void preparar() {
         if(procesos != null && !procesos.isEmpty()) {
             for(Comunicar comunicar : procesos) {
                 comunicar.comunicar("aturar");
             }
         }
         procesos = new ArrayList<>();
-        registre.buidar();
+        registre.buidarTot();
 
-        registre.setTamanysN(1000);
-        registre.setTamanysN(2000);
-        registre.setTamanysN(n);
     }
     /**
      * MIRAR ARRAY DE PRESOS, crec que falta boto per aturar
@@ -58,7 +55,8 @@ public class Main implements Comunicar {
                 }
             }
             if (vius == 0) {
-                preparar(n);
+                registre.setMatriuN(n);
+
                 procesos.add(new SumaM(this));
                 procesos.add(new MultM(this));
                 for (Comunicar proces : procesos) {
@@ -66,14 +64,14 @@ public class Main implements Comunicar {
                 }
             }
         } else if (s.startsWith("suma:")) {
-            preparar(n);
+            registre.buidarSumar();
 
             registre.setMatriuN(n);
             procesos.add(new SumaM(this));
 
             ((Thread) procesos.get(procesos.size() - 1)).start();
         } else if (s.startsWith("multiplicar:")) {
-            preparar(n);
+            registre.buidarMult();
 
             registre.setMatriuN(n);
             Comunicar multiplicar = new MultM(this);

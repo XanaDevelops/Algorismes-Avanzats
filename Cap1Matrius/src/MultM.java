@@ -1,4 +1,4 @@
-public class MultM extends Thread implements Comunicar{{}
+public class MultM extends Thread implements Comunicar{
     private final Main principal;
     private boolean stop;
 
@@ -11,30 +11,31 @@ public class MultM extends Thread implements Comunicar{{}
 
         Dades data = principal.getDades();
         long time;
-        for (int i = 0; ( i<data.getSizeTamN()) && (!stop); i++) {
 
+        //generate two random matrices
+        int n = data.getMatriuN();
+        for (int i = 1; i <= Dades.N_STEP; i++) {
 
-            //generate two random matrices
-            int n = data.getTamanyN(i);
-            Matriu a = Matriu.generarMatriuRandom(n);
-            Matriu b = Matriu.generarMatriuRandom(n);
+            int size = (int)(n / (Dades.N_STEP / (double)i));
+
+            Matriu a = Matriu.generarMatriuRandom(size);
+            Matriu b = Matriu.generarMatriuRandom(size);
 
             //System.out.println(a.multiplicar(b));
-            System.out.println("multiplicant n=" + n);
+            System.out.println("multiplicant n=" + size);
             time = System.nanoTime();
             a.multiplicar(b);
+
             if (!stop){
                 time = System.nanoTime() - time;
-                data.setTempsMult(time);
-                data.setMatriuN(n);
+                data.addResultatMultiplicar(time, size);
                 principal.comunicar("pintar");
             }
         }
-
     }
 
     @Override
-    public  void comunicar(String s) {
+    public void comunicar(String s) {
         if (s.contentEquals("aturar")){
             aturar();
         }

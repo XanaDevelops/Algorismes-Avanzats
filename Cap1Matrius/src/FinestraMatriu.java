@@ -66,7 +66,7 @@ public class FinestraMatriu extends JPanel implements Comunicar {
     }
 
     @Override
-    public void comunicar(String s) {
+    public synchronized void comunicar(String s) {
         if (s.startsWith("pintar")) {
             dibuixMatrius.pintar();
         }else{

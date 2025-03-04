@@ -1,69 +1,79 @@
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 public class Dades {
 
-    private ArrayList<Long> tempsSuma;
-    private ArrayList<Long> tempsMult;
-    private ArrayList<Integer> tamanysN;
+    public class Resultat implements Comparable<Resultat> {
+        private long temps;
+        private int n;
 
+        public Resultat(int n, long temps) {
+            this.n = n;
+            this.temps = temps;
+            System.out.println("Resultat " + n + " " + temps);
+        }
+
+        @Override
+        public int compareTo(Resultat o) {
+            return Long.compare(n, o.n);
+        }
+
+        public long getTemps() {
+            return temps;
+        }
+        public int getN() {
+            return n;
+        }
+    }
+
+    private Set<Resultat> resultatsSumar;
+    private Set<Resultat> resultatsMult;
+
+    //N màxima
     private int N;
 
+    public static final int N_STEP = 20;
+
     public Dades() {
-        tempsSuma = new ArrayList<>();
-        tempsMult = new ArrayList<>();
-        tamanysN = new ArrayList<>();
-
-//        N = 1;
+        resultatsSumar = Collections.synchronizedSet(new TreeSet<>());
+        resultatsMult = Collections.synchronizedSet(new TreeSet<>());
     }
 
-    public void buidar() {
-        tempsSuma.clear();
-        tempsMult.clear();
-        tamanysN.clear();
+    public void buidarTot() {
+        buidarSumar();
+        buidarMult();
     }
 
-    public int getTamTempsSuma() {
-        return tempsSuma.size();
+    public void buidarSumar(){
+        resultatsSumar.clear();
+    }
+    public void buidarMult(){
+        resultatsMult.clear();
     }
 
-    public int getTamTempsMult() {
-        return tempsMult.size();
+    public synchronized void addResultatMultiplicar(long temps, int n){
+        resultatsMult.add(new Resultat(n, temps));
     }
 
-    public int getSizeTamN() {
-        return tamanysN.size();
+    public synchronized void addResultatSumar(long temps, int n){
+        resultatsSumar.add(new Resultat(n, temps));
     }
 
-    public long getTempsSuma(int i) {
-        return(tempsSuma.get(i));
+    public Set<Resultat> getSumes(){
+        return resultatsSumar;
     }
 
-    public long getTempsMult(int i) {
-        return(tempsMult.get(i));
+    public Set<Resultat> getMult(){
+        return resultatsMult;
     }
 
-    public int getTamanyN(int i) {
-        return tamanysN.get(i);
-    }
-
-    public void setTempsSuma(long t) {
-        tempsSuma.add(t);
-    }
-
-    public void setTempsMult(long t) {
-        tempsMult.add(t);
-    }
-
-    public void setTamanysN(int n) {
-        tamanysN.add(n);
-    }
-
-    public int getMatriuN() {
+    public int getMatriuN(){
         return N;
     }
 
-    public void setMatriuN(int n) {
-        N = n;
+    public void setMatriuN(int N) {
+        this.N = N;
     }
 }
