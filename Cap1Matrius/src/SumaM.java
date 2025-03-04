@@ -1,19 +1,22 @@
-public class SumaM extends Thread implements Comunicar{
+import java.util.concurrent.Callable;
+
+public class SumaM implements Callable<Void>, Comunicar{
     private final Main principal;
-    private boolean stop;
+    private volatile boolean stop;
 
     public SumaM(Main p) {
         principal = p;
 
     }
 
-    public void run() {
+    @Override
+    public Void call() {
         stop = false;
 
         Dades data = principal.getDades();
         long time;
 
-       //generate two random matrices
+        //generate two random matrices
         int n = data.getMatriuN();
 
         for (int i = 1; i <= Dades.N_STEP && !stop; i++) {
@@ -34,13 +37,13 @@ public class SumaM extends Thread implements Comunicar{
             }
         }
 
-
-
+        return null;
     }
     @Override
     public  void comunicar(String s) {
        if (s.contentEquals("aturar")){
            aturar();
+           System.out.println("SumaM aturat");
        }
     }
 

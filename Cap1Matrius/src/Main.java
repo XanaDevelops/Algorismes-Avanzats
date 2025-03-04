@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 
 /**
@@ -9,6 +11,7 @@ public class Main implements Comunicar {
     private FinestraMatriu finestra;
     private ArrayList<Comunicar> procesos = null;
     private Dades registre = null;
+    private ExecutorService executorService;
 
     public static void main(String[] args) {
         (new Main()).inicio();
@@ -17,6 +20,8 @@ public class Main implements Comunicar {
     private void inicio() {
         registre = new Dades();
         procesos = new ArrayList<>();
+        executorService = Executors.newFixedThreadPool(2);
+
         preparar();
         JFrame frame = new JFrame("Gràfic Suma vs Mult Matrius");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,9 +42,7 @@ public class Main implements Comunicar {
         registre.buidarTot();
 
     }
-    /**
-     * MIRAR ARRAY DE PRESOS, crec que falta boto per aturar
-     */
+
     @Override
     public synchronized void comunicar(String s) {
         int n = 0;
@@ -48,35 +51,39 @@ public class Main implements Comunicar {
         }
 
         if (s.startsWith("comencar:")) {
-            int vius = 0;
-            for (Comunicar proceso : procesos) {
-                if (((Thread) proceso).isAlive()) {
-                    vius++;
-                }
-            }
-            if (vius == 0) {
-                registre.setMatriuN(n);
 
-                procesos.add(new SumaM(this));
-                procesos.add(new MultM(this));
-                for (Comunicar proces : procesos) {
-                    ((Thread) proces).start();
-                }
+            for (Comunicar enmarxa : procesos) {
+                enmarxa.comunicar("aturar");
             }
+
+            // Fer net dades
+            procesos.clear();
+            registre.setMatriuN(n);
+
+            SumaM sumaTask = new SumaM(this);
+            MultM multTask = new MultM(this);
+
+            procesos.add(sumaTask);
+            procesos.add(multTask);
+
+            // Enviar al executor service
+            executorService.submit(sumaTask);
+            executorService.submit(multTask);
         } else if (s.startsWith("suma:")) {
             registre.buidarSumar();
-
             registre.setMatriuN(n);
-            procesos.add(new SumaM(this));
 
-            ((Thread) procesos.get(procesos.size() - 1)).start();
+            SumaM sumar = new SumaM(this);
+            procesos.add(sumar);
+            executorService.submit(sumar);
+
         } else if (s.startsWith("multiplicar:")) {
             registre.buidarMult();
-
             registre.setMatriuN(n);
-            Comunicar multiplicar = new MultM(this);
+
+            MultM multiplicar = new MultM(this);
             procesos.add(multiplicar);
-            ((Thread) procesos.get(procesos.size() - 1)).start();
+            executorService.submit(multiplicar);
 
         } else if (s.contentEquals("pintar")) {
             finestra.comunicar("pintar");
