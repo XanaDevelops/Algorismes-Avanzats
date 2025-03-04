@@ -14,7 +14,7 @@ public class MultM extends Thread implements Comunicar{
 
         //generate two random matrices
         int n = data.getMatriuN();
-        for (int i = 1; i <= Dades.N_STEP; i++) {
+        for (int i = 1; i <= Dades.N_STEP && !stop; i++) {
 
             int size = (int)(n / (Dades.N_STEP / (double)i));
 
