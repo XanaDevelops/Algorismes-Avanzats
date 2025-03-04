@@ -34,7 +34,7 @@ public class Dades {
     //N màxima
     private int N;
 
-    public static final int N_STEP = 20;
+    public static final int N_STEP = 10;
 
     public Dades() {
         resultatsSumar = Collections.synchronizedSet(new TreeSet<>());
