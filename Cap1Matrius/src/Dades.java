@@ -14,7 +14,7 @@ public class Dades {
         tempsMult = new ArrayList<>();
         tamanyN = new ArrayList<>();
 
-        N = 1;
+//        N = 1;
     }
 
     public void buidar() {

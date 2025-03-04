@@ -2,40 +2,50 @@ import java.util.Random;
 
 public class MultM extends Thread implements Comunicar{{}
     private final Main principal;
-
+    private boolean stop;
+    private Random rand;
     public MultM(Main p) {
-        System.out.println("Multi");
         principal = p;
-        this.start();
+        rand = new Random();
     }
 
-    @Override
     public void run() {
-        int n = principal.getDades().getN();
+        stop = false;
 
-        Random rand = new Random();
+        Dades data = principal.getDades();
+        long time;
+        for (int i = 0;( i<data.getTamN()) && (!stop); i++) {
 
-        Matriu a = new Matriu(n, n);
-        Matriu b = new Matriu(n, n);
-        for (int i = 0; i < n; i++) {
+            time = System.nanoTime();
+            //generate two random matrices
+            int n = data.getTamanyN(i);
+            Matriu a = new Matriu(n, n);
+            Matriu b = new Matriu(n, n);
             for (int j = 0; j < n; j++) {
-                a.set(i, j, rand.nextInt(100000));
-                b.set(i, j, rand.nextInt(100000));
+                for (int k = 0; k < n; k++) {
+                    a.set(j, k, rand.nextInt(100000));
+                    b.set(j, k, rand.nextInt(100000));
+                }
+            }
+            System.out.println(a.multiplicar(b));
+            if (!stop){
+                time = System.nanoTime() - time;
+                data.setTempsMult(time);
+                data.setN(n);
+                principal.comunicar("pintar");
             }
         }
 
-        long start = System.currentTimeMillis();
-        Matriu c = a.multiplicar(b);
-        long end = System.currentTimeMillis();
-        long time = (end - start);
-        System.out.println("Multi time: " + time + " ms");
-        principal.getDades().setTempsMult(time);
-        principal.getDades().setTamanyN(n);
-        principal.getFinestra().comunicar("pintar");
     }
 
     @Override
-    public void comunicar(String s) {
-        System.out.println(s);
+    public  void comunicar(String s) {
+        if (s.contentEquals("aturar")){
+            aturar();
+        }
+    }
+
+    private void aturar(){
+        stop = true;
     }
 }

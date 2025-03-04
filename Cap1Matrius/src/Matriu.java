@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.Random;
+
 public class Matriu {
     private final int[][] matriu;
 
@@ -7,7 +10,14 @@ public class Matriu {
 
 
     public Matriu sumar(Matriu matriu) {
-        return null;
+        int n = this.matriu.length;
+       Matriu result = new Matriu(n, n);
+       for (int i = 0; i < n; i++) {
+           for (int j = 0; j < n; j++) {
+               result.set(i, j, matriu.get(i, j));
+           }
+       }
+        return result;
     }
 
     public Matriu multiplicar(Matriu b) {
@@ -38,17 +48,24 @@ public class Matriu {
         return matriu[i][j];
     }
 
-    public String toString() {
-        String ret = "";
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                ret += matriu[i][j] + "\t";
+
+    public Matriu generarMatriu(int n){
+        Matriu matrix = new Matriu(n, n);
+        Random rn = new Random();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix.set(i, j, rn.nextInt(1000));
             }
-            ret += "\n";
         }
-        return ret;
+        return matrix;
     }
 
+    @Override
+    public String toString() {
+        return "Matriu{" +
+                "matriu=" + Arrays.deepToString(this.matriu) +
+                '}';
+    }
 }
 
 
