@@ -27,6 +27,8 @@ public class MultM extends Thread implements Comunicar{
         Dades data = principal.getDades();
         long time;
 
+        dibuixConstantMult finestraCM = principal.getFinestraCM();
+
         //Obtenim la mida introduïda de la matriu
         int n = data.getMatriuN();
         Double constantMult;
@@ -42,6 +44,8 @@ public class MultM extends Thread implements Comunicar{
 
             //System.out.println(a.multiplicar(b));
             System.out.println("multiplicant n=" + size);
+
+
 //            time = System.nanoTime();
             time = System.currentTimeMillis();
             a.multiplicar(b);
@@ -53,12 +57,15 @@ public class MultM extends Thread implements Comunicar{
                 if (data.jaInicialitzada(data.getCMult())){
                     constantMult = data.getCMult();
                     tempsEsperat = constantMult* Math.pow(size, 3);
+                    System.out.println("constant "+ constantMult);
 
                     System.out.println("Per a la multiplicació de matrius de n = "+ size + " tardaré " +  String.format("%.2f", tempsEsperat)  + " milisegons");
+                    finestraCM.afegirFilaMutl(size, String.format("%.2f",doubleTime), String.format("%.2f",tempsEsperat));
 
                 }else{
                     constantMult= doubleTime/(Math.pow(size, 3));
                     data.setCMult(constantMult);
+                    finestraCM.afegirFilaMutl(size, String.format("%.2f",doubleTime), "-");
                 }
                 System.out.println("Per a la multiplicació de matrius de n = " + size + String.format(" he tardat %.2f", doubleTime  ) + " milisegons");
 
@@ -68,6 +75,7 @@ public class MultM extends Thread implements Comunicar{
 
                 principal.comunicar("pintar");
             }
+
         }
     }
     /**

@@ -55,6 +55,7 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         add(topBar, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
 
+
     }
 
 

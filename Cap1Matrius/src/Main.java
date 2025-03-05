@@ -9,7 +9,7 @@ public class Main implements Comunicar {
     private FinestraMatriu finestra;
     private ArrayList<Comunicar> procesos = null;
     private Dades registre = null;
-
+    private dibuixConstantMult finestraCM;
     public static void main(String[] args) {
         (new Main()).inicio();
     }
@@ -25,6 +25,16 @@ public class Main implements Comunicar {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        //centrat i a la part més dreta
+        frame.setLocation(
+                frame.getToolkit().getScreenSize().width-frame.getWidth() ,
+                frame.getToolkit().getScreenSize().height / 2 - frame.getHeight() / 2
+        );
+
+
+        finestraCM = new dibuixConstantMult(this);
+        finestraCM.setVisible(true);
+
     }
 
     private void preparar() {
@@ -49,6 +59,8 @@ public class Main implements Comunicar {
         }
 
         if (s.startsWith("comencar:")) {
+            finestraCM.comunicar("netejaTaules");
+
             int vius = 0;
             for (Comunicar proceso : procesos) {
                 if (((Thread) proceso).isAlive()) {
@@ -67,6 +79,7 @@ public class Main implements Comunicar {
             }
         } else if (s.startsWith("suma:")) {
             registre.buidarSumar();
+            finestraCM.comunicar("netejaTaules");
 
             registre.setMatriuN(n);
             procesos.add(new SumaM(this));
@@ -74,6 +87,8 @@ public class Main implements Comunicar {
             ((Thread) procesos.get(procesos.size() - 1)).start();
         } else if (s.startsWith("multiplicar:")) {
             registre.buidarMult();
+            finestraCM.comunicar("netejaTaules");
+
 
             registre.setMatriuN(n);
             Comunicar multiplicar = new MultM(this);
@@ -86,13 +101,19 @@ public class Main implements Comunicar {
             for (int i = 0; i < procesos.size(); i++) {
                 procesos.get(i).comunicar("aturar");
             }
+        }else if (s.contentEquals("netejaTaules")){
+            finestraCM.comunicar("netejaTaules");
         }
-
+//afegir netejarTaules
 
     }
 
     public Dades getDades() {
         return registre;
+    }
+
+    public dibuixConstantMult getFinestraCM() {
+        return finestraCM;
     }
 
     //preguntar

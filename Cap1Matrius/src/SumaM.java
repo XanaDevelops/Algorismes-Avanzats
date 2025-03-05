@@ -16,6 +16,8 @@ public class SumaM extends Thread implements Comunicar{
      * Constructor de classe
      * @param p instància del programa principal
      */
+
+
     public SumaM(Main p) {
         principal = p;
     }
@@ -29,12 +31,13 @@ public class SumaM extends Thread implements Comunicar{
         Dades data = principal.getDades();
         long time;
 
+        dibuixConstantMult finestraCM = principal.getFinestraCM();
        //Obtenim la mida introduïda de la matriu
         int n = data.getMatriuN();
         Double constantSuma;
 
 
-        for (int i = 1; i <= Dades.N_STEP && !stop; i++) {
+        for (int i = 1; i <= Dades.N_STEP  && !stop; i++) { //NSTEP o n?
             //calculem la mida de la matriu en aquest pas
             int size = (int)(n / (Dades.N_STEP / (double)i));
 
@@ -54,8 +57,11 @@ public class SumaM extends Thread implements Comunicar{
                     tempsEsperat = constantSuma*size*size;
 
                     System.out.println("Per la suma de matrius de n = "+ size + " tardaré " + String.format("%.2f", tempsEsperat) + " milisegons");
+                    finestraCM.afegirFilaSuma(size, String.format("%.2f",doubleTime), String.format("%.2f",tempsEsperat));
 
                 }else{
+                    finestraCM.afegirFilaSuma(size, String.format("%.2f",doubleTime), "-");
+
                     constantSuma= (doubleTime)/(size*size);
                     data.setCSuma(constantSuma);
 
