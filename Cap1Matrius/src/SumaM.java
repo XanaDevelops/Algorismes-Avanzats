@@ -81,7 +81,6 @@ public class SumaM extends Thread implements Comunicar{
     @Override
     public  void comunicar(String s) {
        if (s.contentEquals("aturar")){
-           System.out.println("estic aqui en stuar suma");
            aturar();
        }
     }

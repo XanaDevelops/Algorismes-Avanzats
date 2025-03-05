@@ -77,7 +77,7 @@ public class MultM extends Thread implements Comunicar{
     @Override
     public void comunicar(String s) {
         if (s.contentEquals("aturar")){
-            System.out.println("estic aqui en stuar mult");
+
 
             aturar();
         }
