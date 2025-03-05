@@ -58,6 +58,8 @@ public class Main implements Comunicar {
 
             // Fer net dades
             procesos.clear();
+            registre.buidarTot();
+
             registre.setMatriuN(n);
 
             SumaM sumaTask = new SumaM(this);
@@ -70,6 +72,12 @@ public class Main implements Comunicar {
             executorService.submit(sumaTask);
             executorService.submit(multTask);
         } else if (s.startsWith("suma:")) {
+            for (Comunicar enmarxa : procesos) {
+                if (enmarxa instanceof SumaM){
+                    enmarxa.comunicar("aturar");
+                }
+            }
+            procesos.removeIf(comunicar -> comunicar instanceof SumaM);
             registre.buidarSumar();
             registre.setMatriuN(n);
 
@@ -78,6 +86,12 @@ public class Main implements Comunicar {
             executorService.submit(sumar);
 
         } else if (s.startsWith("multiplicar:")) {
+            for(Comunicar enmarxa : procesos) {
+                if(enmarxa instanceof MultM){
+                    enmarxa.comunicar("aturar");
+                }
+            }
+            procesos.removeIf(comunicar -> comunicar instanceof MultM);
             registre.buidarMult();
             registre.setMatriuN(n);
 

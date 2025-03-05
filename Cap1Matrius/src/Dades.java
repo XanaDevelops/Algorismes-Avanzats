@@ -12,7 +12,6 @@ public class Dades {
         public Resultat(int n, long temps) {
             this.n = n;
             this.temps = temps;
-            System.out.println("Resultat " + n + " " + temps);
         }
 
         @Override
