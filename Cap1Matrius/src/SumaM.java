@@ -1,6 +1,6 @@
 import java.util.concurrent.Callable;
 
-public class SumaM implements Callable<Void>, Comunicar{
+public class SumaM implements Runnable, Comunicar{
     private final Main principal;
     private volatile boolean stop;
 
@@ -10,7 +10,7 @@ public class SumaM implements Callable<Void>, Comunicar{
     }
 
     @Override
-    public Void call() {
+    public void run() {
         stop = false;
 
         Dades data = principal.getDades();
@@ -37,7 +37,6 @@ public class SumaM implements Callable<Void>, Comunicar{
             }
         }
 
-        return null;
     }
     @Override
     public  void comunicar(String s) {

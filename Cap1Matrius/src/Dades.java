@@ -1,11 +1,9 @@
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 
 public class Dades {
 
-    public class Resultat implements Comparable<Resultat> {
+    public static class Resultat implements Comparable<Resultat> {
         private long temps;
         private int n;
 
@@ -27,8 +25,8 @@ public class Dades {
         }
     }
 
-    private Set<Resultat> resultatsSumar;
-    private Set<Resultat> resultatsMult;
+    private final List<Resultat> resultatsSumar;
+    private final List<Resultat> resultatsMult;
 
     //N màxima
     private int N;
@@ -36,8 +34,8 @@ public class Dades {
     public static final int N_STEP = 10;
 
     public Dades() {
-        resultatsSumar = Collections.synchronizedSet(new TreeSet<>());
-        resultatsMult = Collections.synchronizedSet(new TreeSet<>());
+        resultatsSumar = new ArrayList<>();
+        resultatsMult = new ArrayList<>();
     }
 
     public void buidarTot() {
@@ -60,11 +58,11 @@ public class Dades {
         resultatsSumar.add(new Resultat(n, temps));
     }
 
-    public Set<Resultat> getSumes(){
+    public synchronized List<Resultat> getSumes(){
         return resultatsSumar;
     }
 
-    public Set<Resultat> getMult(){
+    public synchronized List<Resultat> getMult(){
         return resultatsMult;
     }
 

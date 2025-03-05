@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javax.swing.JFrame;
 
 /**
@@ -20,9 +22,16 @@ public class Main implements Comunicar {
     private void inicio() {
         registre = new Dades();
         procesos = new ArrayList<>();
-        executorService = Executors.newFixedThreadPool(2);
+        executorService = Executors.newFixedThreadPool(3);
 
         preparar();
+
+        //interficie en un altre thread
+        executorService.submit(this::crearInterficie);
+
+    }
+
+    private void crearInterficie(){
         JFrame frame = new JFrame("Gràfic Suma vs Mult Matrius");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestra = new FinestraMatriu(this);
@@ -69,8 +78,9 @@ public class Main implements Comunicar {
             procesos.add(multTask);
 
             // Enviar al executor service
-            executorService.submit(sumaTask);
-            executorService.submit(multTask);
+            executorService.execute(sumaTask);
+            executorService.execute(multTask);
+
         } else if (s.startsWith("suma:")) {
             for (Comunicar enmarxa : procesos) {
                 if (enmarxa instanceof SumaM){
