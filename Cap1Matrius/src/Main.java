@@ -102,9 +102,15 @@ public class Main implements Comunicar {
         } else if (s.contentEquals("pintar")) {
             finestra.comunicar("pintar");
         }else if (s.startsWith("aturar:")){
-            for (int i = 0; i < procesos.size(); i++) {
-                procesos.get(i).comunicar("aturar");
+            for (Comunicar proceso : procesos) {
+                proceso.comunicar("aturar");
             }
+        }else if(s.startsWith("net:")){
+            for (Comunicar proceso : procesos) {
+                proceso.comunicar("aturar");
+            }
+            registre.buidarTot();
+            finestra.comunicar("pintar");
         }
 
 
