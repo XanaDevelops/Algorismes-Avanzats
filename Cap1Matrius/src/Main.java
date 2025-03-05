@@ -43,6 +43,7 @@ public class Main implements Comunicar {
     @Override
     public synchronized void comunicar(String s) {
         int n = 0;
+
         if (s.split(":").length > 1) {
             n = Integer.parseInt(s.split(":")[1]);
         }

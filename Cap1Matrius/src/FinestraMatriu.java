@@ -6,10 +6,10 @@ import java.awt.event.ActionListener;
 
 public class FinestraMatriu extends JPanel implements Comunicar {
 
-    private Main principal;
+    private final Main principal;
     private Eixos dibuixMatrius;
     private JTextField nField;
-
+    private final String[] missatgesBotons = {"comencar", "suma", "multiplicar", "aturar"};
     public FinestraMatriu(Main p) {
         principal = p;
         setPreferredSize(new Dimension(800, 625));
@@ -17,21 +17,33 @@ public class FinestraMatriu extends JPanel implements Comunicar {
 
         // Crear la barra superior
         JPanel topBar = new JPanel();
-        topBar.setLayout(new FlowLayout());
+        topBar.setLayout(new GridLayout(1, 5));
 
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 12);
+
+        JPanel nPanel = new JPanel();
+        nPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel nLabel = new JLabel("N:");
-        nField = new JTextField(5);
-        JButton comencarBoto = new JButton("Començar");
-        JButton sumaBoto = new JButton("Només Sumar");
-        JButton multBoto = new JButton("Només Multiplicar");
-        JButton aturarBoto = new JButton("Aturar");
-        topBar.add(nLabel);
-        topBar.add(nField);
-        topBar.add(comencarBoto);
-        topBar.add(sumaBoto);
-        topBar.add(multBoto);
-        topBar.add(aturarBoto);
+        nLabel.setPreferredSize(new Dimension(20, nLabel.getPreferredSize().height));
 
+
+        nField = new JTextField( );
+        nField.setPreferredSize(new Dimension(130, nField.getPreferredSize().height));
+        nField.setFont(font);
+        nPanel.add(nLabel);
+        nPanel.add(nField);
+
+        topBar.add(nPanel);
+        String[] textBotons = {"Començar", "Només Sumar", "Només multiplicar", "Aturar"};
+        JButton[] botons = new JButton[textBotons.length];
+        for (int i = 0; i < botons.length; i++) {
+            botons[i] = new JButton(textBotons[i]);
+            botons[i].setFont(font);
+            int finalI = i;
+            botons[i].addActionListener(e -> enviar(missatgesBotons[finalI]));
+            topBar.add(botons[i]);
+
+        }
         // Crear el panell principal
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(null);
@@ -43,13 +55,8 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         add(topBar, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
 
-        // Afegir listeners als botons
-        comencarBoto.addActionListener(e -> enviar("comencar"));
-        sumaBoto.addActionListener(e -> enviar("suma"));
-        multBoto.addActionListener(e -> enviar("multiplicar"));
-        aturarBoto.addActionListener(e -> enviar("aturar"));
-
     }
+
 
     private void enviar(String msg) {
         String nText = nField.getText().trim();
@@ -69,7 +76,7 @@ public class FinestraMatriu extends JPanel implements Comunicar {
     public synchronized void comunicar(String s) {
         if (s.startsWith("pintar")) {
             dibuixMatrius.pintar();
-        }else{
+        }else{ //limpiar
 
         }
     }

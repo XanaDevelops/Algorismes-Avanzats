@@ -8,12 +8,14 @@ public class Dades {
     public class Resultat implements Comparable<Resultat> {
         private long temps;
         private int n;
-
         public Resultat(int n, long temps) {
             this.n = n;
             this.temps = temps;
+
             System.out.println("Resultat " + n + " " + temps);
+
         }
+
 
         @Override
         public int compareTo(Resultat o) {
@@ -33,7 +35,8 @@ public class Dades {
 
     //N màxima
     private int N;
-
+    private Double CSuma;
+    private Double CMult;
     public static final int N_STEP = 10;
 
     public Dades() {
@@ -71,6 +74,26 @@ public class Dades {
 
     public int getMatriuN(){
         return N;
+    }
+
+    public Double getCSuma() {
+        return CSuma;
+    }
+
+    public void setCSuma(Double CSuma) {
+        this.CSuma = CSuma;
+    }
+
+    public Double getCMult() {
+        return CMult;
+    }
+
+    public void setCMult(Double CMult) {
+        this.CMult = CMult;
+    }
+
+    public boolean jaInicialitzada(Double C) throws  NullPointerException{
+        return (!String.valueOf(C).equals("null"));
     }
 
     public void setMatriuN(int N) {
