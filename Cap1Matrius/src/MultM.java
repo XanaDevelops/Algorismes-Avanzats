@@ -42,20 +42,25 @@ public class MultM extends Thread implements Comunicar{
 
             //System.out.println(a.multiplicar(b));
             System.out.println("multiplicant n=" + size);
-            time = System.nanoTime();
+//            time = System.nanoTime();
+            time = System.currentTimeMillis();
             a.multiplicar(b);
 
             if (!stop){
+                double tempsEsperat;
                 time = System.nanoTime() - time;
+                double doubleTime = time/ 1000000.0;
                 if (data.jaInicialitzada(data.getCMult())){
-                    constantMult = data.getCSuma();
-                    System.out.println("Per a la multiplicació de matrius de n = "+ size + " tardaré " + constantMult*(Math.pow(size, 3)));
+                    constantMult = data.getCMult();
+                    tempsEsperat = constantMult* Math.pow(size, 3);
+
+                    System.out.println("Per a la multiplicació de matrius de n = "+ size + " tardaré " +  String.format("%.2f", tempsEsperat)  + " milisegons");
 
                 }else{
-                    constantMult= (1.0*time)/(Math.pow(size, 3));
+                    constantMult= doubleTime/(Math.pow(size, 3));
                     data.setCMult(constantMult);
                 }
-                System.out.println("Per a la multiplicació de matrius de n = " + size + " he tardat "+ time);
+                System.out.println("Per a la multiplicació de matrius de n = " + size + String.format(" he tardat %.2f", doubleTime  ) + " milisegons");
 
                 //Desem el resultat de la multiplicació
                 data.addResultatMultiplicar(time, size);
@@ -72,6 +77,8 @@ public class MultM extends Thread implements Comunicar{
     @Override
     public void comunicar(String s) {
         if (s.contentEquals("aturar")){
+            System.out.println("estic aqui en stuar mult");
+
             aturar();
         }
     }

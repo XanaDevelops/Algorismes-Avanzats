@@ -56,8 +56,9 @@ public class Main implements Comunicar {
                 }
             }
             if (vius == 0) {
+//                registre.buidarTot();
                 registre.setMatriuN(n);
-
+                procesos.clear();
                 procesos.add(new SumaM(this));
                 procesos.add(new MultM(this));
                 for (Comunicar proces : procesos) {
@@ -82,6 +83,7 @@ public class Main implements Comunicar {
         } else if (s.contentEquals("pintar")) {
             finestra.comunicar("pintar");
         }else if (s.startsWith("aturar:")){
+            System.out.println("I'm hereeeee");
             for (int i = 0; i < procesos.size(); i++) {
                 procesos.get(i).comunicar("aturar");
             }

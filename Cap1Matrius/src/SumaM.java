@@ -45,19 +45,24 @@ public class SumaM extends Thread implements Comunicar{
             time = System.nanoTime();
             a.sumar(b);
             if (!stop){
+                double tempsEsperat;
                 time = System.nanoTime() - time;
+                double doubleTime = time/ 1000000.0;
                 if (data.jaInicialitzada(data.getCSuma())){
                     constantSuma = data.getCSuma();
-                    System.out.println("CONSTANT DE SUMA  = "+constantSuma);
-                    System.out.println("Per la suma de matrius de n = "+ size + " tardaré " + constantSuma*size*size);
+//                    System.out.println("CONSTANT DE SUMA  = "+constantSuma);
+                    tempsEsperat = constantSuma*size*size;
+
+                    System.out.println("Per la suma de matrius de n = "+ size + " tardaré " + String.format("%.2f", tempsEsperat) + " milisegons");
 
                 }else{
-                    constantSuma= (1.0*time)/(size*size);
-                    System.out.println("CONSTANT DE SUMA  = "+constantSuma);
+                    constantSuma= (doubleTime)/(size*size);
                     data.setCSuma(constantSuma);
 
+
                 }
-                System.out.println("Per a la suma de matrius de n = " + size + " he tardat "+ time);
+                System.out.println("Per a la suma de matrius de n = " + size + String.format(" he tardat %.2f", doubleTime  ) + " milisegons");
+
                 //Desem el resultat de la suma
                 data.addResultatSumar(time, size);
 
@@ -76,6 +81,7 @@ public class SumaM extends Thread implements Comunicar{
     @Override
     public  void comunicar(String s) {
        if (s.contentEquals("aturar")){
+           System.out.println("estic aqui en stuar suma");
            aturar();
        }
     }
