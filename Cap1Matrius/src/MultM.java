@@ -1,12 +1,15 @@
-public class MultM extends Thread implements Comunicar{
+import java.util.concurrent.Callable;
+
+public class MultM implements Callable<Void>, Comunicar{
     private final Main principal;
-    private boolean stop;
+    private volatile  boolean stop;
 
     public MultM(Main p) {
         principal = p;
     }
 
-    public void run() {
+    @Override
+    public Void call() {
         stop = false;
 
         Dades data = principal.getDades();
@@ -32,12 +35,15 @@ public class MultM extends Thread implements Comunicar{
                 principal.comunicar("pintar");
             }
         }
+        return null;
     }
 
     @Override
     public void comunicar(String s) {
         if (s.contentEquals("aturar")){
             aturar();
+            System.out.println("MultM aturat");
+
         }
     }
 
