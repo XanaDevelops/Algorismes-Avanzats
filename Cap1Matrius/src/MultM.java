@@ -1,6 +1,4 @@
-import java.util.concurrent.Callable;
-
-public class MultM implements Callable<Void>, Comunicar{
+public class MultM implements Runnable, Comunicar{
     private final Main principal;
     private volatile  boolean stop;
 
@@ -9,7 +7,7 @@ public class MultM implements Callable<Void>, Comunicar{
     }
 
     @Override
-    public Void call() {
+    public void run() {
         stop = false;
 
         Dades data = principal.getDades();
@@ -35,7 +33,7 @@ public class MultM implements Callable<Void>, Comunicar{
                 principal.comunicar("pintar");
             }
         }
-        return null;
+
     }
 
     @Override
