@@ -22,6 +22,7 @@ public class Eixos extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
+
         super.paintComponent(g);
         Dades dad = principal.getDades();
         int w = this.getWidth() - 1;
@@ -116,6 +117,7 @@ public class Eixos extends JPanel {
             }
         }
     }
+
 
 
 }

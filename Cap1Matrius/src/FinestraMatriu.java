@@ -6,11 +6,12 @@ import java.awt.event.ActionListener;
 
 public class FinestraMatriu extends JPanel implements Comunicar {
 
-    private Main principal;
+    private final Main principal;
     private Eixos dibuixMatrius;
     private JTextField nField;
     private  JPanel panelLlagenda;
 
+    private final String[] missatgesBotons = {"comencar", "suma", "multiplicar", "aturar"};
     public FinestraMatriu(Main p) {
         principal = p;
         setPreferredSize(new Dimension(800, 625));
