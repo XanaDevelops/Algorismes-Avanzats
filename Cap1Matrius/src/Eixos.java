@@ -34,12 +34,14 @@ public class Eixos extends JPanel {
 
         if (dad != null) {
             int maxelement = 0;
-            for(Dades.Resultat r: dad.getSumes()){
+            for(int i = 0; i<dad.getSumes().size(); i++){
+                Dades.Resultat r = dad.getSumes().get(i);
                 if(r.getN() > maxelement){
                     maxelement = r.getN();
                 }
             }
-            for(Dades.Resultat r: dad.getMult()){
+            for(int i = 0; i<dad.getMult().size(); i++){
+                Dades.Resultat r = dad.getMult().get(i);
                 if(r.getN() > maxelement){
                     maxelement = r.getN();
                 }
@@ -48,12 +50,14 @@ public class Eixos extends JPanel {
             long maxtemps;
             int px, py, pax, pay;
             maxtemps = 0;
-            for (Dades.Resultat r: dad.getSumes()) {
+            for(int i = 0; i<dad.getSumes().size(); i++){
+                Dades.Resultat r = dad.getSumes().get(i);
                 if (r.getTemps() > maxtemps) {
                     maxtemps = r.getTemps();
                 }
             }
-            for (Dades.Resultat r: dad.getMult()) {
+            for(int i = 0; i<dad.getMult().size(); i++){
+                Dades.Resultat r = dad.getMult().get(i);
                 if (r.getTemps() > maxtemps) {
                     maxtemps = r.getTemps();
                 }
@@ -75,7 +79,8 @@ public class Eixos extends JPanel {
             // llistaSuma
             pax = 50;
             pay = h - 10;
-            for (Dades.Resultat r: dad.getSumes()) {
+            for(int i = 0; i<dad.getSumes().size(); i++){
+                Dades.Resultat r = dad.getSumes().get(i);
                 if(maxelement == 0){
                     break;
                 }
@@ -93,7 +98,8 @@ public class Eixos extends JPanel {
             // llistaMult
             pax = 50;
             pay = h - 10;
-            for (Dades.Resultat r: dad.getMult()) {
+            for(int i = 0; i<dad.getMult().size(); i++){
+                Dades.Resultat r = dad.getMult().get(i);
                 if(maxelement == 0){
                     break;
                 }
