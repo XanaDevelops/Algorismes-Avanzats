@@ -86,7 +86,7 @@ public class Eixos extends JPanel {
                 }
                 g.setColor(Color.green);
                 px = 50 + r.getN() * (w - 60) / maxelement;
-                py = (h - 20) - ((int) (r.getLogTemps() * (h - 40) / Math.log(maxtemps)));
+                py = (h - 20) - ((int) (r.getLogTemps() * (h - 40) / Math.log10(maxtemps)));
                 g.fillOval(px - 3, py - 3, 7, 7);
                 g.drawLine(pax, pay, px, py);
                 g.drawString("(" + r.getN() + ", " + r.getTempsPirnt() +")", px - 20, py - 20);
@@ -105,7 +105,7 @@ public class Eixos extends JPanel {
                 }
                 g.setColor(Color.red);
                 px = 50 + r.getN() * (w - 60) / maxelement;
-                py = (h - 20) - ((int) (r.getLogTemps() * (h - 40) / Math.log(maxtemps)));
+                py = (h - 20) - ((int) (r.getLogTemps() * (h - 40) / Math.log10(maxtemps)));
                 g.fillOval(px - 3, py - 3, 7, 7);
                 g.drawLine(pax, pay, px, py);
                 g.drawString("(" + r.getN() + ", " + r.getTempsPirnt() +")", px - 20, py + 20);

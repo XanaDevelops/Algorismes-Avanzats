@@ -22,7 +22,7 @@ public class Dades {
         }
 
         public double getLogTemps() {
-            return Math.log(temps);
+            return Math.log10(temps);
         }
 
         public int getN() {
