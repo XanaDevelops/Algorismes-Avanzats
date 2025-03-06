@@ -9,6 +9,7 @@ public class FinestraMatriu extends JPanel implements Comunicar {
     private Main principal;
     private Eixos dibuixMatrius;
     private JTextField nField;
+    private  JPanel panelLlagenda;
 
     public FinestraMatriu(Main p) {
         principal = p;
@@ -26,6 +27,20 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         JButton multBoto = new JButton("Només Multiplicar");
         JButton aturarBoto = new JButton("Aturar");
         JButton botoNet = new JButton("Netejar");
+
+        //Llegenda
+        panelLlagenda = new JPanel();
+        panelLlagenda.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JLabel etiquetaS = new JLabel("Verd: Suma");
+        etiquetaS.setForeground(Color.GREEN);
+        JLabel etiquetaM = new JLabel("Vermell: Multiplicar");
+        etiquetaM.setForeground(Color.RED);
+        panelLlagenda.add(etiquetaS);
+        panelLlagenda.add(etiquetaM);
+        panelLlagenda.setSize(panelLlagenda.getPreferredSize());
+        panelLlagenda.setLocation(100, 50);
+        this.add(panelLlagenda);
+
         topBar.add(nLabel);
         topBar.add(nField);
         topBar.add(comencarBoto);
@@ -33,6 +48,7 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         topBar.add(multBoto);
         topBar.add(aturarBoto);
         topBar.add(botoNet);
+
 
         // Crear el panell principal
         JPanel mainPanel = new JPanel();
@@ -71,6 +87,7 @@ public class FinestraMatriu extends JPanel implements Comunicar {
     @Override
     public synchronized void comunicar(String s) {
         if (s.startsWith("pintar")) {
+            panelLlagenda.repaint();
             dibuixMatrius.pintar();
         }else{
 

@@ -89,7 +89,7 @@ public class Eixos extends JPanel {
                 py = (h - 20) - ((int) (r.getTemps() * (h - 40) / maxtemps));
                 g.fillOval(px - 3, py - 3, 7, 7);
                 g.drawLine(pax, pay, px, py);
-                g.drawString("(" + r.getN() + ", " + r.getTemps() +")", px - 20, py - 20);
+                g.drawString("(" + r.getN() + ", " + r.getTemps() +")", px - 20, py + 20);
                 g.setColor(Color.black);
                 g.drawOval(px - 3, py - 3, 7, 7);
                 pax = px;
@@ -108,7 +108,7 @@ public class Eixos extends JPanel {
                 py = (h - 20) - ((int) (r.getTemps() * (h - 40) / maxtemps));
                 g.fillOval(px - 3, py - 3, 7, 7);
                 g.drawLine(pax, pay, px, py);
-                g.drawString("(" + r.getN() + ", " + r.getTemps() +")", px - 20, py + 20);
+                g.drawString("(" + r.getN() + ", " + r.getTemps() +")", px + 20, py - 20);
                 g.setColor(Color.black);
                 g.drawOval(px - 3, py - 3, 7, 7);
                 pax = px;
