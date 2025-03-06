@@ -1,3 +1,4 @@
+public class MultM implements Runnable, Comunicar{
 /**
  *Classe que realitza la multiplicació de matrius en un fil d'execució.
  * Implementa la interfície Comunicar per enviar i rebre missatges.
@@ -7,6 +8,8 @@ public class MultM extends Thread implements Comunicar{
      * Instància de la classe principal (Main)
      */
     private final Main principal;
+    private volatile  boolean stop;
+
     /**
      * Variable booleana per poder aturar el fil d'execució.
      */
@@ -18,6 +21,8 @@ public class MultM extends Thread implements Comunicar{
     public MultM(Main p) {
         principal = p;
     }
+
+    @Override
     /**
      * Mètode principal que executa el fil.
      * Calcula, dins un bucle, la multiplicació de dues matrius de mida incremental.
@@ -77,6 +82,7 @@ public class MultM extends Thread implements Comunicar{
             }
 
         }
+
     }
     /**
      * Implementació del mètode comunicar de la interfície Comunicar
@@ -88,6 +94,8 @@ public class MultM extends Thread implements Comunicar{
 
 
             aturar();
+            System.out.println("MultM aturat");
+
         }
     }
     /**

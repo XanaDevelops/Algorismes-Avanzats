@@ -1,3 +1,6 @@
+import java.util.concurrent.Callable;
+
+public class SumaM implements Runnable, Comunicar{
 /**
  *Classe que realitza la suma de matrius en un fil d'execució.
  * Implementa la interfície Comunicar per enviar i rebre missatges.
@@ -7,6 +10,7 @@ public class SumaM extends Thread implements Comunicar{
      * Instància de la classe principal (Main)
      */
     private final Main principal;
+    private volatile boolean stop;
     /**
      * Variable booleana per poder aturar el fil d'execució.
      */
@@ -22,6 +26,7 @@ public class SumaM extends Thread implements Comunicar{
         principal = p;
     }
 
+    @Override
     /**
      * Mètode principal que executa el fil.
      * Calcula, dins un bucle, la suma de dues matrius de mida incremental.
@@ -33,6 +38,7 @@ public class SumaM extends Thread implements Comunicar{
 
         dibuixConstantMult finestraCM = principal.getFinestraCM();
        //Obtenim la mida introduïda de la matriu
+        //generate two random matrices
         int n = data.getMatriuN();
         Double constantSuma;
 
@@ -77,7 +83,6 @@ public class SumaM extends Thread implements Comunicar{
             }
         }
 
-
     }
 
     /**
@@ -88,6 +93,7 @@ public class SumaM extends Thread implements Comunicar{
     public  void comunicar(String s) {
        if (s.contentEquals("aturar")){
            aturar();
+           System.out.println("SumaM aturat");
        }
     }
 
