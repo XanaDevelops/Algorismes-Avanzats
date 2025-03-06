@@ -15,6 +15,7 @@ public class Main implements Comunicar {
     private Dades registre = null;
     private ExecutorService executorService;
 
+    private dibuixConstantMult finestraCM;
     public static void main(String[] args) {
         (new Main()).inicio();
     }
@@ -39,6 +40,16 @@ public class Main implements Comunicar {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        //centrat i a la part més dreta
+        frame.setLocation(
+                frame.getToolkit().getScreenSize().width-frame.getWidth() ,
+                frame.getToolkit().getScreenSize().height / 2 - frame.getHeight() / 2
+        );
+
+
+        finestraCM = new dibuixConstantMult(this);
+        finestraCM.setVisible(true);
+
     }
 
     private void preparar() {
@@ -60,6 +71,7 @@ public class Main implements Comunicar {
         }
 
         if (s.startsWith("comencar:")) {
+            finestraCM.comunicar("netejaTaules");
 
             for (Comunicar enmarxa : procesos) {
                 enmarxa.comunicar("aturar");
@@ -89,6 +101,8 @@ public class Main implements Comunicar {
             }
             procesos.removeIf(comunicar -> comunicar instanceof SumaM);
             registre.buidarSumar();
+            finestraCM.comunicar("netejaTaules");
+
             registre.setMatriuN(n);
 
             SumaM sumar = new SumaM(this);
@@ -103,6 +117,9 @@ public class Main implements Comunicar {
             }
             procesos.removeIf(comunicar -> comunicar instanceof MultM);
             registre.buidarMult();
+            finestraCM.comunicar("netejaTaules");
+
+
             registre.setMatriuN(n);
 
             MultM multiplicar = new MultM(this);
@@ -115,6 +132,8 @@ public class Main implements Comunicar {
             for (Comunicar proceso : procesos) {
                 proceso.comunicar("aturar");
             }
+        }else if (s.contentEquals("netejaTaules")){
+            finestraCM.comunicar("netejaTaules");
         }else if(s.startsWith("net:")){
             for (Comunicar proceso : procesos) {
                 proceso.comunicar("aturar");
@@ -128,6 +147,10 @@ public class Main implements Comunicar {
 
     public Dades getDades() {
         return registre;
+    }
+
+    public dibuixConstantMult getFinestraCM() {
+        return finestraCM;
     }
 
     //preguntar
