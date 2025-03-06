@@ -66,7 +66,6 @@ public class Main implements Comunicar {
     @Override
     public synchronized void comunicar(String s) {
         int n = 0;
-
         if (s.split(":").length > 1) {
             n = Integer.parseInt(s.split(":")[1]);
         }
@@ -130,13 +129,19 @@ public class Main implements Comunicar {
         } else if (s.contentEquals("pintar")) {
             finestra.comunicar("pintar");
         }else if (s.startsWith("aturar:")){
-            for (int i = 0; i < procesos.size(); i++) {
-                procesos.get(i).comunicar("aturar");
+            for (Comunicar proceso : procesos) {
+                proceso.comunicar("aturar");
             }
         }else if (s.contentEquals("netejaTaules")){
             finestraCM.comunicar("netejaTaules");
+        }else if(s.startsWith("net:")){
+            for (Comunicar proceso : procesos) {
+                proceso.comunicar("aturar");
+            }
+            registre.buidarTot();
+            finestra.comunicar("pintar");
         }
-//afegir netejarTaules
+
 
     }
 
