@@ -5,7 +5,6 @@ public class SumaM implements Runnable, Comunicar{
  *Classe que realitza la suma de matrius en un fil d'execució.
  * Implementa la interfície Comunicar per enviar i rebre missatges.
  **/
-public class SumaM extends Thread implements Comunicar{
     /**
      * Instància de la classe principal (Main)
      */
@@ -14,7 +13,7 @@ public class SumaM extends Thread implements Comunicar{
     /**
      * Variable booleana per poder aturar el fil d'execució.
      */
-    private boolean stop;
+
 
     /**
      * Constructor de classe

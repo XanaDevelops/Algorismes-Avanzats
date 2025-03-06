@@ -3,7 +3,6 @@ public class MultM implements Runnable, Comunicar{
  *Classe que realitza la multiplicació de matrius en un fil d'execució.
  * Implementa la interfície Comunicar per enviar i rebre missatges.
  **/
-public class MultM extends Thread implements Comunicar{
     /**
      * Instància de la classe principal (Main)
      */
@@ -13,7 +12,6 @@ public class MultM extends Thread implements Comunicar{
     /**
      * Variable booleana per poder aturar el fil d'execució.
      */
-    private boolean stop;
     /**
      * Constructor de classe
      * @param p instància del programa principal
