@@ -36,6 +36,8 @@ public class SumaM implements Runnable, Comunicar{
         long time;
 
         dibuixConstantMult finestraCM = principal.getFinestraCM();
+        principal.getFinestra().comunicar("activar:sumar");
+
        //Obtenim la mida introduïda de la matriu
         //generate two random matrices
         int n = data.getMatriuN();
@@ -82,6 +84,8 @@ public class SumaM implements Runnable, Comunicar{
             }
         }
 
+        aturar();
+
     }
 
     /**
@@ -101,6 +105,8 @@ public class SumaM implements Runnable, Comunicar{
      */
     private void aturar(){
         stop = true;
+        principal.getFinestra().comunicar("desactivar:sumar");
+
     }
 
 }

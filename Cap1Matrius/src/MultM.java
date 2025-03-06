@@ -32,6 +32,9 @@ public class MultM implements Runnable, Comunicar{
 
         dibuixConstantMult finestraCM = principal.getFinestraCM();
 
+        principal.getFinestra().comunicar("activar:multiplicar");
+
+
         //Obtenim la mida introduïda de la matriu
         int n = data.getMatriuN();
         Double constantMult;
@@ -80,6 +83,7 @@ public class MultM implements Runnable, Comunicar{
             }
 
         }
+        aturar();
 
     }
     /**
@@ -101,5 +105,7 @@ public class MultM implements Runnable, Comunicar{
      */
     private void aturar(){
         stop = true;
+        principal.getFinestra().comunicar("desactivar:multiplicar");
+
     }
 }

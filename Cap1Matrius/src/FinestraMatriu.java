@@ -11,6 +11,8 @@ public class FinestraMatriu extends JPanel implements Comunicar {
     private JTextField nField;
     private  JPanel panelLlagenda;
 
+    private JProgressBar sumarBar, multiplicarBar;
+
     private final String[] missatgesBotons = {"comencar", "suma", "multiplicar", "aturar"};
     public FinestraMatriu(Main p) {
         principal = p;
@@ -42,6 +44,16 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         panelLlagenda.setLocation(100, 50);
         this.add(panelLlagenda);
 
+        //marcadors Execució
+        JLabel textSuma = new JLabel("S:");
+        JLabel textMultiplicar = new JLabel("M:");
+        sumarBar = new JProgressBar();
+        sumarBar.setIndeterminate(false); //desactiva la barra
+        sumarBar.setPreferredSize(new Dimension(50, sumarBar.getPreferredSize().height));
+        multiplicarBar = new JProgressBar();
+        multiplicarBar.setIndeterminate(false);
+        multiplicarBar.setPreferredSize(new Dimension(50, multiplicarBar.getPreferredSize().height));
+
         topBar.add(nLabel);
         topBar.add(nField);
         topBar.add(comencarBoto);
@@ -49,6 +61,11 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         topBar.add(multBoto);
         topBar.add(aturarBoto);
         topBar.add(botoNet);
+        topBar.add(textSuma);
+        topBar.add(sumarBar);
+        topBar.add(textMultiplicar);
+        topBar.add(multiplicarBar);
+
 
 
         // Crear el panell principal
@@ -90,8 +107,21 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         if (s.startsWith("pintar")) {
             panelLlagenda.repaint();
             dibuixMatrius.pintar();
-        }else{
-
+        }else if (s.startsWith("activar")){
+            String[] split = s.split(":");
+            if(split[1].startsWith("sumar")){
+                sumarBar.setIndeterminate(true);
+            }else if (split[1].startsWith("multiplicar")){
+                multiplicarBar.setIndeterminate(true);
+            }
+        }else if (s.startsWith("desactivar")){
+            String[] split = s.split(":");
+            if (split[1].startsWith("sumar")) {
+                sumarBar.setIndeterminate(false);
+            }
+            if(split[1].startsWith("multiplicar")){
+                multiplicarBar.setIndeterminate(false);
+            }
         }
     }
 }
