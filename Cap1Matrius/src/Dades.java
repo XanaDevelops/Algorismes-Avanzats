@@ -20,8 +20,18 @@ public class Dades {
         public long getTemps() {
             return temps;
         }
+
+        public double getLogTemps() {
+            return Math.log10(temps);
+        }
+
         public int getN() {
             return n;
+        }
+
+        public String getTempsPirnt() {
+            double num =n*Math.pow(10, -3);
+            return (Math.round(num * 10000.0) / 10000.0) + "us";
         }
     }
 
