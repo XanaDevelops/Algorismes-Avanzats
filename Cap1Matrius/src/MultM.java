@@ -83,6 +83,7 @@ public class MultM implements Runnable, Comunicar{
             }
 
         }
+        aturar();
 
     }
     /**

@@ -84,6 +84,7 @@ public class SumaM implements Runnable, Comunicar{
             }
         }
 
+        aturar();
 
     }
 
