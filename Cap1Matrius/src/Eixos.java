@@ -3,9 +3,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
-/**
- *
- */
 
 public class Eixos extends JPanel {
 
@@ -104,7 +101,5 @@ public class Eixos extends JPanel {
     }
 
 
-//    public void limpiar() {
-//        repaint();
-//    }
+
 }

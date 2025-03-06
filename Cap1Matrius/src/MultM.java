@@ -49,8 +49,8 @@ public class MultM implements Runnable, Comunicar{
             System.out.println("multiplicant n=" + size);
 
 
-//            time = System.nanoTime();
-            time = System.currentTimeMillis();
+            time = System.nanoTime();
+//            time = System.currentTimeMillis();
             a.multiplicar(b);
 
             if (!stop){
@@ -62,7 +62,7 @@ public class MultM implements Runnable, Comunicar{
                     tempsEsperat = constantMult* Math.pow(size, 3);
                     System.out.println("constant "+ constantMult);
 
-                    System.out.println("Per a la multiplicació de matrius de n = "+ size + " tardaré " +  String.format("%.2f", tempsEsperat)  + " milisegons");
+//                    System.out.println("Per a la multiplicació de matrius de n = "+ size + " tardaré " +  String.format("%.2f", tempsEsperat)  + " milisegons");
                     finestraCM.afegirFilaMutl(size, String.format("%.2f",doubleTime), String.format("%.2f",tempsEsperat));
 
                 }else{
@@ -70,7 +70,7 @@ public class MultM implements Runnable, Comunicar{
                     data.setCMult(constantMult);
                     finestraCM.afegirFilaMutl(size, String.format("%.2f",doubleTime), "-");
                 }
-                System.out.println("Per a la multiplicació de matrius de n = " + size + String.format(" he tardat %.2f", doubleTime  ) + " milisegons");
+//                System.out.println("Per a la multiplicació de matrius de n = " + size + String.format(" he tardat %.2f", doubleTime  ) + " milisegons");
 
                 //Desem el resultat de la multiplicació
                 data.addResultatMultiplicar(time, size);

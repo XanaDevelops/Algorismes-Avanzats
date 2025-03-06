@@ -61,7 +61,7 @@ public class SumaM implements Runnable, Comunicar{
 //                    System.out.println("CONSTANT DE SUMA  = "+constantSuma);
                     tempsEsperat = constantSuma*size*size;
 
-                    System.out.println("Per la suma de matrius de n = "+ size + " tardaré " + String.format("%.2f", tempsEsperat) + " milisegons");
+//                    System.out.println("Per la suma de matrius de n = "+ size + " tardaré " + String.format("%.2f", tempsEsperat) + " milisegons");
                     finestraCM.afegirFilaSuma(size, String.format("%.2f",doubleTime), String.format("%.2f",tempsEsperat));
 
                 }else{
@@ -72,7 +72,7 @@ public class SumaM implements Runnable, Comunicar{
 
 
                 }
-                System.out.println("Per a la suma de matrius de n = " + size + String.format(" he tardat %.2f", doubleTime  ) + " milisegons");
+//                System.out.println("Per a la suma de matrius de n = " + size + String.format(" he tardat %.2f", doubleTime  ) + " milisegons");
 
                 //Desem el resultat de la suma
                 data.addResultatSumar(time, size);
