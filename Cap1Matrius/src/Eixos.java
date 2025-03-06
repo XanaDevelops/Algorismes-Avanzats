@@ -72,7 +72,7 @@ public class Eixos extends JPanel {
                 g.drawLine(50, y, w - 10, y);
                 g.setColor(Color.BLACK);
                 g.drawString(String.valueOf(i * maxelement / 5), x - 10, h);
-                g.drawString(String.valueOf(i * maxtemps / 5), 10, y + 5);
+                g.drawString(String.valueOf((long) Math.exp(i * Math.log(maxtemps) / 5)), 10, y + 5);
                 g.setColor(Color.LIGHT_GRAY);
             }
 
@@ -86,10 +86,10 @@ public class Eixos extends JPanel {
                 }
                 g.setColor(Color.green);
                 px = 50 + r.getN() * (w - 60) / maxelement;
-                py = (h - 20) - ((int) (r.getTemps() * (h - 40) / maxtemps));
+                py = (h - 20) - ((int) (r.getLogTemps() * (h - 40) / Math.log(maxtemps)));
                 g.fillOval(px - 3, py - 3, 7, 7);
                 g.drawLine(pax, pay, px, py);
-                g.drawString("(" + r.getN() + ", " + r.getTemps() +")", px - 20, py - 20);
+                g.drawString("(" + r.getN() + ", " + r.getTempsPirnt() +")", px - 20, py - 20);
                 g.setColor(Color.black);
                 g.drawOval(px - 3, py - 3, 7, 7);
                 pax = px;
@@ -105,10 +105,10 @@ public class Eixos extends JPanel {
                 }
                 g.setColor(Color.red);
                 px = 50 + r.getN() * (w - 60) / maxelement;
-                py = (h - 20) - ((int) (r.getTemps() * (h - 40) / maxtemps));
+                py = (h - 20) - ((int) (r.getLogTemps() * (h - 40) / Math.log(maxtemps)));
                 g.fillOval(px - 3, py - 3, 7, 7);
                 g.drawLine(pax, pay, px, py);
-                g.drawString("(" + r.getN() + ", " + r.getTemps() +")", px - 20, py + 20);
+                g.drawString("(" + r.getN() + ", " + r.getTempsPirnt() +")", px - 20, py + 20);
                 g.setColor(Color.black);
                 g.drawOval(px - 3, py - 3, 7, 7);
                 pax = px;
@@ -116,6 +116,4 @@ public class Eixos extends JPanel {
             }
         }
     }
-
-
 }
