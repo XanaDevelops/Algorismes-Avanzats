@@ -1,12 +1,13 @@
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import javax.swing.JFrame;
 
 /**
- * @author ferri
+ * Classe principal del programa
+ * Crea i gestiona la comunicació entre els diferents elements del programa
+ *
+ * @authors Josep Ferriol, Daniel García Vázquez, Biel Perelló, Khaoula Ikkene.
  */
 public class Main implements Comunicar {
 
@@ -14,8 +15,8 @@ public class Main implements Comunicar {
     private ArrayList<Comunicar> procesos = null;
     private Dades registre = null;
     private ExecutorService executorService;
-
     private dibuixConstantMult finestraCM;
+
     public static void main(String[] args) {
         (new Main()).inicio();
     }
@@ -27,12 +28,12 @@ public class Main implements Comunicar {
 
         preparar();
 
-        //interficie en un altre thread
+        //interfície en un altre thread
         executorService.submit(this::crearInterficie);
 
     }
 
-    private void crearInterficie(){
+    private void crearInterficie() {
         JFrame frame = new JFrame("Gràfic Suma vs Mult Matrius");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestra = new FinestraMatriu(this);
@@ -40,21 +41,24 @@ public class Main implements Comunicar {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        //centrat i a la part més dreta
+        //centrat i a la part més dreta de la pantalla
         frame.setLocation(
-                frame.getToolkit().getScreenSize().width-frame.getWidth() ,
+                frame.getToolkit().getScreenSize().width - frame.getWidth(),
                 frame.getToolkit().getScreenSize().height / 2 - frame.getHeight() / 2
         );
 
-
-        finestraCM = new dibuixConstantMult(this);
+        //Conté les taules comparatives del temps real vs esperat
+        finestraCM = new dibuixConstantMult();
         finestraCM.setVisible(true);
 
     }
 
+    /**
+     * Prepara els processos a la seva execució.
+     */
     private void preparar() {
-        if(procesos != null && !procesos.isEmpty()) {
-            for(Comunicar comunicar : procesos) {
+        if (procesos != null && !procesos.isEmpty()) {
+            for (Comunicar comunicar : procesos) {
                 comunicar.comunicar("aturar");
             }
         }
@@ -65,6 +69,7 @@ public class Main implements Comunicar {
 
     @Override
     public synchronized void comunicar(String s) {
+        //Mida de la matriu
         int n = 0;
         if (s.split(":").length > 1) {
             n = Integer.parseInt(s.split(":")[1]);
@@ -95,7 +100,7 @@ public class Main implements Comunicar {
 
         } else if (s.startsWith("suma:")) {
             for (Comunicar enmarxa : procesos) {
-                if (enmarxa instanceof SumaM){
+                if (enmarxa instanceof SumaM) {
                     enmarxa.comunicar("aturar");
                 }
             }
@@ -110,8 +115,8 @@ public class Main implements Comunicar {
             executorService.submit(sumar);
 
         } else if (s.startsWith("multiplicar:")) {
-            for(Comunicar enmarxa : procesos) {
-                if(enmarxa instanceof MultM){
+            for (Comunicar enmarxa : procesos) {
+                if (enmarxa instanceof MultM) {
                     enmarxa.comunicar("aturar");
                 }
             }
@@ -127,21 +132,21 @@ public class Main implements Comunicar {
             executorService.submit(multiplicar);
 
         } else if (s.contentEquals("pintar")) {
+
             finestra.comunicar("pintar");
-        }else if (s.startsWith("aturar:")){
-            for (Comunicar proceso : procesos) {
-                proceso.comunicar("aturar");
+        } else if (s.startsWith("aturar:")) {
+            for (Comunicar process : procesos) {
+                process.comunicar("aturar");
             }
-        }else if (s.contentEquals("netejaTaules")){
+        } else if (s.contentEquals("netejaTaules")) {
             finestraCM.comunicar("netejaTaules");
-        }else if(s.startsWith("net:")){
+        } else if (s.startsWith("net:")) {
             for (Comunicar proceso : procesos) {
                 proceso.comunicar("aturar");
             }
             registre.buidarTot();
             finestra.comunicar("pintar");
         }
-
 
     }
 
@@ -153,7 +158,6 @@ public class Main implements Comunicar {
         return finestraCM;
     }
 
-    //preguntar
     public FinestraMatriu getFinestra() {
         return finestra;
     }
