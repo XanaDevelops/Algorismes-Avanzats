@@ -45,7 +45,7 @@ public class SumaM implements Runnable, Comunicar {
         Double constantSuma;
 
 
-        for (int i = 1; i <= Dades.N_STEP && !stop; i++) { //NSTEP o n?
+        for (int i = 1; i <= Dades.N_STEP && !stop; i++) {
             //calculem la mida de la matriu en aquest pas
             int size = (int) (n / (Dades.N_STEP / (double) i));
             //generem dues matrius arbitràries

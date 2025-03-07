@@ -1,3 +1,4 @@
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,7 +28,6 @@ public class Main implements Comunicar {
         executorService = Executors.newFixedThreadPool(3);
 
         preparar();
-
         //interfície en un altre thread
         executorService.submit(this::crearInterficie);
 
@@ -74,79 +74,111 @@ public class Main implements Comunicar {
         if (s.split(":").length > 1) {
             n = Integer.parseInt(s.split(":")[1]);
         }
+        String split = s.split(":")[0];
+        switch (split) {
+            case "comencar":
+                finestraCM.comunicar("netejaTaules");
 
-        if (s.startsWith("comencar:")) {
-            finestraCM.comunicar("netejaTaules");
+                for (Comunicar enmarxa : procesos) {
+                    enmarxa.comunicar("aturar");
+                }
 
-            for (Comunicar enmarxa : procesos) {
+                // Fer net dades
+                procesos.clear();
+                registre.buidarTot();
+
+                registre.setMatriuN(n);
+
+                SumaM sumaTask = new SumaM(this);
+                MultM multTask = new MultM(this);
+
+                procesos.add(sumaTask);
+                procesos.add(multTask);
+
+                // Enviar al executor service
+                executorService.execute(sumaTask);
+                executorService.execute(multTask);
+                break;
+
+            case "suma":
+
+                try {
+                    executaClass(SumaM.class, n);
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                         IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+
+            case "multiplicar":
+
+                try {
+                    executaClass(MultM.class, n);
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                         IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+
+            case "atura":
+                for (Comunicar process : procesos) {
+                    process.comunicar("aturar");
+                }
+                break;
+
+            case "net":
+                for (Comunicar proceso : procesos) {
+                    proceso.comunicar("aturar");
+                }
+                registre.buidarTot();
+            case "pintar":
+                finestra.comunicar("pintar");
+                break;
+
+            default:
+                break;
+
+        }
+
+    }
+
+    /**
+     * Executa un procés de la classe SumaM o MultM
+     * @param classe nom de la classe del fil a crear i executar
+     * @param n mida de la matriu
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    private void executaClass(Class<?> classe, int n) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        for (Comunicar enmarxa : procesos) {
+            if (enmarxa instanceof MultM) {
                 enmarxa.comunicar("aturar");
             }
-
-            // Fer net dades
-            procesos.clear();
-            registre.buidarTot();
-
-            registre.setMatriuN(n);
-
-            SumaM sumaTask = new SumaM(this);
-            MultM multTask = new MultM(this);
-
-            procesos.add(sumaTask);
-            procesos.add(multTask);
-
-            // Enviar al executor service
-            executorService.execute(sumaTask);
-            executorService.execute(multTask);
-
-        } else if (s.startsWith("suma:")) {
-            for (Comunicar enmarxa : procesos) {
-                if (enmarxa instanceof SumaM) {
-                    enmarxa.comunicar("aturar");
-                }
-            }
-            procesos.removeIf(comunicar -> comunicar instanceof SumaM);
-            registre.buidarSumar();
-            finestraCM.comunicar("netejaTaules");
-
-            registre.setMatriuN(n);
-
-            SumaM sumar = new SumaM(this);
-            procesos.add(sumar);
-            executorService.submit(sumar);
-
-        } else if (s.startsWith("multiplicar:")) {
-            for (Comunicar enmarxa : procesos) {
-                if (enmarxa instanceof MultM) {
-                    enmarxa.comunicar("aturar");
-                }
-            }
-            procesos.removeIf(comunicar -> comunicar instanceof MultM);
-            registre.buidarMult();
-            finestraCM.comunicar("netejaTaules");
-
-
-            registre.setMatriuN(n);
-
-            MultM multiplicar = new MultM(this);
-            procesos.add(multiplicar);
-            executorService.submit(multiplicar);
-
-        } else if (s.contentEquals("pintar")) {
-
-            finestra.comunicar("pintar");
-        } else if (s.startsWith("aturar:")) {
-            for (Comunicar process : procesos) {
-                process.comunicar("aturar");
-            }
-        } else if (s.contentEquals("netejaTaules")) {
-            finestraCM.comunicar("netejaTaules");
-        } else if (s.startsWith("net:")) {
-            for (Comunicar proceso : procesos) {
-                proceso.comunicar("aturar");
-            }
-            registre.buidarTot();
-            finestra.comunicar("pintar");
         }
+
+        procesos.removeIf(comunicar -> {
+            if (classe.isInstance(comunicar)) {
+                comunicar.comunicar("aturar");
+                return true;
+            }
+            return false;
+        });
+        if (classe.equals(MultM.class)) {
+            registre.buidarMult();
+
+        } else {
+            registre.buidarSumar();
+        }
+
+        finestraCM.comunicar("netejaTaules");
+
+        registre.setMatriuN(n);
+        Comunicar proces = (Comunicar) classe.getConstructor(Main.class).newInstance(this);
+        procesos.add(proces);
+
+        executorService.submit((Runnable) proces);
 
     }
 
