@@ -34,12 +34,15 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         //Llegenda
         panelLlagenda = new JPanel();
         panelLlagenda.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JLabel etiquetaS = new JLabel("Verd: Suma");
+        JLabel etiquetaS = new JLabel("Suma");
         etiquetaS.setForeground(Color.GREEN);
-        JLabel etiquetaM = new JLabel("Vermell: Multiplicar");
+        JLabel etiquetaM = new JLabel("     Multiplicar");
         etiquetaM.setForeground(Color.RED);
+        JLabel etiquetaEixos = new JLabel("     x: N    y: log10(Temps)");
+        etiquetaEixos.setForeground(Color.BLACK);
         panelLlagenda.add(etiquetaS);
         panelLlagenda.add(etiquetaM);
+        panelLlagenda.add(etiquetaEixos);
         panelLlagenda.setSize(panelLlagenda.getPreferredSize());
         panelLlagenda.setLocation(100, 50);
         this.add(panelLlagenda);
