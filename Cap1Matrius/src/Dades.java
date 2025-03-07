@@ -1,6 +1,9 @@
 import java.util.*;
 
-
+/**
+ * Classe que manipula les dades del programa; les mides, el temps de les operacions
+ * de suma i multiplicació, i les constants multiplicatives de les matrius.
+ */
 public class Dades {
 
     public static class Resultat implements Comparable<Resultat> {
@@ -29,7 +32,7 @@ public class Dades {
             return n;
         }
 
-        public String getTempsPirnt() {
+        public String getTempsPrint() {
             double num =n*Math.pow(10, -3);
             return (Math.round(num * 10000.0) / 10000.0) + "us";
         }
@@ -40,7 +43,14 @@ public class Dades {
 
     //N màxima
     private int N;
+    /**
+     * Constant multplicativa de suma
+     */
+
     private Double CSuma;
+    /**
+     * Constant multplicativa de multiplicació
+     */
     private Double CMult;
     public static final int N_STEP = 10;
 
@@ -96,6 +106,7 @@ public class Dades {
     public void setCMult(Double CMult) {
         this.CMult = CMult;
     }
+
 
     public boolean jaInicialitzada(Double C) throws  NullPointerException{
         return (!String.valueOf(C).equals("null"));

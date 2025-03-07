@@ -1,12 +1,14 @@
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import javax.swing.JFrame;
 
 /**
- * @author ferri
+ * Classe principal del programa
+ * Crea i gestiona la comunicació entre els diferents elements del programa
+ *
+ * @authors Josep Ferriol, Daniel García Vázquez, Biel Perelló, Khaoula Ikkene.
  */
 public class Main implements Comunicar {
 
@@ -14,8 +16,8 @@ public class Main implements Comunicar {
     private ArrayList<Comunicar> procesos = null;
     private Dades registre = null;
     private ExecutorService executorService;
-
     private dibuixConstantMult finestraCM;
+
     public static void main(String[] args) {
         (new Main()).inicio();
     }
@@ -26,13 +28,12 @@ public class Main implements Comunicar {
         executorService = Executors.newFixedThreadPool(3);
 
         preparar();
-
-        //interficie en un altre thread
+        //interfície en un altre thread
         executorService.submit(this::crearInterficie);
 
     }
 
-    private void crearInterficie(){
+    private void crearInterficie() {
         JFrame frame = new JFrame("Gràfic Suma vs Mult Matrius");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestra = new FinestraMatriu(this);
@@ -40,21 +41,24 @@ public class Main implements Comunicar {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        //centrat i a la part més dreta
+        //centrat i a la part més dreta de la pantalla
         frame.setLocation(
-                frame.getToolkit().getScreenSize().width-frame.getWidth() ,
+                frame.getToolkit().getScreenSize().width - frame.getWidth(),
                 frame.getToolkit().getScreenSize().height / 2 - frame.getHeight() / 2
         );
 
-
+        //Conté les taules comparatives del temps real vs esperat
         finestraCM = new dibuixConstantMult(this);
         finestraCM.setVisible(true);
 
     }
 
+    /**
+     * Prepara els processos a la seva execució.
+     */
     private void preparar() {
-        if(procesos != null && !procesos.isEmpty()) {
-            for(Comunicar comunicar : procesos) {
+        if (procesos != null && !procesos.isEmpty()) {
+            for (Comunicar comunicar : procesos) {
                 comunicar.comunicar("aturar");
             }
         }
@@ -65,83 +69,116 @@ public class Main implements Comunicar {
 
     @Override
     public synchronized void comunicar(String s) {
+        //Mida de la matriu
         int n = 0;
         if (s.split(":").length > 1) {
             n = Integer.parseInt(s.split(":")[1]);
         }
+        String split = s.split(":")[0];
+        switch (split) {
+            case "comencar":
+                finestraCM.comunicar("netejaTaules");
 
-        if (s.startsWith("comencar:")) {
-            finestraCM.comunicar("netejaTaules");
-
-            for (Comunicar enmarxa : procesos) {
-                enmarxa.comunicar("aturar");
-            }
-
-            // Fer net dades
-            procesos.clear();
-            registre.buidarTot();
-
-            registre.setMatriuN(n);
-
-            SumaM sumaTask = new SumaM(this);
-            MultM multTask = new MultM(this);
-
-            procesos.add(sumaTask);
-            procesos.add(multTask);
-
-            // Enviar al executor service
-            executorService.execute(sumaTask);
-            executorService.execute(multTask);
-
-        } else if (s.startsWith("suma:")) {
-            for (Comunicar enmarxa : procesos) {
-                if (enmarxa instanceof SumaM){
+                for (Comunicar enmarxa : procesos) {
                     enmarxa.comunicar("aturar");
                 }
-            }
-            procesos.removeIf(comunicar -> comunicar instanceof SumaM);
-            registre.buidarSumar();
-            finestraCM.comunicar("netejaTaules");
 
-            registre.setMatriuN(n);
+                // Fer net dades
+                procesos.clear();
+                registre.buidarTot();
 
-            SumaM sumar = new SumaM(this);
-            procesos.add(sumar);
-            executorService.submit(sumar);
+                registre.setMatriuN(n);
 
-        } else if (s.startsWith("multiplicar:")) {
-            for(Comunicar enmarxa : procesos) {
-                if(enmarxa instanceof MultM){
-                    enmarxa.comunicar("aturar");
+                SumaM sumaTask = new SumaM(this);
+                MultM multTask = new MultM(this);
+
+                procesos.add(sumaTask);
+                procesos.add(multTask);
+
+                // Enviar al executor service
+                executorService.execute(sumaTask);
+                executorService.execute(multTask);
+                break;
+
+            case "suma":
+
+                try {
+                    executaClass(SumaM.class, n);
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                         IllegalAccessException e) {
+                    throw new RuntimeException(e);
                 }
-            }
-            procesos.removeIf(comunicar -> comunicar instanceof MultM);
-            registre.buidarMult();
-            finestraCM.comunicar("netejaTaules");
+                break;
 
+            case "multiplicar":
 
-            registre.setMatriuN(n);
+                try {
+                    executaClass(MultM.class, n);
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                         IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
 
-            MultM multiplicar = new MultM(this);
-            procesos.add(multiplicar);
-            executorService.submit(multiplicar);
+            case "atura":
+                for (Comunicar process : procesos) {
+                    process.comunicar("aturar");
+                }
+                break;
 
-        } else if (s.contentEquals("pintar")) {
-            finestra.comunicar("pintar");
-        }else if (s.startsWith("aturar:")){
-            for (Comunicar proceso : procesos) {
-                proceso.comunicar("aturar");
-            }
-        }else if (s.contentEquals("netejaTaules")){
-            finestraCM.comunicar("netejaTaules");
-        }else if(s.startsWith("net:")){
-            for (Comunicar proceso : procesos) {
-                proceso.comunicar("aturar");
-            }
-            registre.buidarTot();
-            finestra.comunicar("pintar");
+            case "net":
+                for (Comunicar proceso : procesos) {
+                    proceso.comunicar("aturar");
+                }
+                registre.buidarTot();
+            case "pintar":
+                finestra.comunicar("pintar");
+                break;
+
+            default:
+                break;
+
         }
 
+    }
+
+    /**
+     * Executa un procés de la classe SumaM o MultM
+     * @param classe nom de la classe del fil a crear i executar
+     * @param n mida de la matriu
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    private void executaClass(Class<?> classe, int n) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        for (Comunicar enmarxa : procesos) {
+            if (enmarxa instanceof MultM) {
+                enmarxa.comunicar("aturar");
+            }
+        }
+
+        procesos.removeIf(comunicar -> {
+            if (classe.isInstance(comunicar)) {
+                comunicar.comunicar("aturar");
+                return true;
+            }
+            return false;
+        });
+        if (classe.equals(MultM.class)) {
+            registre.buidarMult();
+
+        } else {
+            registre.buidarSumar();
+        }
+
+        finestraCM.comunicar("netejaTaules");
+
+        registre.setMatriuN(n);
+        Comunicar proces = (Comunicar) classe.getConstructor(Main.class).newInstance(this);
+        procesos.add(proces);
+
+        executorService.submit((Runnable) proces);
 
     }
 
@@ -153,7 +190,6 @@ public class Main implements Comunicar {
         return finestraCM;
     }
 
-    //preguntar
     public FinestraMatriu getFinestra() {
         return finestra;
     }

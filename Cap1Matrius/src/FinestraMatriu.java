@@ -1,19 +1,21 @@
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+/**
+ * Classe que manipula la finestra principal del programa.
+ */
 public class FinestraMatriu extends JPanel implements Comunicar {
 
     private final Main principal;
-    private Eixos dibuixMatrius;
-    private JTextField nField;
-    private  JPanel panelLlagenda;
+    private final Eixos dibuixMatrius;
+    private final JTextField nField;
+    private final JPanel panelLlagenda;
 
-    private JProgressBar sumarBar, multiplicarBar;
+    private final JProgressBar sumarBar;
+    private final JProgressBar multiplicarBar;
+    private final String[] missatgesBotons = {"comencar", "suma", "multiplicar", "aturar", "net"};
 
-    private final String[] missatgesBotons = {"comencar", "suma", "multiplicar", "aturar"};
     public FinestraMatriu(Main p) {
         principal = p;
         setPreferredSize(new Dimension(800, 625));
@@ -25,51 +27,31 @@ public class FinestraMatriu extends JPanel implements Comunicar {
 
         JLabel nLabel = new JLabel("N:");
         nField = new JTextField(5);
-        JButton comencarBoto = new JButton("Començar");
-        JButton sumaBoto = new JButton("Només Sumar");
-        JButton multBoto = new JButton("Només Multiplicar");
-        JButton aturarBoto = new JButton("Aturar");
-        JButton botoNet = new JButton("Netejar");
+        topBar.add(nLabel);
+        topBar.add(nField);
 
+        JButton[] botons = new JButton[missatgesBotons.length];
+        for (int i = 0; i < botons.length; i++) {
+            String[] textBotons = {"Començar", "Només Sumar", "Només Multiplicar", "Aturar", "Netejar"};
+            botons[i] = new JButton(textBotons[i]);
+            int finalI = i;
+            // Afegir listeners als botons
+            botons[i].addActionListener(e -> enviar(missatgesBotons[finalI]));
+            topBar.add(botons[i]);
+        }
         //Llegenda
         panelLlagenda = new JPanel();
-        panelLlagenda.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JLabel etiquetaS = new JLabel("Suma");
-        etiquetaS.setForeground(Color.GREEN);
-        JLabel etiquetaM = new JLabel("     Multiplicar");
-        etiquetaM.setForeground(Color.RED);
-        JLabel etiquetaEixos = new JLabel("     x: N    y: log10(Temps)");
-        etiquetaEixos.setForeground(Color.BLACK);
-        panelLlagenda.add(etiquetaS);
-        panelLlagenda.add(etiquetaM);
-        panelLlagenda.add(etiquetaEixos);
-        panelLlagenda.setSize(panelLlagenda.getPreferredSize());
-        panelLlagenda.setLocation(100, 50);
+
+        configuraLlegenda();
+
         this.add(panelLlagenda);
 
         //marcadors Execució
-        JLabel textSuma = new JLabel("S:");
-        JLabel textMultiplicar = new JLabel("M:");
+
         sumarBar = new JProgressBar();
-        sumarBar.setIndeterminate(false); //desactiva la barra
-        sumarBar.setPreferredSize(new Dimension(50, sumarBar.getPreferredSize().height));
         multiplicarBar = new JProgressBar();
-        multiplicarBar.setIndeterminate(false);
-        multiplicarBar.setPreferredSize(new Dimension(50, multiplicarBar.getPreferredSize().height));
-
-        topBar.add(nLabel);
-        topBar.add(nField);
-        topBar.add(comencarBoto);
-        topBar.add(sumaBoto);
-        topBar.add(multBoto);
-        topBar.add(aturarBoto);
-        topBar.add(botoNet);
-        topBar.add(textSuma);
-        topBar.add(sumarBar);
-        topBar.add(textMultiplicar);
-        topBar.add(multiplicarBar);
-
-
+        setAndAddBar(sumarBar, "S", topBar);
+        setAndAddBar(multiplicarBar, "M", topBar);
 
         // Crear el panell principal
         JPanel mainPanel = new JPanel();
@@ -82,12 +64,40 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         add(topBar, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
 
-        // Afegir listeners als botons
-        comencarBoto.addActionListener(e -> enviar("comencar"));
-        sumaBoto.addActionListener(e -> enviar("suma"));
-        multBoto.addActionListener(e -> enviar("multiplicar"));
-        aturarBoto.addActionListener(e -> enviar("aturar"));
-        botoNet.addActionListener(e -> enviar("net"));
+    }
+
+
+    private void configuraLlegenda() {
+        panelLlagenda.setLayout(new FlowLayout(FlowLayout.LEFT));
+        afegirEtiqueta("Suma", Color.GREEN);
+        afegirEtiqueta("Multiplicar", Color.RED);
+        afegirEtiqueta("     x: N    y: log10(Temps)", Color.BLACK);
+        panelLlagenda.setSize(panelLlagenda.getPreferredSize());
+        panelLlagenda.setLocation(100, 50);
+    }
+
+    /**
+     * Crea i afegeix una etiqueta al panelLlengenda
+     * @param txt text de l'etiqueta
+     * @param color color del text
+     */
+    private void afegirEtiqueta(String txt, Color color) {
+        JLabel etiqueta = new JLabel(txt);
+        etiqueta.setForeground(color);
+        panelLlagenda.add(etiqueta);
+    }
+
+    /**
+     * Inicialitza i afegeix la barra b i el text corresponent al JPanel panel.
+     *
+     * @param panel panell al qual s'afegiran b i text
+     */
+    private void setAndAddBar(JProgressBar b, String tipus, JPanel panel) {
+        JLabel text = new JLabel(tipus + ":");
+        b.setIndeterminate(false); //desactiva la barra
+        b.setPreferredSize(new Dimension(50, sumarBar.getPreferredSize().height));
+        panel.add(text);
+        panel.add(b);
 
     }
 
@@ -98,7 +108,7 @@ public class FinestraMatriu extends JPanel implements Comunicar {
             return;
         }
         try {
-             int n = Integer.parseInt(nText);
+            int n = Integer.parseInt(nText);
             principal.comunicar(msg + ":" + n);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -107,24 +117,19 @@ public class FinestraMatriu extends JPanel implements Comunicar {
 
     @Override
     public synchronized void comunicar(String s) {
-        if (s.startsWith("pintar")) {
-            panelLlagenda.repaint();
-            dibuixMatrius.pintar();
-        }else if (s.startsWith("activar")){
-            String[] split = s.split(":");
-            if(split[1].startsWith("sumar")){
-                sumarBar.setIndeterminate(true);
-            }else if (split[1].startsWith("multiplicar")){
-                multiplicarBar.setIndeterminate(true);
-            }
-        }else if (s.startsWith("desactivar")){
-            String[] split = s.split(":");
-            if (split[1].startsWith("sumar")) {
-                sumarBar.setIndeterminate(false);
-            }
-            if(split[1].startsWith("multiplicar")){
-                multiplicarBar.setIndeterminate(false);
-            }
+        String[] split = s.split(":");
+        switch (split[0]) {
+            case "pintar":
+                panelLlagenda.repaint();
+                dibuixMatrius.pintar();
+                break;
+            case "activar":
+                ("sumar".equals(split[1]) ? sumarBar : multiplicarBar).setIndeterminate(true);
+                break;
+            case "desactivar":
+                ("sumar".equals(split[1]) ? sumarBar : multiplicarBar).setIndeterminate(false);
+                break;
         }
+
     }
 }

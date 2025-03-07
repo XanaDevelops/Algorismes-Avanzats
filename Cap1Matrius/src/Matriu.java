@@ -1,6 +1,9 @@
 import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * Classe representativa d'una matriu bidimensional
+ */
 public class Matriu {
     private final int[][] matriu;
 
@@ -11,17 +14,17 @@ public class Matriu {
 
     public Matriu sumar(Matriu matriu) {
         int n = this.matriu.length;
-       Matriu result = new Matriu(n);
-       for (int i = 0; i < n; i++) {
-           for (int j = 0; j < n; j++) {
-               result.set(i, j, matriu.get(i, j));
-           }
-       }
+        Matriu result = new Matriu(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result.set(i, j, matriu.get(i, j));
+            }
+        }
         return result;
     }
 
     public Matriu multiplicar(Matriu b) {
-        //suposam matrius quadrades NxN
+        // matrius quadrades NxN
         final int n = this.matriu.length;
 
         Matriu ret = new Matriu(n);
@@ -49,7 +52,7 @@ public class Matriu {
     }
 
 
-    public static Matriu generarMatriuRandom(int n){
+    public static Matriu generarMatriuRandom(int n) {
         Matriu matrix = new Matriu(n);
         Random rn = new Random();
         for (int i = 0; i < n; i++) {
