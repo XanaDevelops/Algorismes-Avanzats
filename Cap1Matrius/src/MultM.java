@@ -65,13 +65,14 @@ public class MultM implements Runnable, Comunicar {
                     tempsEsperat = constantMult * Math.pow(size, 3);
 
                     //afegim la mida de la matriu, el temps real, i el temps esperat a la taula corresponent
-                    finestraCM.afegirFilaMutl(size, String.format("%.2f", doubleTime), String.format("%.2f", tempsEsperat));
+                    finestraCM.afegirFilaMutl(size, String.format("%.2f", doubleTime), String.format("%.2f", tempsEsperat), String.valueOf(constantMult));
 
                 } else {//NO
                     //La calculem
                     constantMult = doubleTime / (Math.pow(size, 3));
                     data.setCMult(constantMult);
-                    finestraCM.afegirFilaMutl(size, String.format("%.2f", doubleTime), "-");
+                    System.out.println("constantMult " + constantMult);
+                    finestraCM.afegirFilaMutl(size, String.format("%.2f", doubleTime), "-", String.valueOf(constantMult));
                 }
 
                 //Desem el resultat de la multiplicació

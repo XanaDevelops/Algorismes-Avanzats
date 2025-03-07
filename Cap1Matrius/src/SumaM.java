@@ -66,14 +66,15 @@ public class SumaM implements Runnable, Comunicar {
                     tempsEsperat = constantSuma * size * size;
 
                     //afegim la mida de la matriu, el temps real, i el temps esperat a la taula corresponent
-                    finestraCM.afegirFilaSuma(size, String.format("%.2f", doubleTime), String.format("%.2f", tempsEsperat));
+                    finestraCM.afegirFilaSuma(size, String.format("%.2f", doubleTime), String.format("%.2f", tempsEsperat), String.valueOf(constantSuma));
 
                 } else {//NO
                     //La calculem
-                    finestraCM.afegirFilaSuma(size, String.format("%.2f", doubleTime), "-");
 
                     constantSuma = (doubleTime) / (size * size);
                     data.setCSuma(constantSuma);
+                    finestraCM.afegirFilaSuma(size, String.format("%.2f", doubleTime), "-", String.valueOf(constantSuma));
+
 
                 }
 

@@ -48,7 +48,7 @@ public class Main implements Comunicar {
         );
 
         //Conté les taules comparatives del temps real vs esperat
-        finestraCM = new dibuixConstantMult();
+        finestraCM = new dibuixConstantMult(this);
         finestraCM.setVisible(true);
 
     }
