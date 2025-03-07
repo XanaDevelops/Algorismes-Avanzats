@@ -13,7 +13,6 @@ public class FinestraMatriu extends JPanel implements Comunicar {
 
     private JProgressBar sumarBar, multiplicarBar;
 
-    private final String[] missatgesBotons = {"comencar", "suma", "multiplicar", "aturar"};
     public FinestraMatriu(Main p) {
         principal = p;
         setPreferredSize(new Dimension(800, 625));
@@ -88,6 +87,19 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         multBoto.addActionListener(e -> enviar("multiplicar"));
         aturarBoto.addActionListener(e -> enviar("aturar"));
         botoNet.addActionListener(e -> enviar("net"));
+
+    }
+    /**
+     * Inicialitza i afegeix la barra b i el text corresponent al JPanel panel.
+     * @param panel panell al qual s'afegiran b i text
+     */
+    private void setAndAddBar(JProgressBar b, String tipus,  JPanel panel) {
+        JLabel text;
+        text = new JLabel(tipus + ":");
+        b.setIndeterminate(false); //desactiva la barra
+        b.setPreferredSize(new Dimension(50, sumarBar.getPreferredSize().height));
+        panel.add(text);
+        panel.add(b);
 
     }
 
