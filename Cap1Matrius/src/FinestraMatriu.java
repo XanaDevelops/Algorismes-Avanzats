@@ -1,28 +1,19 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-/**
- * Classe que manipula la finestra principal del programa.
- *
- */
 public class FinestraMatriu extends JPanel implements Comunicar {
-    /**
-     * Instància de la classe del programa principal
-     */
+
     private final Main principal;
-    /**
-     *
-     */
     private Eixos dibuixMatrius;
     private JTextField nField;
     private  JPanel panelLlagenda;
 
     private JProgressBar sumarBar, multiplicarBar;
 
-    private final String[] missatgesBotons = {"comencar", "suma", "multiplicar", "aturar", "net"};
-    private final String[] textBotons = {"Començar", "Només Sumar","Només Multiplicar", "Aturar", "Netejar" };
-    private final JButton[] botons = new JButton[missatgesBotons.length];
+    private final String[] missatgesBotons = {"comencar", "suma", "multiplicar", "aturar"};
     public FinestraMatriu(Main p) {
         principal = p;
         setPreferredSize(new Dimension(800, 625));
@@ -34,35 +25,51 @@ public class FinestraMatriu extends JPanel implements Comunicar {
 
         JLabel nLabel = new JLabel("N:");
         nField = new JTextField(5);
-        topBar.add(nLabel);
-        topBar.add(nField);
-
-        for (int i = 0; i < botons.length; i++) {
-            botons[i] = new JButton(textBotons[i]);
-            int finalI = i;
-            // Afegir listeners als botons
-            botons[i].addActionListener(e -> enviar(missatgesBotons[finalI]));
-            //Afegir els botons al panell
-            topBar.add(botons[i]);
-        }
+        JButton comencarBoto = new JButton("Començar");
+        JButton sumaBoto = new JButton("Només Sumar");
+        JButton multBoto = new JButton("Només Multiplicar");
+        JButton aturarBoto = new JButton("Aturar");
+        JButton botoNet = new JButton("Netejar");
 
         //Llegenda
         panelLlagenda = new JPanel();
         panelLlagenda.setLayout(new FlowLayout(FlowLayout.LEFT));
-      //Etiquetes de la gràfica
-        JLabel etiquetaS = new JLabel("Verd: Suma");
+        JLabel etiquetaS = new JLabel("Suma");
         etiquetaS.setForeground(Color.GREEN);
-        JLabel etiquetaM = new JLabel("Vermell: Multiplicar");
+        JLabel etiquetaM = new JLabel("     Multiplicar");
         etiquetaM.setForeground(Color.RED);
+        JLabel etiquetaEixos = new JLabel("     x: N    y: log10(Temps)");
+        etiquetaEixos.setForeground(Color.BLACK);
         panelLlagenda.add(etiquetaS);
         panelLlagenda.add(etiquetaM);
-
+        panelLlagenda.add(etiquetaEixos);
         panelLlagenda.setSize(panelLlagenda.getPreferredSize());
         panelLlagenda.setLocation(100, 50);
         this.add(panelLlagenda);
 
-        setAndAddBar(sumarBar, "S", topBar);
-        setAndAddBar(multiplicarBar,"M", topBar);
+        //marcadors Execució
+        JLabel textSuma = new JLabel("S:");
+        JLabel textMultiplicar = new JLabel("M:");
+        sumarBar = new JProgressBar();
+        sumarBar.setIndeterminate(false); //desactiva la barra
+        sumarBar.setPreferredSize(new Dimension(50, sumarBar.getPreferredSize().height));
+        multiplicarBar = new JProgressBar();
+        multiplicarBar.setIndeterminate(false);
+        multiplicarBar.setPreferredSize(new Dimension(50, multiplicarBar.getPreferredSize().height));
+
+        topBar.add(nLabel);
+        topBar.add(nField);
+        topBar.add(comencarBoto);
+        topBar.add(sumaBoto);
+        topBar.add(multBoto);
+        topBar.add(aturarBoto);
+        topBar.add(botoNet);
+        topBar.add(textSuma);
+        topBar.add(sumarBar);
+        topBar.add(textMultiplicar);
+        topBar.add(multiplicarBar);
+
+
 
         // Crear el panell principal
         JPanel mainPanel = new JPanel();
@@ -75,19 +82,12 @@ public class FinestraMatriu extends JPanel implements Comunicar {
         add(topBar, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
 
-    }
-
-    /**
-     * Inicialitza i afegeix la barra b i el text corresponent al JPanel panel.
-     * @param panel panell al qual s'afegiran b i text
-     */
-    private void setAndAddBar(JProgressBar b, String tipus,  JPanel panel) {
-        JLabel text;
-        text = new JLabel(tipus + ":");
-        b.setIndeterminate(false); //desactiva la barra
-        b.setPreferredSize(new Dimension(50, sumarBar.getPreferredSize().height));
-        panel.add(text);
-        panel.add(b);
+        // Afegir listeners als botons
+        comencarBoto.addActionListener(e -> enviar("comencar"));
+        sumaBoto.addActionListener(e -> enviar("suma"));
+        multBoto.addActionListener(e -> enviar("multiplicar"));
+        aturarBoto.addActionListener(e -> enviar("aturar"));
+        botoNet.addActionListener(e -> enviar("net"));
 
     }
 
