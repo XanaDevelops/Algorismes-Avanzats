@@ -120,7 +120,7 @@ public class Main implements Comunicar {
                 }
                 break;
 
-            case "atura":
+            case "aturar":
                 for (Comunicar process : procesos) {
                     process.comunicar("aturar");
                 }
