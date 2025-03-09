@@ -17,7 +17,7 @@ public class Matriu {
         Matriu result = new Matriu(n);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                result.set(i, j, matriu.get(i, j));
+                result.set(i, j, matriu.get(i, j)+ this.get(i, j));
             }
         }
         return result;
