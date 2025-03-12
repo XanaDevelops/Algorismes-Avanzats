@@ -152,12 +152,6 @@ public class Main implements Comunicar {
      * @throws IllegalAccessException
      */
     private void executaClass(Class<?> classe, int n) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        for (Comunicar enmarxa : procesos) {
-            if (enmarxa instanceof MultM) {
-                enmarxa.comunicar("aturar");
-            }
-        }
-
         procesos.removeIf(comunicar -> {
             if (classe.isInstance(comunicar)) {
                 comunicar.comunicar("aturar");
