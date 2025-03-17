@@ -29,7 +29,7 @@ public class TrominoSolver extends JPanel {
     private void drawTrominosRecursively(int x, int y, Graphics g, int mida, int profunditat, Mode mode) {
         if (profunditat == 0) {
 
-            g.setColor(Color.BLACK);   // Establecer el color del borde a negro
+            g.setColor(Color.BLACK);
             drawTromino(x, y, mode, g, mida);
 
 
@@ -41,12 +41,12 @@ public class TrominoSolver extends JPanel {
             return;
         } else {
 
-            int arees = mida / 2;  // Se divide en 4 partes, y cada parte tendrá la mitad del tamaño de la anterior
+            int arees = mida / 2; //4 arees
 
-            drawTrominosRecursively(x, y, g, arees, profunditat - 1, Mode.LU); // Área superior izquierda
-            drawTrominosRecursively(x + arees, y, g, arees, profunditat - 1, Mode.RU); // Área superior derecha
-            drawTrominosRecursively(x, y + arees, g, arees, profunditat - 1, Mode.LD); // Área inferior izquierda
-            drawTrominosRecursively(x + arees, y + arees, g, arees, profunditat - 1, Mode.RD); // Área inferior derecha
+            drawTrominosRecursively(x, y, g, arees, profunditat - 1, Mode.LU); // Left Up
+            drawTrominosRecursively(x + arees, y, g, arees, profunditat - 1, Mode.RU); // Right Up
+            drawTrominosRecursively(x, y + arees, g, arees, profunditat - 1, Mode.LD); //  Left Down
+            drawTrominosRecursively(x + arees, y + arees, g, arees, profunditat - 1, Mode.RD); //Right Down
 
         }
     }
