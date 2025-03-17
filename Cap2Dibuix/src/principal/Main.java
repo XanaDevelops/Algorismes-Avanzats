@@ -1,8 +1,16 @@
 package principal;
 
+import vista.Finestra;
+
 public class Main implements Comunicar {
+    Finestra finestra;
+
+    public Main(){
+        finestra = new Finestra(this);
+    }
+
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        new Main();
     }
 
     /**
