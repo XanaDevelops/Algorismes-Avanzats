@@ -1,6 +1,6 @@
 package model;
 
-public class Model {
-
-
+public interface Model {
+    int[][] getMatriu();
+    void resol();
 }

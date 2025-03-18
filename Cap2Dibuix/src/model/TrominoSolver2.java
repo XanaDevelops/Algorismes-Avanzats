@@ -2,7 +2,7 @@ package model;
 
 import java.util.Arrays;
 
-public class TrominoSolver2 {
+public class TrominoSolver2 implements Model {
 
     private int[][] tauler;
     private int numActual;
@@ -25,8 +25,13 @@ public class TrominoSolver2 {
         tauler[x][y] = -1;
     }
 
+    @Override
+    public int[][] getMatriu() {
+        return tauler;
+    }
+
     // Crida per emmarcar el mètode recursiu.
-    public void solver() {
+    public void resol() {
         trominoRec(tauler.length, 0, 0);
     }
 

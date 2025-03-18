@@ -26,7 +26,7 @@ public class Main implements Comunicar {
         TrominoSolver2 solver = new TrominoSolver2(size, holeX, holeY);
 
         // Resolem el problema de posar trominos
-        solver.solver();
+        solver.resol();
 
         // Imprimim la graella per veure el resultat
         solver.imprimir();
