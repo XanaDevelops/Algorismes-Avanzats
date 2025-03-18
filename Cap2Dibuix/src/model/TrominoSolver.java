@@ -8,7 +8,7 @@ import java.util.Random;
 public class TrominoSolver extends JPanel {
 
     private int profunditat;
-//    private final int size;
+    //    private final int size;
     private BufferedImage img;
 
     public TrominoSolver(int profunditat) {
@@ -55,7 +55,7 @@ public class TrominoSolver extends JPanel {
      * Un tromino ve representat per 3 rectangles
      */
     private void drawTromino(int x, int y, Mode modeRotacio, Graphics g, int size) {
-       size /= 2;
+        size /= 2;
         switch (modeRotacio.getValue()) {
 
             case 0: // Left Down
