@@ -1,14 +1,21 @@
 package model;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Random;
 
-public class TrominoSolver2 {
+public class TrominoSolver2 extends JPanel {
 
     private int[][] tauler;
     private int numActual;
+    BufferedImage image;
 
+    private int mida;
     public TrominoSolver2(int mida, int x, int y) {
-
+        this.mida = mida;
         int midaActual = 1;
         while (midaActual < mida) midaActual *= 2;
 
@@ -23,6 +30,8 @@ public class TrominoSolver2 {
 
         // Aquesta casella representa el forat original en el tromino.
         tauler[x][y] = -1;
+        solver();
+        dibuixarTrominos();
     }
 
     // Crida per emmarcar el mètode recursiu.
@@ -127,5 +136,41 @@ public class TrominoSolver2 {
             }
             System.out.println("|\n");
         }
+    }
+    public BufferedImage dibuixarTrominos() {
+        int cellSize = 800/ (int)(Math.sqrt(this.mida)); // Tamaño de cada celda
+        int width = tauler.length * cellSize;
+        int height = tauler[0].length * cellSize;
+         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = image.createGraphics();
+
+        // Mapa de colores para los trominós
+        HashMap<Integer, Color> colorMap = new HashMap<>();
+        Random rand = new Random();
+
+        // Dibujar los trominós
+        for (int i = 0; i < tauler.length; i++) {
+            for (int j = 0; j < tauler[i].length; j++) {
+
+                int value = tauler[i][j];
+                if (value == -1) {
+                    g.setColor(Color.BLACK); // Hueco original
+                } else {
+                    colorMap.putIfAbsent(value, new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+                    g.setColor(colorMap.get(value));
+                }
+                g.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                g.setColor(Color.WHITE);
+                g.drawRect(j * cellSize, i * cellSize, cellSize, cellSize);
+            }
+        }
+
+        g.dispose();
+        return image;
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(image, 0, 0, null);
     }
 }
