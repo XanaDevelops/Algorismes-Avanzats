@@ -11,6 +11,8 @@ public class Finestra extends JFrame implements Comunicar {
     Comunicar principal;
     JLabel colorLabel;
     JTextField nField;
+    Dibuix panellFinestra;
+
     //temporal
     Color color = Color.BLACK;
 
