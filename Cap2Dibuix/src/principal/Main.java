@@ -7,6 +7,8 @@ public class Main implements Comunicar {
 
     public Main(){
         finestra = new Finestra(this);
+
+        finestra.comunicar("pinta");
     }
 
     public static void main(String[] args) {
