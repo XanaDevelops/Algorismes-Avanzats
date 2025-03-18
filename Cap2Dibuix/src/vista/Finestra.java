@@ -3,7 +3,6 @@ package vista;
 import principal.Comunicar;
 
 import javax.swing.*;
-import javax.swing.plaf.DimensionUIResource;
 import java.awt.*;
 
 public class Finestra extends JFrame implements Comunicar {
