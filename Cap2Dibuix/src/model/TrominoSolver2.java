@@ -1,18 +1,25 @@
 package model;
 
+import principal.Main;
+
 import java.util.Arrays;
 
-public class TrominoSolver2 implements Model {
-
+public class TrominoSolver2    implements Model{
+    private Dades data;
     private int[][] tauler;
     private int numActual;
+    private Main main;
+    private static final int RETJOLA = -1;
 
-    public TrominoSolver2(int mida, int x, int y) {
+    public TrominoSolver2(Dades data, Main main) {
+        this.data = data;
+        this.main = main;
 
-        int midaActual = 1;
-        while (midaActual < mida) midaActual *= 2;
+        int midaActual = (int)Math.pow(2, data.getProfunditat());
+        long time = (long) (data.getConstantMult()*((Math.pow(4, data.getProfunditat()))/2));
+        System.out.println("Temps previst "+ time/1000 + " segons");
+//        main.comunicar("Temps previst "+ time/1000 + " segons");
 
-        // Assegurem-nos que la mida del tauler sigui una potència de 2 perfecta.
         tauler = new int[midaActual][midaActual];
         numActual = 1;
 
@@ -21,25 +28,45 @@ public class TrominoSolver2 implements Model {
             Arrays.fill(tauler[i], 0);
         }
 
+
         // Aquesta casella representa el forat original en el tromino.
-        tauler[x][y] = -1;
+        int x = data.getxRetjola();
+        int y = data.getyRetjola();
+        tauler[x][y] = RETJOLA;
+
+        time = System.currentTimeMillis();
+        resol();
+        time = System.currentTimeMillis() - time;
+        data.setConstantMult(time*1.0/(Math.pow(4, data.getProfunditat())));
+        System.out.println("Temps real "+ time/1000 + " segons");
+//        main.comunicar("Temps real  "+ time/1000 + "segons");
+
+//        main.comunicar("pintar");
+        espera(1);
+
+
     }
 
-    @Override
-    public int[][] getMatriu() {
-        return tauler;
+
+
+    private void espera(long i) {
+        try {
+            Thread.sleep(i);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    // Crida per emmarcar el mètode recursiu.
-    public void resol() {
-        trominoRec(tauler.length, 0, 0);
-    }
+
+
 
     private void trominoRec(int mida, int topx, int topy) {
 
         // Cas base: mida 2x2, col·locar l'última casella
         if (mida == 2) {
             omplirTromino(topx, topy, mida);
+//            main.comunicar("omplicarTromino x"+ topx +" y"+ topy +" mida"+ mida );
+            espera(1);
             numActual++;
         } else {
             // Cas recursiu
@@ -50,6 +77,7 @@ public class TrominoSolver2 implements Model {
 
             // Omplim el tromino central
             omplirTrominoCentral(mode, topx, topy, mida);
+//            main.comunicar("omplirTrominoCentral mode"+ mode + " x"+ topx +" y"+ topy +" mida"+ mida ); //algo de l'estil
 
             // Recursió per als quatre quadrants
             trominoRec(mida / 2, topx, topy);
@@ -133,4 +161,54 @@ public class TrominoSolver2 implements Model {
             System.out.println("|\n");
         }
     }
+
+    @Override
+    public int[][] getMatriu() {
+        return new int[0][];
+    }
+
+    @Override
+    public void resol() {
+
+        trominoRec(tauler.length, 0, 0);
+
+    }
+//    public BufferedImage dibuixarTrominos() {
+//        int cellSize = 800/ (int)(Math.sqrt(this.mida)); // Tamaño de cada celda
+//        int width = tauler.length * cellSize;
+//        int height = tauler[0].length * cellSize;
+//         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//        Graphics2D g = image.createGraphics();
+//
+//        // Mapa de colores para los trominós
+//        HashMap<Integer, Color> colorMap = new HashMap<>();
+//        Random rand = new Random();
+//
+//        // Dibujar los trominós
+//        for (int i = 0; i < tauler.length; i++) {
+//            for (int j = 0; j < tauler[i].length; j++) {
+//
+//                int value = tauler[i][j];
+//                if (value == -1) {
+//                    g.setColor(Color.BLACK); // Hueco original
+//                } else {
+//                    colorMap.putIfAbsent(value, new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+//                    g.setColor(colorMap.get(value));
+//                }
+//                g.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
+//                g.setColor(Color.WHITE);
+//                g.drawRect(j * cellSize, i * cellSize, cellSize, cellSize);
+//            }
+//        }
+//
+//        g.dispose();
+//        return image;
+//    }
+//    @Override
+//    protected void paintComponent(Graphics g) {
+//        super.paintComponent(g);
+//        g.drawImage(image, 0, 0, null);
+//    }
+
+
 }
