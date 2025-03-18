@@ -35,6 +35,16 @@ public class TrominoSolver2 implements Model {
         trominoRec(tauler.length, 0, 0);
     }
 
+    @Override
+    public void netejar() {
+        // Omplim el tauler amb totes les caselles buides.
+        for (int i = 0; i < tauler.length; i++) {
+            Arrays.fill(tauler[i], 0);
+        }
+        int num = (int) (8* Math.random());
+        tauler[num][num] = -1;
+    }
+
     private void trominoRec(int mida, int topx, int topy) {
 
         // Cas base: mida 2x2, col·locar l'última casella
