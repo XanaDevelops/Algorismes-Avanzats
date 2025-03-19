@@ -9,7 +9,13 @@ import java.awt.*;
 public class Dibuix extends JPanel {
 
     private final Main principal;
+
+    public void colorON() {
+        this.colorON = !colorON;
+    }
+
     private Model solver;
+    private boolean colorON = false;
 
     /**
      * Inicialitza els límits del panell del, i la instància de classe.
@@ -54,45 +60,50 @@ public class Dibuix extends JPanel {
         int files = matriu.length;
         int columnes = matriu[0].length;
 
-        int midaCella = this.getWidth() / columnes;
-        int midaCellb = this.getHeight() / files;
+        int midaCellx = this.getWidth() / columnes;
+        int midaCelly = this.getHeight() / files;
 
         for (int i = 0; i < files; i++) {
             for (int j = 0; j < columnes; j++) {
                 if (matriu[i][j] != -1) { // Suposant que -1 significa buit
-                    g.setColor(getColorForTromino(matriu[i][j]));
-                    g.fillRect(j * midaCella, i * midaCellb, midaCella, midaCellb);
-
+                    if (colorON) {
+                        g.setColor(getColorForTromino(matriu[i][j]));
+                        g.fillRect(j * midaCellx, i * midaCelly, midaCellx, midaCelly);
+                    }
                     // Dibuixar només les vores exteriors
                     g.setColor(Color.BLACK);
-                    esVoraExterior(matriu, i, j, midaCella, midaCellb, g);
+                    dibuixarVoraExterior(matriu, i, j, g);
 
                 }
             }
         }
     }
 
-    private void esVoraExterior(int[][] matriu, int i, int j, int midaCella, int midaCellb, Graphics g) {
+    private void dibuixarVoraExterior(int[][] matriu, int i, int j, Graphics g) {
 
         int id = matriu[i][j];
-        int x = j * midaCella;
-        int y = i * midaCellb;
+        int files = matriu.length;
+        int columnes = matriu[0].length;
+        int midaCellx = this.getWidth() / columnes;
+        int midaCelly = this.getHeight() / files;
+        int x = j * midaCellx;
+        int y = i * midaCelly;
 
         // Vora superior
         if (i == 0 || matriu[i - 1][j] != id) {
-            g.drawLine(x, y, x + midaCella, y);
+            g.drawLine(x, y, x + midaCellx, y);
         }
         // Vora inferior
         if (i == matriu.length - 1 || matriu[i + 1][j] != id) {
-            g.drawLine(x, y + midaCellb, x + midaCella, y + midaCellb);
+            g.drawLine(x, y + midaCelly, x + midaCellx, y + midaCelly);
         }
         // Vora esquerra
         if (j == 0 || matriu[i][j - 1] != id) {
-            g.drawLine(x, y, x, y + midaCellb);
+            g.drawLine(x, y, x, y + midaCelly);
         }
         // Vora dreta
         if (j == matriu[0].length - 1 || matriu[i][j + 1] != id) {
-            g.drawLine(x + midaCella, y, x + midaCella, y + midaCellb);
+            g.drawLine(x + midaCellx, y, x + midaCellx, y + midaCelly);
         }
     }
 

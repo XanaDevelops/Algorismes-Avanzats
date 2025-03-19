@@ -33,14 +33,17 @@ public class Finestra extends JFrame implements Comunicar {
         botons.add(nLabel);
         botons.add(nField);
 
-        botons.add(new JButton("Arrancar"));
+        ((JButton)botons.add(new JButton("Arrancar"))).addActionListener(e -> {
+            principal.getDades().netejar();
+            principal.getDades().resol();
+            panellFinestra.pintar();
+        });
         botons.add(new JButton("Aturar"));
         botons.add(new JButton("Borrar"));
 
         ((JButton)botons.add(new JButton("Color"))).addActionListener(e -> {
             panellFinestra.pintar();
-            principal.getDades().netejar();
-            principal.getDades().resol();
+            panellFinestra.colorON();
 
             /*this.color = JColorChooser.showDialog(this, "Tria Color", color);
             this.colorLabel.setForeground(color);*/
