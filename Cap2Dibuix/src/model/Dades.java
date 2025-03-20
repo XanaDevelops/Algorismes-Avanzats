@@ -14,4 +14,12 @@ public class Dades {
 
     //dades loquesigui
 
+
+    public void setTauler(int[][] tauler) {
+        this.tauler = tauler;
+    }
+
+    public int[][] getTauler() {
+        return tauler;
+    }
 }

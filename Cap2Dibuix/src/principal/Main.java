@@ -13,6 +13,10 @@ public class Main implements Comunicar {
 
     private final ExecutorService executor = Executors.newFixedThreadPool(16);;
 
+    public int[][] getMatriu() {
+        return dades.getTauler();
+    }
+
     private void init(){
         dades = new Dades();
 
@@ -41,6 +45,13 @@ public class Main implements Comunicar {
             case "executar":
                 switch (params[1]){
                     case "tromino":
+                        int[][] matrix = {
+                            {  1,  1,  5,  5 },
+                            {  1, -1,  4,  5 },
+                            {  2,  4,  4,  3 },
+                            {  2,  2,  3,  3 }
+                    };;
+                     dades.setTauler(matrix);
                         break;
                     default:
                         System.out.println("main, comunicar no implementat");
