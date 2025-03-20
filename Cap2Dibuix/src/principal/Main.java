@@ -14,11 +14,13 @@ public class Main implements Comunicar {
     private final ExecutorService executor = Executors.newFixedThreadPool(16);;
 
     private void init(){
+        dades = new Dades();
+
         //generar finestra
         executor.execute(() -> {
-            finestra = new Finestra();
+            finestra = new Finestra(this, dades);
         });
-        dades = new Dades();
+
     }
 
     public static void main(String[] args) {
