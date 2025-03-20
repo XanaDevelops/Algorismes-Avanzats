@@ -8,6 +8,15 @@ import java.util.concurrent.Executors;
 public class Main implements Comunicar {
 
     private Comunicar finestra;
+
+    public Dades getDades() {
+        return dades;
+    }
+
+    public void setDades(Dades dades) {
+        this.dades = dades;
+    }
+
     private Dades dades;
     private Comunicar solver;
 
