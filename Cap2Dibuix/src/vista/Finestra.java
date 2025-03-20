@@ -25,9 +25,9 @@ public class Finestra extends JFrame implements Comunicar {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(800, 600));
 
-        this.setLayout(new FlowLayout());
+        this.setLayout(new BorderLayout());
         JPanel botons = new JPanel();
-        botons.setLayout(new BorderLayout());
+        botons.setLayout(new FlowLayout());
 
         nField = (JTextField)botons.add(new JTextField(5));
         botons.add(generateComboBox());
