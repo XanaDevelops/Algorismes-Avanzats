@@ -27,7 +27,7 @@ public class Finestra extends JFrame implements Comunicar {
 
         this.setLayout(new FlowLayout());
         JPanel botons = new JPanel();
-        botons.setLayout(new FlowLayout());
+        botons.setLayout(new BorderLayout());
 
         nField = (JTextField)botons.add(new JTextField(5));
         botons.add(generateComboBox());
@@ -41,7 +41,9 @@ public class Finestra extends JFrame implements Comunicar {
         });
 
 
-        this.add(botons);
+        this.add(botons, BorderLayout.NORTH);
+        //this.add((JComponent)dibuix, BorderLayour.CENTER); //per exemple
+
         this.pack();
         this.setLocationRelativeTo(null); //centra pantalla
         this.setVisible(true);
