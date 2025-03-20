@@ -1,5 +1,6 @@
 package model.solvers;
 import model.Dades;
+import model.Tipus;
 import principal.Main;
 public class CarpetaSierpinski implements Runnable {
   Main main;
@@ -10,6 +11,7 @@ public class CarpetaSierpinski implements Runnable {
   public CarpetaSierpinski(Main main) {
       this.main = main;
       this.data = main.getDades();
+      data.setTipus(Tipus.QUADRAT);
       this.size = (int)Math.pow(3, data.getProfunditat());
       numActual = 1;
   }
