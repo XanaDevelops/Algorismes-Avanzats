@@ -1,7 +1,12 @@
 package principal;
+
 import model.Dades;
+import model.Tipus;
+import model.solvers.CarpetaSierpinski;
 import vista.Finestra;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -9,21 +14,14 @@ public class Main implements Comunicar {
 
     private Comunicar finestra;
 
-    public Dades getDades() {
-        return dades;
-    }
-
-    public void setDades(Dades dades) {
-        this.dades = dades;
-    }
-
     private Dades dades;
     private Comunicar solver;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(16);;
+    private final ExecutorService executor = Executors.newFixedThreadPool(16);
+    ;
 
-    private void init(){
-        dades = new Dades();
+    private void init() {
+
 
         //generar finestra
         executor.execute(() -> {
@@ -33,6 +31,7 @@ public class Main implements Comunicar {
     }
 
     public static void main(String[] args) {
+
         (new Main()).init();
     }
 
@@ -48,12 +47,20 @@ public class Main implements Comunicar {
                 finestra.comunicar(s);
                 break;
             case "executar":
-                switch (params[1]){
+                switch (params[1]) {
                     case "tromino":
                         break;
                     default:
                         System.out.println("main, comunicar no implementat");
                 }
         }
+    }
+
+    public Dades getDades() {
+        return dades;
+    }
+
+    public void setDades(Dades dades) {
+        this.dades = dades;
     }
 }
