@@ -40,6 +40,7 @@ public class Finestra extends JFrame implements Comunicar {
             /*this.color = JColorChooser.showDialog(this, "Tria Color", color);
             this.colorLabel.setForeground(color);*/
             ((DibuixTromino) (dibuix)).colorON();
+            dibuix.comunicar("");
 
         });
 
@@ -60,6 +61,7 @@ public class Finestra extends JFrame implements Comunicar {
 
         //temporal
         comboBox.addActionListener(e -> {
+            principal.comunicar("executar:"+comboBox.getSelectedItem());
             System.out.println("CHANGED: "+ comboBox.getSelectedItem());
         });
         return comboBox;
@@ -81,6 +83,6 @@ public class Finestra extends JFrame implements Comunicar {
 
     @Override
     public void comunicar(String s) {
-
+        dibuix.comunicar(s);
     }
 }

@@ -45,6 +45,7 @@ public class Main implements Comunicar {
             case "executar":
                 switch (params[1]){
                     case "tromino":
+                        System.out.println("-------------------------------");
                         int[][] matrix = {
                             {  1,  1,  5,  5 },
                             {  1, -1,  4,  5 },
@@ -52,6 +53,7 @@ public class Main implements Comunicar {
                             {  2,  2,  3,  3 }
                     };;
                      dades.setTauler(matrix);
+                        finestra.comunicar(s);
                         break;
                     default:
                         System.out.println("main, comunicar no implementat");

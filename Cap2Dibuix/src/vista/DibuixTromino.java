@@ -28,12 +28,7 @@ public class DibuixTromino extends JPanel implements Comunicar {
         this.setBounds(0, 0, w, h);
     }
 
-    /**
-     * Crida a paintComponent() per actualitzar el panell.
-     */
-    public synchronized void pintar() {
 
-    }
 
     /**
      * Pinta el panell de la gràfica
@@ -106,8 +101,11 @@ public class DibuixTromino extends JPanel implements Comunicar {
         return colors[Math.abs(id) % colors.length];
     }
 
+    /**
+     * Crida a paintComponent() per actualitzar el panell.
+     */
+
     @Override
     public void comunicar(String s) {
-
-    }
+repaint();}
 }
