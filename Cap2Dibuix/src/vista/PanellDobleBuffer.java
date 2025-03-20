@@ -15,7 +15,8 @@ public abstract class PanellDobleBuffer extends JPanel implements Comunicar, Run
     public static final int FPS = 60;
 
     public PanellDobleBuffer() {
-
+        Thread a = new Thread(this);
+        a.start();
     }
 
     @Override
@@ -28,6 +29,9 @@ public abstract class PanellDobleBuffer extends JPanel implements Comunicar, Run
     @Override
     public void paint(Graphics g){
         Graphics2D g2d = (Graphics2D)g;
+        if(buffer == null){
+            buffer = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        }
         buffer.getGraphics().setColor(Color.white);
         buffer.getGraphics().fillRect(0, 0, getWidth(), getHeight());
         pintar(buffer.getGraphics());

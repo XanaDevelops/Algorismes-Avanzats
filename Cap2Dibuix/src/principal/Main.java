@@ -46,18 +46,59 @@ public class Main implements Comunicar {
                 switch (params[1]){
                     case "tromino":
                         System.out.println("-------------------------------");
+
                         int[][] matrix = {
-                            {  1,  1,  5,  5 },
-                            {  1, -1,  4,  5 },
-                            {  2,  4,  4,  3 },
-                            {  2,  2,  3,  3 }
-                    };;
+                            {  1,  1,  0,  0 },
+                            {  1, -1,  0,  0 },
+                            {  0,  0,  0,  0 },
+                            {  0,  0,  0,  0 }
+                    };
                      dades.setTauler(matrix);
-                        finestra.comunicar(s);
+                     esperar(1000);
+                        matrix = new int[][]{
+                                {  1,  1,  0,  0 },
+                                {  1, -1,  0,  0 },
+                                {  2,  0,  0,  0 },
+                                {  2,  2,  0,  0 }
+                        };
+                        dades.setTauler(matrix);
+                        esperar(1000);
+
+                        matrix = new int[][]{
+                                {  1,  1,  0,  0 },
+                                {  1, -1,  0,  0 },
+                                {  2,  0,  0,  3 },
+                                {  2,  2,  3,  3 }
+                        };
+                        dades.setTauler(matrix);
+                        esperar(1000);
+                        matrix = new int[][]{
+                                {  1,  1,  0,  0 },
+                                {  1, -1,  4,  0 },
+                                {  2,  4,  4,  3 },
+                                {  2,  2,  3,  3 }
+                        };
+                        dades.setTauler(matrix);
+                        esperar(1000);
+
+
+
+
+
+
+                        //finestra.comunicar(s);
                         break;
                     default:
                         System.out.println("main, comunicar no implementat");
                 }
+        }
+    }
+
+    private void esperar(int i){
+        try {
+            Thread.sleep(i);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -3,18 +3,13 @@ package vista;
 import principal.Comunicar;
 import principal.Main;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class DibuixTromino extends JPanel implements Comunicar {
+public class DibuixTromino extends PanellDobleBuffer {
 
     private final Comunicar principal;
-    public void colorON() {
-        this.colorON = !colorON;
-    }
-
-
     private boolean colorON = false;
+
 
     /**
      * Inicialitza els límits del panell del, i la instància de classe.
@@ -28,44 +23,8 @@ public class DibuixTromino extends JPanel implements Comunicar {
         this.setBounds(0, 0, w, h);
     }
 
-
-
-    /**
-     * Pinta el panell de la gràfica
-     *
-     * @param g
-     */
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-
-        int[][] matriu = ((Main) (principal)).getMatriu();
-        if (matriu == null) {
-            System.out.println("Matriu és null");
-            return;
-        }
-
-        int files = matriu.length;
-        int columnes = (files > 0) ? matriu[0].length : 1;
-
-        int midaCellx = this.getWidth() / columnes;
-        int midaCelly = this.getHeight() / files;
-
-        for (int i = 0; i < files; i++) {
-            for (int j = 0; j < columnes; j++) {
-                if (matriu[i][j] != -1) { // Suposant que -1 significa buit
-                    if (colorON) {
-                        g.setColor(getColorForTromino(matriu[i][j]));
-                        g.fillRect(j * midaCellx, i * midaCelly, midaCellx, midaCelly);
-                    }
-                    // Dibuixar només les vores exteriors
-                    g.setColor(Color.BLACK);
-                    dibuixarVoraExterior(matriu, i, j, g);
-
-                }
-            }
-        }
+    public void colorON() {
+        this.colorON = !colorON;
     }
 
     private void dibuixarVoraExterior(int[][] matriu, int i, int j, Graphics g) {
@@ -102,10 +61,49 @@ public class DibuixTromino extends JPanel implements Comunicar {
     }
 
     /**
-     * Crida a paintComponent() per actualitzar el panell.
+     * Pinta el panell de la gràfica
+     *
+     * @param g
      */
 
     @Override
+    public void pintar(Graphics g) {
+        super.paintComponent(g);
+
+
+        int[][] matriu = ((Main) (principal)).getMatriu();
+        if (matriu == null) {
+            System.out.println("Matriu és null");
+            return;
+        }
+
+        int files = matriu.length;
+        int columnes = (files > 0) ? matriu[0].length : 1;
+
+        int midaCellx = this.getWidth() / columnes;
+        int midaCelly = this.getHeight() / files;
+
+        for (int i = 0; i < files; i++) {
+            for (int j = 0; j < columnes; j++) {
+                if (matriu[i][j] != -1) { // Suposant que -1 significa buit
+                    if (colorON) {
+                        g.setColor(getColorForTromino(matriu[i][j]));
+                        g.fillRect(j * midaCellx, i * midaCelly, midaCellx, midaCelly);
+                    }
+                    // Dibuixar només les vores exteriors
+                    g.setColor(Color.BLACK);
+                    dibuixarVoraExterior(matriu, i, j, g);
+
+                }
+            }
+        }
+    }
+
+    /**
+     * Crida a paintComponent() per actualitzar el panell.
+     */
+    @Override
     public void comunicar(String s) {
-repaint();}
+        repaint();
+    }
 }
