@@ -20,10 +20,12 @@ public class Finestra extends JFrame implements Comunicar {
     public Finestra(Comunicar principal, Dades dades) {
         super();
         this.principal = principal;
+        this.dades = dades;
+        dibuix = new DibuixTromino(700, 700, principal);
 
         this.setTitle("Dibuixos recursius");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(800, 600));
+        this.setPreferredSize(new Dimension(700, 700));
 
         this.setLayout(new BorderLayout());
         JPanel botons = new JPanel();
@@ -37,12 +39,13 @@ public class Finestra extends JFrame implements Comunicar {
         ((JButton)botons.add(new JButton("Color"))).addActionListener(e -> {
             /*this.color = JColorChooser.showDialog(this, "Tria Color", color);
             this.colorLabel.setForeground(color);*/
+            ((DibuixTromino) (dibuix)).colorON();
 
         });
 
 
         this.add(botons, BorderLayout.NORTH);
-        //this.add((JComponent)dibuix, BorderLayour.CENTER); //per exemple
+        this.add((JComponent)dibuix, BorderLayout.CENTER); //per exemple
 
         this.pack();
         this.setLocationRelativeTo(null); //centra pantalla
