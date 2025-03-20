@@ -73,7 +73,9 @@ public class DibuixTromino extends PanellDobleBuffer {
 
         int[][] matriu = ((Main) (principal)).getMatriu();
         if (matriu == null) {
-            System.out.println("Matriu és null");
+            System.err.println("No se puede pintar la matriu");
+            g.setColor(Color.yellow);
+            g.fillRect(0, 0, this.getWidth(), this.getHeight());
             return;
         }
 

@@ -21,13 +21,17 @@ public class Finestra extends JFrame implements Comunicar {
         super();
         this.principal = principal;
         this.dades = dades;
-        dibuix = new DibuixTromino(700, 700, principal);
 
         this.setTitle("Dibuixos recursius");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(700, 700));
 
-        this.setLayout(new BorderLayout());
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(700, 700));
+        layeredPane.setLayout(new BorderLayout());
+        this.setLayeredPane(layeredPane);
+        dibuix = new DibuixTromino(300, 300, principal);
+
         JPanel botons = new JPanel();
         botons.setLayout(new FlowLayout());
 
@@ -44,10 +48,11 @@ public class Finestra extends JFrame implements Comunicar {
 
         });
 
+        ((JComponent)dibuix).setBounds(0, 100, 300, 300);
+        //layeredPane.add(botons, 0);
+        this.add((JComponent)dibuix); //per exemple
 
-        this.add(botons, BorderLayout.NORTH);
-        this.add((JComponent)dibuix, BorderLayout.CENTER); //per exemple
-
+        this.add(layeredPane);
         this.pack();
         this.setLocationRelativeTo(null); //centra pantalla
         this.setVisible(true);
