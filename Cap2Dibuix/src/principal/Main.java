@@ -39,6 +39,9 @@ public class Main implements Comunicar {
         String[] params = s.split(":");
 
         switch (params[0]) {
+            case "N":
+                dades.createMatrix( Integer.parseInt(params[1]));
+                break;
             case "pintar":
                 finestra.comunicar(s);
                 break;

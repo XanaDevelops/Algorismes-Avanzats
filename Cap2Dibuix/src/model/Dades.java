@@ -8,6 +8,17 @@ public class Dades {
     private int profunditat;
 
     //dades tromino
+    private int[]  inici = new int[2];
+
+    public void setInici(int x, int y) {
+        inici[0] = x;
+        inici[1] = y;
+        tauler[x][y] = -1;
+    }
+    public void createMatrix(int n) {
+        int m = (int) Math.pow(2,n);
+        tauler = new int[m][m];
+    }
 
     //dades triangles
 

@@ -26,12 +26,14 @@ public class Finestra extends JFrame implements Comunicar {
         this.setTitle("Dibuixos recursius");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(700, 700));
+        setResizable(false);
 
         this.setLayout(new BorderLayout());
         JPanel botons = new JPanel();
         botons.setLayout(new FlowLayout());
 
         nField = (JTextField)botons.add(new JTextField(5));
+        nField.addActionListener(e ->enviar("N"));
         botons.add(generateComboBox());
         botons.add(new JButton("Aturar"));
         botons.add(new JButton("Borrar"));
@@ -51,6 +53,22 @@ public class Finestra extends JFrame implements Comunicar {
         this.pack();
         this.setLocationRelativeTo(null); //centra pantalla
         this.setVisible(true);
+
+        dibuix.comunicar("");
+    }
+
+    private void enviar(String msg) {
+        String nText = nField.getText().trim();
+        if (nText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Si us plau, introdueix un número.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        try {
+            int n = Integer.parseInt(nText);
+            principal.comunicar(msg + ":" + n);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private JComboBox<String> generateComboBox() {
@@ -67,19 +85,6 @@ public class Finestra extends JFrame implements Comunicar {
         return comboBox;
     }
 
-    private void enviar(String msg) {
-        String nText = nField.getText().trim();
-        if (nText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Si us plau, introdueix un número.", "Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        try {
-            int n = Integer.parseInt(nText);
-            //principal.comunicar(msg + ":" + n);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
 
     @Override
     public void comunicar(String s) {

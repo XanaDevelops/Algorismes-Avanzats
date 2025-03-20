@@ -4,11 +4,15 @@ import principal.Comunicar;
 import principal.Main;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class DibuixTromino extends PanellDobleBuffer {
 
     private final Comunicar principal;
     private boolean colorON = false;
+    private int x;
+    private int y;
 
 
     /**
@@ -20,6 +24,9 @@ public class DibuixTromino extends PanellDobleBuffer {
      */
     public DibuixTromino(int w, int h, Comunicar p) {
         this.principal = p;
+    this.x = w;
+    this.y = h;
+
         this.setBounds(0, 0, w, h);
     }
 
@@ -32,8 +39,8 @@ public class DibuixTromino extends PanellDobleBuffer {
         int id = matriu[i][j];
         int files = matriu.length;
         int columnes = matriu[0].length;
-        int midaCellx = this.getWidth() / columnes;
-        int midaCelly = this.getHeight() / files;
+        int midaCellx = x / columnes;
+        int midaCelly = y / files;
         int x = j * midaCellx;
         int y = i * midaCelly;
 
@@ -70,10 +77,8 @@ public class DibuixTromino extends PanellDobleBuffer {
     public void pintar(Graphics g) {
         super.paintComponent(g);
 
-
         int[][] matriu = ((Main) (principal)).getMatriu();
         if (matriu == null) {
-            System.out.println("Matriu és null");
             return;
         }
 
@@ -83,8 +88,13 @@ public class DibuixTromino extends PanellDobleBuffer {
         int midaCellx = this.getWidth() / columnes;
         int midaCelly = this.getHeight() / files;
 
+
+
         for (int i = 0; i < files; i++) {
             for (int j = 0; j < columnes; j++) {
+                g.setColor(Color.WHITE);
+                g.drawRect(j * midaCellx, i * midaCelly, midaCellx, midaCelly);
+                g.setColor(Color.BLACK);
                 if (matriu[i][j] != -1) { // Suposant que -1 significa buit
                     if (colorON) {
                         g.setColor(getColorForTromino(matriu[i][j]));
