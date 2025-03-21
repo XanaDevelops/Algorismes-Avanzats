@@ -1,6 +1,8 @@
 package principal;
+
 import model.Dades;
 import model.Tipus;
+
 import model.solvers.SierpinskiSolver;
 import model.solvers.TrominoSolver;
 import vista.Finestra;
@@ -12,10 +14,14 @@ import java.util.concurrent.Executors;
 public class Main implements Comunicar {
 
     private Comunicar finestra;
+
     private Dades dades;
     private ArrayList<Comunicar> processos = null;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(16);;
+    private final ExecutorService executor = Executors.newFixedThreadPool(16);
+    ;
+
+    private void init() {
 
     public int[][] getMatriu() {
         return dades.getTauler();
@@ -33,6 +39,7 @@ public class Main implements Comunicar {
     }
 
     public static void main(String[] args) {
+
         (new Main()).init();
     }
 
@@ -48,7 +55,7 @@ public class Main implements Comunicar {
                 finestra.comunicar(s);
                 break;
             case "executar":
-                switch (params[1]){
+                switch (params[1]) {
                     case "tromino":
                         for (Comunicar enmarxa : processos) {
                             enmarxa.comunicar("aturar");
@@ -88,5 +95,13 @@ public class Main implements Comunicar {
             default:
                 break;
         }
+    }
+
+    public Dades getDades() {
+        return dades;
+    }
+
+    public void setDades(Dades dades) {
+        this.dades = dades;
     }
 }

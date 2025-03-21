@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Arrays;
+
 public class Dades {
     private Tipus tipus;
 
@@ -17,6 +19,9 @@ public class Dades {
     //dades programa
     public static final int HEIGHT = 600;
     public static final int WIDTH = 600;
+
+    public Dades() {
+    }
 
     public Tipus getTipus() {
         return tipus;

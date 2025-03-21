@@ -2,6 +2,7 @@ package model.solvers;
 
 import model.Dades;
 import model.Tipus;
+
 import principal.Comunicar;
 import principal.Main;
 
@@ -21,6 +22,7 @@ public class TrominoSolver implements Runnable, Comunicar {
         this.p = p;
         this.data = data;
         data.setTipus(Tipus.TROMINO);
+
         data.setTauler(new int[data.getProfunditat()][data.getProfunditat()]);
         numActual = 1;
 
@@ -118,6 +120,7 @@ public class TrominoSolver implements Runnable, Comunicar {
         numActual++;
     }
 
+
     // Omple un subtauler de mida x mida amb el tromino actual.
     private void omplirTromino(int topx, int topy, int mida) {
         for (int i = 0; i < mida; i++) {
@@ -132,6 +135,7 @@ public class TrominoSolver implements Runnable, Comunicar {
 
     @Override
     public void run() {
+
         stop = false;
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2, data.getProfunditat());
         System.out.println("Temps esperat " + tempsEsperat  + " segons");
@@ -139,6 +143,7 @@ public class TrominoSolver implements Runnable, Comunicar {
 
         long time = System.currentTimeMillis();
         trominoRec(data.getProfunditat(), 0, 0);
+
 
         p.comunicar("aturar");
 
@@ -148,6 +153,7 @@ public class TrominoSolver implements Runnable, Comunicar {
 
         //actualitzar la constant multiplicativa
         data.setConstantMultiplicativa(time/Math.pow(2, data.getProfunditat() ));
+
 
         //prevenir tornar a aturar
         if(!stop) aturar();
