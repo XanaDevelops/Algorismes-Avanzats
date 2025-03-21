@@ -57,8 +57,4 @@ public class Dades {
     public void setProfunditat(int profunditat) {
         this.profunditat = profunditat;
     }
-
-    public int[] getFilaTauler(int i) {
-        return tauler[i];
-    }
 }
