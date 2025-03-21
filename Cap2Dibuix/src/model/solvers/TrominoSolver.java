@@ -21,12 +21,14 @@ public class TrominoSolver implements Runnable, Comunicar {
         this.p = p;
         this.data = data;
         data.setTipus(Tipus.TROMINO);
+        data.setTauler(new int[data.getProfunditat()][data.getProfunditat()]);
         numActual = 1;
 
-        // Omplim el tauler amb totes les caselles buides.
-        for (int i = 0; i < data.getTauler().length; i++) {
-            Arrays.fill(data.getFilaTauler(i), 0);
+        // Inicialitzar la matriu amb totes les caselles buides
+        for (int[] fila : data.getTauler()) {
+            Arrays.fill(fila, 0);
         }
+
         numActual = 1;
 
         int num1 = (int) ((int)Math.pow(2, data.getProfunditat())* Math.random());
@@ -132,6 +134,8 @@ public class TrominoSolver implements Runnable, Comunicar {
     public void run() {
         stop = false;
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2, data.getProfunditat());
+        System.out.println("Temps esperat " + tempsEsperat  + " segons");
+        p.comunicar("tempsEsperat");
 
         long time = System.currentTimeMillis();
         trominoRec(data.getProfunditat(), 0, 0);

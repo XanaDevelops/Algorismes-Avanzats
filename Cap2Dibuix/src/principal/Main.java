@@ -1,6 +1,7 @@
 package principal;
 import model.Dades;
 import model.Tipus;
+import model.solvers.SierpinskiSolver;
 import model.solvers.TrominoSolver;
 import vista.Finestra;
 
@@ -43,7 +44,7 @@ public class Main implements Comunicar {
         String[] params = s.split(":");
 
         switch (params[0]) {
-            case "pintar":
+            case "pintar", "tempsReal", "tempsEsperat":
                 finestra.comunicar(s);
                 break;
             case "executar":
@@ -54,15 +55,27 @@ public class Main implements Comunicar {
                         }
 
                         processos.clear();
-                        int mida = Integer.parseInt(params[2]);
-                        dades.setTauler(new int[mida][mida]);
-                        dades.setProfunditat(mida);
-                        dades.setTipus(Tipus.TROMINO);
+                        int midaT = Integer.parseInt(params[2]);
+                        dades.setProfunditat(midaT);
 
-                        TrominoSolver t = new TrominoSolver(this, dades);
+                        TrominoSolver tS = new TrominoSolver(this, dades);
 
-                        processos.add(t);
-                        executor.execute(t);
+                        processos.add(tS);
+                        executor.execute(tS);
+                        break;
+                    case "triangles":
+                        for (Comunicar enmarxa : processos) {
+                            enmarxa.comunicar("aturar");
+                        }
+
+                        processos.clear();
+                        int midaS = (int) Math.pow(2, Integer.parseInt(params[2]));
+                        dades.setProfunditat(midaS);
+
+                        SierpinskiSolver sS = new SierpinskiSolver(this, dades);
+
+                        processos.add(sS);
+                        executor.execute(sS);
                         break;
                     default:
                         break;
