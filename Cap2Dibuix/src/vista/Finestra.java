@@ -13,6 +13,7 @@ public class Finestra extends JFrame implements Comunicar {
     Dades dades;
     JLabel colorLabel;
     JTextField nField;
+    JComboBox<String> dibuixosCBox;
 
     //L'element que interpreta la matriu de dades i dibuixa la figura
     Comunicar dibuix;
@@ -33,7 +34,11 @@ public class Finestra extends JFrame implements Comunicar {
         botons.setLayout(new FlowLayout());
 
         nField = (JTextField)botons.add(new JTextField(5));
-        botons.add(generateComboBox());
+        dibuixosCBox = (JComboBox<String>) botons.add(generateComboBox());
+
+        ((JButton)botons.add(new JButton("Pintar"))).addActionListener(e -> {
+            enviar("executar:"+dibuixosCBox.getSelectedItem());
+        });
         botons.add(new JButton("Aturar"));
         botons.add(new JButton("Borrar"));
 
@@ -59,13 +64,13 @@ public class Finestra extends JFrame implements Comunicar {
         JComboBox<String> comboBox = new JComboBox<>();
         comboBox.addItem("tromino");
         comboBox.addItem("triangles");
-        comboBox.addItem("[REDACTED]");
+        //comboBox.addItem("[REDACTED]");
 
         //temporal
         comboBox.addActionListener(e -> {
             //POSAR N DEL JTEXTFIELD
             //principal.comunicar("executar:"+comboBox.getSelectedItem()+":"+3);
-            enviar("executar:"+comboBox.getSelectedItem());
+
             System.out.println("CHANGED: "+ comboBox.getSelectedItem());
         });
         return comboBox;
