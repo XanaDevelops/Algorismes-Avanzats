@@ -64,7 +64,8 @@ public class Finestra extends JFrame implements Comunicar {
         //temporal
         comboBox.addActionListener(e -> {
             //POSAR N DEL JTEXTFIELD
-            principal.comunicar("executar:"+comboBox.getSelectedItem()+":"+3);
+            //principal.comunicar("executar:"+comboBox.getSelectedItem()+":"+3);
+            enviar("executar:"+comboBox.getSelectedItem());
             System.out.println("CHANGED: "+ comboBox.getSelectedItem());
         });
         return comboBox;
@@ -78,7 +79,7 @@ public class Finestra extends JFrame implements Comunicar {
         }
         try {
             int n = Integer.parseInt(nText);
-            //principal.comunicar(msg + ":" + n);
+            principal.comunicar(msg + ":" + n);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
         }
