@@ -63,8 +63,7 @@ public void imprimir() {
     @Override
     public void run() {
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(3, data.getProfunditat());
-
-        main.comunicar("tempsEsperat");//??
+        main.comunicar("tempsEsperat "+ tempsEsperat);//??
         long time = System.currentTimeMillis();
         drawSiperpinskiCarpet(0, 0, data.getTauler().length);
 
