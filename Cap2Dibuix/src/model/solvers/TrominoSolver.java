@@ -2,18 +2,33 @@ package model.solvers;
 
 import model.Dades;
 import model.Tipus;
+import principal.Comunicar;
 import principal.Main;
 
-public class TrominoSolver implements Runnable {
+import java.util.Arrays;
+
+public class TrominoSolver implements Runnable, Comunicar {
     private Main p;
     private Dades data;
     private static int numActual;
+    private static final int RETJOLA = -1;
 
     public TrominoSolver(Main p, Dades data) {
         this.p = p;
         this.data = data;
         data.setTipus(Tipus.TROMINO);
         numActual = 1;
+
+        // Omplim el tauler amb totes les caselles buides.
+        for (int i = 0; i < data.getTauler().length; i++) {
+            Arrays.fill(data.getFilaTauler(i), 0);
+        }
+        numActual = 1;
+
+        int num1 = (int) ((int)Math.pow(2, data.getProfunditat())* Math.random());
+        int num2 = (int) ((int)Math.pow(2, data.getProfunditat())* Math.random());
+
+        data.setValor(num1, num2, RETJOLA);
     }
 
     private void trominoRec(int mida, int topx, int topy) {
@@ -115,7 +130,7 @@ public class TrominoSolver implements Runnable {
         long time = System.currentTimeMillis();
         trominoRec(data.getProfunditat(), 0, 0);
 
-        p.comunicar("acabar");
+        p.comunicar("aturar");
 
         time = (System.currentTimeMillis() - time)/1000;
         System.out.println("Temps real " + time  + " segons");
@@ -123,6 +138,10 @@ public class TrominoSolver implements Runnable {
 
         //actualitzar la constant multiplicativa
         data.setConstantMultiplicativa(time/Math.pow(2, data.getProfunditat() ));
+    }
+
+    @Override
+    public void comunicar(String s) {
     }
 }
 

@@ -1,7 +1,10 @@
 package principal;
 import model.Dades;
+import model.Tipus;
+import model.solvers.TrominoSolver;
 import vista.Finestra;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -9,7 +12,7 @@ public class Main implements Comunicar {
 
     private Comunicar finestra;
     private Dades dades;
-    private Comunicar solver;
+    private ArrayList<Comunicar> processos = null;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(16);;
 
@@ -19,6 +22,7 @@ public class Main implements Comunicar {
 
     private void init(){
         dades = new Dades();
+        processos = new ArrayList<>();
 
         //generar finestra
         executor.execute(() -> {
@@ -45,60 +49,31 @@ public class Main implements Comunicar {
             case "executar":
                 switch (params[1]){
                     case "tromino":
-                        System.out.println("-------------------------------");
+                        for (Comunicar enmarxa : processos) {
+                            enmarxa.comunicar("aturar");
+                        }
 
-                        int[][] matrix = {
-                            {  1,  1,  0,  0 },
-                            {  1, -1,  0,  0 },
-                            {  0,  0,  0,  0 },
-                            {  0,  0,  0,  0 }
-                    };
-                     dades.setTauler(matrix);
-                     esperar(1000);
-                        matrix = new int[][]{
-                                {  1,  1,  0,  0 },
-                                {  1, -1,  0,  0 },
-                                {  2,  0,  0,  0 },
-                                {  2,  2,  0,  0 }
-                        };
-                        dades.setTauler(matrix);
-                        esperar(1000);
+                        processos.clear();
+                        int mida = Integer.parseInt(params[2]);
+                        dades.setTauler(new int[mida][mida]);
+                        dades.setProfunditat(mida);
+                        dades.setTipus(Tipus.TROMINO);
 
-                        matrix = new int[][]{
-                                {  1,  1,  0,  0 },
-                                {  1, -1,  0,  0 },
-                                {  2,  0,  0,  3 },
-                                {  2,  2,  3,  3 }
-                        };
-                        dades.setTauler(matrix);
-                        esperar(1000);
-                        matrix = new int[][]{
-                                {  1,  1,  0,  0 },
-                                {  1, -1,  4,  0 },
-                                {  2,  4,  4,  3 },
-                                {  2,  2,  3,  3 }
-                        };
-                        dades.setTauler(matrix);
-                        esperar(1000);
+                        TrominoSolver t = new TrominoSolver(this, dades);
 
-
-
-
-
-
-                        //finestra.comunicar(s);
+                        processos.add(t);
+                        executor.execute(t);
                         break;
                     default:
-                        System.out.println("main, comunicar no implementat");
+                        break;
                 }
-        }
-    }
-
-    private void esperar(int i){
-        try {
-            Thread.sleep(i);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            case "aturar":
+                for (Comunicar proces : processos) {
+                    proces.comunicar("aturar");
+                }
+                break;
+            default:
+                break;
         }
     }
 }
