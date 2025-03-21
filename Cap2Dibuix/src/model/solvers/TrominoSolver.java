@@ -12,6 +12,10 @@ public class TrominoSolver implements Runnable, Comunicar {
     private Dades data;
     private static int numActual;
     private static final int RETJOLA = -1;
+    /**
+     * Variable booleana per poder aturar el fil d'execució.
+     */
+    private volatile boolean stop;
 
     public TrominoSolver(Main p, Dades data) {
         this.p = p;
@@ -32,28 +36,29 @@ public class TrominoSolver implements Runnable, Comunicar {
     }
 
     private void trominoRec(int mida, int topx, int topy) {
+        if(!stop) {
+            // Cas base: mida 2x2, col·locar l'última casella
+            if (mida == 2) {
+                omplirTromino(topx, topy, mida);
+                //            main.comunicar("omplicarTromino x"+ topx +" y"+ topy +" mida"+ mida );
+                numActual++;
+            } else {
+                // Cas recursiu
+                int[] forat = trobarForat(topx, topy, mida);
 
-        // Cas base: mida 2x2, col·locar l'última casella
-        if (mida == 2) {
-            omplirTromino(topx, topy, mida);
-//            main.comunicar("omplicarTromino x"+ topx +" y"+ topy +" mida"+ mida );
-            numActual++;
-        } else {
-            // Cas recursiu
-            int[] forat = trobarForat(topx, topy, mida);
+                // Utilitzem l'enum Mode per determinar la ubicació del forat i procedir segons correspongui
+                Mode mode = determinarMode(forat[0], forat[1], topx, topy, mida);
 
-            // Utilitzem l'enum Mode per determinar la ubicació del forat i procedir segons correspongui
-            Mode mode = determinarMode(forat[0], forat[1], topx, topy, mida);
+                // Omplim el tromino central
+                omplirTrominoCentral(mode, topx, topy, mida);
+                //            main.comunicar("omplirTrominoCentral mode"+ mode + " x"+ topx +" y"+ topy +" mida"+ mida ); //algo de l'estil
 
-            // Omplim el tromino central
-            omplirTrominoCentral(mode, topx, topy, mida);
-//            main.comunicar("omplirTrominoCentral mode"+ mode + " x"+ topx +" y"+ topy +" mida"+ mida ); //algo de l'estil
-
-            // Recursió per als quatre quadrants
-            trominoRec(mida / 2, topx, topy);
-            trominoRec(mida / 2, topx, topy + mida / 2);
-            trominoRec(mida / 2, topx + mida / 2, topy);
-            trominoRec(mida / 2, topx + mida / 2, topy + mida / 2);
+                // Recursió per als quatre quadrants
+                trominoRec(mida / 2, topx, topy);
+                trominoRec(mida / 2, topx, topy + mida / 2);
+                trominoRec(mida / 2, topx + mida / 2, topy);
+                trominoRec(mida / 2, topx + mida / 2, topy + mida / 2);
+            }
         }
     }
 
@@ -125,6 +130,7 @@ public class TrominoSolver implements Runnable, Comunicar {
 
     @Override
     public void run() {
+        stop = false;
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2, data.getProfunditat());
 
         long time = System.currentTimeMillis();
@@ -138,10 +144,23 @@ public class TrominoSolver implements Runnable, Comunicar {
 
         //actualitzar la constant multiplicativa
         data.setConstantMultiplicativa(time/Math.pow(2, data.getProfunditat() ));
+
+        //prevenir tornar a aturar
+        if(!stop) aturar();
     }
 
     @Override
     public void comunicar(String s) {
+        if (s.contentEquals("aturar")) {
+            aturar();
+        }
+    }
+
+    /**
+     * Mètode per aturar el fil d'execució.
+     */
+    private void aturar() {
+        stop = true;
     }
 }
 
