@@ -2,11 +2,12 @@ package principal;
 
 import model.Dades;
 import model.Tipus;
-import model.solvers.CarpetaSierpinski;
+
+import model.solvers.SierpinskiSolver;
+import model.solvers.TrominoSolver;
 import vista.Finestra;
 
-import javax.swing.*;
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,13 +16,20 @@ public class Main implements Comunicar {
     private Comunicar finestra;
 
     private Dades dades;
-    private Comunicar solver;
+    private ArrayList<Comunicar> processos = null;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(16);
     ;
 
     private void init() {
 
+    public int[][] getMatriu() {
+        return dades.getTauler();
+    }
+
+    private void init(){
+        dades = new Dades();
+        processos = new ArrayList<>();
 
         //generar finestra
         executor.execute(() -> {
@@ -43,16 +51,49 @@ public class Main implements Comunicar {
         String[] params = s.split(":");
 
         switch (params[0]) {
-            case "pintar":
+            case "pintar", "tempsReal", "tempsEsperat":
                 finestra.comunicar(s);
                 break;
             case "executar":
                 switch (params[1]) {
                     case "tromino":
+                        for (Comunicar enmarxa : processos) {
+                            enmarxa.comunicar("aturar");
+                        }
+
+                        processos.clear();
+                        int midaT = Integer.parseInt(params[2]);
+                        dades.setProfunditat(midaT);
+
+                        TrominoSolver tS = new TrominoSolver(this, dades);
+
+                        processos.add(tS);
+                        executor.execute(tS);
+                        break;
+                    case "triangles":
+                        for (Comunicar enmarxa : processos) {
+                            enmarxa.comunicar("aturar");
+                        }
+
+                        processos.clear();
+                        int midaS = (int) Math.pow(2, Integer.parseInt(params[2]));
+                        dades.setProfunditat(midaS);
+
+                        SierpinskiSolver sS = new SierpinskiSolver(this, dades);
+
+                        processos.add(sS);
+                        executor.execute(sS);
                         break;
                     default:
-                        System.out.println("main, comunicar no implementat");
+                        break;
                 }
+            case "aturar":
+                for (Comunicar proces : processos) {
+                    proces.comunicar("aturar");
+                }
+                break;
+            default:
+                break;
         }
     }
 

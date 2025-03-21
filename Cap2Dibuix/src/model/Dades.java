@@ -22,6 +22,7 @@ public class Dades {
 
     public Dades() {
     }
+
     public Tipus getTipus() {
         return tipus;
     }

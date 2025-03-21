@@ -2,43 +2,67 @@ package model.solvers;
 
 import model.Dades;
 import model.Tipus;
+
+import principal.Comunicar;
 import principal.Main;
 
-public class TrominoSolver implements Runnable {
+import java.util.Arrays;
+
+public class TrominoSolver implements Runnable, Comunicar {
     private Main p;
     private Dades data;
     private static int numActual;
+    private static final int RETJOLA = -1;
+    /**
+     * Variable booleana per poder aturar el fil d'execució.
+     */
+    private volatile boolean stop;
 
     public TrominoSolver(Main p, Dades data) {
         this.p = p;
         this.data = data;
         data.setTipus(Tipus.TROMINO);
+
+        data.setTauler(new int[data.getProfunditat()][data.getProfunditat()]);
         numActual = 1;
+
+        // Inicialitzar la matriu amb totes les caselles buides
+        for (int[] fila : data.getTauler()) {
+            Arrays.fill(fila, 0);
+        }
+
+        numActual = 1;
+
+        int num1 = (int) ((int)Math.pow(2, data.getProfunditat())* Math.random());
+        int num2 = (int) ((int)Math.pow(2, data.getProfunditat())* Math.random());
+
+        data.setValor(num1, num2, RETJOLA);
     }
 
     private void trominoRec(int mida, int topx, int topy) {
+        if(!stop) {
+            // Cas base: mida 2x2, col·locar l'última casella
+            if (mida == 2) {
+                omplirTromino(topx, topy, mida);
+                //            main.comunicar("omplicarTromino x"+ topx +" y"+ topy +" mida"+ mida );
+                numActual++;
+            } else {
+                // Cas recursiu
+                int[] forat = trobarForat(topx, topy, mida);
 
-        // Cas base: mida 2x2, col·locar l'última casella
-        if (mida == 2) {
-            omplirTromino(topx, topy, mida);
-//            main.comunicar("omplicarTromino x"+ topx +" y"+ topy +" mida"+ mida );
-            numActual++;
-        } else {
-            // Cas recursiu
-            int[] forat = trobarForat(topx, topy, mida);
+                // Utilitzem l'enum Mode per determinar la ubicació del forat i procedir segons correspongui
+                Mode mode = determinarMode(forat[0], forat[1], topx, topy, mida);
 
-            // Utilitzem l'enum Mode per determinar la ubicació del forat i procedir segons correspongui
-            Mode mode = determinarMode(forat[0], forat[1], topx, topy, mida);
+                // Omplim el tromino central
+                omplirTrominoCentral(mode, topx, topy, mida);
+                //            main.comunicar("omplirTrominoCentral mode"+ mode + " x"+ topx +" y"+ topy +" mida"+ mida ); //algo de l'estil
 
-            // Omplim el tromino central
-            omplirTrominoCentral(mode, topx, topy, mida);
-//            main.comunicar("omplirTrominoCentral mode"+ mode + " x"+ topx +" y"+ topy +" mida"+ mida ); //algo de l'estil
-
-            // Recursió per als quatre quadrants
-            trominoRec(mida / 2, topx, topy);
-            trominoRec(mida / 2, topx, topy + mida / 2);
-            trominoRec(mida / 2, topx + mida / 2, topy);
-            trominoRec(mida / 2, topx + mida / 2, topy + mida / 2);
+                // Recursió per als quatre quadrants
+                trominoRec(mida / 2, topx, topy);
+                trominoRec(mida / 2, topx, topy + mida / 2);
+                trominoRec(mida / 2, topx + mida / 2, topy);
+                trominoRec(mida / 2, topx + mida / 2, topy + mida / 2);
+            }
         }
     }
 
@@ -96,7 +120,8 @@ public class TrominoSolver implements Runnable {
         numActual++;
     }
 
-    // Omple un sub-tauler de mida x mida amb el tromino actual.
+
+    // Omple un subtauler de mida x mida amb el tromino actual.
     private void omplirTromino(int topx, int topy, int mida) {
         for (int i = 0; i < mida; i++) {
             for (int j = 0; j < mida; j++) {
@@ -110,12 +135,17 @@ public class TrominoSolver implements Runnable {
 
     @Override
     public void run() {
+
+        stop = false;
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2, data.getProfunditat());
+        System.out.println("Temps esperat " + tempsEsperat  + " segons");
+        p.comunicar("tempsEsperat");
 
         long time = System.currentTimeMillis();
         trominoRec(data.getProfunditat(), 0, 0);
 
-        p.comunicar("acabar");
+
+        p.comunicar("aturar");
 
         time = (System.currentTimeMillis() - time)/1000;
         System.out.println("Temps real " + time  + " segons");
@@ -123,5 +153,24 @@ public class TrominoSolver implements Runnable {
 
         //actualitzar la constant multiplicativa
         data.setConstantMultiplicativa(time/Math.pow(2, data.getProfunditat() ));
+
+
+        //prevenir tornar a aturar
+        if(!stop) aturar();
+    }
+
+    @Override
+    public void comunicar(String s) {
+        if (s.contentEquals("aturar")) {
+            aturar();
+        }
+    }
+
+    /**
+     * Mètode per aturar el fil d'execució.
+     */
+    private void aturar() {
+        stop = true;
     }
 }
+

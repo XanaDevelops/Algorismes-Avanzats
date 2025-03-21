@@ -21,4 +21,5 @@ public enum Mode {
     public int getValue() {
         return value;
     }
+
 }

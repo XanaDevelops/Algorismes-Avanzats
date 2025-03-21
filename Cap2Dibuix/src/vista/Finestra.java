@@ -13,6 +13,7 @@ public class Finestra extends JFrame implements Comunicar {
     Dades dades;
     JLabel colorLabel;
     JTextField nField;
+    JComboBox<String> dibuixosCBox;
 
     //L'element que interpreta la matriu de dades i dibuixa la figura
     Comunicar dibuix;
@@ -20,29 +21,43 @@ public class Finestra extends JFrame implements Comunicar {
     public Finestra(Comunicar principal, Dades dades) {
         super();
         this.principal = principal;
+        this.dades = dades;
 
         this.setTitle("Dibuixos recursius");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(800, 600));
+        this.setPreferredSize(new Dimension(700, 700));
+        this.setLayout(new BorderLayout());
 
-        this.setLayout(new FlowLayout());
+        dibuix = new DibuixTromino(300, 300, principal);
+
         JPanel botons = new JPanel();
-        botons.setLayout(new BorderLayout());
+        botons.setLayout(new FlowLayout());
 
         nField = (JTextField)botons.add(new JTextField(5));
-        botons.add(generateComboBox());
-        botons.add(new JButton("Aturar"));
-        botons.add(new JButton("Borrar"));
+        dibuixosCBox = (JComboBox<String>) botons.add(generateComboBox());
+
+        ((JButton)botons.add(new JButton("Pintar"))).addActionListener(e -> {
+            enviar("executar:"+dibuixosCBox.getSelectedItem());
+        });
+        ((JButton)botons.add(new JButton("Aturar"))).addActionListener(e -> {
+            principal.comunicar("aturar");
+        });
+        ((JButton)botons.add(new JButton("Borrar"))).addActionListener(e -> {
+            dibuix.comunicar("borrar");
+        });
 
         ((JButton)botons.add(new JButton("Color"))).addActionListener(e -> {
             /*this.color = JColorChooser.showDialog(this, "Tria Color", color);
             this.colorLabel.setForeground(color);*/
+            ((DibuixTromino) (dibuix)).colorON();
+            dibuix.comunicar("");
 
         });
 
-
+        ((JComponent)dibuix).setBounds(0, 100, 300, 300);
         this.add(botons, BorderLayout.NORTH);
-        //this.add((JComponent)dibuix, BorderLayour.CENTER); //per exemple
+        this.add((JComponent)dibuix, BorderLayout.CENTER); //per exemple
+
 
         this.pack();
         this.setLocationRelativeTo(null); //centra pantalla
@@ -53,7 +68,7 @@ public class Finestra extends JFrame implements Comunicar {
         JComboBox<String> comboBox = new JComboBox<>();
         comboBox.addItem("tromino");
         comboBox.addItem("triangles");
-        comboBox.addItem("[REDACTED]");
+        //comboBox.addItem("[REDACTED]");
 
         //temporal
         comboBox.addActionListener(e -> {
@@ -70,7 +85,7 @@ public class Finestra extends JFrame implements Comunicar {
         }
         try {
             int n = Integer.parseInt(nText);
-            //principal.comunicar(msg + ":" + n);
+            principal.comunicar(msg + ":" + n);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -78,6 +93,6 @@ public class Finestra extends JFrame implements Comunicar {
 
     @Override
     public void comunicar(String s) {
-
+        dibuix.comunicar(s);
     }
 }
