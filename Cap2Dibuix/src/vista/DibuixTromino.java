@@ -3,9 +3,10 @@ package vista;
 import principal.Comunicar;
 import principal.Main;
 
+import javax.swing.*;
 import java.awt.*;
 
-public class DibuixTromino extends PanellDobleBuffer {
+public class DibuixTromino extends JPanel implements Comunicar {
 
     private final Comunicar principal;
     private boolean colorON = false;
@@ -67,15 +68,13 @@ public class DibuixTromino extends PanellDobleBuffer {
      */
 
     @Override
-    public void pintar(Graphics g) {
+    public void paint(Graphics g) {
         super.paintComponent(g);
 
 
         int[][] matriu = ((Main) (principal)).getMatriu();
         if (matriu == null) {
             System.err.println("No se puede pintar la matriu");
-            g.setColor(Color.yellow);
-            g.fillRect(0, 0, this.getWidth(), this.getHeight());
             return;
         }
 

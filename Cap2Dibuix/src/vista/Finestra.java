@@ -25,11 +25,8 @@ public class Finestra extends JFrame implements Comunicar {
         this.setTitle("Dibuixos recursius");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(700, 700));
+        this.setLayout(new BorderLayout());
 
-        JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(700, 700));
-        layeredPane.setLayout(new BorderLayout());
-        this.setLayeredPane(layeredPane);
         dibuix = new DibuixTromino(300, 300, principal);
 
         JPanel botons = new JPanel();
@@ -49,10 +46,10 @@ public class Finestra extends JFrame implements Comunicar {
         });
 
         ((JComponent)dibuix).setBounds(0, 100, 300, 300);
-        //layeredPane.add(botons, 0);
-        this.add((JComponent)dibuix); //per exemple
+        this.add(botons, BorderLayout.NORTH);
+        this.add((JComponent)dibuix, BorderLayout.CENTER); //per exemple
 
-        this.add(layeredPane);
+
         this.pack();
         this.setLocationRelativeTo(null); //centra pantalla
         this.setVisible(true);
@@ -66,7 +63,8 @@ public class Finestra extends JFrame implements Comunicar {
 
         //temporal
         comboBox.addActionListener(e -> {
-            principal.comunicar("executar:"+comboBox.getSelectedItem());
+            //POSAR N DEL JTEXTFIELD
+            principal.comunicar("executar:"+comboBox.getSelectedItem()+":"+3);
             System.out.println("CHANGED: "+ comboBox.getSelectedItem());
         });
         return comboBox;
