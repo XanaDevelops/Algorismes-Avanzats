@@ -39,8 +39,12 @@ public class Finestra extends JFrame implements Comunicar {
         ((JButton)botons.add(new JButton("Pintar"))).addActionListener(e -> {
             enviar("executar:"+dibuixosCBox.getSelectedItem());
         });
-        botons.add(new JButton("Aturar"));
-        botons.add(new JButton("Borrar"));
+        ((JButton)botons.add(new JButton("Aturar"))).addActionListener(e -> {
+            principal.comunicar("aturar");
+        });
+        ((JButton)botons.add(new JButton("Borrar"))).addActionListener(e -> {
+            dibuix.comunicar("borrar");
+        });
 
         ((JButton)botons.add(new JButton("Color"))).addActionListener(e -> {
             /*this.color = JColorChooser.showDialog(this, "Tria Color", color);
@@ -68,9 +72,6 @@ public class Finestra extends JFrame implements Comunicar {
 
         //temporal
         comboBox.addActionListener(e -> {
-            //POSAR N DEL JTEXTFIELD
-            //principal.comunicar("executar:"+comboBox.getSelectedItem()+":"+3);
-
             System.out.println("CHANGED: "+ comboBox.getSelectedItem());
         });
         return comboBox;
