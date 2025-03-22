@@ -4,4 +4,5 @@ public enum Tipus {
     TROMINO,
     TRIANGLE,
     QUADRAT,
+    TREE
 }
