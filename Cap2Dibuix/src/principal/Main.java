@@ -24,7 +24,6 @@ public class Main implements Comunicar {
 
 
 
-
     public int[][] getMatriu() {
         return dades.getTauler();
     }
