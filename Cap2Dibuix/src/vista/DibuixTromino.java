@@ -105,6 +105,17 @@ public class DibuixTromino extends JPanel implements Comunicar {
      */
     @Override
     public void comunicar(String s) {
-        repaint();
+        switch (s){
+            case "pintar":
+                repaint();
+                break;
+            case "color":
+                colorON();
+                break;
+            case "borrar":
+                System.err.println("borrar no implementat");
+                break;
+        }
+
     }
 }

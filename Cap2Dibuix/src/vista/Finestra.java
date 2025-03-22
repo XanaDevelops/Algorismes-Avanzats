@@ -6,6 +6,7 @@ import principal.Comunicar;
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 import java.awt.*;
+import java.util.Objects;
 
 public class Finestra extends JFrame implements Comunicar {
 
@@ -49,12 +50,10 @@ public class Finestra extends JFrame implements Comunicar {
         ((JButton)botons.add(new JButton("Color"))).addActionListener(e -> {
             /*this.color = JColorChooser.showDialog(this, "Tria Color", color);
             this.colorLabel.setForeground(color);*/
-            ((DibuixTromino) (dibuix)).colorON();
-            dibuix.comunicar("");
+            dibuix.comunicar("color");
 
         });
 
-        ((JComponent)dibuix).setBounds(0, 100, 300, 300);
         this.add(botons, BorderLayout.NORTH);
         this.add((JComponent)dibuix, BorderLayout.CENTER); //per exemple
 
@@ -70,9 +69,30 @@ public class Finestra extends JFrame implements Comunicar {
         comboBox.addItem("triangles");
         //comboBox.addItem("[REDACTED]");
 
-        //temporal
+        comboBox.setSelectedIndex(0);
+
         comboBox.addActionListener(e -> {
             System.out.println("CHANGED: "+ comboBox.getSelectedItem());
+
+            switch ((String) Objects.requireNonNull(comboBox.getSelectedItem())){
+                case "tromino":
+                    if (!(dibuix instanceof DibuixTromino)){
+                        this.remove((Component) dibuix);
+                        dibuix = new DibuixTromino(300, 300, principal);
+                        this.add((Component) dibuix, BorderLayout.CENTER);
+                        this.revalidate();
+                    }
+                    break;
+                case "triangles":
+                    if (!(dibuix instanceof DibuixSierpinski)){
+                        this.remove((Component) dibuix);
+
+                        dibuix = new DibuixSierpinski(principal);
+
+                        this.add((Component) dibuix, BorderLayout.CENTER);
+                        this.revalidate();
+                    }
+            }
         });
         return comboBox;
     }

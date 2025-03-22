@@ -27,6 +27,10 @@ public class Main implements Comunicar {
         return dades.getTauler();
     }
 
+    public Dades getDades() {
+        return dades;
+    }
+
     private void init(){
         dades = new Dades();
         processos = new ArrayList<>();

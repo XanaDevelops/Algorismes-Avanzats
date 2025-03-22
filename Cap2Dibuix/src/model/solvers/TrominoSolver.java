@@ -31,7 +31,6 @@ public class TrominoSolver implements Runnable, Comunicar {
             Arrays.fill(fila, 0);
         }
 
-        numActual = 1;
 
         int num1 = (int) ((int)Math.pow(2, data.getProfunditat())* Math.random());
         int num2 = (int) ((int)Math.pow(2, data.getProfunditat())* Math.random());
