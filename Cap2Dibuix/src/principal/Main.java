@@ -65,7 +65,8 @@ public class Main implements Comunicar {
                 break;
             case "inici":
                 dades.setForatTromino(Integer.parseInt(params[1]),Integer.parseInt(params[2]));
-                finestra.comunicar("pintar");
+                //volem recalcular els trominos
+                this.comunicar("executar:tromino:"+(int)(Math.log(dades.getProfunditat()) / Math.log(2)));
                 break;
             case "executar":
                 switch (params[1]) {
