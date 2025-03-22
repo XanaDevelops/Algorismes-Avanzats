@@ -31,6 +31,7 @@ public class SierpinskiSolver implements  Runnable, Comunicar {
         if(!stop) {
             if (mida == 1) {
                 data.setValor(x, y, 1);
+                p.comunicar("pintar");
                 return;
             }
 
