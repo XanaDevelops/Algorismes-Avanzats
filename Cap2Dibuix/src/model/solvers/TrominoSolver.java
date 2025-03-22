@@ -41,12 +41,7 @@ public class TrominoSolver implements Runnable, Comunicar {
             Arrays.fill(fila, 0);
         }
 
-        // Defineix la posició del forat inicial
-        data.setForatTromino(new int[]{2,0});
-        int num1 = data.getForatTromino()[0];
-        int num2 = data.getForatTromino()[1];
-
-        data.setValor(num1, num2, RETJOLA);
+        data.setValor(data.getIniciTromino()[0],  data.getIniciTromino()[1], RETJOLA);
     }
 
     /**

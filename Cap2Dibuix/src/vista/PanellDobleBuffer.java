@@ -4,6 +4,8 @@ import principal.Comunicar;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 
 public abstract class PanellDobleBuffer extends JPanel implements Comunicar, Runnable{
@@ -17,6 +19,7 @@ public abstract class PanellDobleBuffer extends JPanel implements Comunicar, Run
     public PanellDobleBuffer() {
         Thread a = new Thread(this);
         a.start();
+
     }
 
     @Override

@@ -58,6 +58,15 @@ public class Main implements Comunicar {
             case "pintar", "tempsReal", "tempsEsperat":
                 finestra.comunicar(s);
                 break;
+            case "N":
+                int n = Integer.parseInt(params[1]);
+                dades.createMatrix(n);
+                finestra.comunicar("pintar");
+                break;
+            case "inici":
+                dades.setForatTromino(Integer.parseInt(params[1]),Integer.parseInt(params[2]));
+                finestra.comunicar("pintar");
+                break;
             case "executar":
                 switch (params[1]) {
                     case "tromino":

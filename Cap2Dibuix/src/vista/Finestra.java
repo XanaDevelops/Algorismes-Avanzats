@@ -28,6 +28,8 @@ public class Finestra extends JFrame implements Comunicar {
         this.setTitle("Dibuixos recursius");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(700, 700));
+        setResizable(false);
+
         this.setLayout(new BorderLayout());
 
         dibuix = new DibuixTromino(300, 300, principal);
@@ -36,6 +38,12 @@ public class Finestra extends JFrame implements Comunicar {
         botons.setLayout(new FlowLayout());
 
         nField = (JTextField)botons.add(new JTextField(5));
+        nField.addActionListener(e -> {
+            if (dibuix instanceof DibuixTromino){
+                enviar("N");
+            }
+        });
+
         dibuixosCBox = (JComboBox<String>) botons.add(generateComboBox());
 
         ((JButton)botons.add(new JButton("Pintar"))).addActionListener(e -> {
@@ -80,6 +88,7 @@ public class Finestra extends JFrame implements Comunicar {
                     if (!(dibuix instanceof DibuixTromino)){
                         replace(new DibuixTromino(300, 300, principal));
                     }
+                    enviar("N");
                     break;
                 case "triangles":
                     if (!(dibuix instanceof DibuixSierpinski)){
