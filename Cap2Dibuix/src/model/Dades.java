@@ -10,6 +10,7 @@ public class Dades {
     private int profunditat;
     //
     //dades tromino
+    private int [] foratTromino;
 
     //dades triangles
 
@@ -61,5 +62,13 @@ public class Dades {
 
     public void setProfunditat(int profunditat) {
         this.profunditat = profunditat;
+    }
+
+    public void setForatTromino(int[] forat) {
+        this.foratTromino = forat;
+    }
+
+    public int [] getForatTromino() {
+        return foratTromino;
     }
 }
