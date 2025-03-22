@@ -29,6 +29,12 @@ public class CarpetaSierpinski implements Runnable, Comunicar {
                 data.setValor(i+x, j+y, numActual);
             }
         }
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        main.comunicar("pintar");
 
 
     }
@@ -46,8 +52,6 @@ public class CarpetaSierpinski implements Runnable, Comunicar {
                     }
                 }
             }
-
-
     }
 public void imprimir() {
      int [][] t = data.getTauler();
@@ -73,7 +77,6 @@ public void imprimir() {
 
         //actualitzar la constant multiplicativa
         data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
-
 
     }
 
