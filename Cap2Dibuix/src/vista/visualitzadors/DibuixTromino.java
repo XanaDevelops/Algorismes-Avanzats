@@ -26,6 +26,7 @@ public class DibuixTromino extends JPanel implements Comunicar {
 
     public void colorON() {
         this.colorON = !colorON;
+        repaint();
     }
 
     private void dibuixarVoraExterior(int[][] matriu, int i, int j, Graphics g) {

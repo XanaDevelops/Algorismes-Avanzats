@@ -68,7 +68,7 @@ public class Finestra extends JFrame implements Comunicar {
         JComboBox<String> comboBox = new JComboBox<>();
         comboBox.addItem("tromino");
         comboBox.addItem("triangles");
-        //comboBox.addItem("[REDACTED]");
+        comboBox.addItem("quadrat");
 
         comboBox.setSelectedIndex(0);
 
@@ -78,25 +78,36 @@ public class Finestra extends JFrame implements Comunicar {
             switch ((String) Objects.requireNonNull(comboBox.getSelectedItem())){
                 case "tromino":
                     if (!(dibuix instanceof DibuixTromino)){
-                        this.remove((Component) dibuix);
-                        dibuix = new DibuixTromino(300, 300, principal);
-                        this.add((Component) dibuix, BorderLayout.CENTER);
-                        this.revalidate();
+                        replace(new DibuixTromino(300, 300, principal));
                     }
                     break;
                 case "triangles":
                     if (!(dibuix instanceof DibuixSierpinski)){
-                        this.remove((Component) dibuix);
-
-                        dibuix = new DibuixSierpinski(principal);
-
-                        this.add((Component) dibuix, BorderLayout.CENTER);
-                        this.revalidate();
+                        replace(new DibuixSierpinski(principal));
                     }
+                    break;
+                case "quadrat":
+                    //TODO: CAMBIAR POR DIBUIX PROPI!!!!
+                    if (!(dibuix instanceof DibuixTromino)){
+                        replace(new DibuixTromino(300, 300, principal));
+                    }
+                    break;
+                default:
+                    System.err.println("dibuix no valid");
             }
         });
         return comboBox;
     }
+
+    private void replace(Comunicar nouDibuix) {
+        this.remove((Component) dibuix);
+        dibuix.comunicar("borrar");
+        dibuix = nouDibuix;
+
+        this.add((Component) nouDibuix, BorderLayout.CENTER);
+        this.revalidate();
+    }
+
 
     private void enviar(String msg) {
         String nText = nField.getText().trim();

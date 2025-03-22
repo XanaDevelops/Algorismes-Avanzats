@@ -1,19 +1,20 @@
 package model.solvers;
 import model.Dades;
 import model.Tipus;
+import principal.Comunicar;
 import principal.Main;
 
 import java.util.Arrays;
 
-public class CarpetaSierpinski implements Runnable {
+public class CarpetaSierpinski implements Runnable, Comunicar {
   Main main;
   Dades data;
   private int size;
   private static int numActual;
 
-  public CarpetaSierpinski(Main main) {
+  public CarpetaSierpinski(Main main, Dades dades) {
       this.main = main;
-      this.data = main.getDades();
+      this.data = dades;
       data.setTipus(Tipus.QUADRAT);
       this.size = (int)Math.pow(3, data.getProfunditat());
       numActual = 1;
@@ -76,6 +77,19 @@ public void imprimir() {
         //actualitzar la constant multiplicativa
         data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
 
+
+    }
+
+    /**
+     * @param s
+     */
+    @Override
+    public void comunicar(String s) {
+        switch (s){
+            case "aturar":
+                System.err.println("ATURAR carpeta sierpinski");
+                break;
+        }
 
     }
 }

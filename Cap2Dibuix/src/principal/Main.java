@@ -3,10 +3,12 @@ package principal;
 import model.Dades;
 import model.Tipus;
 
+import model.solvers.CarpetaSierpinski;
 import model.solvers.SierpinskiSolver;
 import model.solvers.TrominoSolver;
 import vista.Finestra;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,34 +61,32 @@ public class Main implements Comunicar {
             case "executar":
                 switch (params[1]) {
                     case "tromino":
-                        for (Comunicar enmarxa : processos) {
-                            enmarxa.comunicar("aturar");
+                        try {
+                            executar(TrominoSolver.class, Integer.parseInt(params[2]));
+                        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                                 InvocationTargetException e) {
+                            throw new RuntimeException(e);
                         }
-
-                        processos.clear();
-                        int midaT = Integer.parseInt(params[2]);
-                        dades.setProfunditat(midaT);
-
-                        TrominoSolver tS = new TrominoSolver(this, dades);
-
-                        processos.add(tS);
-                        executor.execute(tS);
                         break;
+
                     case "triangles":
-                        for (Comunicar enmarxa : processos) {
-                            enmarxa.comunicar("aturar");
+                        try {
+                            executar(SierpinskiSolver.class,(int) Math.pow(2, Integer.parseInt(params[2])));
+                        } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |
+                                 IllegalAccessException e) {
+                            throw new RuntimeException(e);
                         }
-
-                        processos.clear();
-                        int midaS = (int) Math.pow(2, Integer.parseInt(params[2]));
-                        dades.setProfunditat(midaS);
-
-                        SierpinskiSolver sS = new SierpinskiSolver(this, dades);
-
-                        processos.add(sS);
-                        executor.execute(sS);
+                        break;
+                    case "quadrat":
+                        try {
+                            executar(CarpetaSierpinski.class, (int) Math.pow(3, Integer.parseInt(params[2])));
+                        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                                 IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
                         break;
                     default:
+                        System.err.println("execucio "+s+" desconegut");
                         break;
                 }
             case "aturar":
@@ -95,8 +95,22 @@ public class Main implements Comunicar {
                 }
                 break;
             default:
+                System.err.println("missatge "+s+" desconegut");
                 break;
         }
+    }
+
+    private void executar(Class<? extends Comunicar> clase, int profunditat) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        for (Comunicar enmarxa : processos) {
+            enmarxa.comunicar("aturar");
+        }
+
+        processos.clear();
+
+        dades.setProfunditat(profunditat);
+        Comunicar proces = (Comunicar) clase.getConstructor(Main.class, Dades.class).newInstance(this, dades);
+        processos.add(proces);
+        executor.execute((Runnable) proces);
     }
 
     public Dades getDades() {
