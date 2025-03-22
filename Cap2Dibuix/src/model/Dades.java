@@ -10,16 +10,24 @@ public class Dades {
     private int profunditat;
     //
     //dades tromino
-    private int[]  inici = new int[2];
+    private int[]  foratTromino = new int[2];
 
     public void setInici(int x, int y) {
-        inici[0] = x;
-        inici[1] = y;
+        foratTromino[0] = x;
+        foratTromino[1] = y;
         tauler[x][y] = -1;
     }
     public void createMatrix(int n) {
         int m = (int) Math.pow(2,n);
         tauler = new int[m][m];
+    }
+
+    public void setForatTromino(int[] forat) {
+        this.foratTromino = forat;
+    }
+
+    public int [] getForatTromino() {
+        return foratTromino;
     }
 
     //dades triangles
@@ -72,5 +80,13 @@ public class Dades {
 
     public void setProfunditat(int profunditat) {
         this.profunditat = profunditat;
+    }
+
+    public void setForatTromino(int[] forat) {
+        this.foratTromino = forat;
+    }
+
+    public int [] getForatTromino() {
+        return foratTromino;
     }
 }
