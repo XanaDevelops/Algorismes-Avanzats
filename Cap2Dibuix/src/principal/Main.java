@@ -110,7 +110,7 @@ public class Main implements Comunicar {
                 finestra.comunicar("pintar");
                 break;
             default:
-                System.err.println("missatge "+s+" desconegut");
+                System.err.println("MAIN: missatge "+s+" desconegut");
                 break;
         }
     }

@@ -27,6 +27,7 @@ public class CarpetaSierpinski implements Runnable, Comunicar {
         for (int i = 0; i <size ; i++) {
             for (int j = 0; j <size ; j++) {
                 data.setValor(i+x, j+y, numActual);
+                main.comunicar("pintar");
             }
         }
 
@@ -61,7 +62,7 @@ public void imprimir() {
     @Override
     public void run() {
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(3, data.getProfunditat());
-        main.comunicar("tempsEsperat "+ tempsEsperat);//??
+        main.comunicar("tempsEsperat:"+ tempsEsperat);
         long time = System.currentTimeMillis();
         drawSiperpinskiCarpet(0, 0, data.getTauler().length);
 
