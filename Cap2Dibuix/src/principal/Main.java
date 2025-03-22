@@ -80,7 +80,7 @@ public class Main implements Comunicar {
 
                     case "triangles":
                         try {
-                            executar(SierpinskiSolver.class,(int) Math.pow(2, Integer.parseInt(params[2])));
+                            executar(SierpinskiSolver.class,(int) Math.pow(2, (double)Integer.parseInt(params[2])/2));
                         } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |
                                  IllegalAccessException e) {
                             throw new RuntimeException(e);

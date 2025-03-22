@@ -8,26 +8,35 @@ import principal.Main;
 
 import java.util.Arrays;
 
+/**
+ * Classe que implementa un solucionador del problema dels Trominos utilitzant
+ * el mètode divideix i venceràs. Implementa Runnable per permetre
+ * l'execució en fils.
+ */
 public class TrominoSolver implements Runnable, Comunicar {
-    private Main p;
-    private Dades data;
-    private static int numActual;
-    private static final int RETJOLA = -1;
-    /**
-     * Variable booleana per poder aturar el fil d'execució.
-     */
-    private volatile boolean stop;
+    private Main p; // Referència a l'objecte principal
+    private Dades data; // Objecte que conté les dades del problema
+    private static int numActual; // Número del tromino actual
+    private static final int RETJOLA = -1; // Valor que representa el forat al tauler
+    private boolean stop; // Variable per controlar si el procés s'ha d'aturar
 
+    /**
+     * Constructor de la classe.
+     * @param p Instància de Main que s'encarrega de gestionar la comunicació entre components.
+     * @param data Objecte que conté la informació del tauler i les dades necessàries per generar el fractal.
+     */
     public TrominoSolver(Main p, Dades data) {
         this.p = p;
         this.data = data;
+
+        // Estableix el tipus de fractal que es generarà
         data.setTipus(Tipus.TROMINO);
 
-
+        // Inicialitza el tauler amb la mida adequada
         data.setTauler(new int[data.getProfunditat()][data.getProfunditat()]);
         numActual = 1;
 
-        // Inicialitzar la matriu amb totes les caselles buides
+        // Omple tota la matriu amb el valor 0 (caselles buides)
         for (int[] fila : data.getTauler()) {
             Arrays.fill(fila, 0);
         }
@@ -35,23 +44,27 @@ public class TrominoSolver implements Runnable, Comunicar {
         data.setValor(data.getIniciTromino()[0],  data.getIniciTromino()[1], RETJOLA);
     }
 
+    /**
+     * Mètode recursiu per resoldre el problema dels trominos.
+     * @param mida Mida de la submatriu actual
+     * @param topx Coordenada X superior esquerra
+     * @param topy Coordenada Y superior esquerra
+     */
     private void trominoRec(int mida, int topx, int topy) {
         if(!stop) {
-            // Cas base: mida 2x2, col·locar l'última casella
             if (mida == 2) {
+                // Cas base: si la mida és 2x2, omplim el tromino restant
                 omplirTromino(topx, topy, mida);
-                //            main.comunicar("omplicarTromino x"+ topx +" y"+ topy +" mida"+ mida );
                 numActual++;
             } else {
-                // Cas recursiu
+                // Troba la posició del forat en el subtauler
                 int[] forat = trobarForat(topx, topy, mida);
 
                 // Utilitzem l'enum Mode per determinar la ubicació del forat i procedir segons correspongui
                 Mode mode = determinarMode(forat[0], forat[1], topx, topy, mida);
 
-                // Omplim el tromino central
+                // Omple el tromino central depenent del mode
                 omplirTrominoCentral(mode, topx, topy, mida);
-                //            main.comunicar("omplirTrominoCentral mode"+ mode + " x"+ topx +" y"+ topy +" mida"+ mida ); //algo de l'estil
 
                 // Recursió per als quatre quadrants
                 trominoRec(mida / 2, topx, topy);
@@ -62,7 +75,9 @@ public class TrominoSolver implements Runnable, Comunicar {
         }
     }
 
-    // Troba la posició del forat dins un sub-tauler (quadrant).
+    /**
+     * Troba la posició del forat dins del subtauler actual.
+     */
     private int[] trobarForat(int topx, int topy, int mida) {
         int[] forat = new int[2];
         for (int x = topx; x < topx + mida; x++) {
@@ -132,26 +147,48 @@ public class TrominoSolver implements Runnable, Comunicar {
     @Override
     public void run() {
         stop = false;
-        double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2, data.getProfunditat());
-        System.out.println("Temps esperat " + tempsEsperat  + " segons");
-        p.comunicar("tempsEsperat");
 
-        long time = System.currentTimeMillis();
+        // Inicia el comptador de temps en nanosegons
+        long startTime = System.nanoTime();
+
         trominoRec(data.getTauler().length, 0, 0);
 
-        p.comunicar("aturar");
+        // Calcula el temps real en nanosegons
+        long elapsedTime = System.nanoTime() - startTime;
 
-        time = (System.currentTimeMillis() - time)/1000;
-        System.out.println("Temps real " + time  + " segons");
+        // Converteix a segons (double)
+        double tempsReal = elapsedTime / 1_000_000_000.0;
+
+        // Calcula la constant multiplicativa
+        double profunditatExp = Math.pow(2, data.getProfunditat());
+        double constantMultiplicativa = tempsReal / profunditatExp;
+
+        // Desa la constant multiplicativa
+        data.setConstantMultiplicativa(constantMultiplicativa);
+
+        // Calcula el temps esperat d'execució en segons
+        double tempsEsperat = constantMultiplicativa * profunditatExp;
+
+        // Mostra els resultats
+        System.out.printf("Temps esperat: %.8f segons%n", tempsEsperat);
+        p.comunicar("tempsEsperat");
+
+        System.out.printf("Temps real: %.8f segons%n", tempsReal);
         p.comunicar("tempsReal");
 
-        //actualitzar la constant multiplicativa
-        data.setConstantMultiplicativa(time/Math.pow(2, data.getProfunditat() ));
+        // Notifica que el procés ha finalitzat
+        p.comunicar("aturar");
 
         //prevenir tornar a aturar
         if(!stop) aturar();
     }
 
+    /**
+     * Mètode per rebre missatges de comunicació.
+     * Si es rep el missatge "aturar", es deté l'execució del fractal.
+     *
+     * @param s Missatge rebut per comunicar ordres al solver.
+     */
     @Override
     public void comunicar(String s) {
         if (s.contentEquals("aturar")) {
@@ -160,10 +197,9 @@ public class TrominoSolver implements Runnable, Comunicar {
     }
 
     /**
-     * Mètode per aturar el fil d'execució.
+     * Mètode per aturar l'execució del Solver.
+     * Estableix la variable stop a true per indicar que el fil ha de finalitzar.
      */
-    private void aturar() {
-        stop = true;
-    }
+    private void aturar() { stop = true; }
 }
 
