@@ -9,16 +9,14 @@ import java.util.Arrays;
 public class CarpetaSierpinski implements Runnable, Comunicar {
   Main main;
   Dades data;
-  private int size;
   private static int numActual;
 
   public CarpetaSierpinski(Main main, Dades dades) {
       this.main = main;
       this.data = dades;
       data.setTipus(Tipus.QUADRAT);
-      this.size = (int)Math.pow(3, data.getProfunditat());
       numActual = 1;
-      int [][] t = new int[size][size];
+      int [][] t = new int[data.getProfunditat()][data.getProfunditat()];
       for (int i = 0; i < t.length; i++) {
           Arrays.fill(t[i], 0);
       }
@@ -32,7 +30,6 @@ public class CarpetaSierpinski implements Runnable, Comunicar {
             }
         }
 
-//        numActual++;
 
     }
     private void drawSiperpinskiCarpet(int x, int y, int size) {
@@ -54,12 +51,12 @@ public class CarpetaSierpinski implements Runnable, Comunicar {
     }
 public void imprimir() {
      int [][] t = data.getTauler();
-     for (int i = 0; i < t.length; i++) {
-         for (int j = 0; j < t[i].length; j++) {
-             System.out.print(t[i][j] + " ");
-         }
-         System.out.println();
-     }
+    for (int[] ints : t) {
+        for (int anInt : ints) {
+            System.out.print(anInt + " ");
+        }
+        System.out.println();
+    }
 }
     @Override
     public void run() {
