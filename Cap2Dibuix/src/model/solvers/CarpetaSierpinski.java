@@ -10,7 +10,7 @@ public class CarpetaSierpinski implements Runnable, Comunicar {
   Main main;
   Dades data;
   private static int numActual;
-
+  private boolean stop;
   public CarpetaSierpinski(Main main, Dades dades) {
       this.main = main;
       this.data = dades;
@@ -29,16 +29,23 @@ public class CarpetaSierpinski implements Runnable, Comunicar {
                 data.setValor(i+x, j+y, numActual);
             }
         }
+        try {
+            Thread.sleep(0, 500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        main.comunicar("pintar");
 
 
     }
     private void drawSiperpinskiCarpet(int x, int y, int size) {
 
-        if (size==1) {
-            drawSquare(x, y, size);
-            numActual++;
-            return;
-        }
+        if(!stop){
+            if (size==1) {
+                drawSquare(x, y, size);
+                numActual++;
+                return;
+            }
             for (int i = 0; i < 3; i++) {//posició y
                 for (int j = 0; j < 3; j++) { // posició x
                     if (!(i == 1 && j == 1)){ //quadre no buit
@@ -46,8 +53,7 @@ public class CarpetaSierpinski implements Runnable, Comunicar {
                     }
                 }
             }
-
-
+        }
     }
 public void imprimir() {
      int [][] t = data.getTauler();
@@ -60,21 +66,25 @@ public void imprimir() {
 }
     @Override
     public void run() {
-        double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(3, data.getProfunditat());
+        stop = false;
+
+        double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(8, data.getProfunditat());
         main.comunicar("tempsEsperat "+ tempsEsperat);//??
-        long time = System.currentTimeMillis();
+
+        long time = System.nanoTime();
         drawSiperpinskiCarpet(0, 0, data.getTauler().length);
 
-        main.comunicar("acabar");
+        main.comunicar("aturar");
 
-        time = (System.currentTimeMillis() - time)/1000;
+        time = (System.nanoTime() - time)/1000000000;
         System.out.println("Temps real " + time  + " segons");
-        main.comunicar("tempsReal");
+        main.comunicar("tempsReal "+ time);
 
         //actualitzar la constant multiplicativa
         data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
-
-
+        if (!stop) {
+            aturar();
+        }
     }
 
     /**
@@ -88,5 +98,8 @@ public void imprimir() {
                 break;
         }
 
+    }
+    private void aturar() {
+        stop = true;
     }
 }
