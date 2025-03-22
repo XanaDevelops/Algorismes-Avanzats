@@ -1,4 +1,4 @@
-package vista;
+package vista.visualitzadors;
 
 import principal.Comunicar;
 import principal.Main;

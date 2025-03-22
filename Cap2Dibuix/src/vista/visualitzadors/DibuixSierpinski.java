@@ -1,12 +1,10 @@
-package vista;
+package vista.visualitzadors;
 
 import principal.Comunicar;
 import principal.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.TreeSet;
 
 public class DibuixSierpinski extends JPanel implements Comunicar {
     Comunicar principal;
@@ -18,7 +16,7 @@ public class DibuixSierpinski extends JPanel implements Comunicar {
     //Evita que dibuixi just a la borera de la finestra
     private final int xBorder = 20, yBorder = 20;
 
-    private final Color[] colors = {Color.orange, Color.CYAN, Color.green, Color.RED};
+    private final Color[] colors = {Color.orange, Color.CYAN, Color.green, Color.RED, Color.pink, Color.magenta};
 
     public DibuixSierpinski(Comunicar principal) {
         this.principal = principal;

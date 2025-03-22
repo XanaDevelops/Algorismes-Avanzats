@@ -19,17 +19,15 @@ public class Main implements Comunicar {
     private ArrayList<Comunicar> processos = null;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(16);
-    ;
 
-    private void init() {
+
+
 
     public int[][] getMatriu() {
         return dades.getTauler();
     }
 
-    public Dades getDades() {
-        return dades;
-    }
+
 
     private void init(){
         dades = new Dades();

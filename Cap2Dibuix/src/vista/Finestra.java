@@ -2,9 +2,10 @@ package vista;
 
 import model.Dades;
 import principal.Comunicar;
+import vista.visualitzadors.DibuixSierpinski;
+import vista.visualitzadors.DibuixTromino;
 
 import javax.swing.*;
-import javax.swing.plaf.DimensionUIResource;
 import java.awt.*;
 import java.util.Objects;
 
