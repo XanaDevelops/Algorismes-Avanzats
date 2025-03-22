@@ -6,12 +6,12 @@ import principal.Main;
 
 import java.util.Arrays;
 
-public class CarpetaSierpinski implements Runnable, Comunicar {
+public class SierpinskiCarpetSolver implements Runnable, Comunicar {
   Main main;
   Dades data;
   private static int numActual;
   private boolean stop;
-  public CarpetaSierpinski(Main main, Dades dades) {
+  public SierpinskiCarpetSolver(Main main, Dades dades) {
       this.main = main;
       this.data = dades;
       data.setTipus(Tipus.QUADRAT);
