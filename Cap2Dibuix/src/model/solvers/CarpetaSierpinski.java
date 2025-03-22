@@ -30,7 +30,7 @@ public class CarpetaSierpinski implements Runnable, Comunicar {
             }
         }
         try {
-            Thread.sleep(2);
+            Thread.sleep(0, 500);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
