@@ -1,4 +1,4 @@
-package model;
+package model.solvers;
 
 public enum Mode {
     LD ("LD",  0),
@@ -21,4 +21,5 @@ public enum Mode {
     public int getValue() {
         return value;
     }
+
 }
