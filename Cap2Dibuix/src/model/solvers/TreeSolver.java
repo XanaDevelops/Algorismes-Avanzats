@@ -36,11 +36,11 @@ public class TreeSolver implements Runnable, Comunicar {
            g.setColor(Color.RED);
 
            g.drawLine(x1, y1, x2, y2);
-//           try {
-//               Thread.sleep(2);
-//           } catch (InterruptedException e) {
-//               throw new RuntimeException(e);
-//           }
+//            try {
+//            Thread.sleep(5/1000000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 //           main.comunicar("pintar");
 
            generarArbol(g, x2, y2, angle - 20, p - 1);
@@ -57,7 +57,7 @@ public class TreeSolver implements Runnable, Comunicar {
         stop = false;
         //suposant aqui, q
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2,data.getProfunditat());
-        main.comunicar("tempsEsperat "+ tempsEsperat);//??
+        main.comunicar("tempsEsperat:"+ tempsEsperat);//??
 
         long time = System.nanoTime();
         generarArbol(g, image.getHeight()/2, image.getHeight()-300, -90, data.getProfunditat());
@@ -65,7 +65,7 @@ public class TreeSolver implements Runnable, Comunicar {
 
         time = System.nanoTime() - time;
         System.out.println("Temps real " + time + " segons");
-        main.comunicar("tempsReal "+ time);
+        main.comunicar("tempsReal:"+ time);
         g.dispose();
         if (!stop) {
             aturar();
