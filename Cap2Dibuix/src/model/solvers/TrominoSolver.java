@@ -23,6 +23,7 @@ public class TrominoSolver implements Runnable, Comunicar {
         this.data = data;
         data.setTipus(Tipus.TROMINO);
 
+
         data.setTauler(new int[data.getProfunditat()][data.getProfunditat()]);
         numActual = 1;
 
@@ -32,10 +33,10 @@ public class TrominoSolver implements Runnable, Comunicar {
         }
 
 
-        int num1 = (int) ((int)Math.pow(2, data.getProfunditat())* Math.random());
-        int num2 = (int) ((int)Math.pow(2, data.getProfunditat())* Math.random());
+        int num1 = (int) (data.getProfunditat()* Math.random());
+        int num2 = (int) (data.getProfunditat()* Math.random());
 
-        data.setValor(num1, num2, RETJOLA);
+        data.setInici(num1 , num2);
     }
 
     private void trominoRec(int mida, int topx, int topy) {

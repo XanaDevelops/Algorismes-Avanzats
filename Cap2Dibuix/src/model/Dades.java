@@ -8,7 +8,8 @@ public class Dades {
     private int[][] tauler;
     private double constantMultiplicativa;
     private int profunditat;
-    //
+
+
     //dades tromino
     private int[]  inici = new int[2];
 

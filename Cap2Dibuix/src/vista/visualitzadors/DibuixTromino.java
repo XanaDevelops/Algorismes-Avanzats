@@ -75,7 +75,7 @@ public class DibuixTromino extends JPanel implements Comunicar {
 
         int[][] matriu = ((Main) (principal)).getMatriu();
         if (matriu == null) {
-            System.err.println("No se puede pintar la matriu");
+            System.err.println("No se pot pintar la matriu");
             return;
         }
 
@@ -97,6 +97,10 @@ public class DibuixTromino extends JPanel implements Comunicar {
                     dibuixarVoraExterior(matriu, i, j, g);
 
                 }
+
+                // Dibuixar línies guia de color gris
+                g.setColor(Color.LIGHT_GRAY);
+                g.drawRect(j * midaCellx, i * midaCelly, midaCellx, midaCelly);
             }
         }
     }
