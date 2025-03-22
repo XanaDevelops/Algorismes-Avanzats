@@ -32,11 +32,7 @@ public class TrominoSolver implements Runnable, Comunicar {
             Arrays.fill(fila, 0);
         }
 
-        data.setForatTromino(new int[]{2,0});
-        int num1 = data.getForatTromino()[0];
-        int num2 = data.getForatTromino()[1];
-
-        data.setInici(num1 , num2);
+        data.setValor(data.getIniciTromino()[0],  data.getIniciTromino()[1], RETJOLA);
     }
 
     private void trominoRec(int mida, int topx, int topy) {

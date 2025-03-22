@@ -63,10 +63,13 @@ public class Main implements Comunicar {
                 dades.createMatrix(n);
                 finestra.comunicar("pintar");
                 break;
+            case "inici":
+                dades.setForatTromino(Integer.parseInt(params[1]),Integer.parseInt(params[2]));
+                finestra.comunicar("pintar");
+                break;
             case "executar":
                 switch (params[1]) {
                     case "tromino":
-                        System.out.println("Executando tromino " + params[1]);
                         try {
                             executar(TrominoSolver.class, (int) Math.pow(2, Integer.parseInt(params[2])));
                         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |

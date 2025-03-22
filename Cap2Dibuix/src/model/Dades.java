@@ -8,28 +8,25 @@ public class Dades {
     private int[][] tauler;
     private double constantMultiplicativa;
     private int profunditat;
-    //
-    //dades tromino
-    private int[]  foratTromino = new int[2];
 
-    public void setInici(int x, int y) {
-        foratTromino[0] = x;
-        foratTromino[1] = y;
-        tauler[x][y] = -1;
-    }
+    //TROMINOS
+    private int[] iniciTromino = new int[2];
+
     public void createMatrix(int n) {
         int m = (int) Math.pow(2,n);
         tauler = new int[m][m];
     }
 
-    public void setForatTromino(int[] forat) {
-        this.foratTromino = forat;
+    public void setForatTromino(int x, int y) {
+        tauler[iniciTromino[0]][iniciTromino[1]] = 0;
+        iniciTromino[0]=y;
+        iniciTromino[1]=x;
+        tauler[y][x] = -1;
     }
 
-    public int [] getForatTromino() {
-        return foratTromino;
+    public int[] getIniciTromino() {
+        return iniciTromino;
     }
-
     //dades triangles
 
 
@@ -82,11 +79,4 @@ public class Dades {
         this.profunditat = profunditat;
     }
 
-    public void setForatTromino(int[] forat) {
-        this.foratTromino = forat;
-    }
-
-    public int [] getForatTromino() {
-        return foratTromino;
-    }
 }
