@@ -68,7 +68,7 @@ public class Main implements Comunicar {
                     case "tromino":
                         System.out.println("Executando tromino " + params[1]);
                         try {
-                            executar(TrominoSolver.class, Integer.parseInt(params[2]));
+                            executar(TrominoSolver.class, (int) Math.pow(2, Integer.parseInt(params[2])));
                         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
                                  InvocationTargetException e) {
                             throw new RuntimeException(e);

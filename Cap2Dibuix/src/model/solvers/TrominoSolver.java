@@ -32,9 +32,9 @@ public class TrominoSolver implements Runnable, Comunicar {
             Arrays.fill(fila, 0);
         }
 
-
-        int num1 = (int) (data.getProfunditat()* Math.random());
-        int num2 = (int) (data.getProfunditat()* Math.random());
+        data.setForatTromino(new int[]{2,0});
+        int num1 = data.getForatTromino()[0];
+        int num2 = data.getForatTromino()[1];
 
         data.setInici(num1 , num2);
     }
@@ -125,7 +125,7 @@ public class TrominoSolver implements Runnable, Comunicar {
     private void omplirTromino(int topx, int topy, int mida) {
         for (int i = 0; i < mida; i++) {
             for (int j = 0; j < mida; j++) {
-                if (data.getValor(topx + 1, topy + j) == 0) {
+                if (data.getValor(topx + i, topy + j) == 0) {
                     data.setValor(topx + i, topy + j, numActual);
                     p.comunicar("pintar");
                 }
@@ -135,15 +135,13 @@ public class TrominoSolver implements Runnable, Comunicar {
 
     @Override
     public void run() {
-
         stop = false;
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2, data.getProfunditat());
         System.out.println("Temps esperat " + tempsEsperat  + " segons");
         p.comunicar("tempsEsperat");
 
         long time = System.currentTimeMillis();
-        trominoRec(data.getProfunditat(), 0, 0);
-
+        trominoRec(data.getTauler().length, 0, 0);
 
         p.comunicar("aturar");
 
@@ -153,7 +151,6 @@ public class TrominoSolver implements Runnable, Comunicar {
 
         //actualitzar la constant multiplicativa
         data.setConstantMultiplicativa(time/Math.pow(2, data.getProfunditat() ));
-
 
         //prevenir tornar a aturar
         if(!stop) aturar();
