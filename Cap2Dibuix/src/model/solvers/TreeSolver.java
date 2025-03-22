@@ -36,6 +36,12 @@ public class TreeSolver implements Runnable, Comunicar {
            g.setColor(Color.RED);
 
            g.drawLine(x1, y1, x2, y2);
+//           try {
+//               Thread.sleep(2);
+//           } catch (InterruptedException e) {
+//               throw new RuntimeException(e);
+//           }
+//           main.comunicar("pintar");
 
            generarArbol(g, x2, y2, angle - 20, p - 1);
            generarArbol(g, x2, y2, angle + 20, p - 1);
