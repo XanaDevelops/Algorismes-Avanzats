@@ -103,6 +103,11 @@ public class Main implements Comunicar {
                     proces.comunicar("aturar");
                 }
                 break;
+            case "borrar":
+                this.comunicar("aturar");
+                dades.clean();
+                finestra.comunicar("pintar");
+                break;
             default:
                 System.err.println("missatge "+s+" desconegut");
                 break;
@@ -111,7 +116,7 @@ public class Main implements Comunicar {
 
     private void executar(Class<? extends Comunicar> clase, int profunditat) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         for (Comunicar enmarxa : processos) {
-            enmarxa.comunicar("aturar");
+            enmarxa.comunicar("borrar");
         }
 
         processos.clear();

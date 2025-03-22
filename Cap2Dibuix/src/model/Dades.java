@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Arrays;
+
 
 public class Dades {
     private Tipus tipus;
@@ -77,6 +77,15 @@ public class Dades {
 
     public void setProfunditat(int profunditat) {
         this.profunditat = profunditat;
+    }
+
+    public void clean(){
+        this.profunditat = 0;
+        this.tauler = null;
+
+        iniciTromino[0] = 0;
+        iniciTromino[1] = 0;
+
     }
 
 }
