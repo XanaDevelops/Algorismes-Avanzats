@@ -13,7 +13,7 @@ public class DibuixCarpeta extends JPanel implements Comunicar {
     private boolean doColor = false;
 
     //Evita que dibuixi just a la borera de la finestra
-    private final int xBorder = 10, yBorder = 10;
+    private final int xBorder = 0, yBorder = 0;
 
     private final Color[] colors = {Color.orange, Color.CYAN, Color.green, Color.RED, Color.pink, Color.magenta};
     private int colorIndex = 0;
@@ -26,6 +26,9 @@ public class DibuixCarpeta extends JPanel implements Comunicar {
     private void colorSwitch(){
         System.err.println("Color switch " + !doColor);
         doColor = !doColor;
+        if(doColor){
+            colorIndex = (colorIndex + 1) % colors.length;
+        }
         repaint();
     }
 
@@ -41,7 +44,6 @@ public class DibuixCarpeta extends JPanel implements Comunicar {
             return;
         }
 
-        System.err.println(Arrays.deepToString(matriu));
 
         int rows = matriu.length;
         int cols = matriu[0].length;
@@ -53,20 +55,31 @@ public class DibuixCarpeta extends JPanel implements Comunicar {
         double heightRatio = (double)height / (double)(rows);
 
         for (int i = 0; i < rows; i++) {
-            int colorI = i;
-            for (int j = 0; j < cols; j++) {
-                if (matriu[i][j] != 0) {
-                    //calcula la posició relativa a la mida del panell
-                    int x = (int)((j)*widthRatio) + (xBorder/2);
-                    int y = (int)((i)*heightRatio) + (yBorder/2);
 
-                    if(doColor){
-                        g2d.setColor(colors[(colorI++) % colors.length]);
-                        g2d.fillRect(x,y, (int)widthRatio, (int)heightRatio);
-                    }
-                    g2d.setColor(Color.black);
-                    g2d.drawRect(x,y, (int)widthRatio, (int)heightRatio);
+            for (int j = 0; j < cols; j++) {
+                //calcula la posició relativa a la mida del panell
+
+                int x = (int) ((j) * widthRatio) + (xBorder / 2);
+                int y = (int) ((i) * heightRatio) + (yBorder / 2);
+
+                Color fg, bg;
+                if (doColor) {
+                    fg = colors[colorIndex % colors.length];
+                    bg = fg.darker();
+                } else {
+                    fg = Color.BLACK;
+                    bg = Color.WHITE;
                 }
+
+                if (matriu[i][j] == 0) {
+                    g2d.setColor(bg);
+                    g2d.fillRect(x,y, (int)Math.ceil(widthRatio), (int)Math.ceil(heightRatio));
+                } else {
+                    g2d.setColor(fg);
+                    g2d.fillRect(x,y, (int)Math.ceil(widthRatio), (int)Math.ceil(heightRatio));
+                }
+
+
             }
         }
 

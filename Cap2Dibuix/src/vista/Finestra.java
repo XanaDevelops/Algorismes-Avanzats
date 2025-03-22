@@ -28,13 +28,14 @@ public class Finestra extends JFrame implements Comunicar {
 
         this.setTitle("Dibuixos recursius");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(700, 700));
         setResizable(false);
 
         this.setLayout(new BorderLayout());
 
         dibuix = new DibuixTromino(300, 300, principal);
 
+        //volem un quadrat al dibuix, no necesariament la finestra
+        ((Component)dibuix).setPreferredSize(new Dimension(700, 700));
         JPanel botons = new JPanel();
         botons.setLayout(new FlowLayout());
 
