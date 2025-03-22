@@ -1,18 +1,15 @@
-package vista;
+package vista.visualitzadors;
 
 import principal.Comunicar;
 import principal.Main;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
-public class DibuixTromino extends PanellDobleBuffer {
+public class DibuixTromino extends JPanel implements Comunicar {
 
     private final Comunicar principal;
     private boolean colorON = false;
-    private int x;
-    private int y;
 
 
     /**
@@ -24,14 +21,12 @@ public class DibuixTromino extends PanellDobleBuffer {
      */
     public DibuixTromino(int w, int h, Comunicar p) {
         this.principal = p;
-    this.x = w;
-    this.y = h;
-
         this.setBounds(0, 0, w, h);
     }
 
     public void colorON() {
         this.colorON = !colorON;
+        repaint();
     }
 
     private void dibuixarVoraExterior(int[][] matriu, int i, int j, Graphics g) {
@@ -39,8 +34,8 @@ public class DibuixTromino extends PanellDobleBuffer {
         int id = matriu[i][j];
         int files = matriu.length;
         int columnes = matriu[0].length;
-        int midaCellx = x / columnes;
-        int midaCelly = y / files;
+        int midaCellx = this.getWidth() / columnes;
+        int midaCelly = this.getHeight() / files;
         int x = j * midaCellx;
         int y = i * midaCelly;
 
@@ -74,11 +69,13 @@ public class DibuixTromino extends PanellDobleBuffer {
      */
 
     @Override
-    public void pintar(Graphics g) {
+    public void paint(Graphics g) {
         super.paintComponent(g);
+
 
         int[][] matriu = ((Main) (principal)).getMatriu();
         if (matriu == null) {
+            System.err.println("No se puede pintar la matriu");
             return;
         }
 
@@ -88,13 +85,8 @@ public class DibuixTromino extends PanellDobleBuffer {
         int midaCellx = this.getWidth() / columnes;
         int midaCelly = this.getHeight() / files;
 
-
-
         for (int i = 0; i < files; i++) {
             for (int j = 0; j < columnes; j++) {
-                g.setColor(Color.WHITE);
-                g.drawRect(j * midaCellx, i * midaCelly, midaCellx, midaCelly);
-                g.setColor(Color.BLACK);
                 if (matriu[i][j] != -1) { // Suposant que -1 significa buit
                     if (colorON) {
                         g.setColor(getColorForTromino(matriu[i][j]));
@@ -114,6 +106,17 @@ public class DibuixTromino extends PanellDobleBuffer {
      */
     @Override
     public void comunicar(String s) {
-        repaint();
+        switch (s){
+            case "pintar":
+                repaint();
+                break;
+            case "color":
+                colorON();
+                break;
+            case "borrar":
+                System.err.println("borrar no implementat");
+                break;
+        }
+
     }
 }

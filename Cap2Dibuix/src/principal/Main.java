@@ -1,24 +1,39 @@
 package principal;
+
 import model.Dades;
+import model.Tipus;
+
+import model.solvers.CarpetaSierpinski;
+import model.solvers.SierpinskiSolver;
+import model.solvers.TrominoSolver;
 import vista.Finestra;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main implements Comunicar {
 
     private Comunicar finestra;
-    private Dades dades;
-    private Comunicar solver;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(16);;
+    private Dades dades;
+    private ArrayList<Comunicar> processos = null;
+
+    private final ExecutorService executor = Executors.newFixedThreadPool(16);
+
+
+
 
     public int[][] getMatriu() {
         return dades.getTauler();
     }
 
+
+
     private void init(){
         dades = new Dades();
+        processos = new ArrayList<>();
 
         //generar finestra
         executor.execute(() -> {
@@ -28,6 +43,7 @@ public class Main implements Comunicar {
     }
 
     public static void main(String[] args) {
+
         (new Main()).init();
     }
 
@@ -39,69 +55,69 @@ public class Main implements Comunicar {
         String[] params = s.split(":");
 
         switch (params[0]) {
-            case "N":
-                dades.createMatrix( Integer.parseInt(params[1]));
-                break;
-            case "pintar":
+            case "pintar", "tempsReal", "tempsEsperat":
                 finestra.comunicar(s);
                 break;
             case "executar":
-                switch (params[1]){
+                switch (params[1]) {
                     case "tromino":
-                        System.out.println("-------------------------------");
+                        try {
+                            executar(TrominoSolver.class, Integer.parseInt(params[2]));
+                        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                                 InvocationTargetException e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
 
-                        int[][] matrix = {
-                            {  1,  1,  0,  0 },
-                            {  1, -1,  0,  0 },
-                            {  0,  0,  0,  0 },
-                            {  0,  0,  0,  0 }
-                    };
-                     dades.setTauler(matrix);
-                     esperar(1000);
-                        matrix = new int[][]{
-                                {  1,  1,  0,  0 },
-                                {  1, -1,  0,  0 },
-                                {  2,  0,  0,  0 },
-                                {  2,  2,  0,  0 }
-                        };
-                        dades.setTauler(matrix);
-                        esperar(1000);
-
-                        matrix = new int[][]{
-                                {  1,  1,  0,  0 },
-                                {  1, -1,  0,  0 },
-                                {  2,  0,  0,  3 },
-                                {  2,  2,  3,  3 }
-                        };
-                        dades.setTauler(matrix);
-                        esperar(1000);
-                        matrix = new int[][]{
-                                {  1,  1,  0,  0 },
-                                {  1, -1,  4,  0 },
-                                {  2,  4,  4,  3 },
-                                {  2,  2,  3,  3 }
-                        };
-                        dades.setTauler(matrix);
-                        esperar(1000);
-
-
-
-
-
-
-                        //finestra.comunicar(s);
+                    case "triangles":
+                        try {
+                            executar(SierpinskiSolver.class,(int) Math.pow(2, Integer.parseInt(params[2])));
+                        } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |
+                                 IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    case "quadrat":
+                        try {
+                            executar(CarpetaSierpinski.class, (int) Math.pow(3, Integer.parseInt(params[2])));
+                        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                                 IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
                         break;
                     default:
-                        System.out.println("main, comunicar no implementat");
+                        System.err.println("execucio "+s+" desconegut");
+                        break;
                 }
+            case "aturar":
+                for (Comunicar proces : processos) {
+                    proces.comunicar("aturar");
+                }
+                break;
+            default:
+                System.err.println("missatge "+s+" desconegut");
+                break;
         }
     }
 
-    private void esperar(int i){
-        try {
-            Thread.sleep(i);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+    private void executar(Class<? extends Comunicar> clase, int profunditat) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        for (Comunicar enmarxa : processos) {
+            enmarxa.comunicar("aturar");
         }
+
+        processos.clear();
+
+        dades.setProfunditat(profunditat);
+        Comunicar proces = (Comunicar) clase.getConstructor(Main.class, Dades.class).newInstance(this, dades);
+        processos.add(proces);
+        executor.execute((Runnable) proces);
+    }
+
+    public Dades getDades() {
+        return dades;
+    }
+
+    public void setDades(Dades dades) {
+        this.dades = dades;
     }
 }
