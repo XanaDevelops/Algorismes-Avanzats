@@ -37,17 +37,17 @@ public class Finestra extends JFrame implements Comunicar {
         JPanel botons = new JPanel();
         botons.setLayout(new FlowLayout());
 
+        JButton pintarButton = new JButton("Pintar");
+
         nField = (JTextField)botons.add(new JTextField(5));
         nField.addActionListener(e -> {
-            if (dibuix instanceof DibuixTromino){
-                enviar("N");
-            }
+            pintarButton.doClick();
         });
 
         dibuixosCBox = (JComboBox<String>) botons.add(generateComboBox());
 
-        ((JButton)botons.add(new JButton("Pintar"))).addActionListener(e -> {
-            enviar("executar:"+dibuixosCBox.getSelectedItem());
+        ((JButton)botons.add(pintarButton)).addActionListener(e -> {
+            enviarAmbN("executar:"+dibuixosCBox.getSelectedItem());
         });
         ((JButton)botons.add(new JButton("Aturar"))).addActionListener(e -> {
             principal.comunicar("aturar");
@@ -86,20 +86,20 @@ public class Finestra extends JFrame implements Comunicar {
             switch ((String) Objects.requireNonNull(comboBox.getSelectedItem())){
                 case "tromino":
                     if (!(dibuix instanceof DibuixTromino)){
+                        principal.comunicar("borrar");
                         replace(new DibuixTromino(300, 300, principal));
                     }
-                    enviar("N");
                     break;
                 case "triangles":
                     if (!(dibuix instanceof DibuixSierpinski)){
-                        enviar("borrar");
+                        principal.comunicar("borrar");
                         replace(new DibuixSierpinski(principal));
                     }
                     break;
                 case "quadrat":
                     //TODO: CAMBIAR POR DIBUIX PROPI!!!!
                     if (!(dibuix instanceof DibuixTromino)){
-                        enviar("borrar");
+                        principal.comunicar("borrar");
                         replace(new DibuixTromino(300, 300, principal));
                     }
                     break;
@@ -120,7 +120,11 @@ public class Finestra extends JFrame implements Comunicar {
     }
 
 
-    private void enviar(String msg) {
+    /**
+     * Envia un missatge d'execució a principal (Main) amb n
+     * @param msg missatge a enviar
+     */
+    private void enviarAmbN(String msg) {
         String nText = nField.getText().trim();
         if (nText.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Si us plau, introdueix un número.", "Error", JOptionPane.WARNING_MESSAGE);
