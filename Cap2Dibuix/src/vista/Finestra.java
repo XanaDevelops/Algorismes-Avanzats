@@ -2,7 +2,7 @@ package vista;
 
 import model.Dades;
 import principal.Comunicar;
-import vista.visualitzadors.DibuixCarpeta;
+import vista.visualitzadors.DibuixCarpet;
 import vista.visualitzadors.DibuixSierpinski;
 import vista.visualitzadors.DibuixTromino;
 
@@ -99,9 +99,9 @@ public class Finestra extends JFrame implements Comunicar {
                     }
                     break;
                 case "quadrat":
-                    if (!(dibuix instanceof DibuixCarpeta)){
+                    if (!(dibuix instanceof DibuixCarpet)){
                         principal.comunicar("borrar");
-                        replace(new DibuixCarpeta(principal));
+                        replace(new DibuixCarpet(principal));
                     }
                     break;
                 default:

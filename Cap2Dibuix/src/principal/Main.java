@@ -1,9 +1,8 @@
 package principal;
 
 import model.Dades;
-import model.Tipus;
 
-import model.solvers.CarpetaSierpinski;
+import model.solvers.SierpinskiCarpetSolver;
 import model.solvers.SierpinskiSolver;
 import model.solvers.TrominoSolver;
 import vista.Finestra;
@@ -88,7 +87,7 @@ public class Main implements Comunicar {
                         break;
                     case "quadrat":
                         try {
-                            executar(CarpetaSierpinski.class, (int) Math.pow(3, Integer.parseInt(params[2])));
+                            executar(SierpinskiCarpetSolver.class, (int) Math.pow(3, Integer.parseInt(params[2])));
                         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                                  IllegalAccessException e) {
                             throw new RuntimeException(e);

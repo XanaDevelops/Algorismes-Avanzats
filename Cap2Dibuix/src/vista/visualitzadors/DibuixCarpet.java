@@ -5,9 +5,8 @@ import principal.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
-public class DibuixCarpeta extends JPanel implements Comunicar {
+public class DibuixCarpet extends JPanel implements Comunicar {
     Comunicar principal;
 
     private boolean doColor = false;
@@ -18,7 +17,7 @@ public class DibuixCarpeta extends JPanel implements Comunicar {
     private final Color[] colors = {Color.orange, Color.CYAN, Color.green, Color.RED, Color.pink, Color.magenta};
     private int colorIndex = 0;
 
-    public DibuixCarpeta(Comunicar principal) {
+    public DibuixCarpet(Comunicar principal) {
         this.principal = principal;
 
     }
