@@ -152,9 +152,6 @@ public class DibuixTromino extends JPanel implements Comunicar {
             case "color":
                 colorON();
                 break;
-            case "borrar":
-                System.err.println("borrar no implementat");
-                break;
         }
 
     }

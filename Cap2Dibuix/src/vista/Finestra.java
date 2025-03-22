@@ -53,7 +53,7 @@ public class Finestra extends JFrame implements Comunicar {
             principal.comunicar("aturar");
         });
         ((JButton)botons.add(new JButton("Borrar"))).addActionListener(e -> {
-            dibuix.comunicar("borrar");
+            principal.comunicar("borrar");
         });
 
         ((JButton)botons.add(new JButton("Color"))).addActionListener(e -> {
@@ -92,12 +92,14 @@ public class Finestra extends JFrame implements Comunicar {
                     break;
                 case "triangles":
                     if (!(dibuix instanceof DibuixSierpinski)){
+                        enviar("borrar");
                         replace(new DibuixSierpinski(principal));
                     }
                     break;
                 case "quadrat":
                     //TODO: CAMBIAR POR DIBUIX PROPI!!!!
                     if (!(dibuix instanceof DibuixTromino)){
+                        enviar("borrar");
                         replace(new DibuixTromino(300, 300, principal));
                     }
                     break;
