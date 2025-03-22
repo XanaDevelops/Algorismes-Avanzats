@@ -69,7 +69,7 @@ public void imprimir() {
         stop = false;
 
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(8, data.getProfunditat());
-        main.comunicar("tempsEsperat "+ tempsEsperat);//??
+        main.comunicar("tempsEsperat:"+ tempsEsperat);//??
 
         long time = System.nanoTime();
         drawSiperpinskiCarpet(0, 0, data.getTauler().length);
@@ -78,7 +78,7 @@ public void imprimir() {
 
         time = (System.nanoTime() - time)/1000000000;
         System.out.println("Temps real " + time  + " segons");
-        main.comunicar("tempsReal "+ time);
+        main.comunicar("tempsReal:"+ time);
 
         //actualitzar la constant multiplicativa
         data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
