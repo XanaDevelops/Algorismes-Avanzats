@@ -16,6 +16,7 @@ public class DibuixCarpeta extends JPanel implements Comunicar {
     private final int xBorder = 10, yBorder = 10;
 
     private final Color[] colors = {Color.orange, Color.CYAN, Color.green, Color.RED, Color.pink, Color.magenta};
+    private int colorIndex = 0;
 
     public DibuixCarpeta(Comunicar principal) {
         this.principal = principal;
