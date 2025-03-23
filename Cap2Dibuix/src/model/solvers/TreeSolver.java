@@ -14,16 +14,23 @@ public class TreeSolver implements Runnable, Comunicar {
     Graphics2D g;
     private boolean stop;
 
+    private final int imgSize = 700;
+    private final int treeLogSize = 35;
+    private final int treeLogAngle = 20;
+
     public TreeSolver(Main main, Dades data) {
         this.main = main;
         this.data = data;
 
         data.setTipus(Tipus.TREE);
-        int size = 1024;
-        image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+
+
+        image = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_ARGB);
+        this.data.setImage(image);
+
         g = image.createGraphics();
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, size, size);
+        g.fillRect(0, 0, imgSize, imgSize);
 
     }
 
@@ -31,8 +38,8 @@ public class TreeSolver implements Runnable, Comunicar {
        if(!stop) {
            if (p == 0) return;
 
-           int x2 = x1 + (int) (Math.cos(Math.toRadians(angle)) * 25 );
-           int y2 = y1 + (int) (Math.sin(Math.toRadians(angle)) * 25);
+           int x2 = x1 + (int) (Math.cos(Math.toRadians(angle)) * treeLogSize );
+           int y2 = y1 + (int) (Math.sin(Math.toRadians(angle)) * treeLogSize);
            g.setColor(Color.RED);
 
            g.drawLine(x1, y1, x2, y2);
@@ -41,10 +48,10 @@ public class TreeSolver implements Runnable, Comunicar {
 //        } catch (InterruptedException e) {
 //            throw new RuntimeException(e);
 //        }
-//           main.comunicar("pintar");
+           main.comunicar("pintar");
 
-           generarArbol(g, x2, y2, angle - 20, p - 1);
-           generarArbol(g, x2, y2, angle + 20, p - 1);
+           generarArbol(g, x2, y2, angle - treeLogAngle, p - 1);
+           generarArbol(g, x2, y2, angle + treeLogAngle, p - 1);
        }
     }
 
@@ -77,7 +84,7 @@ public class TreeSolver implements Runnable, Comunicar {
     public void comunicar(String s) {
         switch (s){
             case "aturar":
-                System.err.println("ATURAR carpeta sierpinski");
+                aturar();
                 break;
         }
 

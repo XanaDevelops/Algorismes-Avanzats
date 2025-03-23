@@ -1,6 +1,7 @@
 package model;
 
 
+import java.awt.image.BufferedImage;
 
 public class Dades {
     private Tipus tipus;
@@ -8,6 +9,8 @@ public class Dades {
     private int[][] tauler;
     private double constantMultiplicativa;
     private int profunditat;
+
+    private BufferedImage image;
 
     //TROMINOS
     private int[] iniciTromino = new int[2];
@@ -79,9 +82,18 @@ public class Dades {
         this.profunditat = profunditat;
     }
 
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
+    public BufferedImage getImage() {
+        return image;
+    }
+
     public void clean(){
         this.profunditat = 0;
         this.tauler = null;
+
+        this.image = null;
 
         iniciTromino[0] = 0;
         iniciTromino[1] = 0;
