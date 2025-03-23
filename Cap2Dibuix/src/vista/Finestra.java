@@ -48,6 +48,7 @@ public class Finestra extends JFrame implements Comunicar {
             pintarButton.doClick();
         });
 
+
         dibuixosCBox = (JComboBox<String>) botons.add(generateComboBox());
 
         ((JButton)botons.add(pintarButton)).addActionListener(e -> {

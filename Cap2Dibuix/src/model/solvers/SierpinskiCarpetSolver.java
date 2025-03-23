@@ -15,15 +15,12 @@ import java.util.concurrent.Executors;
  * Implementa la interfície Runnable per permetre l'execució en un fil separat, i la interfície Comunicar
  * per comunicar-se amb el controlador (Main).
  */
-public class SierpinskiCarpetSolver implements Runnable, Comunicar {
+public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar {
 
   Main main;
   Dades data;
 
-  private int numThreads = 0;
-  private final int MAX_THREADS = 16;
-  private final ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
-  private final Deque<Runnable> queue;
+  private long time;
 
     /**
      * Valor numèric assignat als quadres de la catifa
@@ -43,7 +40,6 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
   public SierpinskiCarpetSolver(Main main, Dades dades) {
       this.main = main;
       this.data = dades;
-      this.queue = new ArrayDeque<>();
       //Estableix el tipus de la fractal
       data.setTipus(Tipus.QUADRAT);
       numActual = 1;
@@ -71,12 +67,7 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
             for (int j = 0; j <size ; j++) {
                 data.setValor(i+x, j+y, numActual);
                 main.comunicar("pintar");
-                try {
-                    Thread.sleep(0, 150);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
+                esperar(0, 150);
             }
         }
 
@@ -111,36 +102,12 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
                         //requisit final de exp. lambda
                         int finalI = i;
                         int finalJ = j;
-                        if (i==2 && j==2){
-                            drawSiperpinskiCarpet(x + (finalJ * size / 3), y+ (finalI * size / 3), size / 3);
-                        }else {
-                            //requisit final de exp. lambda
-                            runThread(() -> drawSiperpinskiCarpet(x + (finalJ * size / 3), y + (finalI * size / 3), size / 3));
-                        }
+                        //requisit final de exp. lambda
+                        runThread(() -> drawSiperpinskiCarpet(x + (finalJ * size / 3), y + (finalI * size / 3), size / 3));
                     }
                 }
             }
             endThread();
-        }
-
-
-    }
-
-    private synchronized void endThread(){
-        numThreads--;
-        if (!queue.isEmpty()) {
-            executor.execute(queue.remove());
-        }else if (numThreads==0){
-            System.out.println("HE ACABAT!");
-        }
-    }
-
-    private synchronized void runThread(Runnable r){
-        numThreads++;
-        if (numThreads < MAX_THREADS) {
-            executor.execute(r);
-        }else{
-            queue.add(r);
         }
     }
 
@@ -157,20 +124,29 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(8, data.getProfunditat());
         main.comunicar("tempsEsperat:"+ tempsEsperat);//??
 
-        long time = System.nanoTime();
+        time = System.nanoTime();
         drawSiperpinskiCarpet(0, 0, data.getTauler().length);
 
         //main.comunicar("aturar");
-        time = (System.nanoTime() - time)/1000000000;
+
+    }
+
+    @Override
+    protected void end() {
+        System.err.println("he acabat");
+        System.err.println(getSleepTime());
+        time = (System.nanoTime() - time - getSleepTime())/1000000000;
         System.out.println("Temps real " + time  + " segons");
         main.comunicar("tempsReal:"+ time);
 
         // Actualitza la constant multiplicativa basant-se en el temps real mesurat
         data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
         if (!stop) {
+            main.comunicar("aturar");
             //aturar();
         }
     }
+
 
     /**
      * Implementació del mètode comunicar de la interfície Comunicar.
