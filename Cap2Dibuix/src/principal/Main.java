@@ -124,7 +124,7 @@ public class Main implements Comunicar {
 
     private void executar(Class<? extends Comunicar> clase, int profunditat) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         for (Comunicar enmarxa : processos) {
-            enmarxa.comunicar("borrar");
+            enmarxa.comunicar("aturar");
         }
 
         processos.clear();

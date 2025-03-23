@@ -22,7 +22,7 @@ public class TrominoSolver implements Runnable, Comunicar {
     private Dades data; // Objecte que conté les dades del problema
     private static int numActual; // Número del tromino actual
     private static final int RETJOLA = -1; // Valor que representa el forat al tauler
-    private boolean stop; // Variable per controlar si el procés s'ha d'aturar
+    private volatile boolean stop; // Variable per controlar si el procés s'ha d'aturar
 
     private ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -47,6 +47,13 @@ public class TrominoSolver implements Runnable, Comunicar {
             Arrays.fill(fila, 0);
         }
 
+        //comprovar OoB iniciTromino
+        //FIXME: implementar una forma millor de fer-ho
+        if (data.getIniciTromino()[0] >= data.getProfunditat() || data.getIniciTromino()[1] >= data.getProfunditat()) {
+            System.err.println("FIXME: inici tromino OoB!!! posant a 0 el valor!");
+            data.getIniciTromino()[0] = 0;
+            data.getIniciTromino()[1] = 0;
+        }
         data.setValor(data.getIniciTromino()[0],  data.getIniciTromino()[1], RETJOLA);
     }
 
@@ -116,6 +123,7 @@ public class TrominoSolver implements Runnable, Comunicar {
 
     // Omple el tromino central segons el mode.
     private synchronized void omplirTrominoCentral(Mode mode, int topx, int topy, int mida) {
+        if (stop) return;
         switch (mode) {
             case LU:
                 data.setValor(topx + mida / 2, topy + mida / 2 - 1, numActual);
@@ -144,17 +152,17 @@ public class TrominoSolver implements Runnable, Comunicar {
 
     // Omple un subtauler de mida x mida amb el tromino actual.
     private synchronized void omplirTromino(int topx, int topy, int mida) {
-        for (int i = 0; i < mida; i++) {
-            for (int j = 0; j < mida; j++) {
+        for (int i = 0; i < mida && !stop; i++) {
+            for (int j = 0; j < mida && !stop; j++) {
                 if (data.getValor(topx + i, topy + j) == 0) {
                     data.setValor(topx + i, topy + j, numActual);
                     p.comunicar("pintar");
-
                     try {
                         Thread.sleep(0, 150);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+
                 }
             }
         }
@@ -192,11 +200,11 @@ public class TrominoSolver implements Runnable, Comunicar {
         System.out.printf("Temps real: %.8f segons%n", tempsReal);
         p.comunicar("tempsReal");
 
-        // Notifica que el procés ha finalitzat
-        //p.comunicar("aturar");
+
 
         //prevenir tornar a aturar
-        //if(!stop) aturar();
+        if(!stop) // Notifica que el procés ha finalitzat
+            p.comunicar("aturar");;
     }
 
     /**
