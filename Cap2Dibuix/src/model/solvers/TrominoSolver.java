@@ -7,6 +7,10 @@ import principal.Comunicar;
 import principal.Main;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Classe que implementa un solucionador del problema dels Trominos utilitzant
@@ -19,6 +23,8 @@ public class TrominoSolver implements Runnable, Comunicar {
     private static int numActual; // Número del tromino actual
     private static final int RETJOLA = -1; // Valor que representa el forat al tauler
     private boolean stop; // Variable per controlar si el procés s'ha d'aturar
+
+    private ExecutorService executor = Executors.newCachedThreadPool();
 
     /**
      * Constructor de la classe.
@@ -67,10 +73,14 @@ public class TrominoSolver implements Runnable, Comunicar {
                 omplirTrominoCentral(mode, topx, topy, mida);
 
                 // Recursió per als quatre quadrants
-                trominoRec(mida / 2, topx, topy);
-                trominoRec(mida / 2, topx, topy + mida / 2);
-                trominoRec(mida / 2, topx + mida / 2, topy);
-                trominoRec(mida / 2, topx + mida / 2, topy + mida / 2);
+                executor.execute(() -> trominoRec(mida / 2, topx, topy));
+                executor.execute(() -> trominoRec(mida / 2, topx, topy + mida / 2));
+                executor.execute(() -> trominoRec(mida / 2, topx + mida / 2, topy));
+                executor.execute(() -> trominoRec(mida / 2, topx + mida / 2, topy + mida / 2));
+//                trominoRec(mida / 2, topx, topy);
+//                trominoRec(mida / 2, topx, topy + mida / 2);
+//                trominoRec(mida / 2, topx + mida / 2, topy);
+//                trominoRec(mida / 2, topx + mida / 2, topy + mida / 2);
             }
         }
     }
@@ -105,7 +115,7 @@ public class TrominoSolver implements Runnable, Comunicar {
     }
 
     // Omple el tromino central segons el mode.
-    private void omplirTrominoCentral(Mode mode, int topx, int topy, int mida) {
+    private synchronized void omplirTrominoCentral(Mode mode, int topx, int topy, int mida) {
         switch (mode) {
             case LU:
                 data.setValor(topx + mida / 2, topy + mida / 2 - 1, numActual);
@@ -133,12 +143,18 @@ public class TrominoSolver implements Runnable, Comunicar {
 
 
     // Omple un subtauler de mida x mida amb el tromino actual.
-    private void omplirTromino(int topx, int topy, int mida) {
+    private synchronized void omplirTromino(int topx, int topy, int mida) {
         for (int i = 0; i < mida; i++) {
             for (int j = 0; j < mida; j++) {
                 if (data.getValor(topx + i, topy + j) == 0) {
                     data.setValor(topx + i, topy + j, numActual);
                     p.comunicar("pintar");
+
+                    try {
+                        Thread.sleep(0, 150);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
@@ -177,10 +193,10 @@ public class TrominoSolver implements Runnable, Comunicar {
         p.comunicar("tempsReal");
 
         // Notifica que el procés ha finalitzat
-        p.comunicar("aturar");
+        //p.comunicar("aturar");
 
         //prevenir tornar a aturar
-        if(!stop) aturar();
+        //if(!stop) aturar();
     }
 
     /**
@@ -200,6 +216,9 @@ public class TrominoSolver implements Runnable, Comunicar {
      * Mètode per aturar l'execució del Solver.
      * Estableix la variable stop a true per indicar que el fil ha de finalitzar.
      */
-    private void aturar() { stop = true; }
+    private void aturar() {
+        stop = true;
+        //executor.shutdown();
+    }
 }
 

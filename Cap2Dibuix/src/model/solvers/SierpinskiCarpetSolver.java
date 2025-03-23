@@ -5,6 +5,8 @@ import principal.Comunicar;
 import principal.Main;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Classe que genera la fractal de "Carpeta de Sierpinski" de forma recursiva.
@@ -15,6 +17,8 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
 
   Main main;
   Dades data;
+
+  private ExecutorService executor = Executors.newFixedThreadPool(16);
     /**
      * Valor numèric assignat als quadres de la catifa
      */
@@ -59,15 +63,17 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
         for (int i = 0; i <size ; i++) {
             for (int j = 0; j <size ; j++) {
                 data.setValor(i+x, j+y, numActual);
+                main.comunicar("pintar");
+                try {
+                    Thread.sleep(0, 150);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
         }
-        try {
-            Thread.sleep(0, 500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
-        main.comunicar("pintar");
+
     }
 
     /**
@@ -83,7 +89,6 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
      * @param size La mida del costat del quadrat actual.
      */
     private void drawSiperpinskiCarpet(int x, int y, int size) {
-
         if(!stop){
             //Cae base: dibuixa un quadrat
             if (size==1) {
@@ -95,11 +100,15 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
             for (int i = 0; i < 3; i++) {//posició y
                 for (int j = 0; j < 3; j++) { // posició x
                     if (!(i == 1 && j == 1)){ //quadre no buit
-                        drawSiperpinskiCarpet(x + (j * size / 3), y+ (i * size / 3), size / 3);
+                        //requisit final de exp. lambda
+                        int finalI = i;
+                        int finalJ = j;
+                        executor.execute(() -> drawSiperpinskiCarpet(x + (finalJ * size / 3), y+ (finalI * size / 3), size / 3));
                     }
                 }
             }
         }
+
     }
 
     /**
@@ -118,7 +127,7 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
         long time = System.nanoTime();
         drawSiperpinskiCarpet(0, 0, data.getTauler().length);
 
-        main.comunicar("aturar");
+        //main.comunicar("aturar");
         time = (System.nanoTime() - time)/1000000000;
         System.out.println("Temps real " + time  + " segons");
         main.comunicar("tempsReal:"+ time);
@@ -126,7 +135,7 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
         // Actualitza la constant multiplicativa basant-se en el temps real mesurat
         data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
         if (!stop) {
-            aturar();
+            //aturar();
         }
     }
 
@@ -139,6 +148,7 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
     public void comunicar(String s) {
         if (s.contentEquals("aturar")) {
             aturar();
+
         }
     }
 
@@ -147,5 +157,6 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
      */
     private void aturar() {
         stop = true;
+        //executor.shutdown();
     }
 }
