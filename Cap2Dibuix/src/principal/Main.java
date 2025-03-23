@@ -4,6 +4,7 @@ import model.Dades;
 
 import model.solvers.SierpinskiCarpetSolver;
 import model.solvers.SierpinskiSolver;
+import model.solvers.TreeSolver;
 import model.solvers.TrominoSolver;
 import vista.Finestra;
 
@@ -93,8 +94,16 @@ public class Main implements Comunicar {
                             throw new RuntimeException(e);
                         }
                         break;
+                    case "arbre":
+                        try {
+                            executar(TreeSolver.class, (int) Integer.parseInt(params[2]));
+                        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                                 IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
                     default:
-                        System.err.println("execucio "+s+" desconegut");
+                        System.err.println("MAIN: execucio "+s+" desconegut");
                         break;
                 }
             case "aturar":

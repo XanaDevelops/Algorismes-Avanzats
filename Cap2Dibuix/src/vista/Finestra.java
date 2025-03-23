@@ -1,8 +1,10 @@
 package vista;
 
 import model.Dades;
+import model.Tipus;
 import principal.Comunicar;
 import vista.visualitzadors.DibuixCarpet;
+import vista.visualitzadors.DibuixImage;
 import vista.visualitzadors.DibuixSierpinski;
 import vista.visualitzadors.DibuixTromino;
 
@@ -79,6 +81,7 @@ public class Finestra extends JFrame implements Comunicar {
         comboBox.addItem("tromino");
         comboBox.addItem("triangles");
         comboBox.addItem("quadrat");
+        comboBox.addItem("arbre");
 
         comboBox.setSelectedIndex(0);
 
@@ -102,6 +105,13 @@ public class Finestra extends JFrame implements Comunicar {
                     if (!(dibuix instanceof DibuixCarpet)){
                         principal.comunicar("borrar");
                         replace(new DibuixCarpet(principal));
+                    }
+                    break;
+                case "arbre":
+                    //és possible que un DibuixImage s'usi per generacions no matricials
+                    if (!(dibuix instanceof DibuixImage) && dades.getTipus() != Tipus.TREE){
+                        principal.comunicar("borrar");
+                        replace(new DibuixImage(principal));
                     }
                     break;
                 default:
@@ -133,7 +143,11 @@ public class Finestra extends JFrame implements Comunicar {
         }
         try {
             int n = Integer.parseInt(nText);
-            principal.comunicar(msg + ":" + n);
+            if (n <= 0) {
+                JOptionPane.showMessageDialog(this, "Introdueix un numero major a 0", "Error", JOptionPane.WARNING_MESSAGE);
+            }
+            else
+                principal.comunicar(msg + ":" + n);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
         }
