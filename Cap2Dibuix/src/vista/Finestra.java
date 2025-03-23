@@ -34,7 +34,7 @@ public class Finestra extends JFrame implements Comunicar {
 
         this.setLayout(new BorderLayout());
 
-        dibuix = new DibuixTromino(300, 300, principal);
+        dibuix = new DibuixTromino(principal);
 
         //volem un quadrat al dibuix, no necesariament la finestra
         ((Component)dibuix).setPreferredSize(new Dimension(700, 700));
@@ -92,7 +92,7 @@ public class Finestra extends JFrame implements Comunicar {
                 case "tromino":
                     if (!(dibuix instanceof DibuixTromino)){
                         principal.comunicar("borrar");
-                        replace(new DibuixTromino(300, 300, principal));
+                        replace(new DibuixTromino(principal));
                     }
                     break;
                 case "triangles":
