@@ -7,16 +7,16 @@ import principal.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class TreeSolver implements Runnable, Comunicar {
+public class TreeSolver extends RecursiveSolver implements Comunicar {
     private BufferedImage image;
     private Dades data;
     private Main main;
     Graphics2D g;
-    private boolean stop;
 
-    private final int imgSize = 700;
+    private final int imgSize = 1024;
     private final int treeLogSize = 35;
     private final int treeLogAngle = 20;
+    private long time;
 
     public TreeSolver(Main main, Dades data) {
         this.main = main;
@@ -35,24 +35,24 @@ public class TreeSolver implements Runnable, Comunicar {
     }
 
     private void generarArbol(Graphics2D g, int x1, int y1, double angle, int p) {
-       if(!stop) {
-           if (p == 0) return;
+       if(!aturar) {
+           if (p == 0)
+           {
+               endThread();
+               return;
+           }
 
            int x2 = x1 + (int) (Math.cos(Math.toRadians(angle)) * treeLogSize );
            int y2 = y1 + (int) (Math.sin(Math.toRadians(angle)) * treeLogSize);
            g.setColor(Color.RED);
 
            g.drawLine(x1, y1, x2, y2);
-//            try {
-//            Thread.sleep(5/1000000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
            main.comunicar("pintar");
-
-           generarArbol(g, x2, y2, angle - treeLogAngle, p - 1);
-           generarArbol(g, x2, y2, angle + treeLogAngle, p - 1);
+           esperar(0, 300);
+           runThread(() -> generarArbol(g, x2, y2, angle - treeLogAngle, p - 1));
+           runThread(() -> generarArbol(g, x2, y2, angle + treeLogAngle, p - 1));
        }
+       endThread();
     }
 
     public BufferedImage getImage() {
@@ -61,23 +61,24 @@ public class TreeSolver implements Runnable, Comunicar {
 
     @Override
     public void run() {
-        stop = false;
+        aturar = false;
         //suposant aqui, q
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2,data.getProfunditat());
         main.comunicar("tempsEsperat:"+ tempsEsperat);//??
 
-        long time = System.nanoTime();
+        time = System.nanoTime();
         generarArbol(g, image.getHeight()/2, image.getHeight()-300, -90, data.getProfunditat());
-        main.comunicar("aturar");
+    }
 
-        time = System.nanoTime() - time;
-        System.out.println("Temps real " + time + " segons");
+    @Override
+    protected void end() {
+        time = System.nanoTime() - time - getSleepTime();
+        System.out.println("Temps real " + time + " nanosegons");
         main.comunicar("tempsReal:"+ time);
         g.dispose();
-        if (!stop) {
-            aturar();
+        if (!aturar) {
+            main.comunicar("aturar");
         }
-
     }
 
     @Override
@@ -90,7 +91,7 @@ public class TreeSolver implements Runnable, Comunicar {
 
     }
     private void aturar() {
-        stop = true;
+        aturar = true;
     }
 
 
