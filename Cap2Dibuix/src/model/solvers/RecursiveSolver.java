@@ -13,10 +13,18 @@ public abstract class RecursiveSolver implements Runnable {
 
     private long sleepTime = 0; //nanos dormit
 
+    /**
+     * Permet aturar el fil d'execució
+     */
+    protected volatile boolean aturar = false;
+
     @Override
     public abstract void run();
 
     protected synchronized void runThread(Runnable r){
+        if (aturar) {
+            return;
+        }
         numThreads++;
         if (numThreads < MAX_THREADS) {
             executor.execute(r);
@@ -41,7 +49,7 @@ public abstract class RecursiveSolver implements Runnable {
 
     protected void esperar(long millis, int nanos){
         try {
-            this.sleepTime += millis*1000000 + nanos;
+            this.sleepTime += millis*1000 + nanos;
             Thread.sleep(millis, nanos);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

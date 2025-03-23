@@ -3,7 +3,7 @@ package principal;
 import model.Dades;
 
 import model.solvers.SierpinskiCarpetSolver;
-import model.solvers.SierpinskiSolver;
+import model.solvers.SierpinskiTriangleSolver;
 import model.solvers.TreeSolver;
 import model.solvers.TrominoSolver;
 import vista.Finestra;
@@ -80,7 +80,7 @@ public class Main implements Comunicar {
 
                     case "triangles":
                         try {
-                            executar(SierpinskiSolver.class,(int) Math.pow(2, (double)Integer.parseInt(params[2])-1));
+                            executar(SierpinskiTriangleSolver.class,(int) Math.pow(2, (double)Integer.parseInt(params[2])-1));
                         } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |
                                  IllegalAccessException e) {
                             throw new RuntimeException(e);
