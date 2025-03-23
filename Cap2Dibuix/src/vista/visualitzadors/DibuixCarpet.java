@@ -58,8 +58,8 @@ public class DibuixCarpet extends JPanel implements Comunicar {
             for (int j = 0; j < cols; j++) {
                 //calcula la posició relativa a la mida del panell
 
-                int x = (int) ((j) * widthRatio) + (xBorder / 2);
-                int y = (int) ((i) * heightRatio) + (yBorder / 2);
+                int x = (int) ((j) * widthRatio);
+                int y = (int) ((i) * heightRatio);
 
                 Color fg, bg;
                 if (doColor) {
@@ -101,4 +101,6 @@ public class DibuixCarpet extends JPanel implements Comunicar {
                 break;
         }
     }
+
+
 }

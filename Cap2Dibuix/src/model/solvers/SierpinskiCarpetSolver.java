@@ -4,7 +4,9 @@ import model.Tipus;
 import principal.Comunicar;
 import principal.Main;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,7 +20,11 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
   Main main;
   Dades data;
 
-  private ExecutorService executor = Executors.newFixedThreadPool(16);
+  private int numThreads = 0;
+  private final int MAX_THREADS = 16;
+  private final ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
+  private final Deque<Runnable> queue;
+
     /**
      * Valor numèric assignat als quadres de la catifa
      */
@@ -37,6 +43,7 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
   public SierpinskiCarpetSolver(Main main, Dades dades) {
       this.main = main;
       this.data = dades;
+      this.queue = new ArrayDeque<>();
       //Estableix el tipus de la fractal
       data.setTipus(Tipus.QUADRAT);
       numActual = 1;
@@ -94,6 +101,7 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
             if (size==1) {
                 drawSquare(x, y, size);
                 numActual++;
+                endThread();
                 return;
             }
 
@@ -103,12 +111,37 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
                         //requisit final de exp. lambda
                         int finalI = i;
                         int finalJ = j;
-                        executor.execute(() -> drawSiperpinskiCarpet(x + (finalJ * size / 3), y+ (finalI * size / 3), size / 3));
+                        if (i==2 && j==2){
+                            drawSiperpinskiCarpet(x + (finalJ * size / 3), y+ (finalI * size / 3), size / 3);
+                        }else {
+                            //requisit final de exp. lambda
+                            runThread(() -> drawSiperpinskiCarpet(x + (finalJ * size / 3), y + (finalI * size / 3), size / 3));
+                        }
                     }
                 }
             }
+            endThread();
         }
 
+
+    }
+
+    private synchronized void endThread(){
+        numThreads--;
+        if (!queue.isEmpty()) {
+            executor.execute(queue.remove());
+        }else if (numThreads==0){
+            System.out.println("HE ACABAT!");
+        }
+    }
+
+    private synchronized void runThread(Runnable r){
+        numThreads++;
+        if (numThreads < MAX_THREADS) {
+            executor.execute(r);
+        }else{
+            queue.add(r);
+        }
     }
 
     /**
