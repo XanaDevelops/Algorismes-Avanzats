@@ -215,8 +215,9 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
      * Estableix la variable stop a true per indicar que el fil ha de finalitzar.
      */
     private void aturar() {
+        if(aturar)return;
         aturar = true;
-        //executor.shutdown();
+        executor.shutdown();
     }
 }
 

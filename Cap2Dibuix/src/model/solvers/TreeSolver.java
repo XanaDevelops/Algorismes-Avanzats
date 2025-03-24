@@ -91,7 +91,9 @@ public class TreeSolver extends RecursiveSolver implements Comunicar {
 
     }
     private void aturar() {
+        if(aturar)return;
         aturar = true;
+        executor.shutdown();
     }
 
 
