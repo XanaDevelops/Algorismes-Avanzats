@@ -101,6 +101,7 @@ public class Dades {
 
         iniciTromino[0] = 0;
         iniciTromino[1] = 0;
+        this.constantMultiplicativa = null;
     }
 
     public Color getColor(int i){

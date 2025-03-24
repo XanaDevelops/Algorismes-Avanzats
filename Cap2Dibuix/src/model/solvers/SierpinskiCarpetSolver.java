@@ -114,12 +114,21 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
     @Override
     public void run() {
         aturar = false;
+        double profunditatExp = Math.pow(8, data.getProfunditat()/3);
+        double constant = 1.0;
+        if (data.getTipus() == Tipus.QUADRAT && data.getConstantMultiplicativa()!=null) {
+            constant = data.getConstantMultiplicativa();
+        }
+       double tempsEsperat = constant*profunditatExp;
+        if (tempsEsperat > 100000) {
+            main.comunicar("tempsEsperat:infinity");
+        }else {
 
-
+            main.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
+        }
         time = System.nanoTime();
         runThread(() -> drawSiperpinskiCarpet(0, 0, data.getTauler().length));
 
-        //main.comunicar("aturar");
 
     }
 
@@ -127,19 +136,12 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
 protected void end() {
     time = (System.nanoTime() - time - getSleepTime())/1000000000;
     double profunditatExp = Math.pow(8, data.getProfunditat()/3);
-    double tempsEsperat;
-    double constantMultiplicativa = time / profunditatExp;
-    if (data.getTipus() == Tipus.QUADRAT && data.getConstantMultiplicativa()!=null) {
-        //ja està inicialitzada
-        tempsEsperat = data.getConstantMultiplicativa()*profunditatExp;
-    }else{
-        tempsEsperat = constantMultiplicativa*profunditatExp;
 
-    }
+    double constantMultiplicativa = time / profunditatExp;
 
     data.setConstantMultiplicativa(constantMultiplicativa);
     // Mostra els resultats
-    main.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
+//    main.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
 
     main.comunicar("tempsReal:"+ String.format( "%.3f segons",time));
 

@@ -83,6 +83,20 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
 
         // Inicia el comptador de temps en nanosegons
         startTime = System.nanoTime();
+        double constant =1.0;
+        double profunditatExp = Math.pow(3, data.getProfunditat()/2);
+
+        if (data.getTipus() == Tipus.TRIANGLE && data.getConstantMultiplicativa()!=null) {
+            constant = data.getConstantMultiplicativa();
+        }
+        double tempsEsperat = constant*profunditatExp;
+        if (tempsEsperat > 100000) {
+            p.comunicar("tempsEsperat:infinity");
+        }else {
+
+            p.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
+        }
+
 
         // Crida la funció recursiva per generar el fractal
         runThread(() -> generarSierpinski(0, data.getProfunditat() - 1, data.getProfunditat()));
@@ -102,23 +116,11 @@ protected void end() {
 
     double constantMultiplicativa = tempsReal / profunditatExp;
 
-    if (data.getTipus() == Tipus.TRIANGLE && data.getConstantMultiplicativa()!=null) {
-        //ja està inicialitzada
-        tempsEsperat = data.getConstantMultiplicativa()*profunditatExp;
-    }else{
-        tempsEsperat = constantMultiplicativa*profunditatExp;
-
-    }
-
     // Desa la constant multiplicativa
     data.setConstantMultiplicativa(constantMultiplicativa);
 
-    // Calcula el temps esperat d'execució en segons
-
     // Mostra els resultats
-    p.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
 
-    System.out.printf("Temps real: %.8f segons%n", tempsReal);
     p.comunicar("tempsReal:"+ String.format( "%.3f segons",tempsReal));
     // Si el procés no s'ha aturat manualment, assegura que es detingui
     if (!aturar) p.comunicar("aturar");

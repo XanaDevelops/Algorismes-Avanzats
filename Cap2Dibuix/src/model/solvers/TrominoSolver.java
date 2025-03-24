@@ -173,6 +173,21 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
 
         // Inicia el comptador de temps en nanosegons
         startTime = System.nanoTime();
+        double constant =1.0;
+        double profunditatExp = Math.pow(4, data.getProfunditat()/2);
+
+        if (data.getTipus() == Tipus.TROMINO && data.getConstantMultiplicativa()!=null) {
+            constant = data.getConstantMultiplicativa();
+        }
+
+        double tempsEsperat = constant*profunditatExp;
+        if (tempsEsperat > 100000) {
+            p.comunicar("tempsEsperat:infinity");
+        }else {
+
+            p.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
+        }
+
         this.hashTauler = data.getTauler().hashCode();
         trominoRec(data.getTauler().length, 0, 0);
     }
@@ -187,20 +202,13 @@ protected void end() {
     // Calcula la constant multiplicativa
     double profunditatExp = Math.pow(4, data.getProfunditat()/2);
     double constantMultiplicativa = tempsReal / profunditatExp;
-    double tempsEsperat;
-    if (data.getTipus() == Tipus.TROMINO && data.getConstantMultiplicativa()!=null) {
-        //ja està inicialitzada
-        tempsEsperat = data.getConstantMultiplicativa()*profunditatExp;
-    }else{
-        tempsEsperat = constantMultiplicativa*profunditatExp;
 
-    }
 
     data.setConstantMultiplicativa(constantMultiplicativa);
     // Mostra els resultats
-    p.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
-
-    System.out.printf("Temps real: %.8f segons%n", tempsReal);
+//    p.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
+//
+//    System.out.printf("Temps real: %.8f segons%n", tempsReal);
     p.comunicar("tempsReal:"+ String.format( "%.3f segons",tempsReal));
     //prevenir tornar a aturar
     if(!aturar) // Notifica que el procés ha finalitzat

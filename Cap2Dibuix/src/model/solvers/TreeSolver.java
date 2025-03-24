@@ -63,9 +63,19 @@ public class TreeSolver extends RecursiveSolver implements Comunicar {
     public void run() {
         aturar = false;
         //suposant aqui, q
-        double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2,data.getProfunditat());
-        main.comunicar("tempsEsperat:"+ tempsEsperat);//??
+        double profunditatExp = Math.pow(2, data.getProfunditat());
+        double constant = 1.0;
+        if (data.getTipus() == Tipus.TREE && data.getConstantMultiplicativa()!=null) {
+            //ja està inicialitzada
+            constant = data.getConstantMultiplicativa();
+        }
+        double tempsEsperat = constant* profunditatExp;
+        if (tempsEsperat > 100000) {
+            main.comunicar("tempsEsperat:infinity");
+        }else {
 
+            main.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
+        }
         time = System.nanoTime();
         generarArbol(g, image.getHeight()/2, image.getHeight()-300, -90, data.getProfunditat());
     }
@@ -78,21 +88,13 @@ protected void end() {
     double tempsReal = elapsedTime / 1_000_000_000.0;
 
     // Calcula la constant multiplicativa
-    System.out.println(data.getProfunditat());
     double profunditatExp = Math.pow(2, data.getProfunditat());
     double constantMultiplicativa = tempsReal / profunditatExp;
-    double tempsEsperat;
-    if (data.getTipus() == Tipus.TREE && data.getConstantMultiplicativa()!=null) {
-        //ja està inicialitzada
-        tempsEsperat = data.getConstantMultiplicativa()*profunditatExp;
-    }else{
-        tempsEsperat = constantMultiplicativa*profunditatExp;
 
-    }
 
     data.setConstantMultiplicativa(constantMultiplicativa);
     // Mostra els resultats
-    main.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
+//    main.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
 
     main.comunicar("tempsReal:"+ String.format( "%.3f segons",tempsReal));
     g.dispose();
