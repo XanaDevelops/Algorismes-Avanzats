@@ -16,11 +16,11 @@ public class DibuixSierpinski extends JPanel implements Comunicar {
     //Evita que dibuixi just a la borera de la finestra
     private final int xBorder = 20, yBorder = 20;
 
-    private final Color[] colors = {Color.orange, Color.CYAN, Color.green, Color.RED, Color.pink, Color.magenta};
+    private final Color[] colors;
 
     public DibuixSierpinski(Comunicar principal) {
         this.principal = principal;
-
+        this.colors = ((Main)principal).getDades().getColors();
     }
 
     private void colorSwitch(){
