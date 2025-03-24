@@ -137,5 +137,8 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
      * Mètode per aturar l'execució del Solver.
      * Estableix la variable stop a true per indicar que el fil ha de finalitzar.
      */
-    private void aturar() { aturar = true; }
-}
+    private void aturar() {
+        if(aturar)return;
+        aturar = true;
+        executor.shutdown();
+    }}

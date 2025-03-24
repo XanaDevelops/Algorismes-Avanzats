@@ -22,7 +22,7 @@ public abstract class RecursiveSolver implements Runnable {
     /**
      * Permet aturar el fil d'execució
      */
-    protected volatile boolean aturar = false;
+    protected volatile boolean aturar = true;
 
     /**
      * {@inheritDoc}

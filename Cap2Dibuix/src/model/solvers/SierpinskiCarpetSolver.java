@@ -159,7 +159,8 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
      * Mètode per aturar el fil d'execució.
      */
     private void aturar() {
+        if(aturar)return;
         aturar = true;
-        //executor.shutdown();
+        executor.shutdown();
     }
 }
