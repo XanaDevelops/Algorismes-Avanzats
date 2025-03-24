@@ -44,7 +44,7 @@ public class TreeSolver extends RecursiveSolver implements Comunicar {
 
            int x2 = x1 + (int) (Math.cos(Math.toRadians(angle)) * treeLogSize );
            int y2 = y1 + (int) (Math.sin(Math.toRadians(angle)) * treeLogSize);
-           g.setColor(Color.RED);
+           g.setColor(data.getColor(p%data.getColors().length));
 
            g.drawLine(x1, y1, x2, y2);
            main.comunicar("pintar");
