@@ -53,7 +53,7 @@ public abstract class RecursiveSolver implements Runnable {
      */
     protected synchronized void endThread(){
         numThreads--;
-        if (!queue.isEmpty()) {
+        if (!queue.isEmpty() && !aturar) {
             executor.execute(queue.remove());
         }else if(numThreads == 0){
             end();
