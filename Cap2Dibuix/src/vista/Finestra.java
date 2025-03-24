@@ -37,7 +37,7 @@ public class Finestra extends JFrame implements Comunicar {
         dibuix = new DibuixTromino(principal);
 
         //volem un quadrat al dibuix, no necesariament la finestra
-        ((Component)dibuix).setPreferredSize(new Dimension(1000, 1000));
+        ((Component)dibuix).setPreferredSize(new Dimension(900, 900));
         JPanel botons = new JPanel();
         botons.setLayout(new FlowLayout());
 
