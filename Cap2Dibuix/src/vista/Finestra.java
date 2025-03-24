@@ -134,6 +134,8 @@ public class Finestra extends JFrame implements Comunicar {
 
         this.add((Component) nouDibuix, BorderLayout.CENTER);
         this.revalidate();
+
+        dibuix.comunicar("arrancar");
     }
 
 

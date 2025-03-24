@@ -5,8 +5,25 @@ import principal.Main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferStrategy;
 
-public class DibuixCarpet extends JPanel implements Comunicar {
+public class DibuixCarpet extends Canvas implements Comunicar, Runnable {
+    /**
+     *
+     */
+    @Override
+    public void run() {
+        while(true){
+            pintar();
+            try {
+                Thread.sleep(1000/60);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+    }
+
     Comunicar principal;
 
     private boolean doColor = false;
@@ -14,9 +31,11 @@ public class DibuixCarpet extends JPanel implements Comunicar {
     private final Color[] colors;
     private int colorIndex = 0;
 
+
     public DibuixCarpet(Comunicar principal) {
         this.principal = principal;
         this.colors = ((Main)principal).getDades().getColors();
+        setIgnoreRepaint(true);
     }
 
     private void colorSwitch(){
@@ -27,9 +46,13 @@ public class DibuixCarpet extends JPanel implements Comunicar {
         repaint();
     }
 
-    @Override
-    public void paint(Graphics g){
-        super.paint(g);
+
+    public void pintar(){
+        BufferStrategy bufferStrategy = getBufferStrategy();
+        if(bufferStrategy == null){
+            return;
+        }
+        Graphics g = bufferStrategy.getDrawGraphics();
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, getWidth(), getHeight());
@@ -73,6 +96,9 @@ public class DibuixCarpet extends JPanel implements Comunicar {
             }
         }
 
+        g.dispose();
+        bufferStrategy.show();
+
     }
 
     /**
@@ -82,7 +108,8 @@ public class DibuixCarpet extends JPanel implements Comunicar {
     public void comunicar(String s) {
         switch (s) {
             case "pintar":
-                repaint();
+
+                //repaint();
                 break;
             case "borrar":
                 System.err.println("borrar no implementat");
@@ -90,8 +117,15 @@ public class DibuixCarpet extends JPanel implements Comunicar {
             case "color":
                 colorSwitch();
                 break;
+            case "arrancar":
+                createBufferStrategy(2);
+                new Thread(this).start();
+                break;
+
         }
     }
+
+
 
 
 }
