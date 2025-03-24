@@ -177,36 +177,7 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
         trominoRec(data.getTauler().length, 0, 0);
     }
 
-//    @Override
-//    protected void end() {
-//        // Calcula el temps real en nanosegons
-//        long elapsedTime = System.nanoTime() - startTime;
-//        // Converteix a segons (double)
-//        double tempsReal = elapsedTime / 1_000_000_000.0;
-//
-//        // Calcula la constant multiplicativa
-//        double profunditatExp = Math.pow(2, data.getProfunditat());
-//        double constantMultiplicativa = tempsReal / profunditatExp;
-//
-//        // Desa la constant multiplicativa
-//        data.setConstantMultiplicativa(constantMultiplicativa);
-//
-//        // Calcula el temps esperat d'execució en segons
-//        double tempsEsperat = constantMultiplicativa * profunditatExp;
-//
-//        // Mostra els resultats
-//        System.out.printf("Temps esperat: %.8f segons%n", tempsEsperat);
-//        p.comunicar("tempsEsperat");
-//
-//        System.out.printf("Temps real: %.8f segons%n", tempsReal);
-//        p.comunicar("tempsReal");
-//
-//
-//
-//        //prevenir tornar a aturar
-//        if(!aturar) // Notifica que el procés ha finalitzat
-//            p.comunicar("aturar");;
-//    }
+
 @Override
 protected void end() {
     long elapsedTime = System.nanoTime() - startTime;

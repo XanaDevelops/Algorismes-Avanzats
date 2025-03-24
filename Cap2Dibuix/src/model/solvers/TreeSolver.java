@@ -70,16 +70,7 @@ public class TreeSolver extends RecursiveSolver implements Comunicar {
         generarArbol(g, image.getHeight()/2, image.getHeight()-300, -90, data.getProfunditat());
     }
 
-//    @Override
-//    protected void end() {
-//        time = System.nanoTime() - time - getSleepTime();
-//        System.out.println("Temps real " + time + " nanosegons");
-//        main.comunicar("tempsReal:"+ time);
-//        g.dispose();
-//        if (!aturar) {
-//            main.comunicar("aturar");
-//        }
-//    }
+
 @Override
 protected void end() {
     long elapsedTime = System.nanoTime() - time;
