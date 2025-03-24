@@ -9,6 +9,7 @@ import java.awt.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
+import java.util.Arrays;
 
 public class DibuixTromino extends JPanel implements Comunicar {
 
@@ -119,7 +120,6 @@ public class DibuixTromino extends JPanel implements Comunicar {
         trominoColors.put(id, indexFinal);
         return colors[indexFinal];
     }
-
 
     private void detectarCasella(int x, int y, boolean doSet) {
         int[][] matriu = ((Main) (principal)).getMatriu();
