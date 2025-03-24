@@ -14,7 +14,7 @@ public class DibuixTromino extends JPanel implements Comunicar {
 
     private final Comunicar principal;
     private boolean colorON = false;
-    private final Map<Integer, Color> trominoColors = new HashMap<>();
+    private final Map<Integer, Integer> trominoColors = new HashMap<>();
 
     private double midaCellx, midaCelly;
     private int iniciX = 0, iniciY = 0;
@@ -74,16 +74,16 @@ public class DibuixTromino extends JPanel implements Comunicar {
     }
 
     private Color getColorForTromino(int[][] matriu, int i, int j) {
-        Color[] colors = ((Main)principal).getDades().getColors();
+        Color[] colors = ((Main) principal).getDades().getColors();
         int id = matriu[i][j];
 
         // Si el tromino ja té color, el retornem
         if (trominoColors.containsKey(id)) {
-            return trominoColors.get(id);
+            return colors[trominoColors.get(id)];
         }
 
         // Registrar colors usats pels trominos veïns
-        HashSet<Color> colorsUsats = new HashSet<>();
+        HashSet<Integer> colorsUsats = new HashSet<>();
 
         // Buscar els veïns i afegir els colors que ja estan usats
         int[][] direccions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
@@ -99,24 +99,25 @@ public class DibuixTromino extends JPanel implements Comunicar {
         }
 
         // Selecionar disponibles
-        ArrayList<Color> colorsDisponibles = new ArrayList<>();
-        for (Color color : colors) {
-            if (!colorsUsats.contains(color)) {
-                colorsDisponibles.add(color);
+        ArrayList<Integer> colorsDisponibles = new ArrayList<>();
+        for (int k = 0; k < colors.length; k++) {
+            if (!colorsUsats.contains(k)) {
+                colorsDisponibles.add(k);
             }
         }
 
         // Si colors disponibles, escollim un a l'atzar
-        Color colorFinal;
+
+        int indexFinal;
         if (!colorsDisponibles.isEmpty()) {
-            colorFinal = colorsDisponibles.get(new Random().nextInt(colorsDisponibles.size()));
+            indexFinal = colorsDisponibles.get(new Random().nextInt(colorsDisponibles.size()));
         } else {
             // tria un per defecte
-            colorFinal = colors[new Random().nextInt(colors.length)];
+            indexFinal = new Random().nextInt(colors.length);
         }
 
-        trominoColors.put(id, colorFinal);
-        return colorFinal;
+        trominoColors.put(id, indexFinal);
+        return colors[indexFinal];
     }
 
 
