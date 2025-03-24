@@ -22,8 +22,6 @@ public class Main implements Comunicar {
 
     private final ExecutorService executor = Executors.newFixedThreadPool(16);
 
-
-
     public int[][] getMatriu() {
         return dades.getTauler();
     }

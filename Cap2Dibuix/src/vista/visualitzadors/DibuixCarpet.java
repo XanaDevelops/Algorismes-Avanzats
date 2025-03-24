@@ -14,20 +14,21 @@ public class DibuixCarpet extends JPanel implements Comunicar {
     //Evita que dibuixi just a la borera de la finestra
     private final int xBorder = 0, yBorder = 0;
 
-    private final Color[] colors = {Color.orange, Color.CYAN, Color.green, Color.RED, Color.pink, Color.magenta};
+    private final Color[] colors;
     private int colorIndex = 0;
 
     public DibuixCarpet(Comunicar principal) {
         this.principal = principal;
-
+        this.colors = ((Main)principal).getDades().getColors();
     }
 
     private void colorSwitch(){
-        System.err.println("Color switch " + !doColor);
-        doColor = !doColor;
-        if(doColor){
-            colorIndex = (colorIndex + 1) % colors.length;
-        }
+        System.err.println("Color switch " + !doColor + " " + colorIndex);
+
+        colorIndex = (colorIndex + 1) % (colors.length + 1);
+        doColor = colorIndex > 0;
+
+
         repaint();
     }
 
@@ -63,7 +64,7 @@ public class DibuixCarpet extends JPanel implements Comunicar {
 
                 Color fg, bg;
                 if (doColor) {
-                    fg = colors[colorIndex % colors.length];
+                    fg = colors[colorIndex -1];
                     bg = fg.darker();
                 } else {
                     fg = Color.BLACK;

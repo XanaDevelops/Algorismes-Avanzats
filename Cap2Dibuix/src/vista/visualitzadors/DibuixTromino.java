@@ -71,7 +71,7 @@ public class DibuixTromino extends JPanel implements Comunicar {
     }
 
     private Color getColorForTromino(int id) {
-        Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE, Color.MAGENTA, Color.CYAN, Color.PINK, Color.YELLOW};
+        Color[] colors = ((Main)principal).getDades().getColors();
         return colors[Math.abs(id) % colors.length];
     }
 

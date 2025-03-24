@@ -1,6 +1,7 @@
 package model;
 
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Dades {
@@ -11,6 +12,9 @@ public class Dades {
     private int profunditat;
 
     private BufferedImage image;
+
+    //array que emmagatzema els colors per a processos que ho necessitin
+    private Color[] colors = {Color.RED, Color.yellow, Color.green, Color.CYAN};
 
     //TROMINOS
     private int[] iniciTromino = new int[2];
@@ -97,7 +101,14 @@ public class Dades {
 
         iniciTromino[0] = 0;
         iniciTromino[1] = 0;
-
     }
+
+    public Color getColor(int i){
+        return colors[i];
+    }
+    public void setColor(int i, Color color){
+        colors[i] = color;
+    }
+    public Color[] getColors() {return colors;}
 
 }

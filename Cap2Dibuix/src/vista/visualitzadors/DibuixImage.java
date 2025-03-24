@@ -38,8 +38,16 @@ public class DibuixImage extends JPanel implements Comunicar {
             return;
         }
 
+        BufferedImage newImage;
+        if(!doColor){
+            newImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+            newImage.getGraphics().setXORMode(Color.BLACK);
+            newImage.getGraphics().drawImage(image, 0, 0, null);
+        }else{
+            newImage = image;
+        }
 
-        g2d.drawImage(image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH), 0, 0, this);
+        g2d.drawImage(newImage.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH), 0, 0, this);
 
 
     }
