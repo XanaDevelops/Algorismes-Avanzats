@@ -6,7 +6,7 @@ import principal.Main;
 import javax.swing.*;
 import java.awt.*;
 
-public class DibuixSierpinski extends JPanel implements Comunicar {
+public class DibuixSierpinski extends CanvasDobleBuffer implements Comunicar {
     Comunicar principal;
 
     private boolean doColor = false;
@@ -19,19 +19,18 @@ public class DibuixSierpinski extends JPanel implements Comunicar {
     private final Color[] colors;
 
     public DibuixSierpinski(Comunicar principal) {
+        super();
         this.principal = principal;
         this.colors = ((Main)principal).getDades().getColors();
     }
 
     private void colorSwitch(){
-        System.err.println("Color switch " + !doColor);
         doColor = !doColor;
         repaint();
     }
 
     @Override
-    public void paint(Graphics g){
-        super.paint(g);
+    public void pintar(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, getWidth(), getHeight());
@@ -83,14 +82,16 @@ public class DibuixSierpinski extends JPanel implements Comunicar {
     @Override
     public void comunicar(String s) {
         switch (s) {
-            case "pintar":
-                repaint();
-                break;
-            case "borrar":
-                System.err.println("borrar no implementat");
+            case "pintar", "borrar":
                 break;
             case "color":
                 colorSwitch();
+                break;
+            case "arrancar":
+                initBuffers();
+                break;
+            case "aturar":
+                aturar = true;
                 break;
         }
     }

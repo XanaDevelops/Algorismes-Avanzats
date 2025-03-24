@@ -7,22 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
-public class DibuixCarpet extends Canvas implements Comunicar, Runnable {
-    /**
-     *
-     */
-    @Override
-    public void run() {
-        while(true){
-            pintar();
-            try {
-                Thread.sleep(1000/60);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+public class DibuixCarpet extends CanvasDobleBuffer implements Comunicar {
 
-        }
-    }
 
     Comunicar principal;
 
@@ -33,26 +19,20 @@ public class DibuixCarpet extends Canvas implements Comunicar, Runnable {
 
 
     public DibuixCarpet(Comunicar principal) {
+        super();
         this.principal = principal;
         this.colors = ((Main)principal).getDades().getColors();
-        setIgnoreRepaint(true);
     }
 
     private void colorSwitch(){
         colorIndex = (colorIndex + 1) % (colors.length + 1);
         doColor = colorIndex > 0;
 
-
         repaint();
     }
 
-
-    public void pintar(){
-        BufferStrategy bufferStrategy = getBufferStrategy();
-        if(bufferStrategy == null){
-            return;
-        }
-        Graphics g = bufferStrategy.getDrawGraphics();
+    @Override
+    protected void pintar(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, getWidth(), getHeight());
@@ -95,10 +75,6 @@ public class DibuixCarpet extends Canvas implements Comunicar, Runnable {
                 }
             }
         }
-
-        g.dispose();
-        bufferStrategy.show();
-
     }
 
     /**
@@ -107,19 +83,16 @@ public class DibuixCarpet extends Canvas implements Comunicar, Runnable {
     @Override
     public void comunicar(String s) {
         switch (s) {
-            case "pintar":
-
-                //repaint();
-                break;
-            case "borrar":
-                System.err.println("borrar no implementat");
+            case "pintar", "borrar":
                 break;
             case "color":
                 colorSwitch();
                 break;
             case "arrancar":
-                createBufferStrategy(2);
-                new Thread(this).start();
+                initBuffers();
+                break;
+            case "aturar":
+                aturar = true;
                 break;
 
         }
