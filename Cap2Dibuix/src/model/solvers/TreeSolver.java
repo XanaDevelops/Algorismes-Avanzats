@@ -70,16 +70,48 @@ public class TreeSolver extends RecursiveSolver implements Comunicar {
         generarArbol(g, image.getHeight()/2, image.getHeight()-300, -90, data.getProfunditat());
     }
 
-    @Override
-    protected void end() {
-        time = System.nanoTime() - time - getSleepTime();
-        System.out.println("Temps real " + time + " nanosegons");
-        main.comunicar("tempsReal:"+ time);
-        g.dispose();
-        if (!aturar) {
-            main.comunicar("aturar");
-        }
+//    @Override
+//    protected void end() {
+//        time = System.nanoTime() - time - getSleepTime();
+//        System.out.println("Temps real " + time + " nanosegons");
+//        main.comunicar("tempsReal:"+ time);
+//        g.dispose();
+//        if (!aturar) {
+//            main.comunicar("aturar");
+//        }
+//    }
+@Override
+protected void end() {
+    long elapsedTime = System.nanoTime() - time;
+    // Converteix a segons (double)
+    double tempsReal = elapsedTime / 1_000_000_000.0;
+
+    // Calcula la constant multiplicativa
+    System.out.println(data.getProfunditat());
+    double profunditatExp = Math.pow(2, data.getProfunditat());
+    double constantMultiplicativa = tempsReal / profunditatExp;
+    double tempsEsperat;
+    if (data.getTipus() == Tipus.TREE && data.getConstantMultiplicativa()!=null) {
+        //ja està inicialitzada
+        tempsEsperat = data.getConstantMultiplicativa()*profunditatExp;
+    }else{
+        tempsEsperat = constantMultiplicativa*profunditatExp;
+
     }
+
+    data.setConstantMultiplicativa(constantMultiplicativa);
+    // Mostra els resultats
+    System.out.printf("Temps esperat: %.8f segons%n", tempsEsperat);
+    main.comunicar("tempsEsperat");
+
+    System.out.printf("Temps real: %.8f segons%n", tempsReal);
+    main.comunicar("tempsReal");
+    g.dispose();
+    if (!aturar) {
+        main.comunicar("aturar");
+    }
+}
+
 
     @Override
     public void comunicar(String s) {

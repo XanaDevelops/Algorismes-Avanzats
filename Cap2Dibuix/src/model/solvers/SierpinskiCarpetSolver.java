@@ -124,22 +124,56 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
         //main.comunicar("aturar");
 
     }
+//
+//    @Override
+//    protected void end() {
+//        System.err.println("he acabat");
+//        System.err.println(getSleepTime());
+//        time = (System.nanoTime() - time - getSleepTime())/1000000000;
+//        System.out.println("Temps real " + time  + " segons");
+//        main.comunicar("tempsReal:"+ time);
+//
+//        // Actualitza la constant multiplicativa basant-se en el temps real mesurat
+//        data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
+//        if (!aturar) {
+//            main.comunicar("aturar");
+//            //aturar();
+//        }
+//    }
+@Override
+protected void end() {
+    time = (System.nanoTime() - time - getSleepTime())/1000000000;
+    double profunditatExp = Math.pow(8, data.getProfunditat()/2);
+    double tempsEsperat;
+    double constantMultiplicativa = time / profunditatExp;
+    if (data.getTipus() == Tipus.QUADRAT && data.getConstantMultiplicativa()!=null) {
+        //ja està inicialitzada
+        tempsEsperat = data.getConstantMultiplicativa()*profunditatExp;
+    }else{
+        tempsEsperat = constantMultiplicativa*profunditatExp;
 
-    @Override
-    protected void end() {
-        System.err.println("he acabat");
-        System.err.println(getSleepTime());
-        time = (System.nanoTime() - time - getSleepTime())/1000000000;
-        System.out.println("Temps real " + time  + " segons");
-        main.comunicar("tempsReal:"+ time);
-
-        // Actualitza la constant multiplicativa basant-se en el temps real mesurat
-        data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
-        if (!aturar) {
-            main.comunicar("aturar");
-            //aturar();
-        }
     }
+
+    data.setConstantMultiplicativa(constantMultiplicativa);
+    // Mostra els resultats
+    System.out.printf("Temps esperat: %.8f segons%n", tempsEsperat);
+    main.comunicar("tempsEsperat");
+
+    System.out.printf("Temps real: %.8f segons%n", time);
+    main.comunicar("tempsReal");
+//        System.err.println("he acabat");
+//        System.err.println(getSleepTime());
+//        time = (System.nanoTime() - time - getSleepTime())/1000000000;
+//        System.out.println("Temps real " + time  + " segons");
+//        main.comunicar("tempsReal:"+ time);
+//
+//        // Actualitza la constant multiplicativa basant-se en el temps real mesurat
+//        data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
+    if (!aturar) {
+        main.comunicar("aturar");
+        //aturar();
+    }
+}
 
 
     /**

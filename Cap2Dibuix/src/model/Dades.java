@@ -8,7 +8,7 @@ public class Dades {
     private Tipus tipus;
 
     private int[][] tauler;
-    private double constantMultiplicativa;
+    private Double constantMultiplicativa;
     private int profunditat;
 
     private BufferedImage image;
@@ -70,7 +70,7 @@ public class Dades {
         this.tauler = tauler;
     }
 
-    public double getConstantMultiplicativa() {
+    public Double getConstantMultiplicativa() {
         return constantMultiplicativa;
     }
 
