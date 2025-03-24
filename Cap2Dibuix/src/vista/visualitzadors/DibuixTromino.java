@@ -5,13 +5,16 @@ import principal.Main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.*;
 
 public class DibuixTromino extends JPanel implements Comunicar {
 
     private final Comunicar principal;
     private boolean colorON = false;
+    private final Map<Integer, Integer> trominoColors = new HashMap<>();
 
     private double midaCellx, midaCelly;
     private int iniciX = 0, iniciY = 0;
@@ -70,10 +73,53 @@ public class DibuixTromino extends JPanel implements Comunicar {
         }
     }
 
-    private Color getColorForTromino(int id) {
-        Color[] colors = ((Main)principal).getDades().getColors();
-        return colors[Math.abs(id) % colors.length];
+    private Color getColorForTromino(int[][] matriu, int i, int j) {
+        Color[] colors = ((Main) principal).getDades().getColors();
+        int id = matriu[i][j];
+
+        // Si el tromino ja té color, el retornem
+        if (trominoColors.containsKey(id)) {
+            return colors[trominoColors.get(id)];
+        }
+
+        // Registrar colors usats pels trominos veïns
+        HashSet<Integer> colorsUsats = new HashSet<>();
+
+        // Buscar els veïns i afegir els colors que ja estan usats
+        int[][] direccions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int[] d : direccions) {
+            int ni = i + d[0];
+            int nj = j + d[1];
+            if (ni >= 0 && ni < matriu.length && nj >= 0 && nj < matriu[0].length) {
+                int nid = matriu[ni][nj];
+                if (trominoColors.containsKey(nid)) {
+                    colorsUsats.add(trominoColors.get(nid));
+                }
+            }
+        }
+
+        // Selecionar disponibles
+        ArrayList<Integer> colorsDisponibles = new ArrayList<>();
+        for (int k = 0; k < colors.length; k++) {
+            if (!colorsUsats.contains(k)) {
+                colorsDisponibles.add(k);
+            }
+        }
+
+        // Si colors disponibles, escollim un a l'atzar
+
+        int indexFinal;
+        if (!colorsDisponibles.isEmpty()) {
+            indexFinal = colorsDisponibles.get(new Random().nextInt(colorsDisponibles.size()));
+        } else {
+            // tria un per defecte
+            indexFinal = new Random().nextInt(colors.length);
+        }
+
+        trominoColors.put(id, indexFinal);
+        return colors[indexFinal];
     }
+
 
     private void detectarCasella(int x, int y, boolean doSet) {
         int[][] matriu = ((Main) (principal)).getMatriu();
@@ -81,7 +127,6 @@ public class DibuixTromino extends JPanel implements Comunicar {
 
         int files = matriu.length;
         int columnes = (files > 0) ? matriu[0].length : 1;
-
 
         int fila = (int) (y / midaCelly);
         int columna = (int) (x / midaCellx);
@@ -127,14 +172,12 @@ public class DibuixTromino extends JPanel implements Comunicar {
                 g.setColor(new Color(0x7FEEEEEE, true)); //transparencia
                 g.drawRect((int) (j * midaCellx), (int) (i * midaCelly), (int) midaCellx, (int) midaCelly);
                 if (matriu[i][j] == -1) {
-                    //iniciX = j;
-                    //iniciY = i;
                     //pintant de negre
                     g.setColor(Color.BLACK);
                     g.fillRect((int) (j * midaCellx), (int) (i * midaCelly), (int) midaCellx, (int) midaCelly);
                 } else if (matriu[i][j] != 0) { // Suposant que -1 significa buit
                     if (colorON) {
-                        g.setColor(getColorForTromino(matriu[i][j]));
+                        g.setColor(getColorForTromino(matriu, i, j));
                         g.fillRect((int) (j * midaCellx), (int) (i * midaCelly), (int) midaCellx, (int) midaCelly);
                     }
                     // Dibuixar només les vores exteriors
