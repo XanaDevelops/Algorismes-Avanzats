@@ -46,7 +46,7 @@ public class Dades {
         return tipus;
     }
 
-    public void setValor(int fila, int columna, int valor) {
+    public synchronized void setValor(int fila, int columna, int valor) {
         this.tauler[fila][columna] = valor;
     }
 

@@ -11,18 +11,19 @@ import java.util.Arrays;
  * Implementa la interfície Runnable per permetre l'execució en un fil separat, i la interfície Comunicar
  * per comunicar-se amb el controlador (Main).
  */
-public class SierpinskiCarpetSolver implements Runnable, Comunicar {
+public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar {
 
   Main main;
   Dades data;
+
+  private long time;
+
     /**
      * Valor numèric assignat als quadres de la catifa
      */
   private static int numActual;
-    /**
-     * Permet aturar el fil d'execució
-     */
-  private boolean stop;
+
+
 
     /**
      * Constructor de classe.
@@ -59,15 +60,12 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
         for (int i = 0; i <size ; i++) {
             for (int j = 0; j <size ; j++) {
                 data.setValor(i+x, j+y, numActual);
+                main.comunicar("pintar");
+                esperar(0, 150);
             }
         }
-        try {
-            Thread.sleep(0, 500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
-        main.comunicar("pintar");
+
     }
 
     /**
@@ -83,22 +81,27 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
      * @param size La mida del costat del quadrat actual.
      */
     private void drawSiperpinskiCarpet(int x, int y, int size) {
-
-        if(!stop){
+        if(!aturar){
             //Cae base: dibuixa un quadrat
             if (size==1) {
                 drawSquare(x, y, size);
                 numActual++;
+                endThread();
                 return;
             }
 
-            for (int i = 0; i < 3; i++) {//posició y
-                for (int j = 0; j < 3; j++) { // posició x
+            for (int i = 0; i < 3 && !aturar; i++) {//posició y
+                for (int j = 0; j < 3 && !aturar; j++) { // posició x
                     if (!(i == 1 && j == 1)){ //quadre no buit
-                        drawSiperpinskiCarpet(x + (j * size / 3), y+ (i * size / 3), size / 3);
+                        //requisit final de exp. lambda
+                        int finalI = i;
+                        int finalJ = j;
+                        //requisit final de exp. lambda
+                        runThread(() -> drawSiperpinskiCarpet(x + (finalJ * size / 3), y + (finalI * size / 3), size / 3));
                     }
                 }
             }
+            endThread();
         }
     }
 
@@ -110,25 +113,34 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
 
     @Override
     public void run() {
-        stop = false;
+        aturar = false;
 
         double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(8, data.getProfunditat());
         main.comunicar("tempsEsperat:"+ tempsEsperat);//??
 
-        long time = System.nanoTime();
-        drawSiperpinskiCarpet(0, 0, data.getTauler().length);
+        time = System.nanoTime();
+        runThread(() -> drawSiperpinskiCarpet(0, 0, data.getTauler().length));
 
-        main.comunicar("aturar");
-        time = (System.nanoTime() - time)/1000000000;
+        //main.comunicar("aturar");
+
+    }
+
+    @Override
+    protected void end() {
+        System.err.println("he acabat");
+        System.err.println(getSleepTime());
+        time = (System.nanoTime() - time - getSleepTime())/1000000000;
         System.out.println("Temps real " + time  + " segons");
         main.comunicar("tempsReal:"+ time);
 
         // Actualitza la constant multiplicativa basant-se en el temps real mesurat
         data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
-        if (!stop) {
-            aturar();
+        if (!aturar) {
+            main.comunicar("aturar");
+            //aturar();
         }
     }
+
 
     /**
      * Implementació del mètode comunicar de la interfície Comunicar.
@@ -139,6 +151,7 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
     public void comunicar(String s) {
         if (s.contentEquals("aturar")) {
             aturar();
+
         }
     }
 
@@ -146,6 +159,7 @@ public class SierpinskiCarpetSolver implements Runnable, Comunicar {
      * Mètode per aturar el fil d'execució.
      */
     private void aturar() {
-        stop = true;
+        aturar = true;
+        //executor.shutdown();
     }
 }
