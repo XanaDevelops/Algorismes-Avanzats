@@ -80,9 +80,6 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
     public void run() {
         // Reinicia la variable de control d'aturada
         aturar = false;
-
-        // Inicia el comptador de temps en nanosegons
-        startTime = System.nanoTime();
         double constant =1.0;
         double profunditatExp = Math.pow(3, data.getProfunditat()/2);
 
@@ -91,11 +88,13 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
         }
         double tempsEsperat = constant*profunditatExp;
         if (tempsEsperat > 100000) {
-            p.comunicar("tempsEsperat:infinity");
+            p.comunicar("tempsEsperat:molt de temps");
         }else {
 
             p.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
         }
+        // Inicia el comptador de temps en nanosegons
+        startTime = System.nanoTime();
 
 
         // Crida la funció recursiva per generar el fractal

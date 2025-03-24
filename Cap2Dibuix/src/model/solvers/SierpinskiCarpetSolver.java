@@ -121,7 +121,7 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
         }
        double tempsEsperat = constant*profunditatExp;
         if (tempsEsperat > 100000) {
-            main.comunicar("tempsEsperat:infinity");
+            main.comunicar("tempsEsperat:molt de temps");
         }else {
 
             main.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));

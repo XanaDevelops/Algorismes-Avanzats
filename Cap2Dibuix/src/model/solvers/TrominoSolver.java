@@ -170,9 +170,6 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
     @Override
     public void run() {
         aturar = false;
-
-        // Inicia el comptador de temps en nanosegons
-        startTime = System.nanoTime();
         double constant =1.0;
         double profunditatExp = Math.pow(4, data.getProfunditat()/2);
 
@@ -182,11 +179,14 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
 
         double tempsEsperat = constant*profunditatExp;
         if (tempsEsperat > 100000) {
-            p.comunicar("tempsEsperat:infinity");
+            p.comunicar("tempsEsperat:molt de temps");
         }else {
 
             p.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
         }
+        // Inicia el comptador de temps en nanosegons
+        startTime = System.nanoTime();
+
 
         this.hashTauler = data.getTauler().hashCode();
         trominoRec(data.getTauler().length, 0, 0);
