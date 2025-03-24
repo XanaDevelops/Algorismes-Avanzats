@@ -7,6 +7,7 @@ import principal.Comunicar;
 import principal.Main;
 
 import java.util.Arrays;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Classe que implementa un solucionador del problema dels Trominos utilitzant
@@ -81,7 +82,7 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
                 runThread(() -> trominoRec(mida / 2, topx + mida / 2, topy + mida / 2));
             }
         }
-        endThread();
+
     }
 
     /**
@@ -139,13 +140,14 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
                 break;
         }
         numActual++;
+
     }
 
 
     // Omple un subtauler de mida x mida amb el tromino actual.
     private synchronized void omplirTromino(int topx, int topy, int mida) {
-        for (int i = 0; i < mida && !aturar; i++) {
-            for (int j = 0; j < mida && !aturar; j++) {
+        for (int i = 0; i < mida; i++) {
+            for (int j = 0; j < mida; j++) {
                 if (data.getValor(topx + i, topy + j) == 0) {
                     data.setValor(topx + i, topy + j, numActual);
                     p.comunicar("pintar");
@@ -155,6 +157,7 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
             }
         }
     }
+
 
     @Override
     public void run() {

@@ -38,7 +38,7 @@ public class TreeSolver extends RecursiveSolver implements Comunicar {
        if(!aturar) {
            if (p == 0)
            {
-               endThread();
+
                return;
            }
 
@@ -52,7 +52,7 @@ public class TreeSolver extends RecursiveSolver implements Comunicar {
            runThread(() -> generarArbol(g, x2, y2, angle - treeLogAngle, p - 1));
            runThread(() -> generarArbol(g, x2, y2, angle + treeLogAngle, p - 1));
        }
-       endThread();
+
     }
 
     public BufferedImage getImage() {
