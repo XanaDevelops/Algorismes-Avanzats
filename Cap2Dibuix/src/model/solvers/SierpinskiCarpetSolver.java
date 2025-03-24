@@ -16,7 +16,7 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
   Main main;
   Dades data;
 
-  private long time;
+  private double time;
 
     /**
      * Valor numèric assignat als quadres de la catifa
@@ -114,32 +114,42 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
     @Override
     public void run() {
         aturar = false;
+        double profunditatExp = Math.pow(8, data.getProfunditat()/3);
+        double constant = 1.0;
+        if (data.getTipus() == Tipus.QUADRAT && data.getConstantMultiplicativa()!=null) {
+            constant = data.getConstantMultiplicativa();
+        }
+       double tempsEsperat = constant*profunditatExp;
+        if (tempsEsperat > 100000) {
+            main.comunicar("tempsEsperat:molt de temps");
+        }else {
 
-        double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(8, data.getProfunditat());
-        main.comunicar("tempsEsperat:"+ tempsEsperat);//??
-
+            main.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
+        }
         time = System.nanoTime();
         runThread(() -> drawSiperpinskiCarpet(0, 0, data.getTauler().length));
 
-        //main.comunicar("aturar");
 
     }
 
-    @Override
-    protected void end() {
-        System.err.println("he acabat");
-        System.err.println(getSleepTime());
-        time = (System.nanoTime() - time - getSleepTime())/1000000000;
-        System.out.println("Temps real " + time  + " segons");
-        main.comunicar("tempsReal:"+ time);
+@Override
+protected void end() {
+    time = (System.nanoTime() - time - getSleepTime())/1000000000;
+    double profunditatExp = Math.pow(8, data.getProfunditat()/3);
 
-        // Actualitza la constant multiplicativa basant-se en el temps real mesurat
-        data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
-        if (!aturar) {
-            main.comunicar("aturar");
-            //aturar();
-        }
+    double constantMultiplicativa = time / profunditatExp;
+
+    data.setConstantMultiplicativa(constantMultiplicativa);
+    // Mostra els resultats
+//    main.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
+
+    main.comunicar("tempsReal:"+ String.format( "%.3f segons",time));
+
+    if (!aturar) {
+        main.comunicar("aturar");
+        //aturar();
     }
+}
 
 
     /**

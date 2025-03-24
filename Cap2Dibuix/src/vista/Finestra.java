@@ -175,7 +175,18 @@ public class Finestra extends JFrame implements Comunicar {
 
     @Override
     public void comunicar(String s) {
-        dibuix.comunicar(s);
+        if (s.startsWith("temps")) {
+            String msg = s.split(":", 2)[1];
+            if (s.startsWith("tempsEsperat")) {
+                JOptionPane.showMessageDialog(null, "Tardaré "+ msg, "Temps Esperat", JOptionPane.INFORMATION_MESSAGE);
+
+            }else{
+                JOptionPane.showMessageDialog(null, "He tardat "+ msg, "Temps Real", JOptionPane.INFORMATION_MESSAGE);
+
+            }
+        } else {
+            dibuix.comunicar(s);
+        }
     }
 
     private class BotoColor extends JButton{
