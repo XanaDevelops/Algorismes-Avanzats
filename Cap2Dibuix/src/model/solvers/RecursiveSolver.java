@@ -9,10 +9,9 @@ import java.util.concurrent.*;
  * Classe abstracta que facilita la creació d'un generador amb fils concurrents
  */
 public abstract class RecursiveSolver implements Runnable {
-    protected int numThreads; //nums de threads total
     protected static final int MAX_THREADS = Runtime.getRuntime().availableProcessors(); //hyperthreading
 
-    protected final ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
+    protected final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(MAX_THREADS);
     protected final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
 
     private long sleepTime = 0; //nanos dormit
@@ -37,12 +36,10 @@ public abstract class RecursiveSolver implements Runnable {
         if (aturar) {
             return;
         }
-        numThreads++;
         Runnable rr = () -> {
             r.run();
             endThread();};
-
-        if (numThreads < MAX_THREADS) {
+        if (executor.getActiveCount() < MAX_THREADS) {
             executor.execute(rr);
         }else{
             queue.add(rr);
@@ -56,14 +53,12 @@ public abstract class RecursiveSolver implements Runnable {
      * Si no queden elements crida {@code end()}
      */
     protected synchronized void endThread(){
-        numThreads--;
+
         if (!queue.isEmpty() && !aturar) {
             executor.execute(queue.remove());
-        }else if(numThreads == 0 && ((ThreadPoolExecutor) executor).getActiveCount() == 0){
+        }else if( (executor.getActiveCount() <= 1)){
             end();
         }
-
-
     }
 
     /**
