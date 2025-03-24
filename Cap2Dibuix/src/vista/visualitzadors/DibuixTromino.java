@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 public class DibuixTromino extends JPanel implements Comunicar {
 
@@ -78,7 +79,7 @@ public class DibuixTromino extends JPanel implements Comunicar {
     private void detectarCasella(int x, int y, boolean doSet) {
         int[][] matriu = ((Main) (principal)).getMatriu();
         if (matriu == null) return;
-
+        //System.out.println(Arrays.deepToString(matriu));
         int files = matriu.length;
         int columnes = (files > 0) ? matriu[0].length : 1;
 

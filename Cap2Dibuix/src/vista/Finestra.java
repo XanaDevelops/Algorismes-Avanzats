@@ -19,6 +19,7 @@ public class Finestra extends JFrame implements Comunicar {
     JLabel colorLabel;
     JTextField nField;
     JComboBox<String> dibuixosCBox;
+    JButton pintarButton;
 
     //L'element que interpreta la matriu de dades i dibuixa la figura
     Comunicar dibuix;
@@ -41,7 +42,7 @@ public class Finestra extends JFrame implements Comunicar {
         JPanel botons = new JPanel();
         botons.setLayout(new FlowLayout());
 
-        JButton pintarButton = new JButton("Pintar");
+        pintarButton = new JButton("Pintar");
 
         nField = (JTextField)botons.add(new JTextField(5));
         nField.addActionListener(e -> {
@@ -151,8 +152,17 @@ public class Finestra extends JFrame implements Comunicar {
             if (n <= 0) {
                 JOptionPane.showMessageDialog(this, "Introdueix un numero major a 0", "Error", JOptionPane.WARNING_MESSAGE);
             }
-            else
+            else{
+                if (n > 7 && this.dibuixosCBox.getSelectedIndex() != 3){
+                    int r =JOptionPane.showConfirmDialog(this, n+" és un numero més gran que 7. És possible que els detalls del dibuix siguin massa petits", "Avís",
+                            JOptionPane.OK_CANCEL_OPTION);
+                    if (r == JOptionPane.CANCEL_OPTION){
+                        return;
+                    }
+                }
                 principal.comunicar(msg + ":" + n);
+            }
+
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -178,7 +188,11 @@ public class Finestra extends JFrame implements Comunicar {
                 JOptionPane.showConfirmDialog(this, chooser, "Color", JOptionPane.OK_CANCEL_OPTION);
                 colorHold = chooser.getColor();
                 dades.setColor(i, colorHold);
-                dibuix.comunicar("pintar");
+                if(dibuixosCBox.getSelectedIndex() == 3){
+                    pintarButton.doClick();
+                }else {
+                    dibuix.comunicar("pintar");
+                }
             });
         }
 
