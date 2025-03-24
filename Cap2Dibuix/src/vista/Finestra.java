@@ -37,7 +37,7 @@ public class Finestra extends JFrame implements Comunicar {
         dibuix = new DibuixTromino(principal);
 
         //volem un quadrat al dibuix, no necesariament la finestra
-        ((Component)dibuix).setPreferredSize(new Dimension(800, 800));
+        ((Component)dibuix).setPreferredSize(new Dimension(1000, 1000));
         JPanel botons = new JPanel();
         botons.setLayout(new FlowLayout());
 
@@ -67,6 +67,10 @@ public class Finestra extends JFrame implements Comunicar {
             dibuix.comunicar("color");
 
         });
+
+        for (int i = 0; i < 4; i++) {
+            botons.add(new BotoColor(dades.getColor(i), i));
+        }
 
         this.add(botons, BorderLayout.NORTH);
         this.add((JComponent)dibuix, BorderLayout.CENTER); //per exemple
@@ -158,4 +162,34 @@ public class Finestra extends JFrame implements Comunicar {
     public void comunicar(String s) {
         dibuix.comunicar(s);
     }
+
+    private class BotoColor extends JButton{
+        public Color colorHold;
+        public int i;
+
+        public BotoColor(Color color, int i) {
+            super();
+            this.colorHold = color;
+            this.i = i;
+
+            setPreferredSize(new Dimension(32, 32));
+            addActionListener(e -> {
+                JColorChooser chooser = new JColorChooser(colorHold);
+                JOptionPane.showConfirmDialog(this, chooser, "Color", JOptionPane.OK_CANCEL_OPTION);
+                colorHold = chooser.getColor();
+                dades.setColor(i, colorHold);
+                dibuix.comunicar("pintar");
+            });
+        }
+
+        @Override
+        protected void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.setColor(colorHold);
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+
+    }
+
 }
