@@ -22,6 +22,8 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
 
     private long startTime;
 
+    private int hashTauler;
+
     /**
      * Constructor de la classe.
      * @param p Instància de Main que s'encarrega de gestionar la comunicació entre components.
@@ -30,6 +32,7 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
     public TrominoSolver(Main p, Dades data) {
         this.p = p;
         this.data = data;
+
 
         // Estableix el tipus de fractal que es generarà
         data.setTipus(Tipus.TROMINO);
@@ -94,7 +97,8 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
         int[] forat = new int[2];
         for (int x = topx; x < topx + mida; x++) {
             for (int y = topy; y < topy + mida; y++) {
-                if (data.getTauler() == null) return null;
+                //evitar escriure si no es mateix tauler
+                if (data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return null;
                 if (data.getValor(x, y) != 0) {
                     forat[0] = x;
                     forat[1] = y;
@@ -151,7 +155,7 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
     private synchronized void omplirTromino(int topx, int topy, int mida) {
         for (int i = 0; i < mida; i++) {
             for (int j = 0; j < mida; j++) {
-                if(data.getTauler() == null) return;
+                if(data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return;
                 if (data.getValor(topx + i, topy + j) == 0) {
                     data.setValor(topx + i, topy + j, numActual);
                     p.comunicar("pintar");
@@ -169,7 +173,7 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
 
         // Inicia el comptador de temps en nanosegons
         startTime = System.nanoTime();
-
+        this.hashTauler = data.getTauler().hashCode();
         trominoRec(data.getTauler().length, 0, 0);
     }
 
