@@ -1,5 +1,6 @@
 package model.solvers;
 
+import java.lang.management.ManagementFactory;
 import java.util.Deque;
 import java.util.Queue;
 import java.util.concurrent.*;
@@ -9,12 +10,13 @@ import java.util.concurrent.*;
  */
 public abstract class RecursiveSolver implements Runnable {
     protected int numThreads; //nums de threads total
-    protected static final int MAX_THREADS = 16;
+    protected static final int MAX_THREADS = Runtime.getRuntime().availableProcessors(); //hyperthreading
 
     protected final ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
     protected final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
 
     private long sleepTime = 0; //nanos dormit
+
 
     /**
      * Permet aturar el fil d'execució
