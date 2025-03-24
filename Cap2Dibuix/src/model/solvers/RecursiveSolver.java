@@ -1,23 +1,22 @@
 package model.solvers;
 
+import java.lang.management.ManagementFactory;
 import java.util.Deque;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * Classe abstracta que facilita la creació d'un generador amb fils concurrents
  */
 public abstract class RecursiveSolver implements Runnable {
     protected int numThreads; //nums de threads total
-    protected static final int MAX_THREADS = 16;
+    protected static final int MAX_THREADS = Runtime.getRuntime().availableProcessors(); //hyperthreading
 
     protected final ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
     protected final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
 
     private long sleepTime = 0; //nanos dormit
+
 
     /**
      * Permet aturar el fil d'execució
@@ -39,15 +38,20 @@ public abstract class RecursiveSolver implements Runnable {
             return;
         }
         numThreads++;
+        Runnable rr = () -> {
+            r.run();
+            endThread();};
+
         if (numThreads < MAX_THREADS) {
-            executor.execute(r);
+            executor.execute(rr);
         }else{
-            queue.add(r);
+            queue.add(rr);
         }
     }
 
     /**
-     * Mètode que s'executa al finalitzar un fil
+     * Mètode que s'executa al finalitzar un fil.
+     * Cridat internament per {@code runThread()}. <br>
      * També allibera un espai del executor i desencua un nou element
      * Si no queden elements crida {@code end()}
      */
@@ -55,7 +59,7 @@ public abstract class RecursiveSolver implements Runnable {
         numThreads--;
         if (!queue.isEmpty() && !aturar) {
             executor.execute(queue.remove());
-        }else if(numThreads == 0){
+        }else if(numThreads == 0 && ((ThreadPoolExecutor) executor).getActiveCount() == 0){
             end();
         }
 

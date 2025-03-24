@@ -86,7 +86,7 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
             if (size==1) {
                 drawSquare(x, y, size);
                 numActual++;
-                endThread();
+
                 return;
             }
 
@@ -101,7 +101,7 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
                     }
                 }
             }
-            endThread();
+            
         }
     }
 

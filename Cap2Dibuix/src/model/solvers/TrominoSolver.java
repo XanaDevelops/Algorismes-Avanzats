@@ -7,6 +7,7 @@ import principal.Comunicar;
 import principal.Main;
 
 import java.util.Arrays;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Classe que implementa un solucionador del problema dels Trominos utilitzant
@@ -21,6 +22,8 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
 
     private long startTime;
 
+    private int hashTauler;
+
     /**
      * Constructor de la classe.
      * @param p Instància de Main que s'encarrega de gestionar la comunicació entre components.
@@ -29,6 +32,7 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
     public TrominoSolver(Main p, Dades data) {
         this.p = p;
         this.data = data;
+
 
         // Estableix el tipus de fractal que es generarà
         data.setTipus(Tipus.TROMINO);
@@ -67,7 +71,9 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
             } else {
                 // Troba la posició del forat en el subtauler
                 int[] forat = trobarForat(topx, topy, mida);
-
+                if (forat == null) {
+                    return;
+                }
                 // Utilitzem l'enum Mode per determinar la ubicació del forat i procedir segons correspongui
                 Mode mode = determinarMode(forat[0], forat[1], topx, topy, mida);
 
@@ -81,7 +87,7 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
                 runThread(() -> trominoRec(mida / 2, topx + mida / 2, topy + mida / 2));
             }
         }
-        endThread();
+
     }
 
     /**
@@ -91,6 +97,8 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
         int[] forat = new int[2];
         for (int x = topx; x < topx + mida; x++) {
             for (int y = topy; y < topy + mida; y++) {
+                //evitar escriure si no es mateix tauler
+                if (data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return null;
                 if (data.getValor(x, y) != 0) {
                     forat[0] = x;
                     forat[1] = y;
@@ -139,13 +147,15 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
                 break;
         }
         numActual++;
+
     }
 
 
     // Omple un subtauler de mida x mida amb el tromino actual.
     private synchronized void omplirTromino(int topx, int topy, int mida) {
-        for (int i = 0; i < mida && !aturar; i++) {
-            for (int j = 0; j < mida && !aturar; j++) {
+        for (int i = 0; i < mida; i++) {
+            for (int j = 0; j < mida; j++) {
+                if(data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return;
                 if (data.getValor(topx + i, topy + j) == 0) {
                     data.setValor(topx + i, topy + j, numActual);
                     p.comunicar("pintar");
@@ -156,13 +166,14 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
         }
     }
 
+
     @Override
     public void run() {
         aturar = false;
 
         // Inicia el comptador de temps en nanosegons
         startTime = System.nanoTime();
-
+        this.hashTauler = data.getTauler().hashCode();
         trominoRec(data.getTauler().length, 0, 0);
     }
 

@@ -58,7 +58,6 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
                 data.setValor(x, y, 1); // Marca la posició com a part del fractal
                 p.comunicar("pintar");  // Informa la vista perquè es refresqui
                 esperar(10, 0);
-                endThread();
                 return;
             }
 
@@ -70,7 +69,7 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
             runThread(() -> generarSierpinski(x + novaMida, y - novaMida, novaMida)); // Triangle inferior esquerre
             runThread(() -> generarSierpinski(x + novaMida, y + novaMida, novaMida)); // Triangle inferior dret
         }
-        endThread();
+
     }
 
     /**
@@ -86,9 +85,7 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
         startTime = System.nanoTime();
 
         // Crida la funció recursiva per generar el fractal
-        generarSierpinski(0, data.getProfunditat() - 1, data.getProfunditat());
-
-
+        runThread(() -> generarSierpinski(0, data.getProfunditat() - 1, data.getProfunditat()));
     }
 
     @Override
