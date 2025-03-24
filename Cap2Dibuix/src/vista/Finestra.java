@@ -154,8 +154,9 @@ public class Finestra extends JFrame implements Comunicar {
             }
             else{
                 if (n > 7 && this.dibuixosCBox.getSelectedIndex() != 3){
-                    int r =JOptionPane.showConfirmDialog(this, n+" és un numero més gran que 7. És possible que els detalls del dibuix siguin massa petits", "Avís",
-                            JOptionPane.OK_CANCEL_OPTION);
+                    int r =JOptionPane.showConfirmDialog(this, n+" és un numero més gran que 7. " +
+                                                "És possible que els detalls del dibuix siguin massa petits", "Avís",
+                                                JOptionPane.OK_CANCEL_OPTION);
                     if (r == JOptionPane.CANCEL_OPTION){
                         return;
                     }
