@@ -1,10 +1,10 @@
 package principal;
 
 import model.Dades;
-import model.Tipus;
 
-import model.solvers.CarpetaSierpinski;
-import model.solvers.SierpinskiSolver;
+import model.solvers.SierpinskiCarpetSolver;
+import model.solvers.SierpinskiTriangleSolver;
+import model.solvers.TreeSolver;
 import model.solvers.TrominoSolver;
 import vista.Finestra;
 
@@ -21,9 +21,6 @@ public class Main implements Comunicar {
     private ArrayList<Comunicar> processos = null;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(16);
-
-
-
 
     public int[][] getMatriu() {
         return dades.getTauler();
@@ -81,7 +78,7 @@ public class Main implements Comunicar {
 
                     case "triangles":
                         try {
-                            executar(SierpinskiSolver.class,(int) Math.pow(2, (double)Integer.parseInt(params[2])-1));
+                            executar(SierpinskiTriangleSolver.class,(int) Math.pow(2, (double)Integer.parseInt(params[2])-1));
                         } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |
                                  IllegalAccessException e) {
                             throw new RuntimeException(e);
@@ -89,14 +86,22 @@ public class Main implements Comunicar {
                         break;
                     case "quadrat":
                         try {
-                            executar(CarpetaSierpinski.class, (int) Math.pow(3, Integer.parseInt(params[2])));
+                            executar(SierpinskiCarpetSolver.class, (int) Math.pow(3, Integer.parseInt(params[2])));
+                        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                                 IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    case "arbre":
+                        try {
+                            executar(TreeSolver.class, (int) Integer.parseInt(params[2]));
                         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                                  IllegalAccessException e) {
                             throw new RuntimeException(e);
                         }
                         break;
                     default:
-                        System.err.println("execucio "+s+" desconegut");
+                        System.err.println("MAIN: execucio "+s+" desconegut");
                         break;
                 }
             case "aturar":
@@ -110,14 +115,14 @@ public class Main implements Comunicar {
                 finestra.comunicar("pintar");
                 break;
             default:
-                System.err.println("missatge "+s+" desconegut");
+                System.err.println("MAIN: missatge "+s+" desconegut");
                 break;
         }
     }
 
     private void executar(Class<? extends Comunicar> clase, int profunditat) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         for (Comunicar enmarxa : processos) {
-            enmarxa.comunicar("borrar");
+            enmarxa.comunicar("aturar");
         }
 
         processos.clear();

@@ -1,7 +1,10 @@
 package vista;
 
 import model.Dades;
+import model.Tipus;
 import principal.Comunicar;
+import vista.visualitzadors.DibuixCarpet;
+import vista.visualitzadors.DibuixImage;
 import vista.visualitzadors.DibuixSierpinski;
 import vista.visualitzadors.DibuixTromino;
 
@@ -27,13 +30,14 @@ public class Finestra extends JFrame implements Comunicar {
 
         this.setTitle("Dibuixos recursius");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(700, 700));
         setResizable(false);
 
         this.setLayout(new BorderLayout());
 
-        dibuix = new DibuixTromino(300, 300, principal);
+        dibuix = new DibuixTromino(principal);
 
+        //volem un quadrat al dibuix, no necesariament la finestra
+        ((Component)dibuix).setPreferredSize(new Dimension(900, 900));
         JPanel botons = new JPanel();
         botons.setLayout(new FlowLayout());
 
@@ -43,6 +47,7 @@ public class Finestra extends JFrame implements Comunicar {
         nField.addActionListener(e -> {
             pintarButton.doClick();
         });
+
 
         dibuixosCBox = (JComboBox<String>) botons.add(generateComboBox());
 
@@ -63,6 +68,10 @@ public class Finestra extends JFrame implements Comunicar {
 
         });
 
+        for (int i = 0; i < 4; i++) {
+            botons.add(new BotoColor(dades.getColor(i), i));
+        }
+
         this.add(botons, BorderLayout.NORTH);
         this.add((JComponent)dibuix, BorderLayout.CENTER); //per exemple
 
@@ -77,6 +86,7 @@ public class Finestra extends JFrame implements Comunicar {
         comboBox.addItem("tromino");
         comboBox.addItem("triangles");
         comboBox.addItem("quadrat");
+        comboBox.addItem("arbre");
 
         comboBox.setSelectedIndex(0);
 
@@ -87,7 +97,7 @@ public class Finestra extends JFrame implements Comunicar {
                 case "tromino":
                     if (!(dibuix instanceof DibuixTromino)){
                         principal.comunicar("borrar");
-                        replace(new DibuixTromino(300, 300, principal));
+                        replace(new DibuixTromino(principal));
                     }
                     break;
                 case "triangles":
@@ -97,10 +107,16 @@ public class Finestra extends JFrame implements Comunicar {
                     }
                     break;
                 case "quadrat":
-                    //TODO: CAMBIAR POR DIBUIX PROPI!!!!
-                    if (!(dibuix instanceof DibuixTromino)){
+                    if (!(dibuix instanceof DibuixCarpet)){
                         principal.comunicar("borrar");
-                        replace(new DibuixTromino(300, 300, principal));
+                        replace(new DibuixCarpet(principal));
+                    }
+                    break;
+                case "arbre":
+                    //és possible que un DibuixImage s'usi per generacions no matricials
+                    if (!(dibuix instanceof DibuixImage) && dades.getTipus() != Tipus.TREE){
+                        principal.comunicar("borrar");
+                        replace(new DibuixImage(principal));
                     }
                     break;
                 default:
@@ -132,7 +148,11 @@ public class Finestra extends JFrame implements Comunicar {
         }
         try {
             int n = Integer.parseInt(nText);
-            principal.comunicar(msg + ":" + n);
+            if (n <= 0) {
+                JOptionPane.showMessageDialog(this, "Introdueix un numero major a 0", "Error", JOptionPane.WARNING_MESSAGE);
+            }
+            else
+                principal.comunicar(msg + ":" + n);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -142,4 +162,34 @@ public class Finestra extends JFrame implements Comunicar {
     public void comunicar(String s) {
         dibuix.comunicar(s);
     }
+
+    private class BotoColor extends JButton{
+        public Color colorHold;
+        public int i;
+
+        public BotoColor(Color color, int i) {
+            super();
+            this.colorHold = color;
+            this.i = i;
+
+            setPreferredSize(new Dimension(32, 32));
+            addActionListener(e -> {
+                JColorChooser chooser = new JColorChooser(colorHold);
+                JOptionPane.showConfirmDialog(this, chooser, "Color", JOptionPane.OK_CANCEL_OPTION);
+                colorHold = chooser.getColor();
+                dades.setColor(i, colorHold);
+                dibuix.comunicar("pintar");
+            });
+        }
+
+        @Override
+        protected void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.setColor(colorHold);
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+
+    }
+
 }

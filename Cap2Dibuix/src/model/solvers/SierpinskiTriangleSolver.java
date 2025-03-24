@@ -12,22 +12,21 @@ import java.util.Arrays;
  * Classe encarregada de generar un Triangle de Sierpinski mitjançant recursió.
  * Implementa Runnable per executar-se en un fil separat i Comunicar per interactuar amb el controlador.
  */
-public class SierpinskiSolver implements Runnable, Comunicar {
+public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunicar {
     // Referència a la classe Main, que actua com a controlador principal
-    private Main p;
+    private final Main p;
     // Objecte Dades que conté el tauler i la informació de l'estat actual
-    private Dades data;
-    /**
-     * Variable booleana per poder aturar el fil d'execució de manera segura.
-     */
-    private boolean stop;
+    private final Dades data;
+
+    private long startTime;
+
 
     /**
      * Constructor de la classe.
      * @param p Instància de Main que s'encarrega de gestionar la comunicació entre components.
      * @param data Objecte que conté la informació del tauler i les dades necessàries per generar el fractal.
      */
-    public SierpinskiSolver(Main p, Dades data) {
+    public SierpinskiTriangleSolver(Main p, Dades data) {
         this.p = p;
         this.data = data;
 
@@ -53,11 +52,12 @@ public class SierpinskiSolver implements Runnable, Comunicar {
      */
     private void generarSierpinski(int x, int y, int mida) {
         // Comprova si el procés s'ha d'aturar
-        if (!stop) {
+        if (!aturar) {
             // Cas base: Si la mida és 1, pinta una sola casella i retorna
             if (mida == 1) {
                 data.setValor(x, y, 1); // Marca la posició com a part del fractal
                 p.comunicar("pintar");  // Informa la vista perquè es refresqui
+                esperar(10, 0);
                 return;
             }
 
@@ -65,10 +65,11 @@ public class SierpinskiSolver implements Runnable, Comunicar {
             int novaMida = mida / 2;
 
             // Crida recursiva per generar els tres sub-triangles
-            generarSierpinski(x, y, novaMida);                // Triangle superior
-            generarSierpinski(x + novaMida, y - novaMida, novaMida); // Triangle inferior esquerre
-            generarSierpinski(x + novaMida, y + novaMida, novaMida); // Triangle inferior dret
+            runThread(() -> generarSierpinski(x, y, novaMida));                // Triangle superior
+            runThread(() -> generarSierpinski(x + novaMida, y - novaMida, novaMida)); // Triangle inferior esquerre
+            runThread(() -> generarSierpinski(x + novaMida, y + novaMida, novaMida)); // Triangle inferior dret
         }
+
     }
 
     /**
@@ -78,16 +79,19 @@ public class SierpinskiSolver implements Runnable, Comunicar {
     @Override
     public void run() {
         // Reinicia la variable de control d'aturada
-        stop = false;
+        aturar = false;
 
         // Inicia el comptador de temps en nanosegons
-        long startTime = System.nanoTime();
+        startTime = System.nanoTime();
 
         // Crida la funció recursiva per generar el fractal
-        generarSierpinski(0, data.getProfunditat() - 1, data.getProfunditat());
+        runThread(() -> generarSierpinski(0, data.getProfunditat() - 1, data.getProfunditat()));
+    }
 
-        // Calcula el temps real en nanosegons
-        long elapsedTime = System.nanoTime() - startTime;
+    @Override
+    protected void end() {
+// Calcula el temps real en nanosegons
+        long elapsedTime = System.nanoTime() - startTime - getSleepTime();
 
         // Converteix a segons (double)
         double tempsReal = elapsedTime / 1_000_000_000.0;
@@ -109,11 +113,8 @@ public class SierpinskiSolver implements Runnable, Comunicar {
         System.out.printf("Temps real: %.8f segons%n", tempsReal);
         p.comunicar("tempsReal");
 
-        // Notifica que el procés ha finalitzat
-        p.comunicar("aturar");
-
         // Si el procés no s'ha aturat manualment, assegura que es detingui
-        if (!stop) aturar();
+        if (!aturar) p.comunicar("aturar");
     }
 
     /**
@@ -133,5 +134,8 @@ public class SierpinskiSolver implements Runnable, Comunicar {
      * Mètode per aturar l'execució del Solver.
      * Estableix la variable stop a true per indicar que el fil ha de finalitzar.
      */
-    private void aturar() { stop = true; }
-}
+    private void aturar() {
+        if(aturar)return;
+        aturar = true;
+        executor.shutdown();
+    }}

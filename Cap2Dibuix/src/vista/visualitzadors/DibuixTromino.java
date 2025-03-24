@@ -8,32 +8,40 @@ import java.awt.*;
 import java.awt.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
 
 public class DibuixTromino extends JPanel implements Comunicar {
 
-
-    private final static Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE, Color.MAGENTA, Color.CYAN, Color.PINK, Color.YELLOW};
     private final Comunicar principal;
     private boolean colorON = false;
     private final Map<Integer, Color> trominoColors = new HashMap<>();
 
+    private double midaCellx, midaCelly;
+    private int iniciX = 0, iniciY = 0;
 
     /**
      * Inicialitza els límits del panell del, i la instància de classe.
      *
-     * @param w amplada del panell del Dibuix
-     * @param h altura del panell del Dibuix
      * @param p instància del programa principal
      */
-    public DibuixTromino(int w, int h, Comunicar p) {
+    public DibuixTromino(Comunicar p) {
         this.principal = p;
-        this.setBounds(0, 0, w, h);
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                detectarCasella(e.getX(), e.getY());
+                detectarCasella(e.getX(), e.getY(), true);
+            }
+
+        });
+        addMouseMotionListener(new MouseAdapter(){
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                detectarCasella(e.getX(), e.getY(), false);
+                repaint();
             }
         });
     }
@@ -41,39 +49,35 @@ public class DibuixTromino extends JPanel implements Comunicar {
     public void colorON() {
         this.colorON = !colorON;
         repaint();
-
-
     }
 
     private void dibuixarVoraExterior(int[][] matriu, int i, int j, Graphics g) {
 
         int id = matriu[i][j];
-        int files = matriu.length;
-        int columnes = matriu[0].length;
-        int midaCellx = this.getWidth() / columnes;
-        int midaCelly = this.getHeight() / files;
-        int x = j * midaCellx;
-        int y = i * midaCelly;
+
+        int x = (int)(j * midaCellx);
+        int y = (int)(i * midaCelly);
 
         // Vora superior
         if (i == 0 || matriu[i - 1][j] != id) {
-            g.drawLine(x, y, x + midaCellx, y);
+            g.drawLine(x, y, (int)(x + midaCellx), y);
         }
         // Vora inferior
         if (i == matriu.length - 1 || matriu[i + 1][j] != id) {
-            g.drawLine(x, y + midaCelly, x + midaCellx, y + midaCelly);
+            g.drawLine(x, (int) (y + midaCelly), (int) (x + midaCellx), (int) (y + midaCelly));
         }
         // Vora esquerra
         if (j == 0 || matriu[i][j - 1] != id) {
-            g.drawLine(x, y, x, y + midaCelly);
+            g.drawLine(x, y, x, (int) (y + midaCelly));
         }
         // Vora dreta
         if (j == matriu[0].length - 1 || matriu[i][j + 1] != id) {
-            g.drawLine(x + midaCellx, y, x + midaCellx, y + midaCelly);
+            g.drawLine((int) (x + midaCellx), y, (int) (x + midaCellx), (int) (y + midaCelly));
         }
     }
 
     private Color getColorForTromino(int[][] matriu, int i, int j) {
+        Color[] colors = ((Main)principal).getDades().getColors();
         int id = matriu[i][j];
 
         // Si el tromino ja té color, el retornem
@@ -119,22 +123,23 @@ public class DibuixTromino extends JPanel implements Comunicar {
     }
 
 
-    private void detectarCasella(int x, int y) {
+    private void detectarCasella(int x, int y, boolean doSet) {
         int[][] matriu = ((Main) (principal)).getMatriu();
         if (matriu == null) return;
 
         int files = matriu.length;
         int columnes = (files > 0) ? matriu[0].length : 1;
 
-        int midaCellx = this.getWidth() / columnes;
-        int midaCelly = this.getHeight() / files;
+        int fila = (int) (y / midaCelly);
+        int columna = (int) (x / midaCellx);
 
-        int fila = y / midaCelly;
-        int columna = x / midaCellx;
-
-        if (fila >= 0 && fila < files && columna >= 0 && columna < columnes) {
-            principal.comunicar("inici:" + columna + ":" + fila);
+        if (doSet) {
+            if (fila >= 0 && fila < files && columna >= 0 && columna < columnes) {
+                principal.comunicar("inici:" + columna + ":" + fila);
+            }
         }
+        iniciX = columna;
+        iniciY = fila;
     }
 
     /**
@@ -147,43 +152,44 @@ public class DibuixTromino extends JPanel implements Comunicar {
     public void paint(Graphics g) {
         super.paintComponent(g);
 
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, getWidth(), getHeight());
+
 
         int[][] matriu = ((Main) (principal)).getMatriu();
         if (matriu == null) {
-            System.err.println("No se pot pintar la matriu");
             return;
         }
 
         int files = matriu.length;
         int columnes = (files > 0) ? matriu[0].length : 1;
 
-        int midaCellx = this.getWidth() / columnes;
-        int midaCelly = this.getHeight() / files;
+        midaCellx = this.getWidth() / (double) columnes;
+        midaCelly = this.getHeight() / (double) files;
 
-        int iniciX = 0, iniciY = 0;
 
         for (int i = 0; i < files; i++) {
             for (int j = 0; j < columnes; j++) {
                 // Dibuixar línies guia de color gris
-                g.setColor(Color.WHITE);
-                g.drawRect(j * midaCellx, i * midaCelly, midaCellx, midaCelly);
+                g.setColor(new Color(0x7FEEEEEE, true)); //transparencia
+                g.drawRect((int) (j * midaCellx), (int) (i * midaCelly), (int) midaCellx, (int) midaCelly);
                 if (matriu[i][j] == -1) {
-                    iniciX = j;
-                    iniciY = i;
+                    //pintant de negre
+                    g.setColor(Color.BLACK);
+                    g.fillRect((int) (j * midaCellx), (int) (i * midaCelly), (int) midaCellx, (int) midaCelly);
                 } else if (matriu[i][j] != 0) { // Suposant que -1 significa buit
                     if (colorON) {
                         g.setColor(getColorForTromino(matriu, i, j));
-                        g.fillRect(j * midaCellx, i * midaCelly, midaCellx, midaCelly);
+                        g.fillRect((int) (j * midaCellx), (int) (i * midaCelly), (int) midaCellx, (int) midaCelly);
                     }
                     // Dibuixar només les vores exteriors
                     g.setColor(Color.BLACK);
                     dibuixarVoraExterior(matriu, i, j, g);
-
                 }
             }
         }
         g.setColor(Color.RED);
-        g.drawRect(iniciX * midaCellx, iniciY * midaCelly, midaCellx, midaCelly);
+        g.drawRect((int) (iniciX * midaCellx), (int) (iniciY * midaCelly), (int) midaCellx, (int) midaCelly);
     }
 
     /**
