@@ -87,7 +87,7 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
             constant = data.getConstantMultiplicativa();
         }
         double tempsEsperat = constant*profunditatExp;
-        if (tempsEsperat > 100000) {
+        if (tempsEsperat > 100000 || Double.isNaN(tempsEsperat)) {
             p.comunicar("tempsEsperat:molt de temps");
         }else {
 
