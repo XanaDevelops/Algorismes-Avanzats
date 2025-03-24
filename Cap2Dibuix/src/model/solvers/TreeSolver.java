@@ -70,7 +70,7 @@ public class TreeSolver extends RecursiveSolver implements Comunicar {
             constant = data.getConstantMultiplicativa();
         }
         double tempsEsperat = constant* profunditatExp;
-        if (tempsEsperat > 100000) {
+        if (tempsEsperat > 100000 || Double.isNaN(tempsEsperat)) {
             main.comunicar("tempsEsperat:molt de temps");
         }else {
 
