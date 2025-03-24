@@ -63,23 +63,46 @@ public class TreeSolver extends RecursiveSolver implements Comunicar {
     public void run() {
         aturar = false;
         //suposant aqui, q
-        double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2,data.getProfunditat());
-        main.comunicar("tempsEsperat:"+ tempsEsperat);//??
+        double profunditatExp = Math.pow(2, data.getProfunditat());
+        double constant = 1.0;
+        if (data.getTipus() == Tipus.TREE && data.getConstantMultiplicativa()!=null) {
+            //ja està inicialitzada
+            constant = data.getConstantMultiplicativa();
+        }
+        double tempsEsperat = constant* profunditatExp;
+        if (tempsEsperat > 100000) {
+            main.comunicar("tempsEsperat:molt de temps");
+        }else {
 
+            main.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
+        }
         time = System.nanoTime();
         generarArbol(g, image.getHeight()/2, image.getHeight()-300, -90, data.getProfunditat());
     }
 
-    @Override
-    protected void end() {
-        time = System.nanoTime() - time - getSleepTime();
-        System.out.println("Temps real " + time + " nanosegons");
-        main.comunicar("tempsReal:"+ time);
-        g.dispose();
-        if (!aturar) {
-            main.comunicar("aturar");
-        }
+
+@Override
+protected void end() {
+    long elapsedTime = System.nanoTime() - time;
+    // Converteix a segons (double)
+    double tempsReal = elapsedTime / 1_000_000_000.0;
+
+    // Calcula la constant multiplicativa
+    double profunditatExp = Math.pow(2, data.getProfunditat());
+    double constantMultiplicativa = tempsReal / profunditatExp;
+
+
+    data.setConstantMultiplicativa(constantMultiplicativa);
+    // Mostra els resultats
+//    main.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
+
+    main.comunicar("tempsReal:"+ String.format( "%.3f segons",tempsReal));
+    g.dispose();
+    if (!aturar) {
+        main.comunicar("aturar");
     }
+}
+
 
     @Override
     public void comunicar(String s) {

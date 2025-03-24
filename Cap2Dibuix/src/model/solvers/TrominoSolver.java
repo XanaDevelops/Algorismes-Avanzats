@@ -170,43 +170,50 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
     @Override
     public void run() {
         aturar = false;
+        double constant =1.0;
+        double profunditatExp = Math.pow(4, data.getProfunditat()/2);
 
+        if (data.getTipus() == Tipus.TROMINO && data.getConstantMultiplicativa()!=null) {
+            constant = data.getConstantMultiplicativa();
+        }
+
+        double tempsEsperat = constant*profunditatExp;
+        if (tempsEsperat > 100000) {
+            p.comunicar("tempsEsperat:molt de temps");
+        }else {
+
+            p.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
+        }
         // Inicia el comptador de temps en nanosegons
         startTime = System.nanoTime();
+
+
         this.hashTauler = data.getTauler().hashCode();
         trominoRec(data.getTauler().length, 0, 0);
     }
 
-    @Override
-    protected void end() {
-        // Calcula el temps real en nanosegons
-        long elapsedTime = System.nanoTime() - startTime;
-        // Converteix a segons (double)
-        double tempsReal = elapsedTime / 1_000_000_000.0;
 
-        // Calcula la constant multiplicativa
-        double profunditatExp = Math.pow(2, data.getProfunditat());
-        double constantMultiplicativa = tempsReal / profunditatExp;
+@Override
+protected void end() {
+    long elapsedTime = System.nanoTime() - startTime;
+    // Converteix a segons (double)
+    double tempsReal = elapsedTime / 1_000_000_000.0;
 
-        // Desa la constant multiplicativa
-        data.setConstantMultiplicativa(constantMultiplicativa);
-
-        // Calcula el temps esperat d'execució en segons
-        double tempsEsperat = constantMultiplicativa * profunditatExp;
-
-        // Mostra els resultats
-        System.out.printf("Temps esperat: %.8f segons%n", tempsEsperat);
-        p.comunicar("tempsEsperat");
-
-        System.out.printf("Temps real: %.8f segons%n", tempsReal);
-        p.comunicar("tempsReal");
+    // Calcula la constant multiplicativa
+    double profunditatExp = Math.pow(4, data.getProfunditat()/2);
+    double constantMultiplicativa = tempsReal / profunditatExp;
 
 
-
-        //prevenir tornar a aturar
-        if(!aturar) // Notifica que el procés ha finalitzat
-            p.comunicar("aturar");;
-    }
+    data.setConstantMultiplicativa(constantMultiplicativa);
+    // Mostra els resultats
+//    p.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
+//
+//    System.out.printf("Temps real: %.8f segons%n", tempsReal);
+    p.comunicar("tempsReal:"+ String.format( "%.3f segons",tempsReal));
+    //prevenir tornar a aturar
+    if(!aturar) // Notifica que el procés ha finalitzat
+        p.comunicar("aturar");;
+}
 
     /**
      * Mètode per rebre missatges de comunicació.

@@ -80,42 +80,50 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
     public void run() {
         // Reinicia la variable de control d'aturada
         aturar = false;
+        double constant =1.0;
+        double profunditatExp = Math.pow(3, data.getProfunditat()/2);
 
+        if (data.getTipus() == Tipus.TRIANGLE && data.getConstantMultiplicativa()!=null) {
+            constant = data.getConstantMultiplicativa();
+        }
+        double tempsEsperat = constant*profunditatExp;
+        if (tempsEsperat > 100000) {
+            p.comunicar("tempsEsperat:molt de temps");
+        }else {
+
+            p.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
+        }
         // Inicia el comptador de temps en nanosegons
         startTime = System.nanoTime();
+
 
         // Crida la funció recursiva per generar el fractal
         runThread(() -> generarSierpinski(0, data.getProfunditat() - 1, data.getProfunditat()));
     }
 
-    @Override
-    protected void end() {
-// Calcula el temps real en nanosegons
-        long elapsedTime = System.nanoTime() - startTime - getSleepTime();
 
-        // Converteix a segons (double)
-        double tempsReal = elapsedTime / 1_000_000_000.0;
 
-        // Calcula la constant multiplicativa
-        double profunditatExp = Math.pow(2, data.getProfunditat());
-        double constantMultiplicativa = tempsReal / profunditatExp;
+@Override
+protected void end() {
+    long elapsedTime = System.nanoTime() - startTime - getSleepTime();
 
-        // Desa la constant multiplicativa
-        data.setConstantMultiplicativa(constantMultiplicativa);
+    // Converteix a segons (double)
+    double tempsReal = elapsedTime / 1_000_000_000.0;
+    double tempsEsperat;
+    double profunditatExp = Math.pow(3, data.getProfunditat()/2);
+    // Calcula la constant multiplicativa
 
-        // Calcula el temps esperat d'execució en segons
-        double tempsEsperat = constantMultiplicativa * profunditatExp;
+    double constantMultiplicativa = tempsReal / profunditatExp;
 
-        // Mostra els resultats
-        System.out.printf("Temps esperat: %.8f segons%n", tempsEsperat);
-        p.comunicar("tempsEsperat");
+    // Desa la constant multiplicativa
+    data.setConstantMultiplicativa(constantMultiplicativa);
 
-        System.out.printf("Temps real: %.8f segons%n", tempsReal);
-        p.comunicar("tempsReal");
+    // Mostra els resultats
 
-        // Si el procés no s'ha aturat manualment, assegura que es detingui
-        if (!aturar) p.comunicar("aturar");
-    }
+    p.comunicar("tempsReal:"+ String.format( "%.3f segons",tempsReal));
+    // Si el procés no s'ha aturat manualment, assegura que es detingui
+    if (!aturar) p.comunicar("aturar");
+}
 
     /**
      * Mètode per rebre missatges de comunicació.
