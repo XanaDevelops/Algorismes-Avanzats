@@ -8,10 +8,7 @@ import java.awt.*;
 import java.awt.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class DibuixTromino extends JPanel implements Comunicar {
 
