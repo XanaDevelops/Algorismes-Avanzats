@@ -101,11 +101,9 @@ protected void end() {
 
     data.setConstantMultiplicativa(constantMultiplicativa);
     // Mostra els resultats
-    System.out.printf("Temps esperat: %.8f segons%n", tempsEsperat);
-    main.comunicar("tempsEsperat");
+    main.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
 
-    System.out.printf("Temps real: %.8f segons%n", tempsReal);
-    main.comunicar("tempsReal");
+    main.comunicar("tempsReal:"+ String.format( "%.3f segons",tempsReal));
     g.dispose();
     if (!aturar) {
         main.comunicar("aturar");

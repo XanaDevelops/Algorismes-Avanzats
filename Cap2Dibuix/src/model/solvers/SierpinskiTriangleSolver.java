@@ -143,12 +143,10 @@ protected void end() {
     // Calcula el temps esperat d'execució en segons
 
     // Mostra els resultats
-    System.out.printf("Temps esperat: %.8f segons%n", tempsEsperat);
-
-    p.comunicar("tempsEsperat");
+    p.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
 
     System.out.printf("Temps real: %.8f segons%n", tempsReal);
-    p.comunicar("tempsReal");
+    p.comunicar("tempsReal:"+ String.format( "%.3f segons",tempsReal));
     // Si el procés no s'ha aturat manualment, assegura que es detingui
     if (!aturar) p.comunicar("aturar");
 }

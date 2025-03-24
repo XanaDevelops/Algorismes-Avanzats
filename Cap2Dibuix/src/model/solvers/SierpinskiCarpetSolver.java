@@ -16,7 +16,7 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
   Main main;
   Dades data;
 
-  private long time;
+  private double time;
 
     /**
      * Valor numèric assignat als quadres de la catifa
@@ -156,19 +156,10 @@ protected void end() {
 
     data.setConstantMultiplicativa(constantMultiplicativa);
     // Mostra els resultats
-    System.out.printf("Temps esperat: %.8f segons%n", tempsEsperat);
-    main.comunicar("tempsEsperat");
+    main.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
 
-    System.out.printf("Temps real: %.8f segons%n", time);
-    main.comunicar("tempsReal");
-//        System.err.println("he acabat");
-//        System.err.println(getSleepTime());
-//        time = (System.nanoTime() - time - getSleepTime())/1000000000;
-//        System.out.println("Temps real " + time  + " segons");
-//        main.comunicar("tempsReal:"+ time);
-//
-//        // Actualitza la constant multiplicativa basant-se en el temps real mesurat
-//        data.setConstantMultiplicativa(time/Math.pow(3, data.getProfunditat() ));
+    main.comunicar("tempsReal:"+ String.format( "%.3f segons",time));
+
     if (!aturar) {
         main.comunicar("aturar");
         //aturar();
