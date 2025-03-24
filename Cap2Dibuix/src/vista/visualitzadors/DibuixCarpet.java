@@ -5,8 +5,11 @@ import principal.Main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferStrategy;
 
-public class DibuixCarpet extends JPanel implements Comunicar {
+public class DibuixCarpet extends CanvasDobleBuffer implements Comunicar {
+
+
     Comunicar principal;
 
     private boolean doColor = false;
@@ -14,7 +17,9 @@ public class DibuixCarpet extends JPanel implements Comunicar {
     private final Color[] colors;
     private int colorIndex = 0;
 
+
     public DibuixCarpet(Comunicar principal) {
+        super();
         this.principal = principal;
         this.colors = ((Main)principal).getDades().getColors();
     }
@@ -23,13 +28,11 @@ public class DibuixCarpet extends JPanel implements Comunicar {
         colorIndex = (colorIndex + 1) % (colors.length + 1);
         doColor = colorIndex > 0;
 
-
         repaint();
     }
 
     @Override
-    public void paint(Graphics g){
-        super.paint(g);
+    protected void pintar(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, getWidth(), getHeight());
@@ -72,7 +75,6 @@ public class DibuixCarpet extends JPanel implements Comunicar {
                 }
             }
         }
-
     }
 
     /**
@@ -81,17 +83,22 @@ public class DibuixCarpet extends JPanel implements Comunicar {
     @Override
     public void comunicar(String s) {
         switch (s) {
-            case "pintar":
-                repaint();
-                break;
-            case "borrar":
-                System.err.println("borrar no implementat");
+            case "pintar", "borrar":
                 break;
             case "color":
                 colorSwitch();
                 break;
+            case "arrancar":
+                initBuffers();
+                break;
+            case "aturar":
+                aturar = true;
+                break;
+
         }
     }
+
+
 
 
 }

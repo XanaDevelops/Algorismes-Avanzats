@@ -60,7 +60,7 @@ public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar
         for (int i = 0; i <size ; i++) {
             for (int j = 0; j <size ; j++) {
                 data.setValor(i+x, j+y, numActual);
-                main.comunicar("pintar");
+
                 esperar(0, 150);
             }
         }

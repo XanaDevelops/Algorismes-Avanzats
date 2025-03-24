@@ -74,12 +74,14 @@ public class Finestra extends JFrame implements Comunicar {
         }
 
         this.add(botons, BorderLayout.NORTH);
-        this.add((JComponent)dibuix, BorderLayout.CENTER); //per exemple
+        this.add((Component) dibuix, BorderLayout.CENTER); //per exemple
 
 
         this.pack();
         this.setLocationRelativeTo(null); //centra pantalla
         this.setVisible(true);
+
+        dibuix.comunicar("arrancar");
     }
 
     private JComboBox<String> generateComboBox() {
@@ -128,12 +130,14 @@ public class Finestra extends JFrame implements Comunicar {
     }
 
     private void replace(Comunicar nouDibuix) {
+        dibuix.comunicar("aturar");
         this.remove((Component) dibuix);
-        dibuix.comunicar("borrar");
         dibuix = nouDibuix;
 
         this.add((Component) nouDibuix, BorderLayout.CENTER);
         this.revalidate();
+
+        dibuix.comunicar("arrancar");
     }
 
 

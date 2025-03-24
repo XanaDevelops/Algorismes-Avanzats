@@ -158,7 +158,7 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
                 if(data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return;
                 if (data.getValor(topx + i, topy + j) == 0) {
                     data.setValor(topx + i, topy + j, numActual);
-                    p.comunicar("pintar");
+
                     esperar(0, 150);
 
                 }

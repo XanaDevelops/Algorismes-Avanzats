@@ -47,7 +47,7 @@ public class TreeSolver extends RecursiveSolver implements Comunicar {
            g.setColor(data.getColor(p%data.getColors().length));
 
            g.drawLine(x1, y1, x2, y2);
-           main.comunicar("pintar");
+
            esperar(0, 300);
            runThread(() -> generarArbol(g, x2, y2, angle - treeLogAngle, p - 1));
            runThread(() -> generarArbol(g, x2, y2, angle + treeLogAngle, p - 1));

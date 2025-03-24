@@ -9,7 +9,7 @@ import java.util.concurrent.*;
  * Classe abstracta que facilita la creació d'un generador amb fils concurrents
  */
 public abstract class RecursiveSolver implements Runnable {
-    protected static final int MAX_THREADS = Runtime.getRuntime().availableProcessors(); //hyperthreading
+    protected static final int MAX_THREADS = Runtime.getRuntime().availableProcessors()*5; //hyperthreading
 
     protected final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(MAX_THREADS);
     protected final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();

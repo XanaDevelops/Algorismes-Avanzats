@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.Arrays;
 
-public class DibuixTromino extends JPanel implements Comunicar {
+public class DibuixTromino extends CanvasDobleBuffer implements Comunicar {
 
     private final Comunicar principal;
     private boolean colorON = false;
@@ -147,9 +147,7 @@ public class DibuixTromino extends JPanel implements Comunicar {
      */
 
     @Override
-    public void paint(Graphics g) {
-        super.paintComponent(g);
-
+    public void pintar(Graphics g) {
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWidth(), getHeight());
 
@@ -201,6 +199,12 @@ public class DibuixTromino extends JPanel implements Comunicar {
                 break;
             case "color":
                 colorON();
+                break;
+            case "arrancar":
+                initBuffers();
+                break;
+            case "aturar":
+                aturar = true;
                 break;
         }
 

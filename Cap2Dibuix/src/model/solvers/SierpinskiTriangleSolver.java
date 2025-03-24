@@ -56,7 +56,7 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
             // Cas base: Si la mida és 1, pinta una sola casella i retorna
             if (mida == 1) {
                 data.setValor(x, y, 1); // Marca la posició com a part del fractal
-                p.comunicar("pintar");  // Informa la vista perquè es refresqui
+                  // Informa la vista perquè es refresqui
                 esperar(10, 0);
                 return;
             }
