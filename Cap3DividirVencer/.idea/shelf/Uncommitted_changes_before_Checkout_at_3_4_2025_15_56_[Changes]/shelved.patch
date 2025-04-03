@@ -1,0 +1,25 @@
+Index: src/model/Punt2D.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model;\r\n\r\npublic class Punt2D {\r\n}\r\n
+===================================================================
+diff --git a/src/model/Punt2D.java b/src/model/Punt2D.java
+--- a/src/model/Punt2D.java	(revision a5b79b90724c2c3be3e81f92e5141345a9339a2f)
++++ b/src/model/Punt2D.java	(date 1743684060576)
+@@ -1,4 +1,16 @@
+ package model;
+ 
+ public class Punt2D {
++        public final int x, y;
++
++        public Punt2D(int x, int y) {
++            this.x = x;
++            this.y = y;
++        }
++
++        public double distancia(Punt2D altre) {
++            double dx = this.x - altre.x;
++            double dy = this.y - altre.y;
++            return Math.sqrt(dx * dx + dy * dy);
++        }
+ }

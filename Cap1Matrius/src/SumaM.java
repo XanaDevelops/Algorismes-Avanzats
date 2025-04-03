@@ -6,7 +6,7 @@
 public class SumaM implements Runnable, Comunicar {
 
     /**
-     * Instància de la classe principal (Main)
+     * Instància de la classe principal (controlador.Main)
      */
     private final Main principal;
     /**

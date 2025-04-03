@@ -13,7 +13,7 @@ import java.util.Arrays;
  * Implementa Runnable per executar-se en un fil separat i Comunicar per interactuar amb el controlador.
  */
 public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunicar {
-    // Referència a la classe Main, que actua com a controlador principal
+    // Referència a la classe controlador.Main, que actua com a controlador principal
     private final Main p;
     // Objecte Dades que conté el tauler i la informació de l'estat actual
     private final Dades data;
@@ -23,7 +23,7 @@ public class SierpinskiTriangleSolver extends RecursiveSolver implements Comunic
 
     /**
      * Constructor de la classe.
-     * @param p Instància de Main que s'encarrega de gestionar la comunicació entre components.
+     * @param p Instància de controlador.Main que s'encarrega de gestionar la comunicació entre components.
      * @param data Objecte que conté la informació del tauler i les dades necessàries per generar el fractal.
      */
     public SierpinskiTriangleSolver(Main p, Dades data) {

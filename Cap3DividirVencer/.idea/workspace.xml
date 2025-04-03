@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../src/model/Punt2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/AlgoAvançats.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/AlgoAvançats.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Cap3DividirVencer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../Cap3DividirVencer.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controlador/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controlador/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,23 +10,23 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "JoFeF08"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;JoFeF08&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/XanaDevelops/Algorismes-Avanzats.git",
-    "accountId": "6b8a92e2-6215-4739-8c00-e8ec04af0802"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/XanaDevelops/Algorismes-Avanzats.git&quot;,
+    &quot;accountId&quot;: &quot;6b8a92e2-6215-4739-8c00-e8ec04af0802&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2vDXiybSIgdiTJqDGlY1OjMCed7" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -36,11 +34,16 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "model/Punt2D",
+    "git-widget-placeholder": "cotrolador/main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/ferri/Desktop/Nueva carpeta/uni/3r/1s/IA/practica",
+    "last_opened_file_path": "C:/Users/ferri/Desenvolupament/Projectes/IdeaProjects/Algorismes-Avanzats/Cap3DividirVencer",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
@@ -62,6 +65,7 @@
       <option name="presentableId" value="Default" />
       <updated>1743680752492</updated>
       <workItem from="1743680753561" duration="5000" />
+      <workItem from="1743691179542" duration="347000" />
     </task>
     <servers />
   </component>

@@ -168,25 +168,25 @@ L'aplicació està estructurada seguint el patró MVC, que separa la lògica de 
 \begin{itemize}
     \item \textbf{Model}: La classe \texttt{Dades} gestiona les dades de l'aplicació, incloent els resultats de les operacions de suma i producte de matrius. Aquesta classe també calcula les constants multiplicatives i emmagatzema els resultats en llistes. La classe \texttt{Matriu} representa una matriu i proporciona mètodes per sumar i multiplicar matrius.
     \item \textbf{Vista}: Les classes \texttt{FinestraMatriu}, \texttt{dibuixConstantMult} i \texttt{Eixos} s'encarreguen de la presentació de les dades a l'usuari. Utilitzen la llibreria Swing per crear la interfície gràfica i mostrar els resultats de les operacions en taules i gràfics.
-    \item \textbf{Controlador}: La classe \texttt{Main} actua com a controlador, gestionant les interaccions de l'usuari i coordinant les operacions entre el model i la vista. Aquesta classe és responsable de crear i gestionar els fils d'execució per a les operacions de suma i producte de matrius, així com de mantenir la comunicació entre els diferents components de l'aplicació.
+    \item \textbf{Controlador}: La classe \texttt{controlador.Main} actua com a controlador, gestionant les interaccions de l'usuari i coordinant les operacions entre el model i la vista. Aquesta classe és responsable de crear i gestionar els fils d'execució per a les operacions de suma i producte de matrius, així com de mantenir la comunicació entre els diferents components de l'aplicació.
 
-La classe \texttt{Main} conté els següents elements principals:
+La classe \texttt{controlador.Main} conté els següents elements principals:
 
 \begin{itemize}
-    \item \textbf{Inicialització}: El mètode \texttt{main} és el punt d'entrada de l'aplicació. Aquest mètode crea una instància de la classe \texttt{Main} i crida al mètode \texttt{inicio} per iniciar l'aplicació. El mètode \texttt{inicio} inicialitza les dades, els processos i l'\texttt{ExecutorService}, i després crida al mètode \texttt{crearInterficie} per crear la interfície gràfica en un fil separat.
+    \item \textbf{Inicialització}: El mètode \texttt{main} és el punt d'entrada de l'aplicació. Aquest mètode crea una instància de la classe \texttt{controlador.Main} i crida al mètode \texttt{inicio} per iniciar l'aplicació. El mètode \texttt{inicio} inicialitza les dades, els processos i l'\texttt{ExecutorService}, i després crida al mètode \texttt{crearInterficie} per crear la interfície gràfica en un fil separat.
     
     \item \textbf{Creació de la Interfície Gràfica}: El mètode \texttt{crearInterficie} crea la finestra principal de l'aplicació utilitzant la classe \texttt{FinestraMatriu}. També crea una segona finestra per mostrar els resultats de les operacions de suma i producte de matrius utilitzant la classe \texttt{dibuixConstantMult}. Aquestes finestres es mostren a l'usuari i permeten la interacció amb l'aplicació.
     
     \item \textbf{Gestió de Processos}: El mètode \texttt{preparar} s'encarrega de buidar les dades i aturar qualsevol procés en execució abans de començar una nova operació. Això assegura que les dades anteriors no interfereixin amb les noves operacions.
     
-    \item \textbf{Comunicació}: La classe \texttt{Main} implementa la interfície \texttt{Comunicar}, que defineix el mètode \texttt{comunicar}. Aquest mètode s'utilitza per rebre missatges de la interfície gràfica i dels fils d'execució, i per enviar missatges als components corresponents. Per exemple, quan l'usuari fa clic en un botó per iniciar una operació, es crida al mètode \texttt{comunicar} amb el missatge corresponent, que després es processa per iniciar els fils d'execució adequats.
+    \item \textbf{Comunicació}: La classe \texttt{controlador.Main} implementa la interfície \texttt{Comunicar}, que defineix el mètode \texttt{comunicar}. Aquest mètode s'utilitza per rebre missatges de la interfície gràfica i dels fils d'execució, i per enviar missatges als components corresponents. Per exemple, quan l'usuari fa clic en un botó per iniciar una operació, es crida al mètode \texttt{comunicar} amb el missatge corresponent, que després es processa per iniciar els fils d'execució adequats.
     
-    \item \textbf{Gestió de Fils d'Execució}: La classe \texttt{Main} utilitza un \texttt{ExecutorService} per gestionar els fils d'execució de les operacions de suma i producte de matrius. Quan es rep un missatge per iniciar una operació, es creen instàncies de les classes \texttt{SumaM} i \texttt{MultM} i s'envien al \texttt{ExecutorService} per ser executades en fils separats. Això permet executar les operacions de manera concurrent i millorar l'eficiència de l'aplicació.
+    \item \textbf{Gestió de Fils d'Execució}: La classe \texttt{controlador.Main} utilitza un \texttt{ExecutorService} per gestionar els fils d'execució de les operacions de suma i producte de matrius. Quan es rep un missatge per iniciar una operació, es creen instàncies de les classes \texttt{SumaM} i \texttt{MultM} i s'envien al \texttt{ExecutorService} per ser executades en fils separats. Això permet executar les operacions de manera concurrent i millorar l'eficiència de l'aplicació.
     
-    \item \textbf{Actualització de la Interfície Gràfica}: Quan es completen les operacions de suma i producte de matrius, els resultats es mostren a la interfície gràfica. La classe \texttt{Main} s'encarrega d'enviar missatges a les classes \texttt{FinestraMatriu} i \texttt{dibuixConstantMult} per actualitzar les taules i els gràfics amb els nous resultats. Això permet a l'usuari visualitzar els costos computacionals asimptòtics de les operacions.
+    \item \textbf{Actualització de la Interfície Gràfica}: Quan es completen les operacions de suma i producte de matrius, els resultats es mostren a la interfície gràfica. La classe \texttt{controlador.Main} s'encarrega d'enviar missatges a les classes \texttt{FinestraMatriu} i \texttt{dibuixConstantMult} per actualitzar les taules i els gràfics amb els nous resultats. Això permet a l'usuari visualitzar els costos computacionals asimptòtics de les operacions.
 \end{itemize}
 
-En resum, la classe \texttt{Main} actua com a controlador central de l'aplicació, gestionant les interaccions de l'usuari, coordinant les operacions entre el model i la vista, i assegurant que les operacions es realitzin de manera eficient i concurrent. Aquesta arquitectura permet una clara separació de responsabilitats, millorant la modularitat i mantenibilitat del codi.
+En resum, la classe \texttt{controlador.Main} actua com a controlador central de l'aplicació, gestionant les interaccions de l'usuari, coordinant les operacions entre el model i la vista, i assegurant que les operacions es realitzin de manera eficient i concurrent. Aquesta arquitectura permet una clara separació de responsabilitats, millorant la modularitat i mantenibilitat del codi.
 \end{itemize}
 
 \subsection{Implementació del Patró per Esdeveniments}
@@ -201,8 +201,8 @@ public interface Comunicar {
 }
 \end{lstlisting}
 
-\subsubsection{Classe \texttt{Main}}
-La classe \texttt{Main} actua com a controlador central de l'aplicació i és responsable de gestionar la comunicació entre els components, com s'ha explicat anteriorment. Quan l'usuari interactua amb la interfície gràfica, la classe \texttt{Main} rep els missatges corresponents i els processa per iniciar, aturar o actualitzar les operacions de suma i producte de matrius. El mètode \texttt{comunicar} de la classe \texttt{Main} processa els missatges i crida als mètodes adequats per gestionar les operacions.
+\subsubsection{Classe \texttt{controlador.Main}}
+La classe \texttt{controlador.Main} actua com a controlador central de l'aplicació i és responsable de gestionar la comunicació entre els components, com s'ha explicat anteriorment. Quan l'usuari interactua amb la interfície gràfica, la classe \texttt{controlador.Main} rep els missatges corresponents i els processa per iniciar, aturar o actualitzar les operacions de suma i producte de matrius. El mètode \texttt{comunicar} de la classe \texttt{controlador.Main} processa els missatges i crida als mètodes adequats per gestionar les operacions.
 
 \subsubsection{Classes \texttt{SumaM} i \texttt{MultM}}
 Les classes \texttt{SumaM} i \texttt{MultM} implementen la interfície \texttt{Comunicar} per rebre missatges del controlador i aturar els fils d'execució quan sigui necessari. Quan es rep un missatge per aturar l'operació, el mètode \texttt{comunicar} d'aquestes classes estableix una variable booleana \texttt{stop} a \texttt{true}, la qual cosa fa que el bucle principal del mètode \texttt{run} s'aturi.
@@ -215,7 +215,7 @@ El flux de comunicació entre els components es pot resumir en els següents pas
 
 \begin{enumerate}
     \item L'usuari interactua amb la interfície gràfica, per exemple, fent clic en un botó per iniciar una operació.
-    \item La classe \texttt{FinestraMatriu} envia un missatge al controlador (classe \texttt{Main}) mitjançant el mètode \texttt{comunicar}.
+    \item La classe \texttt{FinestraMatriu} envia un missatge al controlador (classe \texttt{controlador.Main}) mitjançant el mètode \texttt{comunicar}.
     \item El controlador processa el missatge i, si és necessari, crea instàncies de les classes \texttt{SumaM} o \texttt{MultM} per executar les operacions en fils separats.
     \item Les classes \texttt{SumaM} i \texttt{MultM} realitzen les operacions de suma i producte de matrius respectivament. Durant l'execució, poden enviar missatges al controlador per actualitzar la interfície gràfica.
     \item Quan es completa una operació o es rep un missatge per aturar-la, les classes \texttt{SumaM} i \texttt{MultM} envien missatges al controlador per desactivar les barres de progrés i actualitzar els resultats.
@@ -287,10 +287,10 @@ Aquestes finestres permeten a l'usuari interactuar amb l'aplicació, iniciar les
 
 
 \subsection{Gestió de Fils d'Execució}
-La classe \texttt{Main} utilitza un \texttt{ExecutorService} per gestionar els fils d'execució de les operacions de suma i producte de matrius. Això permet executar les operacions de manera concurrent i millorar l'eficiència de l'aplicació. Els fils es poden iniciar i aturar mitjançant missatges enviats a través de la interfície \texttt{Comunicar}.
+La classe \texttt{controlador.Main} utilitza un \texttt{ExecutorService} per gestionar els fils d'execució de les operacions de suma i producte de matrius. Això permet executar les operacions de manera concurrent i millorar l'eficiència de l'aplicació. Els fils es poden iniciar i aturar mitjançant missatges enviats a través de la interfície \texttt{Comunicar}.
 
 \subsubsection{ExecutorService}
-L'`ExecutorService` és una interfície que proporciona mecanismes per gestionar un conjunt de fils d'execució. En aquest projecte, s'utilitza per executar les classes \texttt{SumaM} i \texttt{MultM} en fils separats. La classe \texttt{Main} crea un `ExecutorService` amb un grup de fils fixos mitjançant el mètode \texttt{Executors.newFixedThreadPool(3)}:
+L'`ExecutorService` és una interfície que proporciona mecanismes per gestionar un conjunt de fils d'execució. En aquest projecte, s'utilitza per executar les classes \texttt{SumaM} i \texttt{MultM} en fils separats. La classe \texttt{controlador.Main} crea un `ExecutorService` amb un grup de fils fixos mitjançant el mètode \texttt{Executors.newFixedThreadPool(3)}:
 
 \begin{lstlisting}[language=Java, basicstyle=\ttfamily\normalsize]
 executorService = 
@@ -306,7 +306,7 @@ Això permet tenir fins a tres fils d'execució simultanis, assegurant que les o
 \end{figure}
 
 \subsubsection{Inici i Aturada de Fils}
-Quan l'usuari interactua amb la interfície gràfica per iniciar una operació, la classe \texttt{Main} rep un missatge mitjançant el mètode \texttt{comunicar}. Aquest mètode processa el missatge i, si és necessari, crea instàncies de les classes \texttt{SumaM} o \texttt{MultM} per executar les operacions en fils separats. Per exemple, quan es rep un missatge per iniciar les operacions de suma i producte de matrius, es creen i s'executen les instàncies de \texttt{SumaM} i \texttt{MultM}:
+Quan l'usuari interactua amb la interfície gràfica per iniciar una operació, la classe \texttt{controlador.Main} rep un missatge mitjançant el mètode \texttt{comunicar}. Aquest mètode processa el missatge i, si és necessari, crea instàncies de les classes \texttt{SumaM} o \texttt{MultM} per executar les operacions en fils separats. Per exemple, quan es rep un missatge per iniciar les operacions de suma i producte de matrius, es creen i s'executen les instàncies de \texttt{SumaM} i \texttt{MultM}:
 
 \begin{lstlisting}[language=Java, basicstyle=\ttfamily\normalsize]
 SumaM sumaTask = new SumaM(this);
@@ -330,7 +330,7 @@ L'aplicació pot gestionar diferents casos de concurrència, depenent de les ope
 
 \begin{lstlisting}[language=Java, basicstyle=\ttfamily\normalsize]
 Comunicar proces = (Comunicar) classe
-    .getConstructor(Main.class)
+    .getConstructor(controlador.Main.class)
     .newInstance(this);
 procesos.add(proces);
 executorService.submit((Runnable) proces);
@@ -339,7 +339,7 @@ executorService.submit((Runnable) proces);
 \end{itemize}
 
 \subsubsection{Aturada de Fils}
-Quan es rep un missatge per aturar una operació, el mètode \texttt{comunicar} de la classe \texttt{Main} envia un missatge a les instàncies de \texttt{SumaM} i \texttt{MultM} per aturar els fils d'execució. Això es fa establint la variable booleana \texttt{stop} a \texttt{true}, la qual cosa fa que el bucle principal del mètode \texttt{run} s'aturi:
+Quan es rep un missatge per aturar una operació, el mètode \texttt{comunicar} de la classe \texttt{controlador.Main} envia un missatge a les instàncies de \texttt{SumaM} i \texttt{MultM} per aturar els fils d'execució. Això es fa establint la variable booleana \texttt{stop} a \texttt{true}, la qual cosa fa que el bucle principal del mètode \texttt{run} s'aturi:
 
 \begin{lstlisting}[language=Java, basicstyle=\ttfamily\normalsize]
 for (Comunicar enmarxa : procesos) {
