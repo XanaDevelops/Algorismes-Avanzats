@@ -1,4 +1,4 @@
-package model;
+package model.punts;
 
 public class Punt3D extends Punt2D {
     public final int z;
@@ -8,7 +8,9 @@ public class Punt3D extends Punt2D {
         this.z = z;
     }
 
-    public double distancia(Punt3D altre) {
+    public double distancia(Punt punt2) {
+        Punt3D altre = (Punt3D) punt2;
+
         int dx = this.x - altre.x;
         int dy = this.y - altre.y;
         int dz = this.z - altre.z;
