@@ -7,98 +7,70 @@ import principal.Comunicar;
 import principal.Main;
 
 import java.util.Arrays;
-import java.util.concurrent.ThreadPoolExecutor;
 
-/**
- * Classe que implementa un solucionador del problema dels Trominos utilitzant
- * el mètode divideix i venceràs. Implementa Runnable per permetre
- * l'execució en fils.
- */
-public class TrominoSolver extends RecursiveSolver implements  Comunicar {
-    private Main p; // Referència a l'objecte principal
-    private Dades data; // Objecte que conté les dades del problema
-    private static int numActual; // Número del tromino actual
-    private static final int RETJOLA = -1; // Valor que representa el forat al tauler
-
-    private long startTime;
-
-    private int hashTauler;
-
+public class TrominoSolver implements Runnable, Comunicar {
+    private Main p;
+    private Dades data;
+    private static int numActual;
+    private static final int RETJOLA = -1;
     /**
-     * Constructor de la classe.
-     * @param p Instància de Main que s'encarrega de gestionar la comunicació entre components.
-     * @param data Objecte que conté la informació del tauler i les dades necessàries per generar el fractal.
+     * Variable booleana per poder aturar el fil d'execució.
      */
+    private volatile boolean stop;
+
     public TrominoSolver(Main p, Dades data) {
         this.p = p;
         this.data = data;
-
-
-        // Estableix el tipus de fractal que es generarà
         data.setTipus(Tipus.TROMINO);
 
-        // Inicialitza el tauler amb la mida adequada
+
         data.setTauler(new int[data.getProfunditat()][data.getProfunditat()]);
         numActual = 1;
 
-        // Omple tota la matriu amb el valor 0 (caselles buides)
+        // Inicialitzar la matriu amb totes les caselles buides
         for (int[] fila : data.getTauler()) {
             Arrays.fill(fila, 0);
         }
 
-        //comprovar OoB iniciTromino
-        //FIXME: implementar una forma millor de fer-ho
-        if (data.getIniciTromino()[0] >= data.getProfunditat() || data.getIniciTromino()[1] >= data.getProfunditat()) {
-            System.err.println("FIXME: inici tromino OoB!!! posant a 0 el valor!");
-            data.getIniciTromino()[0] = 0;
-            data.getIniciTromino()[1] = 0;
-        }
-        data.setValor(data.getIniciTromino()[0],  data.getIniciTromino()[1], RETJOLA);
+        data.setForatTromino(new int[]{2,0});
+        int num1 = data.getForatTromino()[0];
+        int num2 = data.getForatTromino()[1];
+
+        data.setInici(num1 , num2);
     }
 
-    /**
-     * Mètode recursiu per resoldre el problema dels trominos.
-     * @param mida Mida de la submatriu actual
-     * @param topx Coordenada X superior esquerra
-     * @param topy Coordenada Y superior esquerra
-     */
     private void trominoRec(int mida, int topx, int topy) {
-        if(!aturar) {
+        if(!stop) {
+            // Cas base: mida 2x2, col·locar l'última casella
             if (mida == 2) {
-                // Cas base: si la mida és 2x2, omplim el tromino restant
                 omplirTromino(topx, topy, mida);
+                //            main.comunicar("omplicarTromino x"+ topx +" y"+ topy +" mida"+ mida );
                 numActual++;
             } else {
-                // Troba la posició del forat en el subtauler
+                // Cas recursiu
                 int[] forat = trobarForat(topx, topy, mida);
-                if (forat == null) {
-                    return;
-                }
+
                 // Utilitzem l'enum Mode per determinar la ubicació del forat i procedir segons correspongui
                 Mode mode = determinarMode(forat[0], forat[1], topx, topy, mida);
 
-                // Omple el tromino central depenent del mode
+                // Omplim el tromino central
                 omplirTrominoCentral(mode, topx, topy, mida);
+                //            main.comunicar("omplirTrominoCentral mode"+ mode + " x"+ topx +" y"+ topy +" mida"+ mida ); //algo de l'estil
 
                 // Recursió per als quatre quadrants
-                runThread(() -> trominoRec(mida / 2, topx, topy));
-                runThread(() -> trominoRec(mida / 2, topx, topy + mida / 2));
-                runThread(() -> trominoRec(mida / 2, topx + mida / 2, topy));
-                runThread(() -> trominoRec(mida / 2, topx + mida / 2, topy + mida / 2));
+                trominoRec(mida / 2, topx, topy);
+                trominoRec(mida / 2, topx, topy + mida / 2);
+                trominoRec(mida / 2, topx + mida / 2, topy);
+                trominoRec(mida / 2, topx + mida / 2, topy + mida / 2);
             }
         }
-
     }
 
-    /**
-     * Troba la posició del forat dins del subtauler actual.
-     */
+    // Troba la posició del forat dins un sub-tauler (quadrant).
     private int[] trobarForat(int topx, int topy, int mida) {
         int[] forat = new int[2];
         for (int x = topx; x < topx + mida; x++) {
             for (int y = topy; y < topy + mida; y++) {
-                //evitar escriure si no es mateix tauler
-                if (data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return null;
                 if (data.getValor(x, y) != 0) {
                     forat[0] = x;
                     forat[1] = y;
@@ -122,8 +94,7 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
     }
 
     // Omple el tromino central segons el mode.
-    private synchronized void omplirTrominoCentral(Mode mode, int topx, int topy, int mida) {
-        if (aturar) return;
+    private void omplirTrominoCentral(Mode mode, int topx, int topy, int mida) {
         switch (mode) {
             case LU:
                 data.setValor(topx + mida / 2, topy + mida / 2 - 1, numActual);
@@ -147,80 +118,44 @@ public class TrominoSolver extends RecursiveSolver implements  Comunicar {
                 break;
         }
         numActual++;
-
     }
 
 
     // Omple un subtauler de mida x mida amb el tromino actual.
-    private synchronized void omplirTromino(int topx, int topy, int mida) {
+    private void omplirTromino(int topx, int topy, int mida) {
         for (int i = 0; i < mida; i++) {
             for (int j = 0; j < mida; j++) {
-                if(data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return;
                 if (data.getValor(topx + i, topy + j) == 0) {
                     data.setValor(topx + i, topy + j, numActual);
-
-                    esperar(0, 150);
-
+                    p.comunicar("pintar");
                 }
             }
         }
     }
 
-
     @Override
     public void run() {
-        aturar = false;
-        double constant =1.0;
-        double profunditatExp = Math.pow(4, data.getProfunditat()/2);
+        stop = false;
+        double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2, data.getProfunditat());
+        System.out.println("Temps esperat " + tempsEsperat  + " segons");
+        p.comunicar("tempsEsperat");
 
-        if (data.getTipus() == Tipus.TROMINO && data.getConstantMultiplicativa()!=null) {
-            constant = data.getConstantMultiplicativa();
-        }
-
-        double tempsEsperat = constant*profunditatExp;
-        if (tempsEsperat > 100000 || Double.isNaN(tempsEsperat)) {
-            p.comunicar("tempsEsperat:molt de temps");
-        }else {
-
-            p.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
-        }
-        // Inicia el comptador de temps en nanosegons
-        startTime = System.nanoTime();
-
-
-        this.hashTauler = data.getTauler().hashCode();
+        long time = System.currentTimeMillis();
         trominoRec(data.getTauler().length, 0, 0);
+
+        p.comunicar("aturar");
+
+        time = (System.currentTimeMillis() - time)/1000;
+        System.out.println("Temps real " + time  + " segons");
+        p.comunicar("tempsReal");
+
+        //actualitzar la constant multiplicativa
+        data.setConstantMultiplicativa(time/Math.pow(2, data.getProfunditat() ));
+
+        //prevenir tornar a aturar
+        if(!stop) aturar();
     }
 
-
-@Override
-protected void end() {
-    long elapsedTime = System.nanoTime() - startTime;
-    // Converteix a segons (double)
-    double tempsReal = elapsedTime / 1_000_000_000.0;
-
-    // Calcula la constant multiplicativa
-    double profunditatExp = Math.pow(4, data.getProfunditat()/2);
-    double constantMultiplicativa = tempsReal / profunditatExp;
-
-
-    data.setConstantMultiplicativa(constantMultiplicativa);
-    // Mostra els resultats
-//    p.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
-//
-//    System.out.printf("Temps real: %.8f segons%n", tempsReal);
-    p.comunicar("tempsReal:"+ String.format( "%.3f segons",tempsReal));
-    //prevenir tornar a aturar
-    if(!aturar) // Notifica que el procés ha finalitzat
-        p.comunicar("aturar");;
-}
-
-    /**
-     * Mètode per rebre missatges de comunicació.
-     * Si es rep el missatge "aturar", es deté l'execució del fractal.
-     *
-     * @param s Missatge rebut per comunicar ordres al solver.
-     */
     @Override
     public void comunicar(String s) {
         if (s.contentEquals("aturar")) {
@@ -229,13 +164,10 @@ protected void end() {
     }
 
     /**
-     * Mètode per aturar l'execució del Solver.
-     * Estableix la variable stop a true per indicar que el fil ha de finalitzar.
+     * Mètode per aturar el fil d'execució.
      */
     private void aturar() {
-        if(aturar)return;
-        aturar = true;
-        executor.shutdown();
+        stop = true;
     }
 }
 

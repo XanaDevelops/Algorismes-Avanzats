@@ -77,6 +77,7 @@ public class Main implements Comunicar {
                         break;
 
                     case "triangles":
+                        dades.setInici(0,0);
                         try {
                             executar(SierpinskiTriangleSolver.class,(int) Math.pow(2, (double)Integer.parseInt(params[2])-1));
                         } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |
