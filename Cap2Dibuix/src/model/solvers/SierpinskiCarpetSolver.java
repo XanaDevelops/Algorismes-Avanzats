@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * Classe que genera la fractal de "Carpeta de Sierpinski" de forma recursiva.
  * Implementa la interfície Runnable per permetre l'execució en un fil separat, i la interfície Comunicar
- * per comunicar-se amb el controlador (Main).
+ * per comunicar-se amb el controlador (controlador.Main).
  */
 public class SierpinskiCarpetSolver extends RecursiveSolver implements Comunicar {
 

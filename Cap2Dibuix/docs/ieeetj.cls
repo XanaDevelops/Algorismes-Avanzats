@@ -1609,7 +1609,7 @@
 \g@addto@macro\pdfstringdefPreHook{\let\mbox\relax}
 
 
-% Main text forms (how shown in main text headings)
+% controlador.Main text forms (how shown in main text headings)
 % V1.6, using \thesection in \thesectiondis allows changes
 % in the former to automatically appear in the latter
 \ifCLASSOPTIONcompsoc

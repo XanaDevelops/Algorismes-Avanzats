@@ -4,7 +4,7 @@ public class MultM implements Runnable, Comunicar {
  * Implementa la interfície Comunicar per enviar i rebre missatges.
  **/
     /**
-     * Instància de la classe principal (Main)
+     * Instància de la classe principal (controlador.Main)
      */
     private final Main principal;
     /**

@@ -142,7 +142,7 @@ public class Finestra extends JFrame implements Comunicar {
 
 
     /**
-     * Envia un missatge d'execució a principal (Main) amb n
+     * Envia un missatge d'execució a principal (controlador.Main) amb n
      * @param msg missatge a enviar
      */
     private void enviarAmbN(String msg) {
