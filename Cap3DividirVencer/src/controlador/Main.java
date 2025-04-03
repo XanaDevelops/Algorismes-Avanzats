@@ -1,28 +1,23 @@
 package controlador;
 
 
-import model.*;
-import javax.swing.*;
+import model.punts.Punt;
+import model.punts.Punt2D;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Main implements Comunicar {
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
-    //private Finestra finestra;
-    private List<Punt2D> punts;
+
+    private List<Punt> punts;
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Main().init());
+        (new Main()).init();
     }
 
     private void init() {
         punts = new ArrayList<>();
-        this.comunicar("generar");
-        //finestra = new Finestra(this);
     }
 
     @Override
