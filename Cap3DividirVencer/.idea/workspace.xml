@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/vista/Finestra.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/vista/PanellDobleBuffer.java" afterDir="false" />
+    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="plantilla principal">
       <change beforePath="$PROJECT_DIR$/../Cap2Dibuix/src/principal/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Cap2Dibuix/src/principal/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controlador/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controlador/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Dades.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Dades.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/vista/Eixos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vista/Eixos.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/vista/Finestra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vista/Finestra.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,11 +87,24 @@
       <updated>1743680752492</updated>
       <workItem from="1743680753561" duration="5000" />
       <workItem from="1743691179542" duration="347000" />
-      <workItem from="1743787549049" duration="7038000" />
+      <workItem from="1743787549049" duration="10254000" />
     </task>
+    <task id="LOCAL-00001" summary="plantilla principal">
+      <option name="closed" value="true" />
+      <created>1743797035755</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1743797035755</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="plantilla principal" />
+    <option name="LAST_COMMIT_MESSAGE" value="plantilla principal" />
   </component>
 </project>

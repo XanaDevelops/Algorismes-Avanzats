@@ -50,6 +50,7 @@ public class Main implements Comunicar {
                     punts.add(new Punt2D(r.nextInt() * 600, r.nextInt() * 500));
 
                 System.out.println(Arrays.toString(punts.toArray()));
+                dades.setPunts(punts);
                 finestra.comunicar("dibuixPunts");
                 break;
             case "classic":

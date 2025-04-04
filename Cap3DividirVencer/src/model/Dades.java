@@ -8,11 +8,21 @@ import java.util.List;
 public class Dades {
     private final List<Resultat> forcaBruta;
     private final List<Resultat> dividirVencer;
-
+    private  List<Punt> punts;
     public Dades() {
         this.forcaBruta = new ArrayList<>();;
         this.dividirVencer = new ArrayList<>();;
+        this.punts = new ArrayList<>();
     }
+
+    public void setPunts(List<Punt> punts) {
+        this.punts= punts;
+
+    }
+    public List<Punt> getPunts() {
+        return punts;
+    }
+
 
     public List<Resultat> getForcaBruta() {
         return forcaBruta;

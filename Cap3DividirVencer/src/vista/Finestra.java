@@ -12,15 +12,17 @@ public class Finestra extends JFrame implements Comunicar {
     public static final String ARRANCAR = "arrancar";
     JComboBox<Integer> nPunts;
     Comunicar comunicar;
-   Dades data;
-    JComboBox<String> algorime;
 
+    Dades dades;
+    JComboBox<String> algorime;
+    Eixos eixos;
 
     JPanel panellBotons;
-   public Finestra(Comunicar comunicar, Dades data) {
+   public Finestra(Comunicar comunicar, Dades dades) {
        super();
        this.comunicar = comunicar;
-       this.data = data;
+       this.dades = dades;
+       eixos= new Eixos(750, 900,dades );
        this.setTitle("Distàncies a un nuvol de punts");
        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        setResizable(false);
@@ -33,17 +35,17 @@ public class Finestra extends JFrame implements Comunicar {
        panellBotons.add(new JLabel("Nombre de Punts"));
 
        panellBotons.add(nPunts);
-       ((JButton)panellBotons.add(new JButton(ATURAR))).addActionListener(e ->{
-              comunicar.comunicar(ATURAR);});
 
        ((JButton)panellBotons.add(new JButton(ARRANCAR))).addActionListener(e ->{
            comunicar.comunicar(ARRANCAR);
        });
+       ((JButton)panellBotons.add(new JButton(ATURAR))).addActionListener(e ->{
+           comunicar.comunicar(ATURAR);});
 
        algorime = generateComBox();
        panellBotons.add(algorime);
       this.add(panellBotons, BorderLayout.NORTH);
-//      this.add(Eixos);
+      this.add(eixos, BorderLayout.CENTER);
 
 
       this.pack();
