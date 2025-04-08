@@ -1,6 +1,7 @@
 package vista;
 
 import controlador.Comunicar;
+import javafx.application.Platform;
 import model.Dades;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class Finestra extends JFrame implements Comunicar {
        super();
        this.comunicar = comunicar;
        this.dades = dades;
-       eixos= new Eixos(750, 900,dades );
+       //eixos= new Eixos(750, 900,dades );
        this.setTitle("Distàncies a un nuvol de punts");
        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        setResizable(false);
@@ -30,7 +31,7 @@ public class Finestra extends JFrame implements Comunicar {
        this.setPreferredSize(new Dimension(900, 900));
 
        panellBotons = new JPanel();
-        nPunts = generateNPunts();
+       nPunts = generateNPunts();
 
        panellBotons.add(new JLabel("Nombre de Punts"));
 
@@ -45,12 +46,15 @@ public class Finestra extends JFrame implements Comunicar {
        algorime = generateComBox();
        panellBotons.add(algorime);
       this.add(panellBotons, BorderLayout.NORTH);
-      this.add(eixos, BorderLayout.CENTER);
-
+      //this.add(eixos, BorderLayout.CENTER);
+       Eixos3D eixos3D = new Eixos3D();
+       this.add(eixos3D, BorderLayout.CENTER);
 
       this.pack();
       this.setLocationRelativeTo(null);
       this.setVisible(true);
+
+      Platform.runLater(eixos3D::initFX);
 
    }
 

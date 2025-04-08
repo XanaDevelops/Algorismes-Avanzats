@@ -1,0 +1,363 @@
+Index: src/model/Punt3D.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/Punt3D.java b/src/model/Punt3D.java
+new file mode 100644
+--- /dev/null	(date 1743696915110)
++++ b/src/model/Punt3D.java	(date 1743696915110)
+@@ -0,0 +1,17 @@
++package model;
++
++public class Punt3D extends Punt2D {
++    public final int z;
++
++    public Punt3D(int x, int y, int z) {
++        super(x, y);
++        this.z = z;
++    }
++
++    public double distancia(Punt3D altre) {
++        int dx = this.x - altre.x;
++        int dy = this.y - altre.y;
++        int dz = this.z - altre.z;
++        return Math.sqrt(dx * dx + dy * dy  + dz * dz);
++    }
++}
+Index: src/model/Punt2D.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/model/Punt2D.java b/src/model/Punt2D.java
+new file mode 100644
+--- /dev/null	(date 1743696915110)
++++ b/src/model/Punt2D.java	(date 1743696915110)
+@@ -0,0 +1,4 @@
++package model;
++
++public class Punt2D {
++}
+Index: ../Cap2Dibuix/src/model/solvers/TrominoSolver.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model.solvers;\r\n\r\nimport model.Dades;\r\nimport model.Tipus;\r\n\r\nimport principal.Comunicar;\r\nimport principal.Main;\r\n\r\nimport java.util.Arrays;\r\nimport java.util.concurrent.ThreadPoolExecutor;\r\n\r\n/**\r\n * Classe que implementa un solucionador del problema dels Trominos utilitzant\r\n * el mètode divideix i venceràs. Implementa Runnable per permetre\r\n * l'execució en fils.\r\n */\r\npublic class TrominoSolver extends RecursiveSolver implements  Comunicar {\r\n    private Main p; // Referència a l'objecte principal\r\n    private Dades data; // Objecte que conté les dades del problema\r\n    private static int numActual; // Número del tromino actual\r\n    private static final int RETJOLA = -1; // Valor que representa el forat al tauler\r\n\r\n    private long startTime;\r\n\r\n    private int hashTauler;\r\n\r\n    /**\r\n     * Constructor de la classe.\r\n     * @param p Instància de Main que s'encarrega de gestionar la comunicació entre components.\r\n     * @param data Objecte que conté la informació del tauler i les dades necessàries per generar el fractal.\r\n     */\r\n    public TrominoSolver(Main p, Dades data) {\r\n        this.p = p;\r\n        this.data = data;\r\n\r\n\r\n        // Estableix el tipus de fractal que es generarà\r\n        data.setTipus(Tipus.TROMINO);\r\n\r\n        // Inicialitza el tauler amb la mida adequada\r\n        data.setTauler(new int[data.getProfunditat()][data.getProfunditat()]);\r\n        numActual = 1;\r\n\r\n        // Omple tota la matriu amb el valor 0 (caselles buides)\r\n        for (int[] fila : data.getTauler()) {\r\n            Arrays.fill(fila, 0);\r\n        }\r\n\r\n        //comprovar OoB iniciTromino\r\n        //FIXME: implementar una forma millor de fer-ho\r\n        if (data.getIniciTromino()[0] >= data.getProfunditat() || data.getIniciTromino()[1] >= data.getProfunditat()) {\r\n            System.err.println(\"FIXME: inici tromino OoB!!! posant a 0 el valor!\");\r\n            data.getIniciTromino()[0] = 0;\r\n            data.getIniciTromino()[1] = 0;\r\n        }\r\n        data.setValor(data.getIniciTromino()[0],  data.getIniciTromino()[1], RETJOLA);\r\n    }\r\n\r\n    /**\r\n     * Mètode recursiu per resoldre el problema dels trominos.\r\n     * @param mida Mida de la submatriu actual\r\n     * @param topx Coordenada X superior esquerra\r\n     * @param topy Coordenada Y superior esquerra\r\n     */\r\n    private void trominoRec(int mida, int topx, int topy) {\r\n        if(!aturar) {\r\n            if (mida == 2) {\r\n                // Cas base: si la mida és 2x2, omplim el tromino restant\r\n                omplirTromino(topx, topy, mida);\r\n                numActual++;\r\n            } else {\r\n                // Troba la posició del forat en el subtauler\r\n                int[] forat = trobarForat(topx, topy, mida);\r\n                if (forat == null) {\r\n                    return;\r\n                }\r\n                // Utilitzem l'enum Mode per determinar la ubicació del forat i procedir segons correspongui\r\n                Mode mode = determinarMode(forat[0], forat[1], topx, topy, mida);\r\n\r\n                // Omple el tromino central depenent del mode\r\n                omplirTrominoCentral(mode, topx, topy, mida);\r\n\r\n                // Recursió per als quatre quadrants\r\n                runThread(() -> trominoRec(mida / 2, topx, topy));\r\n                runThread(() -> trominoRec(mida / 2, topx, topy + mida / 2));\r\n                runThread(() -> trominoRec(mida / 2, topx + mida / 2, topy));\r\n                runThread(() -> trominoRec(mida / 2, topx + mida / 2, topy + mida / 2));\r\n            }\r\n        }\r\n\r\n    }\r\n\r\n    /**\r\n     * Troba la posició del forat dins del subtauler actual.\r\n     */\r\n    private int[] trobarForat(int topx, int topy, int mida) {\r\n        int[] forat = new int[2];\r\n        for (int x = topx; x < topx + mida; x++) {\r\n            for (int y = topy; y < topy + mida; y++) {\r\n                //evitar escriure si no es mateix tauler\r\n                if (data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return null;\r\n                if (data.getValor(x, y) != 0) {\r\n                    forat[0] = x;\r\n                    forat[1] = y;\r\n                }\r\n            }\r\n        }\r\n        return forat;\r\n    }\r\n\r\n    // Determina el mode (quadrant) en què es troba el forat dins el sub-tauler.\r\n    private Mode determinarMode(int foratX, int foratY, int topx, int topy, int mida) {\r\n        if (foratX < topx + mida / 2 && foratY < topy + mida / 2) {\r\n            return Mode.LU;\r\n        } else if (foratX < topx + mida / 2 && foratY >= topy + mida / 2) {\r\n            return Mode.RU;\r\n        } else if (foratX >= topx + mida / 2 && foratY < topy + mida / 2) {\r\n            return Mode.LD;\r\n        } else {\r\n            return Mode.RD;\r\n        }\r\n    }\r\n\r\n    // Omple el tromino central segons el mode.\r\n    private synchronized void omplirTrominoCentral(Mode mode, int topx, int topy, int mida) {\r\n        if (aturar) return;\r\n        switch (mode) {\r\n            case LU:\r\n                data.setValor(topx + mida / 2, topy + mida / 2 - 1, numActual);\r\n                data.setValor(topx + mida / 2, topy + mida / 2, numActual);\r\n                data.setValor(topx + mida / 2 - 1, topy + mida / 2, numActual);\r\n                break;\r\n            case RU:\r\n                data.setValor(topx + mida / 2, topy + mida / 2 - 1, numActual);\r\n                data.setValor(topx + mida / 2, topy + mida / 2, numActual);\r\n                data.setValor(topx + mida / 2 - 1, topy + mida / 2 - 1, numActual);\r\n                break;\r\n            case LD:\r\n                data.setValor(topx + mida / 2 - 1, topy + mida / 2, numActual);\r\n                data.setValor(topx + mida / 2, topy + mida / 2, numActual);\r\n                data.setValor(topx + mida / 2 - 1, topy + mida / 2 - 1, numActual);\r\n                break;\r\n            case RD:\r\n                data.setValor(topx + mida / 2 - 1, topy + mida / 2, numActual);\r\n                data.setValor(topx + mida / 2, topy + mida / 2 - 1, numActual);\r\n                data.setValor(topx + mida / 2 - 1, topy + mida / 2 - 1, numActual);\r\n                break;\r\n        }\r\n        numActual++;\r\n\r\n    }\r\n\r\n\r\n    // Omple un subtauler de mida x mida amb el tromino actual.\r\n    private synchronized void omplirTromino(int topx, int topy, int mida) {\r\n        for (int i = 0; i < mida; i++) {\r\n            for (int j = 0; j < mida; j++) {\r\n                if(data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return;\r\n                if (data.getValor(topx + i, topy + j) == 0) {\r\n                    data.setValor(topx + i, topy + j, numActual);\r\n\r\n                    esperar(0, 150);\r\n\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n\r\n    @Override\r\n    public void run() {\r\n        aturar = false;\r\n        double constant =1.0;\r\n        double profunditatExp = Math.pow(4, data.getProfunditat()/2);\r\n\r\n        if (data.getTipus() == Tipus.TROMINO && data.getConstantMultiplicativa()!=null) {\r\n            constant = data.getConstantMultiplicativa();\r\n        }\r\n\r\n        double tempsEsperat = constant*profunditatExp;\r\n        if (tempsEsperat > 100000 || Double.isNaN(tempsEsperat)) {\r\n            p.comunicar(\"tempsEsperat:molt de temps\");\r\n        }else {\r\n\r\n            p.comunicar(\"tempsEsperat:\" + String.format(\"%.3f segons\", tempsEsperat));\r\n        }\r\n        // Inicia el comptador de temps en nanosegons\r\n        startTime = System.nanoTime();\r\n\r\n\r\n        this.hashTauler = data.getTauler().hashCode();\r\n        trominoRec(data.getTauler().length, 0, 0);\r\n    }\r\n\r\n\r\n@Override\r\nprotected void end() {\r\n    long elapsedTime = System.nanoTime() - startTime;\r\n    // Converteix a segons (double)\r\n    double tempsReal = elapsedTime / 1_000_000_000.0;\r\n\r\n    // Calcula la constant multiplicativa\r\n    double profunditatExp = Math.pow(4, data.getProfunditat()/2);\r\n    double constantMultiplicativa = tempsReal / profunditatExp;\r\n\r\n\r\n    data.setConstantMultiplicativa(constantMultiplicativa);\r\n    // Mostra els resultats\r\n//    p.comunicar(\"tempsEsperat:\"+ String.format( \"%.3f segons\",tempsEsperat));\r\n//\r\n//    System.out.printf(\"Temps real: %.8f segons%n\", tempsReal);\r\n    p.comunicar(\"tempsReal:\"+ String.format( \"%.3f segons\",tempsReal));\r\n    //prevenir tornar a aturar\r\n    if(!aturar) // Notifica que el procés ha finalitzat\r\n        p.comunicar(\"aturar\");;\r\n}\r\n\r\n    /**\r\n     * Mètode per rebre missatges de comunicació.\r\n     * Si es rep el missatge \"aturar\", es deté l'execució del fractal.\r\n     *\r\n     * @param s Missatge rebut per comunicar ordres al solver.\r\n     */\r\n    @Override\r\n    public void comunicar(String s) {\r\n        if (s.contentEquals(\"aturar\")) {\r\n            aturar();\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Mètode per aturar l'execució del Solver.\r\n     * Estableix la variable stop a true per indicar que el fil ha de finalitzar.\r\n     */\r\n    private void aturar() {\r\n        if(aturar)return;\r\n        aturar = true;\r\n        executor.shutdown();\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../Cap2Dibuix/src/model/solvers/TrominoSolver.java b/../Cap2Dibuix/src/model/solvers/TrominoSolver.java
+--- a/../Cap2Dibuix/src/model/solvers/TrominoSolver.java	(revision e8721331fc3e738e00b31150bc2d76c5cd63d059)
++++ b/../Cap2Dibuix/src/model/solvers/TrominoSolver.java	(date 1743696915108)
+@@ -7,98 +7,70 @@
+ import principal.Main;
+ 
+ import java.util.Arrays;
+-import java.util.concurrent.ThreadPoolExecutor;
+ 
+-/**
+- * Classe que implementa un solucionador del problema dels Trominos utilitzant
+- * el mètode divideix i venceràs. Implementa Runnable per permetre
+- * l'execució en fils.
+- */
+-public class TrominoSolver extends RecursiveSolver implements  Comunicar {
+-    private Main p; // Referència a l'objecte principal
+-    private Dades data; // Objecte que conté les dades del problema
+-    private static int numActual; // Número del tromino actual
+-    private static final int RETJOLA = -1; // Valor que representa el forat al tauler
+-
+-    private long startTime;
+-
+-    private int hashTauler;
++public class TrominoSolver implements Runnable, Comunicar {
++    private Main p;
++    private Dades data;
++    private static int numActual;
++    private static final int RETJOLA = -1;
++    /**
++     * Variable booleana per poder aturar el fil d'execució.
++     */
++    private volatile boolean stop;
+ 
+-    /**
+-     * Constructor de la classe.
+-     * @param p Instància de Main que s'encarrega de gestionar la comunicació entre components.
+-     * @param data Objecte que conté la informació del tauler i les dades necessàries per generar el fractal.
+-     */
+     public TrominoSolver(Main p, Dades data) {
+         this.p = p;
+         this.data = data;
+-
+-
+-        // Estableix el tipus de fractal que es generarà
+         data.setTipus(Tipus.TROMINO);
+ 
+-        // Inicialitza el tauler amb la mida adequada
++
+         data.setTauler(new int[data.getProfunditat()][data.getProfunditat()]);
+         numActual = 1;
+ 
+-        // Omple tota la matriu amb el valor 0 (caselles buides)
++        // Inicialitzar la matriu amb totes les caselles buides
+         for (int[] fila : data.getTauler()) {
+             Arrays.fill(fila, 0);
+         }
+ 
+-        //comprovar OoB iniciTromino
+-        //FIXME: implementar una forma millor de fer-ho
+-        if (data.getIniciTromino()[0] >= data.getProfunditat() || data.getIniciTromino()[1] >= data.getProfunditat()) {
+-            System.err.println("FIXME: inici tromino OoB!!! posant a 0 el valor!");
+-            data.getIniciTromino()[0] = 0;
+-            data.getIniciTromino()[1] = 0;
+-        }
+-        data.setValor(data.getIniciTromino()[0],  data.getIniciTromino()[1], RETJOLA);
++        data.setForatTromino(new int[]{2,0});
++        int num1 = data.getForatTromino()[0];
++        int num2 = data.getForatTromino()[1];
++
++        data.setInici(num1 , num2);
+     }
+ 
+-    /**
+-     * Mètode recursiu per resoldre el problema dels trominos.
+-     * @param mida Mida de la submatriu actual
+-     * @param topx Coordenada X superior esquerra
+-     * @param topy Coordenada Y superior esquerra
+-     */
+     private void trominoRec(int mida, int topx, int topy) {
+-        if(!aturar) {
++        if(!stop) {
++            // Cas base: mida 2x2, col·locar l'última casella
+             if (mida == 2) {
+-                // Cas base: si la mida és 2x2, omplim el tromino restant
+                 omplirTromino(topx, topy, mida);
++                //            main.comunicar("omplicarTromino x"+ topx +" y"+ topy +" mida"+ mida );
+                 numActual++;
+             } else {
+-                // Troba la posició del forat en el subtauler
++                // Cas recursiu
+                 int[] forat = trobarForat(topx, topy, mida);
+-                if (forat == null) {
+-                    return;
+-                }
++
+                 // Utilitzem l'enum Mode per determinar la ubicació del forat i procedir segons correspongui
+                 Mode mode = determinarMode(forat[0], forat[1], topx, topy, mida);
+ 
+-                // Omple el tromino central depenent del mode
++                // Omplim el tromino central
+                 omplirTrominoCentral(mode, topx, topy, mida);
++                //            main.comunicar("omplirTrominoCentral mode"+ mode + " x"+ topx +" y"+ topy +" mida"+ mida ); //algo de l'estil
+ 
+                 // Recursió per als quatre quadrants
+-                runThread(() -> trominoRec(mida / 2, topx, topy));
+-                runThread(() -> trominoRec(mida / 2, topx, topy + mida / 2));
+-                runThread(() -> trominoRec(mida / 2, topx + mida / 2, topy));
+-                runThread(() -> trominoRec(mida / 2, topx + mida / 2, topy + mida / 2));
++                trominoRec(mida / 2, topx, topy);
++                trominoRec(mida / 2, topx, topy + mida / 2);
++                trominoRec(mida / 2, topx + mida / 2, topy);
++                trominoRec(mida / 2, topx + mida / 2, topy + mida / 2);
+             }
+         }
+-
+     }
+ 
+-    /**
+-     * Troba la posició del forat dins del subtauler actual.
+-     */
++    // Troba la posició del forat dins un sub-tauler (quadrant).
+     private int[] trobarForat(int topx, int topy, int mida) {
+         int[] forat = new int[2];
+         for (int x = topx; x < topx + mida; x++) {
+             for (int y = topy; y < topy + mida; y++) {
+-                //evitar escriure si no es mateix tauler
+-                if (data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return null;
+                 if (data.getValor(x, y) != 0) {
+                     forat[0] = x;
+                     forat[1] = y;
+@@ -122,8 +94,7 @@
+     }
+ 
+     // Omple el tromino central segons el mode.
+-    private synchronized void omplirTrominoCentral(Mode mode, int topx, int topy, int mida) {
+-        if (aturar) return;
++    private void omplirTrominoCentral(Mode mode, int topx, int topy, int mida) {
+         switch (mode) {
+             case LU:
+                 data.setValor(topx + mida / 2, topy + mida / 2 - 1, numActual);
+@@ -147,80 +118,44 @@
+                 break;
+         }
+         numActual++;
+-
+     }
+ 
+ 
+     // Omple un subtauler de mida x mida amb el tromino actual.
+-    private synchronized void omplirTromino(int topx, int topy, int mida) {
++    private void omplirTromino(int topx, int topy, int mida) {
+         for (int i = 0; i < mida; i++) {
+             for (int j = 0; j < mida; j++) {
+-                if(data.getTauler() == null || data.getTauler().hashCode() != this.hashTauler) return;
+                 if (data.getValor(topx + i, topy + j) == 0) {
+                     data.setValor(topx + i, topy + j, numActual);
+-
+-                    esperar(0, 150);
+-
++                    p.comunicar("pintar");
+                 }
+             }
+         }
+     }
+-
+ 
+     @Override
+     public void run() {
+-        aturar = false;
+-        double constant =1.0;
+-        double profunditatExp = Math.pow(4, data.getProfunditat()/2);
+-
+-        if (data.getTipus() == Tipus.TROMINO && data.getConstantMultiplicativa()!=null) {
+-            constant = data.getConstantMultiplicativa();
+-        }
+-
+-        double tempsEsperat = constant*profunditatExp;
+-        if (tempsEsperat > 100000 || Double.isNaN(tempsEsperat)) {
+-            p.comunicar("tempsEsperat:molt de temps");
+-        }else {
+-
+-            p.comunicar("tempsEsperat:" + String.format("%.3f segons", tempsEsperat));
+-        }
+-        // Inicia el comptador de temps en nanosegons
+-        startTime = System.nanoTime();
++        stop = false;
++        double tempsEsperat = data.getConstantMultiplicativa()* Math.pow(2, data.getProfunditat());
++        System.out.println("Temps esperat " + tempsEsperat  + " segons");
++        p.comunicar("tempsEsperat");
+ 
+-
+-        this.hashTauler = data.getTauler().hashCode();
++        long time = System.currentTimeMillis();
+         trominoRec(data.getTauler().length, 0, 0);
+-    }
+ 
++        p.comunicar("aturar");
+ 
+-@Override
+-protected void end() {
+-    long elapsedTime = System.nanoTime() - startTime;
+-    // Converteix a segons (double)
+-    double tempsReal = elapsedTime / 1_000_000_000.0;
++        time = (System.currentTimeMillis() - time)/1000;
++        System.out.println("Temps real " + time  + " segons");
++        p.comunicar("tempsReal");
+ 
+-    // Calcula la constant multiplicativa
+-    double profunditatExp = Math.pow(4, data.getProfunditat()/2);
+-    double constantMultiplicativa = tempsReal / profunditatExp;
++        //actualitzar la constant multiplicativa
++        data.setConstantMultiplicativa(time/Math.pow(2, data.getProfunditat() ));
+ 
+-
+-    data.setConstantMultiplicativa(constantMultiplicativa);
+-    // Mostra els resultats
+-//    p.comunicar("tempsEsperat:"+ String.format( "%.3f segons",tempsEsperat));
+-//
+-//    System.out.printf("Temps real: %.8f segons%n", tempsReal);
+-    p.comunicar("tempsReal:"+ String.format( "%.3f segons",tempsReal));
+-    //prevenir tornar a aturar
+-    if(!aturar) // Notifica que el procés ha finalitzat
+-        p.comunicar("aturar");;
+-}
++        //prevenir tornar a aturar
++        if(!stop) aturar();
++    }
+ 
+-    /**
+-     * Mètode per rebre missatges de comunicació.
+-     * Si es rep el missatge "aturar", es deté l'execució del fractal.
+-     *
+-     * @param s Missatge rebut per comunicar ordres al solver.
+-     */
+     @Override
+     public void comunicar(String s) {
+         if (s.contentEquals("aturar")) {
+@@ -229,13 +164,10 @@
+     }
+ 
+     /**
+-     * Mètode per aturar l'execució del Solver.
+-     * Estableix la variable stop a true per indicar que el fil ha de finalitzar.
++     * Mètode per aturar el fil d'execució.
+      */
+     private void aturar() {
+-        if(aturar)return;
+-        aturar = true;
+-        executor.shutdown();
++        stop = true;
+     }
+ }
+ 
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"VcsDirectoryMappings\">\r\n    <mapping directory=\"$PROJECT_DIR$/../..\" vcs=\"Git\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+--- a/.idea/vcs.xml	(revision e8721331fc3e738e00b31150bc2d76c5cd63d059)
++++ b/.idea/vcs.xml	(date 1743696922263)
+@@ -2,5 +2,6 @@
+ <project version="4">
+   <component name="VcsDirectoryMappings">
+     <mapping directory="$PROJECT_DIR$/../.." vcs="Git" />
++    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: ../Cap2Dibuix/src/principal/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package principal;\r\n\r\nimport model.Dades;\r\n\r\nimport model.solvers.SierpinskiCarpetSolver;\r\nimport model.solvers.SierpinskiTriangleSolver;\r\nimport model.solvers.TreeSolver;\r\nimport model.solvers.TrominoSolver;\r\nimport vista.Finestra;\r\n\r\nimport java.lang.reflect.InvocationTargetException;\r\nimport java.util.ArrayList;\r\nimport java.util.concurrent.ExecutorService;\r\nimport java.util.concurrent.Executors;\r\n\r\npublic class Main implements Comunicar {\r\n\r\n    private Comunicar finestra;\r\n\r\n    private Dades dades;\r\n    private ArrayList<Comunicar> processos = null;\r\n\r\n    private final ExecutorService executor = Executors.newFixedThreadPool(16);\r\n\r\n    public int[][] getMatriu() {\r\n        return dades.getTauler();\r\n    }\r\n\r\n\r\n\r\n    private void init(){\r\n        dades = new Dades();\r\n        processos = new ArrayList<>();\r\n\r\n        //generar finestra\r\n        executor.execute(() -> {\r\n            finestra = new Finestra(this, dades);\r\n        });\r\n\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n\r\n        (new Main()).init();\r\n    }\r\n\r\n    /**\r\n     * @param s\r\n     */\r\n    @Override\r\n    public void comunicar(String s) {\r\n        String[] params = s.split(\":\");\r\n\r\n        switch (params[0]) {\r\n            case \"pintar\", \"tempsReal\", \"tempsEsperat\":\r\n                finestra.comunicar(s);\r\n                break;\r\n            case \"N\":\r\n                int n = Integer.parseInt(params[1]);\r\n                dades.createMatrix(n);\r\n                finestra.comunicar(\"pintar\");\r\n                break;\r\n            case \"inici\":\r\n                dades.setForatTromino(Integer.parseInt(params[1]),Integer.parseInt(params[2]));\r\n                //volem recalcular els trominos\r\n                this.comunicar(\"executar:tromino:\"+(int)(Math.log(dades.getProfunditat()) / Math.log(2)));\r\n                break;\r\n            case \"executar\":\r\n                switch (params[1]) {\r\n                    case \"tromino\":\r\n                        try {\r\n                            executar(TrominoSolver.class, (int) Math.pow(2, Integer.parseInt(params[2])));\r\n                        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |\r\n                                 InvocationTargetException e) {\r\n                            throw new RuntimeException(e);\r\n                        }\r\n                        break;\r\n\r\n                    case \"triangles\":\r\n                        try {\r\n                            executar(SierpinskiTriangleSolver.class,(int) Math.pow(2, (double)Integer.parseInt(params[2])-1));\r\n                        } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |\r\n                                 IllegalAccessException e) {\r\n                            throw new RuntimeException(e);\r\n                        }\r\n                        break;\r\n                    case \"quadrat\":\r\n                        try {\r\n                            executar(SierpinskiCarpetSolver.class, (int) Math.pow(3, Integer.parseInt(params[2])));\r\n                        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |\r\n                                 IllegalAccessException e) {\r\n                            throw new RuntimeException(e);\r\n                        }\r\n                        break;\r\n                    case \"arbre\":\r\n                        try {\r\n                            executar(TreeSolver.class, (int) Integer.parseInt(params[2]));\r\n                        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |\r\n                                 IllegalAccessException e) {\r\n                            throw new RuntimeException(e);\r\n                        }\r\n                        break;\r\n                    default:\r\n                        System.err.println(\"MAIN: execucio \"+s+\" desconegut\");\r\n                        break;\r\n                }\r\n            case \"aturar\":\r\n                for (Comunicar proces : processos) {\r\n                    proces.comunicar(\"aturar\");\r\n                }\r\n                break;\r\n            case \"borrar\":\r\n                this.comunicar(\"aturar\");\r\n                dades.clean();\r\n                finestra.comunicar(\"pintar\");\r\n                break;\r\n            default:\r\n                System.err.println(\"MAIN: missatge \"+s+\" desconegut\");\r\n                break;\r\n        }\r\n    }\r\n\r\n    private void executar(Class<? extends Comunicar> clase, int profunditat) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {\r\n        for (Comunicar enmarxa : processos) {\r\n            enmarxa.comunicar(\"aturar\");\r\n        }\r\n\r\n        processos.clear();\r\n\r\n        dades.setProfunditat(profunditat);\r\n        Comunicar proces = (Comunicar) clase.getConstructor(Main.class, Dades.class).newInstance(this, dades);\r\n        processos.add(proces);\r\n        executor.execute((Runnable) proces);\r\n    }\r\n\r\n    public Dades getDades() {\r\n        return dades;\r\n    }\r\n\r\n    public void setDades(Dades dades) {\r\n        this.dades = dades;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../Cap2Dibuix/src/principal/Main.java b/../Cap2Dibuix/src/principal/Main.java
+--- a/../Cap2Dibuix/src/principal/Main.java	(revision e8721331fc3e738e00b31150bc2d76c5cd63d059)
++++ b/../Cap2Dibuix/src/principal/Main.java	(date 1743696915108)
+@@ -77,6 +77,7 @@
+                         break;
+ 
+                     case "triangles":
++                        dades.setInici(0,0);
+                         try {
+                             executar(SierpinskiTriangleSolver.class,(int) Math.pow(2, (double)Integer.parseInt(params[2])-1));
+                         } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |
+Index: .idea/git_toolbox_prj.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/git_toolbox_prj.xml b/.idea/git_toolbox_prj.xml
+new file mode 100644
+--- /dev/null	(date 1743696915109)
++++ b/.idea/git_toolbox_prj.xml	(date 1743696915109)
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="GitToolBoxProjectSettings">
++    <option name="commitMessageIssueKeyValidationOverride">
++      <BoolValueOverride>
++        <option name="enabled" value="true" />
++      </BoolValueOverride>
++    </option>
++    <option name="commitMessageValidationEnabledOverride">
++      <BoolValueOverride>
++        <option name="enabled" value="true" />
++      </BoolValueOverride>
++    </option>
++  </component>
++</project>
+\ No newline at end of file

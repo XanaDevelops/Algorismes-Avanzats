@@ -1,0 +1,157 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"739d782b-ca33-440a-87a3-67de115ff2de\" name=\"Changes\" comment=\"\">\r\n      <change afterPath=\"$PROJECT_DIR$/../src/model/Punt2D.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/../../.idea/AlgoAvançats.iml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/../../.idea/AlgoAvançats.iml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/../Cap3DividirVencer.iml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/../Cap3DividirVencer.iml\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/../..\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\r\n  \"lastFilter\": {\r\n    \"state\": \"OPEN\",\r\n    \"assignee\": \"JoFeF08\"\r\n  }\r\n}]]></component>\r\n  <component name=\"GithubPullRequestsUISettings\"><![CDATA[{\r\n  \"selectedUrlAndAccountId\": {\r\n    \"url\": \"https://github.com/XanaDevelops/Algorismes-Avanzats.git\",\r\n    \"accountId\": \"6b8a92e2-6215-4739-8c00-e8ec04af0802\"\r\n  }\r\n}]]></component>\r\n  <component name=\"ProjectColorInfo\"><![CDATA[{\r\n  \"associatedIndex\": 2\r\n}]]></component>\r\n  <component name=\"ProjectId\" id=\"2vDXiybSIgdiTJqDGlY1OjMCed7\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"git-widget-placeholder\": \"model/Punt2D\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"C:/Users/ferri/Desktop/Nueva carpeta/uni/3r/1s/IA/practica\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"739d782b-ca33-440a-87a3-67de115ff2de\" name=\"Changes\" comment=\"\" />\r\n      <created>1743680752492</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1743680752492</updated>\r\n      <workItem from=\"1743680753561\" duration=\"5000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision e8721331fc3e738e00b31150bc2d76c5cd63d059)
++++ b/.idea/workspace.xml	(date 1743696915109)
+@@ -1,34 +1,75 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="AutoImportSettings">
++    <option name="autoReloadType" value="SELECTIVE" />
++  </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/../src/model/Punt2D.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/../../.idea/AlgoAvançats.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/AlgoAvançats.iml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/../Cap3DividirVencer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../Cap3DividirVencer.iml" afterDir="false" />
+-    </list>
++    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="comunicar" />
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
++  </component>
++  <component name="FileTemplateManagerImpl">
++    <option name="RECENT_TEMPLATES">
++      <list>
++        <option value="Class" />
++        <option value="Interface" />
++      </list>
++    </option>
+   </component>
+   <component name="Git.Settings">
+-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$/.." value="cotrolador/main" />
++      </map>
++    </option>
++    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+   </component>
+-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+-  "lastFilter": {
+-    "state": "OPEN",
+-    "assignee": "JoFeF08"
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;,
++    &quot;assignee&quot;: &quot;JoFeF08&quot;
+   }
+-}]]></component>
+-  <component name="GithubPullRequestsUISettings"><![CDATA[{
+-  "selectedUrlAndAccountId": {
+-    "url": "https://github.com/XanaDevelops/Algorismes-Avanzats.git",
+-    "accountId": "6b8a92e2-6215-4739-8c00-e8ec04af0802"
++}</component>
++  <component name="GitToolBoxStore">
++    <option name="recentBranches">
++      <RecentBranches>
++        <option name="branchesForRepo">
++          <list>
++            <RecentBranchesForRepo>
++              <option name="branches">
++                <list>
++                  <RecentBranch>
++                    <option name="branchName" value="model/Punt2D" />
++                    <option name="lastUsedInstant" value="1743688756" />
++                  </RecentBranch>
++                  <RecentBranch>
++                    <option name="branchName" value="cotrolador/main" />
++                    <option name="lastUsedInstant" value="1743688594" />
++                  </RecentBranch>
++                  <RecentBranch>
++                    <option name="branchName" value="Cap3" />
++                    <option name="lastUsedInstant" value="1743683653" />
++                  </RecentBranch>
++                </list>
++              </option>
++              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$/.." />
++            </RecentBranchesForRepo>
++          </list>
++        </option>
++      </RecentBranches>
++    </option>
++  </component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/XanaDevelops/Algorismes-Avanzats.git&quot;,
++    &quot;accountId&quot;: &quot;6b8a92e2-6215-4739-8c00-e8ec04af0802&quot;
+   }
+-}]]></component>
+-  <component name="ProjectColorInfo"><![CDATA[{
+-  "associatedIndex": 2
+-}]]></component>
++}</component>
++  <component name="ProjectColorInfo">{
++  &quot;associatedIndex&quot;: 2
++}</component>
+   <component name="ProjectId" id="2vDXiybSIgdiTJqDGlY1OjMCed7" />
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+@@ -38,9 +79,12 @@
+   "keyToString": {
+     "RunOnceActivity.ShowReadmeOnStart": "true",
+     "RunOnceActivity.git.unshallow": "true",
+-    "git-widget-placeholder": "model/Punt2D",
+     "kotlin-language-version-configured": "true",
+-    "last_opened_file_path": "C:/Users/ferri/Desktop/Nueva carpeta/uni/3r/1s/IA/practica",
++    "last_opened_file_path": "C:/Users/ferri/Desenvolupament/Projectes/IdeaProjects/Algorismes-Avanzats",
++    "node.js.detected.package.eslint": "true",
++    "node.js.detected.package.tslint": "true",
++    "node.js.selected.package.eslint": "(autodetect)",
++    "node.js.selected.package.tslint": "(autodetect)",
+     "nodejs_package_manager_path": "npm",
+     "vue.rearranger.settings.migration": "true"
+   }
+@@ -62,10 +106,35 @@
+       <option name="presentableId" value="Default" />
+       <updated>1743680752492</updated>
+       <workItem from="1743680753561" duration="5000" />
++      <workItem from="1743681065677" duration="2767000" />
++    </task>
++    <task id="LOCAL-00001" summary="comunicar">
++      <option name="closed" value="true" />
++      <created>1743688700167</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1743688700167</updated>
+     </task>
++    <option name="localTasksCounter" value="2" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="3" />
+   </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State />
++          </value>
++        </entry>
++      </map>
++    </option>
++  </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="comunicar" />
++    <option name="LAST_COMMIT_MESSAGE" value="comunicar" />
++  </component>
+ </project>
+\ No newline at end of file
