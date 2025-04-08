@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="dibuix basic de punts">
+    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="dibuix de la distancia">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controlador/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controlador/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/vista/Eixos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vista/Eixos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vista/Finestra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vista/Finestra.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +86,7 @@
       <workItem from="1743691179542" duration="347000" />
       <workItem from="1743787549049" duration="10981000" />
       <workItem from="1744125588088" duration="389000" />
-      <workItem from="1744140426099" duration="6057000" />
+      <workItem from="1744140426099" duration="7418000" />
     </task>
     <task id="LOCAL-00001" summary="plantilla principal">
       <option name="closed" value="true" />
@@ -129,7 +128,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744144005407</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="dibuix de la distancia">
+      <option name="closed" value="true" />
+      <created>1744146677783</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1744146677783</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,6 +147,7 @@
     <MESSAGE value="classe Eixos, incompleta." />
     <MESSAGE value="moure list&lt;Punts&gt; a Dades" />
     <MESSAGE value="dibuix basic de punts" />
-    <option name="LAST_COMMIT_MESSAGE" value="dibuix basic de punts" />
+    <MESSAGE value="dibuix de la distancia" />
+    <option name="LAST_COMMIT_MESSAGE" value="dibuix de la distancia" />
   </component>
 </project>

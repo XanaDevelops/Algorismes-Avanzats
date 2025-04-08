@@ -5,7 +5,6 @@ import model.Dades;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class Finestra extends JFrame implements Comunicar {
     public static final String ATURAR = "aturar";
@@ -18,70 +17,74 @@ public class Finestra extends JFrame implements Comunicar {
     Eixos eixos;
     JComboBox<Distribucio> distribucio;
     JPanel panellBotons;
-   public Finestra(Comunicar comunicar, Dades dades) {
-       super();
-       this.comunicar = comunicar;
-       this.dades = dades;
-       eixos= new Eixos(750, 890,dades );
-       this.setTitle("Distàncies a un nuvol de punts");
-       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       setResizable(false);
-       this.setLayout(new BorderLayout());
-       this.setPreferredSize(new Dimension(900, 900));
 
-       panellBotons = new JPanel();
+    public Finestra(Comunicar comunicar, Dades dades) {
+        super();
+        this.comunicar = comunicar;
+        this.dades = dades;
+        eixos = new Eixos(750, 890, dades);
+        this.setTitle("Distàncies a un nuvol de punts");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+        this.setLayout(new BorderLayout());
+        this.setPreferredSize(new Dimension(900, 900));
+
+        panellBotons = new JPanel();
         nPunts = generateNPunts();
 
-       panellBotons.add(new JLabel("Nombre de Punts"));
+        panellBotons.add(new JLabel("Nombre de Punts"));
 
-       panellBotons.add(nPunts);
+        panellBotons.add(nPunts);
 
-       ((JButton)panellBotons.add(new JButton(ARRANCAR))).addActionListener(e ->{
-           comunicar.comunicar(ARRANCAR);
-       });
-       ((JButton)panellBotons.add(new JButton(ATURAR))).addActionListener(e ->{
-           comunicar.comunicar(ATURAR);});
+        ((JButton) panellBotons.add(new JButton(ARRANCAR))).addActionListener(e -> {
+            comunicar.comunicar(ARRANCAR);
+        });
+        ((JButton) panellBotons.add(new JButton(ATURAR))).addActionListener(e -> {
+            comunicar.comunicar(ATURAR);
+        });
 
-       algorime = generateComBox();
-       distribucio = generateComBoxDistr();
-       panellBotons.add(algorime);
-       panellBotons.add(distribucio);
-      this.add(panellBotons, BorderLayout.NORTH);
-      this.add(eixos, BorderLayout.CENTER);
+        algorime = generateComBox();
+        distribucio = generateComBoxDistr();
+        panellBotons.add(algorime);
+        panellBotons.add(distribucio);
+        this.add(panellBotons, BorderLayout.NORTH);
+        this.add(eixos, BorderLayout.CENTER);
 
 
-      this.pack();
-      this.setLocationRelativeTo(null);
-      this.setVisible(true);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
 
-   }
+    }
 
     private JComboBox<Distribucio> generateComBoxDistr() {
-       JComboBox<Distribucio> comboBox = new JComboBox<>();
+        JComboBox<Distribucio> comboBox = new JComboBox<>();
 
         comboBox.addItem(Distribucio.Uniforme);
         comboBox.addItem(Distribucio.Gaussiana);
         comboBox.addItem(Distribucio.Exponencial);
         comboBox.setSelectedIndex(0);
-       switch (comboBox.getSelectedIndex()){
-           case 0:
-               //gaussiana();
-               break;
-           case 1 : break;
-           case 2 : break;
-       }
+        switch (comboBox.getSelectedIndex()) {
+            case 0:
+                //gaussiana();
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
         return comboBox;
     }
 
     private JComboBox<String> generateComBox() {
-       JComboBox<String> comboBox = new JComboBox<>();
-       comboBox.addItem("Clàssic O(N)");
-       comboBox.addItem("Optimitzat O(N·log N)");
+        JComboBox<String> comboBox = new JComboBox<>();
+        comboBox.addItem("Clàssic O(N)");
+        comboBox.addItem("Optimitzat O(N·log N)");
 
-       comboBox.setSelectedIndex(0); //default a classic
-        comboBox.addActionListener(e ->{
+        comboBox.setSelectedIndex(0); //default a classic
+        comboBox.addActionListener(e -> {
             switch (comboBox.getSelectedIndex()) {
-            //per ara
+                //per ara
                 case 0:
                     comunicar.comunicar("classic");
                     break;
@@ -90,35 +93,33 @@ public class Finestra extends JFrame implements Comunicar {
                     comunicar.comunicar("optimitzat");
                     break;
 
-
-
             }
         });
 
-       return comboBox;
+        return comboBox;
 
     }
 
     private JComboBox<Integer> generateNPunts() {
-       JComboBox<Integer> comboBox = new JComboBox<>();
-       comboBox.addItem(100);
-       comboBox.addItem(500);
-       comboBox.addItem(1000);
-       comboBox.addItem(2000);
-       comboBox.addItem(5000);
+        JComboBox<Integer> comboBox = new JComboBox<>();
+        comboBox.addItem(100);
+        comboBox.addItem(500);
+        comboBox.addItem(1000);
+        comboBox.addItem(2000);
+        comboBox.addItem(5000);
         comboBox.addItem(10000);
 
         comboBox.addActionListener(e -> comunicar.comunicar("generar:" + comboBox.getSelectedItem()));
-       return comboBox;
+        return comboBox;
     }
 
     @Override
     public void comunicar(String s) {
-       switch (s){
-           case "dibuixPunts":
-               eixos.pintar();
-              break;
-       }
+        switch (s) {
+            case "dibuixPunts":
+                eixos.pintar();
+                break;
+        }
 
     }
 }

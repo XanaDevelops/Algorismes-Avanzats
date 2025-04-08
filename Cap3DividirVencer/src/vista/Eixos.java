@@ -66,6 +66,14 @@ public class Eixos extends JPanel {
             }
             int px, py;
             g.setColor(Color.LIGHT_GRAY);
+            int maxSizePoint = 10;
+            int minSizePoint = 4;
+            int MAX_POINTS = 10000;
+
+            double ratio = Math.min(1.0, (double)punts.size() / 10000);
+             int pointSize = (int)(maxSizePoint - ratio * (maxSizePoint - minSizePoint));
+
+            System.out.println("pointSize: " + pointSize);
             for (Punt2D punt2D : punts) {
                 if (maxX == 0) {
                     break;
@@ -73,9 +81,9 @@ public class Eixos extends JPanel {
                 g.setColor(new Color(102, 178, 255));
                 px = 50 + punt2D.getX() * (width - 60) / maxX;
                 py = (height - 20) - (punt2D.getY() * (height - 40)) / maxY;
-                g.fillOval(px - 3, py - 3, 4, 4);
+                g.fillOval(px - pointSize/2, py -  pointSize/2, pointSize, pointSize);
                 g.setColor(Color.black);
-                g.drawOval(px - 3, py - 3, 4, 4);
+                g.drawOval(px - pointSize/2, py -  pointSize/2, pointSize, pointSize);
 
 
             }
