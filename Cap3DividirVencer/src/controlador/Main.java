@@ -46,9 +46,10 @@ public class Main implements Comunicar {
                 int num = Integer.parseInt(res[1]);
                 Random r = new Random();
                 punts.clear();
+//                punts.add(new Punt2D(0, 0));
+//                punts.add(new Punt2D(100, 100));
                 for (int i = 0; i < num; i++) {
                     punts.add(new Punt2D(r.nextInt(700) , r.nextInt(1000) ));
-//                    System.out.println(punts.get(punts.size() - 1).toString());
                 }
                 System.out.println(Arrays.toString(punts.toArray()));
                 dades.setPunts(punts);

@@ -22,7 +22,7 @@ public class Finestra extends JFrame implements Comunicar {
        super();
        this.comunicar = comunicar;
        this.dades = dades;
-       eixos= new Eixos(750, 900,dades );
+       eixos= new Eixos(750, 890,dades );
        this.setTitle("Distàncies a un nuvol de punts");
        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        setResizable(false);
@@ -116,8 +116,6 @@ public class Finestra extends JFrame implements Comunicar {
     public void comunicar(String s) {
        switch (s){
            case "dibuixPunts":
-               System.out.println("en dibuixPunts");
-//              eixos.pintar();
                eixos.pintar();
               break;
        }

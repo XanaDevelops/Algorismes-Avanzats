@@ -36,16 +36,6 @@ public class Eixos extends JPanel {
            paint(this.getGraphics());
        }
    }
-//    private void iniciar(Graphics g) {
-//        g.setColor(Color.white);
-//        g.fillRect(0, 0, width, height);
-//
-//        g.setColor(new Color(64, 181, 217));
-//
-//        //dibuixar eixos
-//        g.drawLine(MARGIN, height-MARGIN, width-MARGIN, height-MARGIN);
-//        g.drawLine(MARGIN, height-MARGIN, MARGIN, MARGIN);
-//    }
 
     @Override
     public void paintComponent (Graphics g) {
@@ -56,6 +46,7 @@ public class Eixos extends JPanel {
         g.setColor(new Color(64, 181, 217));
 
         //dibuixar eixos
+
         g.drawLine(MARGIN, height - MARGIN, width - MARGIN, height - MARGIN);
         g.drawLine(MARGIN, height - MARGIN, MARGIN, MARGIN);
 
@@ -75,25 +66,42 @@ public class Eixos extends JPanel {
             }
             int px, py;
             g.setColor(Color.LIGHT_GRAY);
-            for (int i = 0; i < punts.size(); i++) {
-                if (maxX == 0){
+            for (Punt2D punt2D : punts) {
+                if (maxX == 0) {
                     break;
                 }
-                Punt2D punt = punts.get(i);
-                g.setColor(new Color (102, 178, 255));
-                px = 50 + punt.getX() * (width - 60) / maxX;
-                System.out.println("PX = "+ px);
-                py = (height-20) - (punt.getY() * (height - 40) )/ maxY;
-                System.out.println("PY = "+ py);
-                g.fillOval(px - 3, py - 3, 3, 3);
+                g.setColor(new Color(102, 178, 255));
+                px = 50 + punt2D.getX() * (width - 60) / maxX;
+                py = (height - 20) - (punt2D.getY() * (height - 40)) / maxY;
+                g.fillOval(px - 3, py - 3, 4, 4);
                 g.setColor(Color.black);
-                g.drawOval(px - 3, py - 3, 3, 3);
+                g.drawOval(px - 3, py - 3, 4, 4);
 
 
             }
 
+            //draw linias de la distància
+            if (!punts.isEmpty()) {
+
+//                drawDistance(punts.get(0), punts.get(1), g, maxX, maxY);
+
+            }
 
         }
 
+    }
+
+    private void drawDistance (Punt2D p1, Punt2D p2, Graphics g, int maxX, int maxY) {
+        g.setColor(Color.RED);
+        double distance = Math.sqrt(Math.pow(p1.getX()-p2.getX(), 2) + Math.pow(p1.getY()-p2.getY(), 2));
+        int p1x = 50 + p1.getX() * (width - 60) / maxX;
+        int p1y =  (height - 20) - (p1.getY() * (height - 40)) / maxY;
+        int p2x = 50 + p2.getX() * (width - 60) / maxX;
+        int p2y = (height - 20) - (p2.getY() * (height - 40)) / maxY;
+        g.drawLine(p1x-1, p1y-1, p2x-1, p2y-1);
+
+        int midX = (p1x+p1y) / 2;
+        int midY = (p2x+p2y) / 2;
+        g.drawString(String.format("%.2f", distance), midX, midY - 10);
     }
 }
