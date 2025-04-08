@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 public class Main implements Comunicar {
     Comunicar finestra;
     Dades dades;
-    private List<Punt> punts;
+    private List<Punt2D> punts;
 
     private ArrayList<Comunicar> processos = null;
 
@@ -46,9 +46,10 @@ public class Main implements Comunicar {
                 int num = Integer.parseInt(res[1]);
                 Random r = new Random();
                 punts.clear();
-                for (int i = 0; i < num; i++)
-                    punts.add(new Punt2D(r.nextInt() * 600, r.nextInt() * 500));
-
+                for (int i = 0; i < num; i++) {
+                    punts.add(new Punt2D(r.nextInt(700) , r.nextInt(1000) ));
+//                    System.out.println(punts.get(punts.size() - 1).toString());
+                }
                 System.out.println(Arrays.toString(punts.toArray()));
                 dades.setPunts(punts);
                 finestra.comunicar("dibuixPunts");
@@ -66,6 +67,7 @@ public class Main implements Comunicar {
             case "borar":
                 this.comunicar("aturar");
                //esborrar els punts
+                dades.clearPunts();
 
                 finestra.comunicar("pintar");
                 break;

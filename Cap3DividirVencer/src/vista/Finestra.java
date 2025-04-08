@@ -16,7 +16,7 @@ public class Finestra extends JFrame implements Comunicar {
     Dades dades;
     JComboBox<String> algorime;
     Eixos eixos;
-
+    JComboBox<Distribucio> distribucio;
     JPanel panellBotons;
    public Finestra(Comunicar comunicar, Dades dades) {
        super();
@@ -43,7 +43,9 @@ public class Finestra extends JFrame implements Comunicar {
            comunicar.comunicar(ATURAR);});
 
        algorime = generateComBox();
+       distribucio = generateComBoxDistr();
        panellBotons.add(algorime);
+       panellBotons.add(distribucio);
       this.add(panellBotons, BorderLayout.NORTH);
       this.add(eixos, BorderLayout.CENTER);
 
@@ -53,6 +55,23 @@ public class Finestra extends JFrame implements Comunicar {
       this.setVisible(true);
 
    }
+
+    private JComboBox<Distribucio> generateComBoxDistr() {
+       JComboBox<Distribucio> comboBox = new JComboBox<>();
+
+        comboBox.addItem(Distribucio.Uniforme);
+        comboBox.addItem(Distribucio.Gaussiana);
+        comboBox.addItem(Distribucio.Exponencial);
+        comboBox.setSelectedIndex(0);
+       switch (comboBox.getSelectedIndex()){
+           case 0:
+               //gaussiana();
+               break;
+           case 1 : break;
+           case 2 : break;
+       }
+        return comboBox;
+    }
 
     private JComboBox<String> generateComBox() {
        JComboBox<String> comboBox = new JComboBox<>();
@@ -95,6 +114,13 @@ public class Finestra extends JFrame implements Comunicar {
 
     @Override
     public void comunicar(String s) {
+       switch (s){
+           case "dibuixPunts":
+               System.out.println("en dibuixPunts");
+//              eixos.pintar();
+               eixos.pintar();
+              break;
+       }
 
     }
 }

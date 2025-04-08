@@ -1,6 +1,7 @@
 package model;
 
 import model.punts.Punt;
+import model.punts.Punt2D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,18 +9,18 @@ import java.util.List;
 public class Dades {
     private final List<Resultat> forcaBruta;
     private final List<Resultat> dividirVencer;
-    private  List<Punt> punts;
+    private  List<Punt2D> punts;
     public Dades() {
         this.forcaBruta = new ArrayList<>();;
         this.dividirVencer = new ArrayList<>();;
         this.punts = new ArrayList<>();
     }
 
-    public void setPunts(List<Punt> punts) {
+    public void setPunts(List<Punt2D> punts) {
         this.punts= punts;
 
     }
-    public List<Punt> getPunts() {
+    public List<Punt2D> getPunts() {
         return punts;
     }
 
@@ -48,6 +49,11 @@ public class Dades {
     public void addDividirVencer(Punt p1, Punt p2, double distancia, long temps, String tipus) {
         Resultat res = new Resultat(p1, p2, distancia, temps, tipus);
         dividirVencer.add(res);
+    }
+
+    public void clearPunts() {
+        punts.clear();
+
     }
 
     public class Resultat {
