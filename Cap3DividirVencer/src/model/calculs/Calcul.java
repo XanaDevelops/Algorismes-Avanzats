@@ -10,8 +10,8 @@ abstract class Calcul implements Runnable {
     protected final List<Punt> punts;
     protected Dades dades;
 
-    public Calcul(List<Punt> punts, Dades dades) {
-        this.punts = punts;
+    public Calcul(Dades dades) {
+        this.punts = dades.getPunts();
         this.dades = dades;
     }
 }

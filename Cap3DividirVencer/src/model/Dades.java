@@ -4,21 +4,26 @@ import model.punts.Punt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 public class Dades {
-    private final List<Resultat> forcaBruta;
-    private final List<Resultat> dividirVencer;
 
-    public Dades() {
-        this.forcaBruta = new ArrayList<>();;
-        this.dividirVencer = new ArrayList<>();;
+    private final List<Punt> punts; // llista original de punts
+    private final TreeMap<Integer, Resultat> forcaBruta;
+    private final TreeMap<Integer, Resultat> dividirVencer;
+
+    public Dades(List<Punt> punts) {
+        this.punts = punts;
+        this.forcaBruta = new TreeMap<>();
+        this.dividirVencer = new TreeMap<>();
     }
 
-    public List<Resultat> getForcaBruta() {
+    public NavigableMap<Integer, Resultat> getForcaBruta() {
         return forcaBruta;
     }
 
-    public List<Resultat> getDividirVencer() {
+    public NavigableMap<Integer, Resultat> getDividirVencer() {
         return dividirVencer;
     }
 
@@ -30,28 +35,33 @@ public class Dades {
         dividirVencer.clear();
     }
 
-    public void addForcaBruta(Punt p1, Punt p2, double distancia, long temps, String tipus) {
-        Resultat res = new Resultat(p1, p2, distancia, temps, tipus);
-        forcaBruta.add(res);
+    public void afegeixForcaBruta(int n, Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
+        Resultat r = new Resultat(p1, p2, distancia, tempsNano, tipus);
+        forcaBruta.put(n, r);
     }
 
-    public void addDividirVencer(Punt p1, Punt p2, double distancia, long temps, String tipus) {
-        Resultat res = new Resultat(p1, p2, distancia, temps, tipus);
-        dividirVencer.add(res);
+    public void afegeixDividirVencer(int n, Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
+        Resultat r = new Resultat(p1, p2, distancia, tempsNano, tipus);
+        dividirVencer.put(n, r);
+    }
+
+    public List<Punt> getPunts() {
+        return punts;
     }
 
     public class Resultat {
-        public Punt p1, p2;
-        public double distancia;
-        public long temps;
-        public String tipus;
+        private final long tempsNano;
+        private final Punt p1;
+        private final Punt p2;
+        private final double distancia;
+        private final String tipus; // "curta", "llarga", "aproximada", etc.
 
-        public Resultat(Punt p1, Punt p2, double distancia, long temps, String tipus) {
+        public Resultat(Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
             this.p1 = p1;
             this.p2 = p2;
             this.distancia = distancia;
+            this.tempsNano = tempsNano;
             this.tipus = tipus;
-            this.temps = temps;
         }
     }
 
