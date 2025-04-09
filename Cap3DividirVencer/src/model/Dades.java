@@ -10,13 +10,19 @@ import java.util.TreeMap;
 public class Dades {
 
     private final List<Punt> punts; // llista original de punts
+    private TipoPunt tp;
     private final TreeMap<Integer, Resultat> forcaBruta;
     private final TreeMap<Integer, Resultat> dividirVencer;
 
-    public Dades(List<Punt> punts) {
+    public Dades(List<Punt> punts, TipoPunt tp ) {
         this.punts = punts;
+        this.tp = tp;
         this.forcaBruta = new TreeMap<>();
         this.dividirVencer = new TreeMap<>();
+    }
+
+    public TipoPunt getTp() {
+        return tp;
     }
 
     public NavigableMap<Integer, Resultat> getForcaBruta() {

@@ -2,11 +2,13 @@ package model.calculs;
 
 import model.Dades;
 import model.Dades.Resultat;
-import model.punts.Punt2D;
+import model.TipoPunt;
+import model.punts.Punt;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
 
 public class ParellaPropera_dv extends Calcul {
 
@@ -16,66 +18,73 @@ public class ParellaPropera_dv extends Calcul {
 
     @Override
     public void run() {
-        long t = System.nanoTime();
-        List<Punt2D> puntsOrdenatsX = new ArrayList<>(punts);
-        puntsOrdenatsX.sort(Comparator.comparingInt(Punt2D::getX));
-        Resultat resultat = divideix(puntsOrdenatsX);
-        t = System.nanoTime() - t;
+        long start = System.nanoTime();
+        // Obtenim la llista de punts i els ordenem per la coordenada X.
+        List<Punt> punts = new ArrayList<>(dades.getPunts());
+        punts.sort(Comparator.comparingInt(Punt::getX));
 
-        dades.afegeixDividirVencer(punts.size(), resultat.p1, resultat.p2, resultat.distancia, t, "min");
+        Resultat resultat = divideix(punts);
+
+        long time = System.nanoTime() - start;
+        dades.afegeixDividirVencer(punts.size(), resultat.p1, resultat.p2, resultat.distancia, time, "min");
     }
 
-    private Resultat divideix(List<Punt2D> punts) {
+    private Resultat divideix(List<Punt> punts) {
         int n = punts.size();
         if (n <= 3) {
             return bruteForce(punts);
         }
 
         int mid = n / 2;
-        List<Punt2D> esquerra = punts.subList(0, mid);
-        List<Punt2D> dreta = punts.subList(mid, n);
+        List<Punt> left = new ArrayList<>(punts.subList(0, mid));
+        List<Punt> right = new ArrayList<>(punts.subList(mid, n));
 
-        Resultat minEsquerra = divideix(esquerra);
-        Resultat minDreta = divideix(dreta);
+        Resultat leftResult = divideix(left);
+        Resultat rightResult = divideix(right);
+        Resultat bestResult = leftResult.distancia < rightResult.distancia ? leftResult : rightResult;
 
-        Resultat millor = (minEsquerra.distancia < minDreta.distancia) ? minEsquerra : minDreta;
-        double dMin = millor.distancia;
 
+        double dmin = bestResult.distancia;
         int midX = punts.get(mid).getX();
-        List<Punt2D> franja = new ArrayList<>();
-        for (Punt2D p : punts) {
-            if (Math.abs(p.getX() - midX) < dMin) {
-                franja.add(p);
+
+        List<Punt> strip = new ArrayList<>();
+        for (Punt p : punts) {
+            if (Math.abs(p.getX() - midX) < dmin) {
+                strip.add(p);
             }
         }
-        franja.sort(Comparator.comparingInt(Punt2D::getY));
+        strip.sort(Comparator.comparingInt(Punt::getY));
 
-        for (int i = 0; i < franja.size(); i++) {
-            for (int j = i + 1; j < franja.size() && (franja.get(j).getY() - franja.get(i).getY()) < dMin; j++) {
-                double d = franja.get(i).distancia(franja.get(j));
-                if (d < millor.distancia) {
-                    millor = new Resultat(franja.get(i), franja.get(j), d, 0);
-                    dMin = d;
+        int stripSize = strip.size();
+        for (int i = 0; i < stripSize; i++) {
+            for (int j = i + 1; j < stripSize && ((strip.get(j).getY() - strip.get(i).getY()) < dmin); j++) {
+                if (tp == TipoPunt.p3D && (Math.abs(strip.get(j).getZ() - strip.get(i).getZ()) >= dmin)) {
+                    continue;
+                }
+                double d = strip.get(i).distancia(strip.get(j));
+                if (d < dmin) {
+                    bestResult = new Resultat(strip.get(i), strip.get(j), d, 0);
+                    dmin = d;
                 }
             }
         }
-
-        return millor;
+        return bestResult;
     }
 
-    private Resultat bruteForce(List<Punt2D> punts) {
+    private Resultat bruteForce(List<Punt> punts) {
         double min = Double.MAX_VALUE;
-        Punt2D p1 = null, p2 = null;
-        for (int i = 0; i < punts.size(); i++) {
-            for (int j = i + 1; j < punts.size(); j++) {
+        Punt best1 = null, best2 = null;
+        int n = punts.size();
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
                 double d = punts.get(i).distancia(punts.get(j));
                 if (d < min) {
                     min = d;
-                    p1 = punts.get(i);
-                    p2 = punts.get(j);
+                    best1 = punts.get(i);
+                    best2 = punts.get(j);
                 }
             }
         }
-        return new Resultat(p1, p2, min, 0);
+        return new Resultat(best1, best2, min, 0);
     }
 }
