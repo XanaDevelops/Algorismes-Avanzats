@@ -49,12 +49,12 @@ public class Dades {
         return punts;
     }
 
-    public class Resultat {
-        private final long tempsNano;
-        private final Punt p1;
-        private final Punt p2;
-        private final double distancia;
-        private final String tipus; // "curta", "llarga", "aproximada", etc.
+    public static class Resultat {
+        public final long tempsNano;
+        public final Punt p1;
+        public final Punt p2;
+        public final double distancia;
+        public final String tipus; // "curta", "llarga", "aproximada", etc.
 
         public Resultat(Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
             this.p1 = p1;
@@ -63,8 +63,11 @@ public class Dades {
             this.tempsNano = tempsNano;
             this.tipus = tipus;
         }
+
+        // Constructor auxiliar sense tipus (opcional)
+        public Resultat(Punt p1, Punt p2, double distancia, long tempsNano) {
+            this(p1, p2, distancia, tempsNano, "min");
+        }
     }
-
-
 
 }
