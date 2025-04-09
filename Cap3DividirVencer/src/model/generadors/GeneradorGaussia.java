@@ -2,14 +2,13 @@ package model.generadors;
 
 import model.punts.Punt;
 import model.punts.Punt2D;
+import model.punts.Punt3D;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class GeneradorGaussia extends Generador {
 
-    private static final Random rand = new Random();
     private final double mitjana;
     private final double desviacio;
 
@@ -19,8 +18,13 @@ public class GeneradorGaussia extends Generador {
         this.desviacio = desviacio;
     }
 
+    private int limita(int valor) {
+        return Math.max(min, Math.min(max, valor));
+    }
+
     @Override
-    public List<Punt> genera() {
+    public List<Punt> genera2D() {
+        // Generació 2D amb gaussiana
         List<Punt> punts = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             int x = limita((int) (rand.nextGaussian() * desviacio + mitjana));
@@ -30,7 +34,16 @@ public class GeneradorGaussia extends Generador {
         return punts;
     }
 
-    private int limita(int valor) {
-        return Math.max(min, Math.min(max, valor));
+    @Override
+    public List<Punt> genera3D() {
+        List<Punt> punts = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            int x = limita((int) (rand.nextGaussian() * desviacio + mitjana));
+            int y = limita((int) (rand.nextGaussian() * desviacio + mitjana));
+            int z = limita((int) (rand.nextGaussian() * desviacio + mitjana));
+            punts.add(new Punt3D(x, y, z));
+        }
+        return punts;
     }
+
 }
