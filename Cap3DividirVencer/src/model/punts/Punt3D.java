@@ -8,6 +8,12 @@ public class Punt3D extends Punt2D {
         this.z = z;
     }
 
+    @Override
+    public int getZ() {
+        return z;
+    }
+
+    @Override
     public double distancia(Punt punt2) {
         Punt3D altre = (Punt3D) punt2;
 
