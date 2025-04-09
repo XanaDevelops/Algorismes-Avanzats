@@ -4,11 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="canvis de random i afegir generador 3D" />
+    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="parella propre dividir i vencer">
+      <change afterPath="$PROJECT_DIR$/src/model/TipoPunt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Dades.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Dades.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/calculs/Calcul.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/Calcul.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Enum" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -32,6 +46,10 @@
             <RecentBranchesForRepo>
               <option name="branches">
                 <list>
+                  <RecentBranch>
+                    <option name="branchName" value="cotrolador/divideixVencer" />
+                    <option name="lastUsedInstant" value="1744198583" />
+                  </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="cotrolador/generadors" />
                     <option name="lastUsedInstant" value="1744193794" />
@@ -68,7 +86,7 @@
     "Application.Main.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "cotrolador/generadors",
+    "git-widget-placeholder": "cotrolador/divideixVencer",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/ferri/Desenvolupament/Projectes/IdeaProjects/Algorismes-Avanzats/Cap3DividirVencer",
     "node.js.detected.package.eslint": "true",
@@ -79,6 +97,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ferri\Desenvolupament\Projectes\IdeaProjects\Algorismes-Avanzats\Cap3DividirVencer\src\model\calculs" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -107,14 +130,61 @@
       <option name="project" value="LOCAL" />
       <updated>1744195108437</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="modificacio de Dades.java">
+      <option name="closed" value="true" />
+      <created>1744197558634</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1744197558634</updated>
+    </task>
+    <task id="LOCAL-00003" summary="canvis a dades">
+      <option name="closed" value="true" />
+      <created>1744202505290</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1744202505290</updated>
+    </task>
+    <task id="LOCAL-00004" summary="canvia a interfice punt">
+      <option name="closed" value="true" />
+      <created>1744202518226</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1744202518226</updated>
+    </task>
+    <task id="LOCAL-00005" summary="parella propre dividir i vencer">
+      <option name="closed" value="true" />
+      <created>1744202541056</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1744202541056</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="canvis de random i afegir generador 3D" />
-    <option name="LAST_COMMIT_MESSAGE" value="canvis de random i afegir generador 3D" />
+    <MESSAGE value="modificacio de Dades.java" />
+    <MESSAGE value="canvis a dades" />
+    <MESSAGE value="canvia a interfice punt" />
+    <MESSAGE value="parella propre dividir i vencer" />
+    <option name="LAST_COMMIT_MESSAGE" value="parella propre dividir i vencer" />
   </component>
 </project>
