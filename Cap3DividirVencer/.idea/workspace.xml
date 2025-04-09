@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/generadors/Generador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/generadors/Generador.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/generadors/GeneradorExponencial.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/generadors/GeneradorExponencial.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/generadors/GeneradorGaussia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/generadors/GeneradorGaussia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/generadors/GeneradorUniforme.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/generadors/GeneradorUniforme.java" afterDir="false" />
-    </list>
+    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="canvis de random i afegir generador 3D" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -103,11 +97,24 @@
       <updated>1743680752492</updated>
       <workItem from="1743680753561" duration="5000" />
       <workItem from="1743691179542" duration="347000" />
-      <workItem from="1744192867725" duration="1950000" />
+      <workItem from="1744192867725" duration="2260000" />
     </task>
+    <task id="LOCAL-00001" summary="canvis de random i afegir generador 3D">
+      <option name="closed" value="true" />
+      <created>1744195108437</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1744195108437</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="canvis de random i afegir generador 3D" />
+    <option name="LAST_COMMIT_MESSAGE" value="canvis de random i afegir generador 3D" />
   </component>
 </project>
