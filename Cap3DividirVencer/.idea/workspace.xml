@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="canvis de random i afegir generador 3D">
+    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="modificacio de Dades.java">
+      <change afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Dades.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Dades.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/calculs/Calcul.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/Calcul.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/punts/Punt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/punts/Punt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/punts/Punt2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/punts/Punt2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/punts/Punt3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/punts/Punt3D.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +41,10 @@
             <RecentBranchesForRepo>
               <option name="branches">
                 <list>
+                  <RecentBranch>
+                    <option name="branchName" value="cotrolador/divideixVencer" />
+                    <option name="lastUsedInstant" value="1744198583" />
+                  </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="cotrolador/generadors" />
                     <option name="lastUsedInstant" value="1744193794" />
@@ -72,7 +81,7 @@
     "Application.Main.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "cotrolador/main",
+    "git-widget-placeholder": "cotrolador/divideixVencer",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/ferri/Desenvolupament/Projectes/IdeaProjects/Algorismes-Avanzats/Cap3DividirVencer",
     "node.js.detected.package.eslint": "true",
@@ -83,6 +92,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ferri\Desenvolupament\Projectes\IdeaProjects\Algorismes-Avanzats\Cap3DividirVencer\src\model\calculs" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -111,7 +125,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744195108437</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="modificacio de Dades.java">
+      <option name="closed" value="true" />
+      <created>1744197558634</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1744197558634</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -119,6 +141,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="canvis de random i afegir generador 3D" />
-    <option name="LAST_COMMIT_MESSAGE" value="canvis de random i afegir generador 3D" />
+    <MESSAGE value="modificacio de Dades.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="modificacio de Dades.java" />
   </component>
 </project>
