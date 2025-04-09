@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/controlador/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controlador/Main.java" afterDir="false" />
-    </list>
+    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="canvis de random i afegir generador 3D" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="cotrolador/main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -18,6 +24,31 @@
     &quot;assignee&quot;: &quot;JoFeF08&quot;
   }
 }</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="cotrolador/generadors" />
+                    <option name="lastUsedInstant" value="1744193794" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="cotrolador/main" />
+                    <option name="lastUsedInstant" value="1744193793" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$/.." />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/XanaDevelops/Algorismes-Avanzats.git&quot;,
@@ -37,7 +68,7 @@
     "Application.Main.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "cotrolador/main",
+    "git-widget-placeholder": "cotrolador/generadors",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/ferri/Desenvolupament/Projectes/IdeaProjects/Algorismes-Avanzats/Cap3DividirVencer",
     "node.js.detected.package.eslint": "true",
@@ -66,10 +97,24 @@
       <updated>1743680752492</updated>
       <workItem from="1743680753561" duration="5000" />
       <workItem from="1743691179542" duration="347000" />
+      <workItem from="1744192867725" duration="2260000" />
     </task>
+    <task id="LOCAL-00001" summary="canvis de random i afegir generador 3D">
+      <option name="closed" value="true" />
+      <created>1744195108437</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1744195108437</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="canvis de random i afegir generador 3D" />
+    <option name="LAST_COMMIT_MESSAGE" value="canvis de random i afegir generador 3D" />
   </component>
 </project>
