@@ -9,16 +9,32 @@ import java.util.TreeMap;
 
 public class Dades {
 
-    private final List<Punt> punts; // llista original de punts
+
+    private List<Punt> punts; // llista original de punts
     private TipoPunt tp;
+
     private final TreeMap<Integer, Resultat> forcaBruta;
     private final TreeMap<Integer, Resultat> dividirVencer;
+
+
+    public Dades (){
+        this.forcaBruta = new TreeMap<>();
+        this.dividirVencer = new TreeMap<>();
+    }
 
     public Dades(List<Punt> punts, TipoPunt tp ) {
         this.punts = punts;
         this.tp = tp;
         this.forcaBruta = new TreeMap<>();
         this.dividirVencer = new TreeMap<>();
+    }
+
+    public void setTp(TipoPunt tp) {
+        this.tp = tp;
+    }
+
+    public void setPunts(List<Punt> punts) {
+        this.punts = punts;
     }
 
     public TipoPunt getTp() {
@@ -53,6 +69,10 @@ public class Dades {
 
     public List<Punt> getPunts() {
         return punts;
+    }
+
+    public void clearPunts() {
+       punts.clear();
     }
 
     public static class Resultat {

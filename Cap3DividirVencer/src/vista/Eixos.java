@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public class Eixos extends JPanel {
-   private Dades dades;
+    private Dades dades;
     private BufferedImage image;
     private int width;
     private int height;
@@ -30,12 +30,12 @@ public class Eixos extends JPanel {
     }
 
 
-   public synchronized void pintar() {
+    public synchronized void pintar() {
 
-       if(this.getGraphics() != null){
-           paint(this.getGraphics());
-       }
-   }
+        if(this.getGraphics() != null){
+            paint(this.getGraphics());
+        }
+    }
 
     @Override
     public void paintComponent (Graphics g) {
@@ -51,10 +51,12 @@ public class Eixos extends JPanel {
         g.drawLine(MARGIN, height - MARGIN, MARGIN, MARGIN);
 
         g.setColor(new Color(64, 181, 217));
-        if (dades != null) {
-            List<Punt2D> punts = dades.getPunts();
+
+        if (dades != null && dades.getPunts() != null && !dades.getPunts().isEmpty()) {
+            List<Punt> punts = dades.getPunts();
+
             int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
-            for (Punt2D punt2D : punts) {
+            for (Punt punt2D : punts) {
                 if (punt2D != null) {
                     if (punt2D.getX() > maxX) {
                         maxX = punt2D.getX();
@@ -71,10 +73,10 @@ public class Eixos extends JPanel {
             int MAX_POINTS = 10000;
 
             double ratio = Math.min(1.0, (double)punts.size() / 10000);
-             int pointSize = (int)(maxSizePoint - ratio * (maxSizePoint - minSizePoint));
+            int pointSize = (int)(maxSizePoint - ratio * (maxSizePoint - minSizePoint));
 
-            System.out.println("pointSize: " + pointSize);
-            for (Punt2D punt2D : punts) {
+//            System.out.println("pointSize: " + pointSize);
+            for (Punt punt2D : punts) {
                 if (maxX == 0) {
                     break;
                 }

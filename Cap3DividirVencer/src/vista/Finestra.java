@@ -8,10 +8,11 @@ import java.awt.*;
 
 public class Finestra extends JFrame implements Comunicar {
     public static final String ATURAR = "aturar";
-    public static final String ARRANCAR = "arrancar";
-    JComboBox<Integer> nPunts;
+    public static final String COMENÇAR = "començar";
+    public static final String ESBORRAR = "esborrar";
+    JTextField nPunts;
     Comunicar comunicar;
-
+    JComboBox<String> dimensio;
     Dades dades;
     JComboBox<String> algorime;
     Eixos eixos;
@@ -30,21 +31,55 @@ public class Finestra extends JFrame implements Comunicar {
         this.setPreferredSize(new Dimension(900, 900));
 
         panellBotons = new JPanel();
-        nPunts = generateNPunts();
+        nPunts = new JTextField(5);
+
 
         panellBotons.add(new JLabel("Nombre de Punts"));
 
         panellBotons.add(nPunts);
 
-        ((JButton) panellBotons.add(new JButton(ARRANCAR))).addActionListener(e -> {
-            comunicar.comunicar(ARRANCAR);
+        ((JButton) panellBotons.add(new JButton(COMENÇAR))).addActionListener(e -> {
+                    if (nPunts.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Si us plau, introdueix un número.", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    try{
+
+                        int num = Integer.parseInt(nPunts.getText());
+                        if (num <= 0) {
+                            JOptionPane.showMessageDialog(this, "Introdueix un numero major a 0", "Error", JOptionPane.WARNING_MESSAGE);
+
+                        }else{
+                            if (num>10000){
+                                int r = JOptionPane.showConfirmDialog(this, "El número que has introduït és molt gran. Pot ser difícil visualitzar la distància mínima");
+                                if (r == JOptionPane.CANCEL_OPTION){
+                                    return;
+
+                                }
+                            }
+                            comunicar.comunicar("generar:"+num +":"+ distribucio.getSelectedItem().toString() + ":p"+ dimensio.getSelectedItem().toString() + ":"+ algorime.getSelectedItem().toString() );
+                        }
+                    }catch (NumberFormatException ex){
+                        JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
+
+                    }
+
+
+
         });
         ((JButton) panellBotons.add(new JButton(ATURAR))).addActionListener(e -> {
             comunicar.comunicar(ATURAR);
         });
+        ((JButton) panellBotons.add(new JButton(ESBORRAR))).addActionListener(e -> {
+            comunicar.comunicar(ESBORRAR);
+        });
+
 
         algorime = generateComBox();
+//        algorime.addActionListener(e -> comunicar.comunicar(algorime.getSelectedItem().toString()));
+        dimensio = generateDim();
         distribucio = generateComBoxDistr();
+        panellBotons.add(dimensio);
         panellBotons.add(algorime);
         panellBotons.add(distribucio);
         this.add(panellBotons, BorderLayout.NORTH);
@@ -64,15 +99,25 @@ public class Finestra extends JFrame implements Comunicar {
         comboBox.addItem(Distribucio.Gaussiana);
         comboBox.addItem(Distribucio.Exponencial);
         comboBox.setSelectedIndex(0);
-        switch (comboBox.getSelectedIndex()) {
-            case 0:
-                //gaussiana();
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-        }
+        comboBox.addItemListener(e -> {
+            comunicar.comunicar("distribucio:"+comboBox.getSelectedItem());
+
+        });
+        return comboBox;
+
+    }
+    private JComboBox<String> generateDim(){
+
+        JComboBox<String> comboBox = new JComboBox<>();
+        comboBox.addItem(Dimensio.D2.getEtiqueta());
+        comboBox.addItem(Dimensio.D3.getEtiqueta());
+
+        comboBox.setSelectedIndex(0);
+        comboBox.addItemListener(e -> {
+            comunicar.comunicar("dimensio:"+comboBox.getSelectedItem());
+
+        });
+
         return comboBox;
     }
 
@@ -83,41 +128,24 @@ public class Finestra extends JFrame implements Comunicar {
 
         comboBox.setSelectedIndex(0); //default a classic
         comboBox.addActionListener(e -> {
-            switch (comboBox.getSelectedIndex()) {
-                //per ara
-                case 0:
-                    comunicar.comunicar("classic");
-                    break;
+            comunicar.comunicar("algorisme:"+comboBox.getSelectedItem());
 
-                case 1:
-                    comunicar.comunicar("optimitzat");
-                    break;
-
-            }
         });
 
         return comboBox;
 
     }
 
-    private JComboBox<Integer> generateNPunts() {
-        JComboBox<Integer> comboBox = new JComboBox<>();
-        comboBox.addItem(100);
-        comboBox.addItem(500);
-        comboBox.addItem(1000);
-        comboBox.addItem(2000);
-        comboBox.addItem(5000);
-        comboBox.addItem(10000);
 
-        comboBox.addActionListener(e -> comunicar.comunicar("generar:" + comboBox.getSelectedItem()));
-        return comboBox;
-    }
 
     @Override
     public void comunicar(String s) {
         switch (s) {
             case "dibuixPunts":
                 eixos.pintar();
+                break;
+            case "pintar":
+                eixos.repaint();
                 break;
         }
 

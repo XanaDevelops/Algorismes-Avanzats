@@ -11,9 +11,14 @@ public class GeneradorExponencial extends Generador {
 
     private final double lambda;  // Paràmetre de la distribució exponencial
 
-    public GeneradorExponencial(int n, int min, int max, double lambda) {
+//    public GeneradorExponencial(int n, int min, int max, double lambda) {
+//        super(n, min, max);
+//        this.lambda = lambda;
+//    }
+
+    public GeneradorExponencial(int n, int min, int max) {
         super(n, min, max);
-        this.lambda = lambda;
+        this.lambda = Math.E;
     }
 
     private double exponencial(double lambda) {
