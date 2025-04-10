@@ -18,6 +18,7 @@ public class Finestra extends JFrame implements Comunicar {
     Eixos eixos;
     JComboBox<Distribucio> distribucio;
     JPanel panellBotons;
+    JComboBox<String> distancia;
 
     public Finestra(Comunicar comunicar, Dades dades) {
         super();
@@ -57,7 +58,7 @@ public class Finestra extends JFrame implements Comunicar {
 
                                 }
                             }
-                            comunicar.comunicar("generar:"+num +":"+ distribucio.getSelectedItem().toString() + ":p"+ dimensio.getSelectedItem().toString() + ":"+ algorime.getSelectedItem().toString() );
+                            comunicar.comunicar("generar:"+num +":"+ distribucio.getSelectedItem().toString() + ":p"+ dimensio.getSelectedItem().toString() +  ":"+ distancia.getSelectedItem().toString() + ":"+ algorime.getSelectedItem().toString() );
                         }
                     }catch (NumberFormatException ex){
                         JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -76,10 +77,14 @@ public class Finestra extends JFrame implements Comunicar {
 
 
         algorime = generateComBox();
-//        algorime.addActionListener(e -> comunicar.comunicar(algorime.getSelectedItem().toString()));
+
         dimensio = generateDim();
         distribucio = generateComBoxDistr();
+        distancia = generarDistCombox();
+
         panellBotons.add(dimensio);
+
+        panellBotons.add(distancia);
         panellBotons.add(algorime);
         panellBotons.add(distribucio);
         this.add(panellBotons, BorderLayout.NORTH);
@@ -90,6 +95,17 @@ public class Finestra extends JFrame implements Comunicar {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
+    }
+
+    private JComboBox<String> generarDistCombox(){
+        JComboBox<String> combox = new JComboBox<>();
+        combox.addItem("Parella propera");
+        combox.addItem("Parella llunyana");
+        combox.setSelectedIndex(0);
+        combox.addActionListener(e -> {
+            comunicar.comunicar(combox.getSelectedItem().toString());
+        });
+        return combox;
     }
 
     private JComboBox<Distribucio> generateComBoxDistr() {
@@ -123,8 +139,8 @@ public class Finestra extends JFrame implements Comunicar {
 
     private JComboBox<String> generateComBox() {
         JComboBox<String> comboBox = new JComboBox<>();
-        comboBox.addItem("Clàssic O(N)");
-        comboBox.addItem("Optimitzat O(N·log N)");
+        comboBox.addItem("Força Bruta");
+        comboBox.addItem("Dividir i vèncer");
 
         comboBox.setSelectedIndex(0); //default a classic
         comboBox.addActionListener(e -> {
