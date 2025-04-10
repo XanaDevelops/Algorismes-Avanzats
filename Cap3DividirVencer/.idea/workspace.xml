@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="parella propre dividir i vencer">
-      <change afterPath="$PROJECT_DIR$/src/model/TipoPunt.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Dades.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Dades.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/calculs/Calcul.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/Calcul.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +86,7 @@
     "Application.Main.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "cotrolador/divideixVencer",
+    "git-widget-placeholder": "dev",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/ferri/Desenvolupament/Projectes/IdeaProjects/Algorismes-Avanzats/Cap3DividirVencer",
     "node.js.detected.package.eslint": "true",
@@ -121,6 +121,7 @@
       <workItem from="1743680753561" duration="5000" />
       <workItem from="1743691179542" duration="347000" />
       <workItem from="1744192867725" duration="2260000" />
+      <workItem from="1744280502551" duration="1837000" />
     </task>
     <task id="LOCAL-00001" summary="canvis de random i afegir generador 3D">
       <option name="closed" value="true" />

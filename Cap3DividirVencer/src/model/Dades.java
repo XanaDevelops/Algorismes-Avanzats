@@ -1,5 +1,6 @@
 package model;
 
+import controlador.Comunicar;
 import model.punts.Punt;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.List;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-public class Dades {
+public class Dades implements Comunicar {
 
     private final List<Punt> punts; // llista original de punts
     private TipoPunt tp;
@@ -53,6 +54,11 @@ public class Dades {
 
     public List<Punt> getPunts() {
         return punts;
+    }
+
+    @Override
+    public void comunicar(String s) {
+
     }
 
     public static class Resultat {
