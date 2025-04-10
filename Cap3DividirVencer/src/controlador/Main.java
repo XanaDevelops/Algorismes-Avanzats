@@ -55,9 +55,9 @@ public class Main implements Comunicar {
                 String tipusDist = params[1];    // "uniforme", "gaussia", "exponencial"
                 String dimensio = params[2];     // "2D" o "3D"
 
-                int numPunts, min, max;
+                int N, min, max;
                 try {
-                    numPunts = Integer.parseInt(params[3]);
+                    N = Integer.parseInt(params[3]);
                     min = Integer.parseInt(params[4]);
                     max = Integer.parseInt(params[5]);
                 } catch (NumberFormatException e) {
@@ -70,20 +70,20 @@ public class Main implements Comunicar {
                 try {
                     switch (tipusDist.toLowerCase()) {
                         case "uniforme":
-                            GeneradorUniforme genU = new GeneradorUniforme(numPunts, min, max);
+                            GeneradorUniforme genU = new GeneradorUniforme(N, min, max);
                             nousPunts = (tp == TipoPunt.p3D) ? genU.genera3D() : genU.genera2D();
                             break;
                         case "gaussia":
                             // Espera 2 extres: mitjana i desviació estàndard
                             double mitjana = (params.length > 6) ? Double.parseDouble(params[6]) : (min + max) / 2.0;
                             double desviacio = (params.length > 7) ? Double.parseDouble(params[7]) : Math.max(1.0, (max - min) / 4.0);
-                            GeneradorGaussia genG = new GeneradorGaussia(numPunts, min, max, mitjana, desviacio);
+                            GeneradorGaussia genG = new GeneradorGaussia(N, min, max, mitjana, desviacio);
                             nousPunts = (tp == TipoPunt.p3D) ? genG.genera3D() : genG.genera2D();
                             break;
                         case "exponencial":
                             // Espera 1 extra: lambda
                             double lambda = (params.length > 6) ? Double.parseDouble(params[6]) : 1.0;
-                            GeneradorExponencial genE = new GeneradorExponencial(numPunts, min, max, lambda);
+                            GeneradorExponencial genE = new GeneradorExponencial(N, min, max, lambda);
                             nousPunts = (tp == TipoPunt.p3D) ? genE.genera3D() : genE.genera2D();
                             break;
                         default:
@@ -94,8 +94,8 @@ public class Main implements Comunicar {
                     System.err.println("MAIN: paràmetres extra invàlids - " + msg);
                     return;
                 }
-                // Inicialitzar noves dades amb els punts generats
                 dades = new Dades(nousPunts, tp);
+
                 // Mostrar els punts generats a la vista
                 finestra.comunicar("pintar");
                 break;
