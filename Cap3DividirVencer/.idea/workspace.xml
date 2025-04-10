@@ -10,6 +10,7 @@
       <change beforePath="$PROJECT_DIR$/src/model/generadors/GeneradorExponencial.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/generadors/GeneradorExponencial.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/generadors/GeneradorGaussia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/generadors/GeneradorGaussia.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/vista/Finestra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vista/Finestra.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +90,7 @@
     "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "visual",
+    "git-widget-placeholder": "dev",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/h/IdeaProjects/Subcadena/Subcadena",
     "node.js.detected.package.eslint": "true",
@@ -124,6 +125,7 @@
       <workItem from="1743680753561" duration="5000" />
       <workItem from="1743691179542" duration="347000" />
       <workItem from="1744192867725" duration="2260000" />
+      <workItem from="1744280502551" duration="1837000" />
     </task>
     <task id="LOCAL-00001" summary="canvis de random i afegir generador 3D">
       <option name="closed" value="true" />

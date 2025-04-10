@@ -87,4 +87,9 @@ public class ParellaPropera_dv extends Calcul {
         }
         return new Resultat(best1, best2, min, 0);
     }
+
+    @Override
+    public void comunicar(String s) {
+
+    }
 }

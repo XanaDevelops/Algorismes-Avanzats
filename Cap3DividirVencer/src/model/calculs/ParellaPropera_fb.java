@@ -28,4 +28,9 @@ public class ParellaPropera_fb extends Calcul {
                 t = System.nanoTime() - t;
                 dades.afegeixForcaBruta(punts.size(), p1, p2, min,t,"min");
         }
+
+        @Override
+        public void comunicar(String s) {
+
+        }
 }
