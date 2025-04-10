@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="Generadors de punts aletoris seguint diferents distribucions.">
+    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="ParellaPropera_dv per calcular la distància mínima mitjançant dividir i vèncer amb complexitat O(n log n).">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,7 +76,7 @@
       <updated>1743680752492</updated>
       <workItem from="1743680753561" duration="5000" />
       <workItem from="1743691179542" duration="347000" />
-      <workItem from="1744127051655" duration="1780000" />
+      <workItem from="1744127051655" duration="4282000" />
     </task>
     <task id="LOCAL-00001" summary="Generadors de punts aletoris seguint diferents distribucions.">
       <option name="closed" value="true" />
@@ -86,7 +86,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744127203312</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="ParellaPropera_dv per calcular la distància mínima mitjançant dividir i vèncer amb complexitat O(n log n).">
+      <option name="closed" value="true" />
+      <created>1744129019242</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1744129019242</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -94,6 +102,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Generadors de punts aletoris seguint diferents distribucions." />
-    <option name="LAST_COMMIT_MESSAGE" value="Generadors de punts aletoris seguint diferents distribucions." />
+    <MESSAGE value="ParellaPropera_dv per calcular la distància mínima mitjançant dividir i vèncer amb complexitat O(n log n)." />
+    <option name="LAST_COMMIT_MESSAGE" value="ParellaPropera_dv per calcular la distància mínima mitjançant dividir i vèncer amb complexitat O(n log n)." />
   </component>
 </project>
