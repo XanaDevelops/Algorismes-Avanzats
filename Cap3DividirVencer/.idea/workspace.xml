@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="mapping dels algorismes">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controlador/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controlador/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/generadors/GeneradorExponencial.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/generadors/GeneradorExponencial.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/generadors/GeneradorGaussia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/generadors/GeneradorGaussia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vista/Finestra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vista/Finestra.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -28,7 +24,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="dev" />
+        <entry key="$PROJECT_DIR$/.." value="visual" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -68,12 +64,12 @@
       </RecentBranches>
     </option>
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/XanaDevelops/Algorismes-Avanzats.git",
-    "accountId": "b8b22d0a-3c79-49db-b938-b69ba5611d4f"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/XanaDevelops/Algorismes-Avanzats.git&quot;,
+    &quot;accountId&quot;: &quot;b8b22d0a-3c79-49db-b938-b69ba5611d4f&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -90,7 +86,7 @@
     "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "dev",
+    "git-widget-placeholder": "visual",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/h/IdeaProjects/Subcadena/Subcadena",
     "node.js.detected.package.eslint": "true",
