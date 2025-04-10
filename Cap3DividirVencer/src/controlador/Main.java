@@ -135,9 +135,13 @@ public class Main implements Comunicar {
                         System.err.println("MAIN: execució de '" + algorisme + "' desconeguda");
                         break;
                 }
+                finestra.comunicar("pintar");
                 break;
 
             case "aturar":
+                List<Runnable> pendents = executor.shutdownNow();
+                System.out.println("Tasques cancel·lades: " + pendents.size());
+                activeTasks.set(0);
                 finestra.comunicar("aturar");
                 break;
 
