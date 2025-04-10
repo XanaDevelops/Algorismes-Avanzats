@@ -114,17 +114,19 @@ public class Main implements Comunicar {
         dades.setTp(tp);
 
 
-        String metodoGeneracion = tp == TipoPunt.p2D ? "genera2D" : "genera3D";
+        String metodeGeneracio = tp == TipoPunt.p2D ? "genera2D" : "genera3D";
 
         Object generador =  classe.getConstructor(int.class, int.class, int.class)
-                .newInstance(num, 0, 100000);
+                .newInstance(num, 0, 1000000);
 
 
 
-       Object o =  generador.getClass().getMethod(metodoGeneracion).invoke(generador);
+
+       Object o =  generador.getClass().getMethod(metodeGeneracio).invoke(generador);
         if (o instanceof List<?>) {
 
             dades.setPunts((List<Punt>) o);
+            System.out.println(dades.getPunts().toString());
             //cridar a l'algorisme per calcular la distància
             Calcul calcul = algorisme.getConstructor(Dades.class).newInstance(dades);
 
@@ -137,19 +139,6 @@ public class Main implements Comunicar {
             System.out.println("Error a l'hora de generar la llista de punts.");
         }
     }
-
-//    private void executar(Class<? extends Comunicar> clase, TipoPunt tp, Distribucio distribucio) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-//        for (Comunicar enmarxa : processos) {
-//            enmarxa.comunicar("aturar");
-//        }
-//
-//        processos.clear();
-//
-//
-//        Comunicar proces = (Comunicar) clase.getConstructor(Main.class, Dades.class).newInstance(this, dades);
-//        processos.add(proces);
-//        executor.execute((Runnable) proces);
-//    }
 
 
 
