@@ -1,6 +1,8 @@
 package model.punts;
 
 public interface Punt {
+
+
     double distancia(Punt punt2);
 
     int getX();

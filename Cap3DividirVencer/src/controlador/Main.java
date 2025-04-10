@@ -1,161 +1,176 @@
 package controlador;
 
+
 import model.Dades;
 import model.TipoPunt;
-import model.punts.Punt;
-import model.generadors.GeneradorUniforme;
-import model.generadors.GeneradorGaussia;
+import model.generadors.*;
 import model.generadors.GeneradorExponencial;
-import model.calculs.ParellaPropera_fb;
-import model.calculs.ParellaPropera_dv;
+import model.generadors.GeneradorGaussia;
+import model.generadors.GeneradorUniforme;
+import model.punts.Punt;
+import model.punts.Punt2D;
+import vista.*;
+
+
+import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
-// Controlador Main que actua de pont entre la vista i el model
 public class Main implements Comunicar {
-    // Camps del controlador
-    private Comunicar finestra;
-    private Dades dades;
-    private ExecutorService executor;
-    private final AtomicInteger activeTasks = new AtomicInteger(0);
+    Comunicar finestra;
+    Dades dades;
+    private List<Punt> punts;
 
-    // Inicialització de l'aplicació
+    private ArrayList<Comunicar> processos = null;
+
+    private final ExecutorService executor = Executors.newFixedThreadPool(16);
+
+    private Generador generador;
+    public static void main(String[] args) {
+        (new Main()).init();
+
+    }
+
     private void init() {
+        dades = new Dades();
+        punts = new ArrayList<>();
+        processos = new ArrayList<>();
 
-        dades = new Dades(new ArrayList<>(), TipoPunt.p2D);
-        executor = Executors.newFixedThreadPool(4);
         executor.execute(() -> {
             finestra = new Finestra(this, dades);
         });
     }
 
-    public static void main(String[] args) {
-        new Main().init();
-    }
-
     @Override
-    public void comunicar(String msg) {
-        String[] params = msg.split(":");
-        switch (params[0]) {
-            case "pintar":
-            case "color":
-            case "tempsReal":
-                // Propagar missatges directament a la vista
-                finestra.comunicar(msg);
-                break;
+    public void comunicar(String s) {
+        String[] parts = s.split(":");
+        switch (parts[0]) {
 
             case "generar":
-                if (params.length < 6) {
-                    System.err.println("MAIN: format 'generar' incorrecte - " + msg);
-                    return;
-                }
-                String tipusDist = params[1];    // "uniforme", "gaussia", "exponencial"
-                String dimensio = params[2];     // "2D" o "3D"
 
-                int N, min, max;
-                try {
-                    N = Integer.parseInt(params[3]);
-                    min = Integer.parseInt(params[4]);
-                    max = Integer.parseInt(params[5]);
-                } catch (NumberFormatException e) {
-                    System.err.println("MAIN: paràmetres numèrics invàlids - " + msg);
-                    return;
-                }
-                // Generar els punts segons el tipus de distribució
-                List<Punt> nousPunts;
-                TipoPunt tp = dimensio.equalsIgnoreCase("3D") ? TipoPunt.p3D : TipoPunt.p2D;
-                try {
-                    switch (tipusDist.toLowerCase()) {
-                        case "uniforme":
-                            GeneradorUniforme genU = new GeneradorUniforme(N, min, max);
-                            nousPunts = (tp == TipoPunt.p3D) ? genU.genera3D() : genU.genera2D();
-                            break;
-                        case "gaussia":
-                            // Espera 2 extres: mitjana i desviació estàndard
-                            double mitjana = (params.length > 6) ? Double.parseDouble(params[6]) : (min + max) / 2.0;
-                            double desviacio = (params.length > 7) ? Double.parseDouble(params[7]) : Math.max(1.0, (max - min) / 4.0);
-                            GeneradorGaussia genG = new GeneradorGaussia(N, min, max, mitjana, desviacio);
-                            nousPunts = (tp == TipoPunt.p3D) ? genG.genera3D() : genG.genera2D();
-                            break;
-                        case "exponencial":
-                            // Espera 1 extra: lambda
-                            double lambda = (params.length > 6) ? Double.parseDouble(params[6]) : 1.0;
-                            GeneradorExponencial genE = new GeneradorExponencial(N, min, max, lambda);
-                            nousPunts = (tp == TipoPunt.p3D) ? genE.genera3D() : genE.genera2D();
-                            break;
-                        default:
-                            System.err.println("MAIN: distribució '" + tipusDist + "' desconeguda");
-                            return;
-                    }
-                } catch (NumberFormatException e) {
-                    System.err.println("MAIN: paràmetres extra invàlids - " + msg);
-                    return;
-                }
-                dades = new Dades(nousPunts, tp);
+                String[] res = s.split(":");
+                int num = Integer.parseInt(res[1]);
+                Random r = new Random();
+                punts.clear();
 
-                // Mostrar els punts generats a la vista
-                finestra.comunicar("pintar");
-                break;
+                //generar:num:distribucio:dimensio
 
-            case "executar":
-                if (params.length < 2) {
-                    System.err.println("MAIN: missatge 'executar' sense algorisme - " + msg);
-                    return;
-                }
-                String algorisme = params[1];
+                TipoPunt tp = TipoPunt.valueOf(parts[3]);
+                switch(parts[2]){
 
-                int total = dades.getPunts().size();
-                if (params.length > 2) {
-                    try {
-                        int limit = Integer.parseInt(params[2]);
-                        if (limit > 0 && limit < total) {
-                            total = limit;
+                    case "Uniforme":
+                        try {
+//                            System.out.println("Generando..."+ parts[2]+ " "+ num + " " + tp);
+                            executar(GeneradorUniforme.class, num,  tp );
+                            finestra.comunicar("dibuixPunts");
+                        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                                 ClassNotFoundException | IllegalAccessException e) {
+                            System.out.println(e.getMessage());
                         }
-                    } catch (NumberFormatException e) {
-                    }
+                        break;
+                        case "Gaussiana":
+                            try {
+//                            System.out.println("Generando..."+ parts[2]+ " "+ num + " " + tp);
+                                executar(GeneradorGaussia.class, num,  tp );
+                                finestra.comunicar("dibuixPunts");
+                            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                                     ClassNotFoundException | IllegalAccessException e) {
+                                System.out.println(e.getMessage());
+                            }
+                            break;
+
+                            case "Exponencial":
+
+                                try {
+//                            System.out.println("Generando..."+ parts[2]+ " "+ num + " " + tp);
+                                    executar(GeneradorExponencial.class, num,  tp );
+                                    finestra.comunicar("dibuixPunts");
+                                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                                         ClassNotFoundException | IllegalAccessException e) {
+                                    System.out.println(e.getMessage());
+                                }
+                                break;
+
                 }
-                // Executar l'algorisme corresponent de manera concurrent
-                switch (algorisme) {
-                    case "fb":
-                        activeTasks.incrementAndGet();
-                        executor.execute(() -> {
-                            new ParellaPropera_fb(dades).run();
-                        });
-                        break;
-                    case "dv":  // divideix i venceràs
-                        activeTasks.incrementAndGet();
-                        executor.execute(() -> {
-                            new ParellaPropera_dv(dades).run();
-                        });
-                        break;
-                    default:
-                        System.err.println("MAIN: execució de '" + algorisme + "' desconeguda");
-                        break;
-                }
-                finestra.comunicar("pintar");
+
+
+
                 break;
+
+            case "classic":
+                break;
+
+            case "optimitzat":break;
 
             case "aturar":
-                List<Runnable> pendents = executor.shutdownNow();
-                System.out.println("Tasques cancel·lades: " + pendents.size());
-                activeTasks.set(0);
-                finestra.comunicar("aturar");
+                for (Comunicar proces : processos) {
+                    proces.comunicar("aturar");
+                }
                 break;
-
-            case "borrar":
+            case "esborrar":
                 this.comunicar("aturar");
-                dades.getPunts().clear();
-                dades.clearForcaBruta();
-                dades.clearDividirVencer();
+               //esborrar els punts
+                dades.clearPunts();
+
+
                 finestra.comunicar("pintar");
                 break;
+        }
 
-            default:
-                System.err.println("MAIN: missatge no reconegut - " + msg);
-                break;
+    }
+
+    public Dades getDades() {
+        return dades;
+    }
+
+    public void setDades(Dades dades) {
+        this.dades = dades;
+    }
+
+    private  void executar(Class<? extends Generador> classe, int num, TipoPunt tp )
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
+
+
+        dades.setTp(tp);
+
+
+        String metodoGeneracion = tp == TipoPunt.p2D ? "genera2D" : "genera3D";
+
+        Object generador =  classe.getConstructor(int.class, int.class, int.class)
+                .newInstance(num, 0, 100000);
+
+
+
+       Object o =  generador.getClass().getMethod(metodoGeneracion).invoke(generador);
+        if (o instanceof List<?>) {
+            List<?> listaPuntos = (List<?>) o;
+            System.out.println("Puntos generados:" + listaPuntos.toString());
+
+            // Asignar los puntos generados a dades
+            dades.setPunts((List<Punt>) o);
+        } else {
+            System.out.println("El método no devolvió una lista de puntos.");
         }
     }
+
+//    private void executar(Class<? extends Comunicar> clase, TipoPunt tp, Distribucio distribucio) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+//        for (Comunicar enmarxa : processos) {
+//            enmarxa.comunicar("aturar");
+//        }
+//
+//        processos.clear();
+//
+//
+//        Comunicar proces = (Comunicar) clase.getConstructor(Main.class, Dades.class).newInstance(this, dades);
+//        processos.add(proces);
+//        executor.execute((Runnable) proces);
+//    }
+
+
+
 }

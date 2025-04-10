@@ -1,6 +1,5 @@
 package model;
 
-import controlador.Comunicar;
 import model.punts.Punt;
 
 import java.util.ArrayList;
@@ -8,18 +7,34 @@ import java.util.List;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-public class Dades implements Comunicar {
+public class Dades {
 
-    private final List<Punt> punts; // llista original de punts
+
+    private List<Punt> punts; // llista original de punts
     private TipoPunt tp;
+
     private final TreeMap<Integer, Resultat> forcaBruta;
     private final TreeMap<Integer, Resultat> dividirVencer;
+
+
+    public Dades (){
+        this.forcaBruta = new TreeMap<>();
+        this.dividirVencer = new TreeMap<>();
+    }
 
     public Dades(List<Punt> punts, TipoPunt tp ) {
         this.punts = punts;
         this.tp = tp;
         this.forcaBruta = new TreeMap<>();
         this.dividirVencer = new TreeMap<>();
+    }
+
+    public void setTp(TipoPunt tp) {
+        this.tp = tp;
+    }
+
+    public void setPunts(List<Punt> punts) {
+        this.punts = punts;
     }
 
     public TipoPunt getTp() {
@@ -56,9 +71,8 @@ public class Dades implements Comunicar {
         return punts;
     }
 
-    @Override
-    public void comunicar(String s) {
-
+    public void clearPunts() {
+       punts.clear();
     }
 
     public static class Resultat {
