@@ -94,6 +94,17 @@ public class Dades {
         public Resultat(Punt p1, Punt p2, double distancia, long tempsNano) {
             this(p1, p2, distancia, tempsNano, "min");
         }
+
+        @Override
+        public String toString() {
+            return "Resultat{" +
+                    "tempsNano=" + tempsNano +
+                    ", p1=" + p1 +
+                    ", p2=" + p2 +
+                    ", distancia=" + distancia +
+                    ", tipus='" + tipus + '\'' +
+                    '}';
+        }
     }
 
 }
