@@ -14,6 +14,7 @@ import model.punts.Punt;
 import vista.*;
 
 
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -52,9 +53,10 @@ public class Main implements Comunicar {
         punts = new ArrayList<>();
         processos = new ArrayList<>();
 
-        executor.execute(() -> {
-            finestra = new Finestra();
-        });
+//        executor.execute(() -> {
+//            finestra = new Finestra();
+//        });
+        SwingUtilities.invokeLater(() -> finestra = new Finestra());
     }
 
     @Override
