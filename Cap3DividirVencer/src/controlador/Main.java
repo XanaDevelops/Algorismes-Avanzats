@@ -1,5 +1,6 @@
 package controlador;
 
+
 import model.Dades;
 import model.TipoPunt;
 import model.calculs.Calcul;
@@ -20,17 +21,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main implements Comunicar {
-    private Comunicar finestra;
-    private Dades dades;
+    public static Main instance; //singleton
+
+    Comunicar finestra;
+    Dades dades;
     private List<Punt> punts;
 
+    private ArrayList<Comunicar> processos = null;
 
-    private final ArrayList<Comunicar> processos = new ArrayList<>();
-
-
-    private final ExecutorService guiExecutor = Executors.newFixedThreadPool(2);
-    private final ExecutorService calcExecutor = Executors.newFixedThreadPool(4);
-
+    private final ExecutorService executor = Executors.newFixedThreadPool(16);
 
     private static final Map<String, Class<? extends Generador>> GENERADORS = Map.of(
             "Uniforme", GeneradorUniforme.class,
@@ -38,20 +37,22 @@ public class Main implements Comunicar {
             "Exponencial", GeneradorExponencial.class
     );
     private static final Map<String, Class<? extends Calcul>> ALGORISMES = Map.of(
-            "fb", ParellaPropera_fb.class,
-            "dv", ParellaPropera_dv.class
+            "Parella propera Força Bruta", ParellaPropera_fb.class,
+            "Parella propera Dividir i vèncer", ParellaPropera_dv.class
+//                "Parella llunyana Força Bruta"
     );
 
     public static void main(String[] args) {
-        new Main().init();
+        (new Main()).init();
     }
 
     private void init() {
         dades = new Dades();
         punts = new ArrayList<>();
-        // Llançar la GUI en un executor separat per assegurar la responsivitat de la interfície
-        guiExecutor.execute(() -> {
-            finestra = new Finestra(this, dades);
+        processos = new ArrayList<>();
+
+        executor.execute(() -> {
+            finestra = new Finestra();
         });
     }
 
@@ -63,6 +64,16 @@ public class Main implements Comunicar {
             // --------------------------
             // Format esperat: generar:<num>:<distribucio>:<dimensio>:<min>:<max>[:<extra1>:<extra2>...]
             case "generar":
+                System.out.println(s);
+                String[] res = s.split(":");
+                int num = Integer.parseInt(res[1]);
+                Random r = new Random();
+                punts.clear();
+
+
+                //generar:num:distribucio:dimensio: algorisme: parella
+
+
                 try {
                     int num = Integer.parseInt(parts[1]);
                     String distribucio = parts[2];  // "Uniforme", "Gaussiana", o "Exponencial"
@@ -129,6 +140,7 @@ public class Main implements Comunicar {
 
             case "esborrar":
                 this.comunicar("aturar");
+               //esborrar els punts
                 dades.clearPunts();
                 dades.clearForcaBruta();
                 dades.clearDividirVencer();
@@ -141,6 +153,7 @@ public class Main implements Comunicar {
                 finestra.comunicar(msg);
                 break;
         }
+
     }
 
     public Dades getDades() {
@@ -171,7 +184,7 @@ public class Main implements Comunicar {
     // Mètode per executar l'algorisme de càlcul
     private void calcularAlgorisme(Class<? extends Calcul> calculClass)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        calcExecutor.execute(() -> {
+        executor.execute(() -> {
             try {
                 Calcul calcul = calculClass.getConstructor(Dades.class).newInstance(dades);
 
