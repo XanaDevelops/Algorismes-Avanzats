@@ -45,28 +45,34 @@ public class ParellaPropera_dv extends Calcul {
         Resultat bestResult = esquerraR.distancia < dretaR.distancia ? esquerraR : dretaR;
 
         double dmin = bestResult.distancia;
-        int midX = punts.get(mid).getX();
-        int midZ = punts.get(mid).getZ();
+        double midX = punts.get(mid).getX();
 
-
-        List<Punt> areaPossible = new ArrayList<>();
         boolean es3D = this.tp == TipoPunt.p3D;
 
+        List<Punt> areaPossible = new ArrayList<>();
         for (Punt p : punts) {
-            boolean properX = Math.abs(p.getX() - midX) < dmin;
-            boolean properZ = !es3D || Math.abs(p.getZ() - midZ) < dmin;
-            if (properX && properZ) {
+            boolean areaX = Math.abs(p.getX() - midX) < dmin;
+            if (areaX ) {
                 areaPossible.add(p);
             }
         }
 
+
         areaPossible.sort(Comparator.comparingInt(Punt::getY));
-        int mida = areaPossible.size();
-        for (int i = 0; i < mida; i++) {
-            for (int j = i + 1; j < mida && (areaPossible.get(j).getY() - areaPossible.get(i).getY()) < dmin; j++) {
-                if (es3D && Math.abs(areaPossible.get(j).getZ() - areaPossible.get(i).getZ()) >= dmin) {
-                    continue;
+
+
+        int m = areaPossible.size();
+        for (int i = 0; i < m; i++) {
+            for (int j = i + 1; j < m; j++) {
+                double diffY = areaPossible.get(j).getY() - areaPossible.get(i).getY();
+                double diffZ = Math.abs(areaPossible.get(j).getZ() - areaPossible.get(i).getZ());
+
+                if (es3D) {
+                    if (diffY >= dmin && diffZ >= dmin) break;
+                } else {
+                    if (diffY >= dmin) break;
                 }
+
                 double d = areaPossible.get(i).distancia(areaPossible.get(j));
                 if (d < dmin) {
                     bestResult = new Resultat(areaPossible.get(i), areaPossible.get(j), d, 0);
@@ -74,7 +80,6 @@ public class ParellaPropera_dv extends Calcul {
                 }
             }
         }
-
         return bestResult;
     }
 }
