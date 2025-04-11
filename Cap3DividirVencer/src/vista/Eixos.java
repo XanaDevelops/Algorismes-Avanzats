@@ -18,8 +18,9 @@ public class Eixos extends JPanel {
     private int height;
     private final static int MARGIN = 15;
 
-    public Eixos(int height, int width, Dades dades) {
-        this.dades = dades;
+    public Eixos(int height, int width) {
+        this.dades = Main.instance.getDades();
+
         this.width = width;
         this.height = height;
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);

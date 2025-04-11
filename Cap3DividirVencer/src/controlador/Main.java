@@ -20,6 +20,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main implements Comunicar {
+    public static Main instance; //singleton
+
     Comunicar finestra;
     Dades dades;
     private List<Punt> punts;
@@ -41,16 +43,17 @@ public class Main implements Comunicar {
 
     public static void main(String[] args) {
         (new Main()).init();
-
     }
 
     private void init() {
+        instance = this;
+
         dades = new Dades();
         punts = new ArrayList<>();
         processos = new ArrayList<>();
 
         executor.execute(() -> {
-            finestra = new Finestra(this, dades);
+            finestra = new Finestra();
         });
     }
 
@@ -99,13 +102,7 @@ public class Main implements Comunicar {
 
     }
 
-    public Dades getDades() {
-        return dades;
-    }
 
-    public void setDades(Dades dades) {
-        this.dades = dades;
-    }
 
     private  void executar(Class<? extends Generador> classe, int num, TipoPunt tp, Class<? extends Calcul> algorisme)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
@@ -140,6 +137,13 @@ public class Main implements Comunicar {
         }
     }
 
+    public Dades getDades() {
+        return dades;
+    }
+
+    public Comunicar getFinestra(){
+        return finestra;
+    }
 
 
 }

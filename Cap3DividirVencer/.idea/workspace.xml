@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="mapping dels algorismes">
-      <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" afterDir="false" />
+    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="mem2">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controlador/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controlador/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/vista/Eixos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vista/Eixos.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/vista/Finestra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vista/Finestra.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="visual" />
+        <entry key="$PROJECT_DIR$/.." value="dev" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -77,6 +80,7 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2vDXiybSIgdiTJqDGlY1OjMCed7" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -84,9 +88,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Main.executor": "Run",
+    "Application.Unnamed.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "visual",
+    "git-widget-placeholder": "singleton",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/h/IdeaProjects/Subcadena/Subcadena",
     "node.js.detected.package.eslint": "true",
@@ -101,6 +106,15 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ferri\Desenvolupament\Projectes\IdeaProjects\Algorismes-Avanzats\Cap3DividirVencer\src\model\calculs" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="controlador.Main" />
+      <module name="Cap3DividirVencer" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -171,7 +185,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744308658048</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="mem2">
+      <option name="closed" value="true" />
+      <created>1744393826642</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1744393826642</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,6 +217,7 @@
     <MESSAGE value="canvia a interfice punt" />
     <MESSAGE value="parella propre dividir i vencer" />
     <MESSAGE value="mapping dels algorismes" />
-    <option name="LAST_COMMIT_MESSAGE" value="mapping dels algorismes" />
+    <MESSAGE value="mem2" />
+    <option name="LAST_COMMIT_MESSAGE" value="mem2" />
   </component>
 </project>
