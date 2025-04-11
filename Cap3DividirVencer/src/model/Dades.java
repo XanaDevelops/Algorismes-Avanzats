@@ -1,6 +1,7 @@
 package model;
 
 import model.punts.Punt;
+import model.punts.Punt3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class Dades {
     private final TreeMap<Integer, Resultat> forcaBruta;
     private final TreeMap<Integer, Resultat> dividirVencer;
 
+    public static final int RANG_PUNT = 100;
 
     public Dades (){
         this.forcaBruta = new TreeMap<>();
@@ -70,6 +72,8 @@ public class Dades {
     public List<Punt> getPunts() {
         return punts;
     }
+
+
 
     public void clearPunts() {
        punts.clear();

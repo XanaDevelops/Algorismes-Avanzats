@@ -1,5 +1,6 @@
 package vista;
 
+import controlador.Comunicar;
 import controlador.Main;
 import model.Dades;
 import model.punts.Punt;
@@ -11,14 +12,14 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 
-public class Eixos extends JPanel {
+public class Eixos2D extends JPanel implements Comunicar {
     private Dades dades;
     private BufferedImage image;
     private int width;
     private int height;
     private final static int MARGIN = 15;
 
-    public Eixos(int height, int width) {
+    public Eixos2D(int height, int width) {
         this.dades = Main.instance.getDades();
 
         this.width = width;
@@ -114,5 +115,10 @@ public class Eixos extends JPanel {
         int midX = (p1x+p1y) / 2;
         int midY = (p2x+p2y) / 2;
         g.drawString(String.format("%.2f", distance), midX, midY - 10);
+    }
+
+    @Override
+    public void comunicar(String s) {
+        pintar();
     }
 }

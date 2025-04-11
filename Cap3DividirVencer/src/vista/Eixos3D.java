@@ -1,11 +1,14 @@
 package vista;
 
 
+import controlador.Comunicar;
+import controlador.Main;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
@@ -13,10 +16,33 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
+import model.Dades;
+import model.punts.Punt;
+import model.punts.Punt3D;
 
-public class Eixos3D extends JFXPanel {
+import java.awt.*;
+import java.util.List;
+
+public class Eixos3D extends JFXPanel implements Comunicar {
+    private final Dades dades;
+
+    private final Material puntBlau = new PhongMaterial(Color.BLUE);
+
+    private Punt3D originPoints;
+
+    private Group root, puntGroup;
+
+
+
+    //això impideix que JAvaFX s'aturi o algo
+    static {
+        Platform.setImplicitExit(false);
+    }
+
     public Eixos3D() {
-
+        super();
+        dades = Main.instance.getDades();
+        Platform.runLater(this::initFX);
     }
 
     public void initFX(){
@@ -25,61 +51,49 @@ public class Eixos3D extends JFXPanel {
     }
 
     private Scene createScene(){
-        Group root  =  new  Group();
-        Scene  scene  =  new  Scene(root, Color.ALICEBLUE);
+        root = new Group();
+        puntGroup = new Group();
+        Scene scene = new Scene(root, getWidth(), getHeight(), Color.BLACK);
 
-        Camera pCamera = new PerspectiveCamera();
-        pCamera.setRotationAxis(new Point3D(0,1,0));
-        //pCamera.setRotate(Math.PI);
-        pCamera.setRotationAxis(new Point3D(0,0,1));
-        //pCamera.setRotate(45);
-        for (int i = 0; i < 10; i++) {
-            Sphere sphere = new Sphere(4);
-            sphere.setTranslateX(30);
-            sphere.setTranslateY(620);
-            sphere.setTranslateZ(20*i);
-            root.getChildren().add(sphere);
+
+        root.getChildren().addAll(puntGroup);
+
+        return scene;
+    }
+
+    private void plotPunts(){
+        List<Punt> punts =  dades.getPunts();
+        System.err.println("Lista de Punts: " + punts.size());
+        puntGroup.getChildren().clear();
+
+        originPoints = new Punt3D((int) (getWidth()/2d), (int) (getHeight()/2d), 0);
+        System.err.println(getWidth());
+        //plotPunts();
+        puntGroup.setTranslateX(originPoints.getX());
+        puntGroup.setTranslateY(originPoints.getY());
+        puntGroup.setTranslateZ(originPoints.getZ());
+
+        for(Punt p : punts) {
+            Punt3D punt = (Punt3D) p;
+            Sphere puntS = new Sphere(5);
+            puntS.setMaterial(puntBlau);
+            puntS.setTranslateX(punt.x);
+            puntS.setTranslateY(punt.y);
+            puntS.setTranslateZ(punt.z);
+
+            puntGroup.getChildren().add(puntS);
         }
+    }
 
-        PhongMaterial rojo = new PhongMaterial(Color.RED);
-        PhongMaterial verde = new PhongMaterial(Color.GREEN);
-        PhongMaterial azul = new PhongMaterial(Color.BLUE);
-
-// Eje X
-        Cylinder ejeX = new Cylinder(1, 100);
-        ejeX.setMaterial(rojo);
-        ejeX.setRotationAxis(Rotate.Z_AXIS);
-        ejeX.setRotate(90);
-        ejeX.setTranslateX(50);
-
-// Eje Y
-        Cylinder ejeY = new Cylinder(1, 100);
-        ejeY.setMaterial(verde);
-        ejeY.setTranslateY(-50);
-
-// Eje Z
-        Cylinder ejeZ = new Cylinder(1, 100);
-        ejeZ.setMaterial(azul);
-        ejeZ.setRotationAxis(Rotate.X_AXIS);
-        ejeZ.setRotate(90);
-        ejeZ.setTranslateZ(50);
-
-// Agrupación y posición
-        Group eje3D = new Group(ejeX, ejeY, ejeZ);
-        eje3D.setTranslateX(20);
-        eje3D.setTranslateY(600);
-        eje3D.setTranslateZ(0);
-
-
-        root.getChildren().add(eje3D);
-
-        pCamera.setFarClip(Double.MAX_VALUE);
-        pCamera.getTransforms().addAll(
-                new Rotate(-45, Rotate.Y_AXIS),
-                new Rotate(-45, Rotate.X_AXIS)
-        );
-
-        scene.setCamera(pCamera);
-        return (scene);
+    @Override
+    public void comunicar(String s) {
+        switch(s){
+            case "dibuixPunts":
+            case "pintar":
+                Platform.runLater(this::plotPunts);
+                break;
+            case "aturar":
+                break;
+        }
     }
 }

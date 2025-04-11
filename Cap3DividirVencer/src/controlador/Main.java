@@ -112,9 +112,11 @@ public class Main implements Comunicar {
 
 
         String metodeGeneracio = tp == TipoPunt.p2D ? "genera2D" : "genera3D";
+        System.out.println("metodeGeneracio: " + metodeGeneracio);
 
+        int valMin = tp == TipoPunt.p2D ? 0 : -Dades.RANG_PUNT;
         Object generador =  classe.getConstructor(int.class, int.class, int.class)
-                .newInstance(num, 0, 1000000);
+                .newInstance(num, valMin, Dades.RANG_PUNT);
 
 
 
@@ -124,6 +126,7 @@ public class Main implements Comunicar {
 
             dades.setPunts((List<Punt>) o);
             System.out.println(dades.getPunts().toString());
+            System.out.println(dades.getPunts().getFirst().getClass());
             //cridar a l'algorisme per calcular la distància
             Calcul calcul = algorisme.getConstructor(Dades.class).newInstance(dades);
 
