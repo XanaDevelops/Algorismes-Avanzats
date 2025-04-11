@@ -1,0 +1,59 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"739d782b-ca33-440a-87a3-67de115ff2de\" name=\"Changes\" comment=\"dibuix de la distancia\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/controlador/Main.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/controlador/Main.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/vista/Eixos.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/vista/Eixos.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n        <option value=\"Enum\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$/..\" value=\"visual\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/..\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;JoFeF08&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/XanaDevelops/Algorismes-Avanzats.git&quot;,\r\n    &quot;accountId&quot;: &quot;b8b22d0a-3c79-49db-b938-b69ba5611d4f&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 2\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2vDXiybSIgdiTJqDGlY1OjMCed7\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;Application.Main.executor&quot;: &quot;Run&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;visual&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/h/IdeaProjects/Algorismes-Avanzats/Cap3DividirVencer&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"739d782b-ca33-440a-87a3-67de115ff2de\" name=\"Changes\" comment=\"\" />\r\n      <created>1743680752492</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1743680752492</updated>\r\n      <workItem from=\"1743680753561\" duration=\"5000\" />\r\n      <workItem from=\"1743691179542\" duration=\"347000\" />\r\n      <workItem from=\"1743787549049\" duration=\"10981000\" />\r\n      <workItem from=\"1744125588088\" duration=\"389000\" />\r\n      <workItem from=\"1744140426099\" duration=\"7418000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"plantilla principal\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1743797035755</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1743797035755</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"classe Eixos, incompleta.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1743800105876</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1743800105876</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"moure list&lt;Punts&gt; a Dades\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1744125919785</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1744125919785</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"dibuix basic de punts\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1744143996776</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1744143996776</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"dibuix basic de punts\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1744144005407</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1744144005407</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"dibuix de la distancia\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1744146677783</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1744146677783</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"7\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"plantilla principal\" />\r\n    <MESSAGE value=\"classe Eixos, incompleta.\" />\r\n    <MESSAGE value=\"moure list&lt;Punts&gt; a Dades\" />\r\n    <MESSAGE value=\"dibuix basic de punts\" />\r\n    <MESSAGE value=\"dibuix de la distancia\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"dibuix de la distancia\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision f3662e23f2e07e53de522e6ec029dd7115308d7b)
++++ b/.idea/workspace.xml	(date 1744221742990)
+@@ -4,11 +4,7 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="dibuix de la distancia">
+-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/controlador/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controlador/Main.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/vista/Eixos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vista/Eixos.java" afterDir="false" />
+-    </list>
++    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="escalament de punts" />
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -86,7 +82,7 @@
+       <workItem from="1743691179542" duration="347000" />
+       <workItem from="1743787549049" duration="10981000" />
+       <workItem from="1744125588088" duration="389000" />
+-      <workItem from="1744140426099" duration="7418000" />
++      <workItem from="1744140426099" duration="8413000" />
+     </task>
+     <task id="LOCAL-00001" summary="plantilla principal">
+       <option name="closed" value="true" />
+@@ -136,7 +132,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1744146677783</updated>
+     </task>
+-    <option name="localTasksCounter" value="7" />
++    <task id="LOCAL-00007" summary="escalament de punts">
++      <option name="closed" value="true" />
++      <created>1744148218423</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1744148218423</updated>
++    </task>
++    <option name="localTasksCounter" value="8" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -148,6 +152,7 @@
+     <MESSAGE value="moure list&lt;Punts&gt; a Dades" />
+     <MESSAGE value="dibuix basic de punts" />
+     <MESSAGE value="dibuix de la distancia" />
+-    <option name="LAST_COMMIT_MESSAGE" value="dibuix de la distancia" />
++    <MESSAGE value="escalament de punts" />
++    <option name="LAST_COMMIT_MESSAGE" value="escalament de punts" />
+   </component>
+ </project>
+\ No newline at end of file

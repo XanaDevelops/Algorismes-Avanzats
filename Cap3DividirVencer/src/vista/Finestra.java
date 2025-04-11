@@ -1,7 +1,6 @@
 package vista;
 
 import controlador.Comunicar;
-import javafx.application.Platform;
 import model.Dades;
 
 import javax.swing.*;
@@ -10,95 +9,167 @@ import java.util.Objects;
 
 public class Finestra extends JFrame implements Comunicar {
     public static final String ATURAR = "aturar";
-    public static final String ARRANCAR = "arrancar";
-    JComboBox<Integer> nPunts;
-    Comunicar comunicar;
+    public static final String COMENÇAR = "començar";
+    public static final String ESBORRAR = "esborrar";
 
-    Dades dades;
-    JComboBox<String> algorime;
-    Eixos eixos;
-
-    JPanel panellBotons;
-   public Finestra(Comunicar comunicar, Dades dades) {
-       super();
-       this.comunicar = comunicar;
-       this.dades = dades;
-       //eixos= new Eixos(750, 900,dades );
-       this.setTitle("Distàncies a un nuvol de punts");
-       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       setResizable(false);
-       this.setLayout(new BorderLayout());
-       this.setPreferredSize(new Dimension(900, 900));
-
-       panellBotons = new JPanel();
-       nPunts = generateNPunts();
-
-       panellBotons.add(new JLabel("Nombre de Punts"));
-
-       panellBotons.add(nPunts);
-
-       ((JButton)panellBotons.add(new JButton(ARRANCAR))).addActionListener(e ->{
-           comunicar.comunicar(ARRANCAR);
-       });
-       ((JButton)panellBotons.add(new JButton(ATURAR))).addActionListener(e ->{
-           comunicar.comunicar(ATURAR);});
-
-       algorime = generateComBox();
-       panellBotons.add(algorime);
-      this.add(panellBotons, BorderLayout.NORTH);
-      //this.add(eixos, BorderLayout.CENTER);
-       Eixos3D eixos3D = new Eixos3D();
-       this.add(eixos3D, BorderLayout.CENTER);
-
-      this.pack();
-      this.setLocationRelativeTo(null);
-      this.setVisible(true);
-
-      Platform.runLater(eixos3D::initFX);
-
-   }
-
-    private JComboBox<String> generateComBox() {
-       JComboBox<String> comboBox = new JComboBox<>();
-       comboBox.addItem("Clàssic O(N)");
-       comboBox.addItem("Optimitzat O(N·log N)");
-
-       comboBox.setSelectedIndex(0); //default a classic
-        comboBox.addActionListener(e ->{
-            switch (comboBox.getSelectedIndex()) {
-            //per ara
-                case 0:
-                    comunicar.comunicar("classic");
-                    break;
-
-                case 1:
-                    comunicar.comunicar("optimitzat");
-                    break;
+    private final String[] opcionsAlgorisme = {"Força Bruta", "Dividir i vèncer"};
+    private final Comunicar comunicar;
+    private JTextField nPunts;
 
 
+    private JComboBox<String> dimensio;
+    private JComboBox<String> algorisme;
+    private JComboBox<String> distancia;
+
+    private final Eixos eixos;
+    private JComboBox<Distribucio> distribucio;
+
+
+    public Finestra(Comunicar comunicar, Dades dades) {
+        super();
+        this.comunicar = comunicar;
+        eixos = new Eixos(750, 890, dades);
+        setTitle("Distàncies a un núvol de punts");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+        setLayout(new BorderLayout());
+        setPreferredSize(new Dimension(900, 900));
+
+        JPanel panellBotons = crearPanellBotons();
+
+        this.add(panellBotons, BorderLayout.NORTH);
+        this.add(eixos, BorderLayout.CENTER);
+
+        this.pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+
+    }
+
+    private JPanel crearPanellBotons() {
+        JPanel panel = new JPanel();
+        nPunts = new JTextField(5);
+        panel.add(new JLabel("Nombre de Punts"));
+        panel.add(nPunts);
+        algorisme = generateComBox();
+
+        dimensio = generateDim();
+        distribucio = generateComBoxDistr();
+        distancia = generarDistCombox();
+
+        ((JButton) panel.add(new JButton(COMENÇAR))).addActionListener(e -> {
+            if (nPunts.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Si us plau, introdueix un número.", "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            try {
+
+                int num = Integer.parseInt(nPunts.getText());
+                if (num <= 0) {
+                    JOptionPane.showMessageDialog(this, "Introdueix un numero major a 0", "Error", JOptionPane.WARNING_MESSAGE);
+
+                } else {
+                    if (num > 10000) {
+                        int r = JOptionPane.showConfirmDialog(this, "El número que has introduït és molt gran. Pot ser difícil visualitzar la distància mínima", "AVÍS", JOptionPane.OK_CANCEL_OPTION );
+                        if (r == JOptionPane.CANCEL_OPTION) {
+                            return;
+
+                        }
+                    }
+                    comunicar.comunicar("generar:" + num + ":" + distribucio.getSelectedItem() + ":p" + dimensio.getSelectedItem() + ":" + distancia.getSelectedItem() + ":" + algorisme.getSelectedItem());
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
 
             }
+
         });
+        ((JButton) panel.add(new JButton(ATURAR))).addActionListener(e -> comunicar.comunicar(ATURAR));
+        ((JButton) panel.add(new JButton(ESBORRAR))).addActionListener(e -> comunicar.comunicar(ESBORRAR));
 
-       return comboBox;
+        panel.add(dimensio);
+
+        panel.add(distancia);
+        panel.add(algorisme);
+        panel.add(distribucio);
+        return panel;
+    }
+
+    private JComboBox<String> generarDistCombox() {
+        JComboBox<String> combox = new JComboBox<>();
+        combox.addItem("Parella propera");
+        combox.addItem("Parella llunyana");
+        combox.setSelectedIndex(0);
+        combox.addActionListener(e -> {
+            String selected = Objects.requireNonNull(combox.getSelectedItem()).toString();
+            comunicar.comunicar(selected);
+            if (selected.equals("Parella llunyana")) {
+                updateOptionsAlgorisme(new String[]{"Força Bruta"});
+            } else {
+                updateOptionsAlgorisme(opcionsAlgorisme);
+            }
+        });
+        return combox;
+    }
+
+    private void updateOptionsAlgorisme(String[] opcions) {
+        algorisme.removeAllItems();
+        for (String opcio : opcions) {
+            algorisme.addItem(opcio);
+        }
+        algorisme.setSelectedIndex(0);
+    }
+
+
+    private JComboBox<Distribucio> generateComBoxDistr() {
+        JComboBox<Distribucio> comboBox = new JComboBox<>();
+
+        comboBox.addItem(Distribucio.Uniforme);
+        comboBox.addItem(Distribucio.Gaussiana);
+        comboBox.addItem(Distribucio.Exponencial);
+        comboBox.setSelectedIndex(0);
+
+        return comboBox;
 
     }
 
-    private JComboBox<Integer> generateNPunts() {
-       JComboBox<Integer> comboBox = new JComboBox<>();
-       comboBox.addItem(100);
-       comboBox.addItem(500);
-       comboBox.addItem(1000);
-       comboBox.addItem(2000);
-       comboBox.addItem(5000);
-        comboBox.addItem(10000);
+    private JComboBox<String> generateDim() {
 
-        comboBox.addActionListener(e -> comunicar.comunicar("generar:" + comboBox.getSelectedItem()));
-       return comboBox;
+        JComboBox<String> comboBox = new JComboBox<>();
+        comboBox.addItem(Dimensio.D2.getEtiqueta());
+        comboBox.addItem(Dimensio.D3.getEtiqueta());
+
+        comboBox.setSelectedIndex(0);
+
+        return comboBox;
     }
+
+    private JComboBox<String> generateComBox() {
+        JComboBox<String> comboBox = new JComboBox<>();
+        comboBox.addItem("Força Bruta");
+        comboBox.addItem("Dividir i vèncer");
+
+        comboBox.setSelectedIndex(0); //default a classic
+
+        return comboBox;
+
+    }
+
 
     @Override
     public void comunicar(String s) {
+        switch (s) {
+            case "dibuixPunts":
+                eixos.pintar();
+                break;
+            case "pintar":
+                eixos.repaint();
+                break;
+
+            default:
+                break;
+        }
+
 
     }
 }
