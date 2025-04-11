@@ -8,7 +8,9 @@ import model.punts.Punt2D;
 
 import java.util.List;
 
-abstract class Calcul implements Runnable, Comunicar {
+
+public abstract class Calcul implements Runnable {
+
 
     protected final List<Punt> punts;
     protected TipoPunt tp;

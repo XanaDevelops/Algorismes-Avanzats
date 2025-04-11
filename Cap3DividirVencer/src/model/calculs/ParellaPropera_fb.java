@@ -29,8 +29,5 @@ public class ParellaPropera_fb extends Calcul {
                 dades.afegeixForcaBruta(punts.size(), p1, p2, min,t,"min");
         }
 
-        @Override
-        public void comunicar(String s) {
 
-        }
 }
