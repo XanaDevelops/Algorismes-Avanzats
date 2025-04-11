@@ -18,73 +18,63 @@ public class ParellaPropera_dv extends Calcul {
 
     @Override
     public void run() {
-        long start = System.nanoTime();
+        long t = System.nanoTime();
         // Obtenim la llista de punts i els ordenem per la coordenada X.
         List<Punt> punts = new ArrayList<>(dades.getPunts());
         punts.sort(Comparator.comparingInt(Punt::getX));
 
         Resultat resultat = divideix(punts);
 
-        long time = System.nanoTime() - start;
-        dades.afegeixDividirVencer(punts.size(), resultat.p1, resultat.p2, resultat.distancia, time, "min");
+        long temps = System.nanoTime() - t;
+        dades.afegeixDividirVencer(punts.size(), resultat.p1, resultat.p2, resultat.distancia, temps, "min");
     }
 
     private Resultat divideix(List<Punt> punts) {
         int n = punts.size();
+
         if (n <= 3) {
-            return bruteForce(punts);
+            return ParellaPropera_fb.calc((ArrayList<Punt>) punts);
         }
 
         int mid = n / 2;
-        List<Punt> left = new ArrayList<>(punts.subList(0, mid));
-        List<Punt> right = new ArrayList<>(punts.subList(mid, n));
+        List<Punt> esquerra = new ArrayList<>(punts.subList(0, mid));
+        List<Punt> dreta = new ArrayList<>(punts.subList(mid, n));
 
-        Resultat leftResult = divideix(left);
-        Resultat rightResult = divideix(right);
-        Resultat bestResult = leftResult.distancia < rightResult.distancia ? leftResult : rightResult;
-
+        Resultat esquerraR = divideix(esquerra);
+        Resultat dretaR = divideix(dreta);
+        Resultat bestResult = esquerraR.distancia < dretaR.distancia ? esquerraR : dretaR;
 
         double dmin = bestResult.distancia;
         int midX = punts.get(mid).getX();
+        int midZ = punts.get(mid).getZ();
 
-        List<Punt> strip = new ArrayList<>();
+
+        List<Punt> areaPossible = new ArrayList<>();
+        boolean es3D = this.tp == TipoPunt.p3D;
+
         for (Punt p : punts) {
-            if (Math.abs(p.getX() - midX) < dmin) {
-                strip.add(p);
+            boolean properX = Math.abs(p.getX() - midX) < dmin;
+            boolean properZ = !es3D || Math.abs(p.getZ() - midZ) < dmin;
+            if (properX && properZ) {
+                areaPossible.add(p);
             }
         }
-        strip.sort(Comparator.comparingInt(Punt::getY));
 
-        int stripSize = strip.size();
-        for (int i = 0; i < stripSize; i++) {
-            for (int j = i + 1; j < stripSize && ((strip.get(j).getY() - strip.get(i).getY()) < dmin); j++) {
-                if (tp == TipoPunt.p3D && (Math.abs(strip.get(j).getZ() - strip.get(i).getZ()) >= dmin)) {
+        areaPossible.sort(Comparator.comparingInt(Punt::getY));
+        int mida = areaPossible.size();
+        for (int i = 0; i < mida; i++) {
+            for (int j = i + 1; j < mida && (areaPossible.get(j).getY() - areaPossible.get(i).getY()) < dmin; j++) {
+                if (es3D && Math.abs(areaPossible.get(j).getZ() - areaPossible.get(i).getZ()) >= dmin) {
                     continue;
                 }
-                double d = strip.get(i).distancia(strip.get(j));
+                double d = areaPossible.get(i).distancia(areaPossible.get(j));
                 if (d < dmin) {
-                    bestResult = new Resultat(strip.get(i), strip.get(j), d, 0);
+                    bestResult = new Resultat(areaPossible.get(i), areaPossible.get(j), d, 0);
                     dmin = d;
                 }
             }
         }
-        return bestResult;
-    }
 
-    private Resultat bruteForce(List<Punt> punts) {
-        double min = Double.MAX_VALUE;
-        Punt best1 = null, best2 = null;
-        int n = punts.size();
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                double d = punts.get(i).distancia(punts.get(j));
-                if (d < min) {
-                    min = d;
-                    best1 = punts.get(i);
-                    best2 = punts.get(j);
-                }
-            }
-        }
-        return new Resultat(best1, best2, min, 0);
+        return bestResult;
     }
 }
