@@ -2,7 +2,6 @@ package vista;
 
 import controlador.Comunicar;
 import controlador.Main;
-import model.Dades;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,9 +9,9 @@ import java.util.Objects;
 
 public class Finestra extends JFrame implements Comunicar {
     public static final String ATURAR = "aturar";
-    public static final String COMENÇAR = "començar";
+    public static final String GENERAR = "generar";
     public static final String ESBORRAR = "esborrar";
-
+    public static final String CALCULAR = "calcular";
     private final String[] opcionsAlgorisme = {"Força Bruta", "Dividir i vèncer"};
     private final Comunicar comunicar;
     private JTextField nPunts;
@@ -59,7 +58,7 @@ public class Finestra extends JFrame implements Comunicar {
         distribucio = generateComBoxDistr();
         distancia = generarDistCombox();
 
-        ((JButton) panel.add(new JButton(COMENÇAR))).addActionListener(e -> {
+        ((JButton) panel.add(new JButton(GENERAR))).addActionListener(e -> {
             if (nPunts.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Si us plau, introdueix un número.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -78,10 +77,24 @@ public class Finestra extends JFrame implements Comunicar {
 
                         }
                     }
-                    comunicar.comunicar("generar:" + num + ":" + distribucio.getSelectedItem() + ":p" + dimensio.getSelectedItem() + ":" + distancia.getSelectedItem() + ":" + algorisme.getSelectedItem());
+//                    comunicar.comunicar("generar:" + num + ":" + distribucio.getSelectedItem() + ":p" + dimensio.getSelectedItem() + ":" + distancia.getSelectedItem() + ":" + algorisme.getSelectedItem());
+                    comunicar.comunicar("generar:" + num + ":" + distribucio.getSelectedItem() + ":p" + dimensio.getSelectedItem());
+
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+
+        });
+        ((JButton) panel.add(new JButton(CALCULAR))).addActionListener(e -> {
+
+            //FORMAT calcular:<Parella Propera | Parella llunyana>:<Força Bruta| Dividir i vèncer>
+            if (Main.instance.getDades().getPunts()!=null){
+                comunicar.comunicar("calcular:" + distancia.getSelectedItem() +":"+ algorisme.getSelectedItem());
+
+            }else{
+                JOptionPane.showMessageDialog(this, "Primer has de generar els punts","Error", JOptionPane.WARNING_MESSAGE);
 
             }
 
@@ -167,7 +180,9 @@ public class Finestra extends JFrame implements Comunicar {
             case "pintar":
                 eixos.repaint();
                 break;
-
+            case "dibiuxDistancia":
+                eixos.pintarDistancies((String) algorisme.getSelectedItem());
+                    break;
             default:
                 break;
         }
