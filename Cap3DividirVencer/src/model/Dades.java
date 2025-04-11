@@ -56,7 +56,12 @@ public class Dades {
     public void clearDividirVencer() {
         dividirVencer.clear();
     }
-
+    public Resultat getLastResultatFB(){
+        return forcaBruta.get(forcaBruta.lastKey());
+    }
+    public Resultat getLastResultatDV(){
+        return dividirVencer.get(dividirVencer.lastKey());
+    }
     public void afegeixForcaBruta(int n, Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
         Resultat r = new Resultat(p1, p2, distancia, tempsNano, tipus);
         forcaBruta.put(n, r);

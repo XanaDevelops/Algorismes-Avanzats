@@ -14,9 +14,7 @@ import model.punts.Punt;
 import vista.Finestra;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,6 +45,7 @@ public class Main implements Comunicar {
     }
 
     private void init() {
+        instance = this;
         dades = new Dades();
         punts = new ArrayList<>();
         processos = new ArrayList<>();
@@ -60,47 +59,44 @@ public class Main implements Comunicar {
     public void comunicar(String msg) {
         // Dividim el missatge pels caràcters ":" per determinar la comanda
         String[] parts = msg.split(":");
+        System.out.println(Arrays.toString(parts));
         switch (parts[0]) {
             // --------------------------
             // Format esperat: generar:<num>:<distribucio>:<dimensio>:<min>:<max>[:<extra1>:<extra2>...]
             case "generar":
-                System.out.println(s);
-                String[] res = s.split(":");
-                int num = Integer.parseInt(res[1]);
-                Random r = new Random();
+                System.out.println(msg);
                 punts.clear();
-
-
-                //generar:num:distribucio:dimensio: algorisme: parella
 
 
                 try {
                     int num = Integer.parseInt(parts[1]);
                     String distribucio = parts[2];  // "Uniforme", "Gaussiana", o "Exponencial"
                     String dimensio = parts.length > 3 ? parts[3] : "p2D";
-                    int min = parts.length > 4 ? Integer.parseInt(parts[4]) : 0;
-                    int max = parts.length > 5 ? Integer.parseInt(parts[5]) : 600;
+
+//                    int min = parts.length > 4 ? Integer.parseInt(parts[4]) : 0;
+//                    int max = parts.length > 5 ? Integer.parseInt(parts[5]) : 600;
+                    int min = 0, max = 600;
                     TipoPunt tp = dimensio.equalsIgnoreCase("p3D") ? TipoPunt.p3D : TipoPunt.p2D;
 
                     // Capturar els possibles paràmetres extra per generadors com Gaussiana o Exponencial
                     String[] extraParams;
                     if (distribucio.equalsIgnoreCase("Gaussiana")) {
                         // Per a la distribució Gaussiana s'esperen dos paràmetres extra: mitjana i desviació estàndard
-                        if (parts.length > 7) {
-                            extraParams = new String[]{ parts[6], parts[7] };
-                        } else {
+//                        if (parts.length > 7) {
+//                            extraParams = new String[]{ parts[6], parts[7] };
+//                        } else {
                             extraParams = new String[]{
                                     String.valueOf((min + max) / 2.0),
                                     String.valueOf(Math.max(1.0, (max - min) / 4.0))
                             };
-                        }
+//                        }
                     } else if (distribucio.equalsIgnoreCase("Exponencial")) {
                         // Per a la distribució Exponencial s'espera un paràmetre extra: lambda
-                        if (parts.length > 6) {
-                            extraParams = new String[]{ parts[6] };
-                        } else {
+//                        if (parts.length > 6) {
+//                            extraParams = new String[]{ parts[6] };
+//                        } else {
                             extraParams = new String[]{ "1.0" };
-                        }
+//                        }
                     } else {
                         extraParams = new String[0];
                     }
@@ -117,13 +113,17 @@ public class Main implements Comunicar {
                 break;
 
 
-            // Format esperat: calcular:<algorisme>
+            // Format esperat: calcular:<distancia>:<algorisme>
             case "calcular":
                 try {
-                    String alg = parts[1].toLowerCase();
+                    String alg = String.format("%s %s", parts[1], parts[2]);
+                    System.out.printf("Algorisme: %s%n", alg);
+
                     Class<? extends Calcul> calculClass = ALGORISMES.get(alg);
 
                     calcularAlgorisme(calculClass);
+
+
                 } catch (Exception e) {
                     System.err.println("MAIN: error en executar el càlcul: " + e.getMessage());
                 }
@@ -196,7 +196,8 @@ public class Main implements Comunicar {
                 calcul.run();
                 System.out.println("Resultats de càlcul FB: " + dades.getForcaBruta().toString());
                 System.out.println("Resultats de càlcul DV: " + dades.getDividirVencer().toString());
-                finestra.comunicar("pintar");
+//                finestra.comunicar("pintar");
+                finestra.comunicar("dibiuxDistancia");
             } catch (Exception e) {
                 System.err.println("Error en el càlcul: " + e.getMessage());
             }
