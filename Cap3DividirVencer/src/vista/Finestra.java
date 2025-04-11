@@ -1,6 +1,7 @@
 package vista;
 
 import controlador.Comunicar;
+import controlador.Main;
 import model.Dades;
 
 import javax.swing.*;
@@ -25,10 +26,11 @@ public class Finestra extends JFrame implements Comunicar {
     private JComboBox<Distribucio> distribucio;
 
 
-    public Finestra(Comunicar comunicar, Dades dades) {
+    public Finestra() {
         super();
-        this.comunicar = comunicar;
-        eixos = new Eixos(750, 890, dades);
+        this.comunicar = Main.instance;
+
+        eixos = new Eixos(750, 890);
         setTitle("Distàncies a un núvol de punts");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
