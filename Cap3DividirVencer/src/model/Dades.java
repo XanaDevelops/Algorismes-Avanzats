@@ -15,11 +15,13 @@ public class Dades {
 
     private final TreeMap<Integer, Resultat> forcaBruta;
     private final TreeMap<Integer, Resultat> dividirVencer;
+    private final TreeMap<Integer, Resultat> distanciaMaxima;
 
 
     public Dades (){
         this.forcaBruta = new TreeMap<>();
         this.dividirVencer = new TreeMap<>();
+        this.distanciaMaxima = new TreeMap<>();
     }
 
     public Dades(List<Punt> punts, TipoPunt tp ) {
@@ -27,6 +29,7 @@ public class Dades {
         this.tp = tp;
         this.forcaBruta = new TreeMap<>();
         this.dividirVencer = new TreeMap<>();
+        this.distanciaMaxima = new TreeMap<>();
     }
 
     public void setTp(TipoPunt tp) {
@@ -49,12 +52,20 @@ public class Dades {
         return dividirVencer;
     }
 
+    public NavigableMap<Integer, Resultat> getDistanciaMaxima() {
+        return distanciaMaxima;
+    }
+
     public void clearForcaBruta() {
         forcaBruta.clear();
     }
 
     public void clearDividirVencer() {
         dividirVencer.clear();
+    }
+
+    public void clearDistanciaMaxima() {
+        distanciaMaxima.clear();
     }
 
     public void afegeixForcaBruta(int n, Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
@@ -65,6 +76,11 @@ public class Dades {
     public void afegeixDividirVencer(int n, Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
         Resultat r = new Resultat(p1, p2, distancia, tempsNano, tipus);
         dividirVencer.put(n, r);
+    }
+
+    public void afegeixDistMax(int n, Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
+        Resultat r = new Resultat(p1, p2, distancia, tempsNano, tipus);
+        distanciaMaxima.put(n, r);
     }
 
     public List<Punt> getPunts() {
