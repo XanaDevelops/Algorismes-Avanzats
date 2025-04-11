@@ -6,7 +6,6 @@ import model.solvers.SierpinskiCarpetSolver;
 import model.solvers.SierpinskiTriangleSolver;
 import model.solvers.TreeSolver;
 import model.solvers.TrominoSolver;
-import vista.Finestra;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

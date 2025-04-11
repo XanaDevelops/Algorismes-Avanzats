@@ -3,7 +3,6 @@ package model.calculs;
 import model.Dades;
 import model.punts.Punt;
 
-import java.util.List;
 
 public class ParellaPropera_fb extends Calcul {
 
@@ -29,4 +28,6 @@ public class ParellaPropera_fb extends Calcul {
                 t = System.nanoTime() - t;
                 dades.afegeixForcaBruta(punts.size(), p1, p2, min,t,"min");
         }
+
+
 }

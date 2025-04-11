@@ -9,14 +9,36 @@ import java.util.TreeMap;
 
 public class Dades {
 
-    private final List<Punt> punts; // llista original de punts
+
+    private List<Punt> punts; // llista original de punts
+    private TipoPunt tp;
+
     private final TreeMap<Integer, Resultat> forcaBruta;
     private final TreeMap<Integer, Resultat> dividirVencer;
 
-    public Dades(List<Punt> punts) {
-        this.punts = punts;
+
+    public Dades (){
         this.forcaBruta = new TreeMap<>();
         this.dividirVencer = new TreeMap<>();
+    }
+
+    public Dades(List<Punt> punts, TipoPunt tp ) {
+        this.punts = punts;
+        this.tp = tp;
+        this.forcaBruta = new TreeMap<>();
+        this.dividirVencer = new TreeMap<>();
+    }
+
+    public void setTp(TipoPunt tp) {
+        this.tp = tp;
+    }
+
+    public void setPunts(List<Punt> punts) {
+        this.punts = punts;
+    }
+
+    public TipoPunt getTp() {
+        return tp;
     }
 
     public NavigableMap<Integer, Resultat> getForcaBruta() {
@@ -49,12 +71,16 @@ public class Dades {
         return punts;
     }
 
-    public class Resultat {
-        private final long tempsNano;
-        private final Punt p1;
-        private final Punt p2;
-        private final double distancia;
-        private final String tipus; // "curta", "llarga", "aproximada", etc.
+    public void clearPunts() {
+       punts.clear();
+    }
+
+    public static class Resultat {
+        public final long tempsNano;
+        public final Punt p1;
+        public final Punt p2;
+        public final double distancia;
+        public final String tipus; // "curta", "llarga", "aproximada", etc.
 
         public Resultat(Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
             this.p1 = p1;
@@ -63,8 +89,22 @@ public class Dades {
             this.tempsNano = tempsNano;
             this.tipus = tipus;
         }
+
+        // Constructor auxiliar sense tipus (opcional)
+        public Resultat(Punt p1, Punt p2, double distancia, long tempsNano) {
+            this(p1, p2, distancia, tempsNano, "min");
+        }
+
+        @Override
+        public String toString() {
+            return "Resultat{" +
+                    "tempsNano=" + tempsNano +
+                    ", p1=" + p1 +
+                    ", p2=" + p2 +
+                    ", distancia=" + distancia +
+                    ", tipus='" + tipus + '\'' +
+                    '}';
+        }
     }
-
-
 
 }

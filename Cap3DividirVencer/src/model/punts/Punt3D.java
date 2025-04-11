@@ -8,11 +8,17 @@ public class Punt3D extends Punt2D {
         this.z = z;
     }
 
+    @Override
+    public int getZ() {
+        return z;
+    }
+
+    @Override
     public double distancia(Punt punt2) {
         Punt3D altre = (Punt3D) punt2;
 
-        int dx = this.x - altre.x;
-        int dy = this.y - altre.y;
+        int dx = this.getX() - altre.getX();
+        int dy = this.getY() - altre.getY();
         int dz = this.z - altre.z;
         return Math.sqrt(dx * dx + dy * dy  + dz * dz);
     }
