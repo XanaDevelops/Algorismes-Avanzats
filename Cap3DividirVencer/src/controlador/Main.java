@@ -6,17 +6,16 @@ import model.TipoPunt;
 import model.calculs.Calcul;
 import model.calculs.ParellaPropera_dv;
 import model.calculs.ParellaPropera_fb;
-import model.generadors.Generador;
+import model.generadors.*;
 import model.generadors.GeneradorExponencial;
 import model.generadors.GeneradorGaussia;
 import model.generadors.GeneradorUniforme;
 import model.punts.Punt;
-import vista.Finestra;
+import vista.*;
+
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,6 +46,8 @@ public class Main implements Comunicar {
     }
 
     private void init() {
+        instance = this;
+
         dades = new Dades();
         punts = new ArrayList<>();
         processos = new ArrayList<>();
@@ -57,12 +58,11 @@ public class Main implements Comunicar {
     }
 
     @Override
-    public void comunicar(String msg) {
-        // Dividim el missatge pels caràcters ":" per determinar la comanda
-        String[] parts = msg.split(":");
+    public void comunicar(String s) {
+
+        String[] parts = s.split(":");
         switch (parts[0]) {
-            // --------------------------
-            // Format esperat: generar:<num>:<distribucio>:<dimensio>:<min>:<max>[:<extra1>:<extra2>...]
+
             case "generar":
                 System.out.println(s);
                 String[] res = s.split(":");
@@ -75,131 +75,75 @@ public class Main implements Comunicar {
 
 
                 try {
-                    int num = Integer.parseInt(parts[1]);
-                    String distribucio = parts[2];  // "Uniforme", "Gaussiana", o "Exponencial"
-                    String dimensio = parts.length > 3 ? parts[3] : "p2D";
-                    int min = parts.length > 4 ? Integer.parseInt(parts[4]) : 0;
-                    int max = parts.length > 5 ? Integer.parseInt(parts[5]) : 600;
-                    TipoPunt tp = dimensio.equalsIgnoreCase("p3D") ? TipoPunt.p3D : TipoPunt.p2D;
-
-                    // Capturar els possibles paràmetres extra per generadors com Gaussiana o Exponencial
-                    String[] extraParams;
-                    if (distribucio.equalsIgnoreCase("Gaussiana")) {
-                        // Per a la distribució Gaussiana s'esperen dos paràmetres extra: mitjana i desviació estàndard
-                        if (parts.length > 7) {
-                            extraParams = new String[]{ parts[6], parts[7] };
-                        } else {
-                            extraParams = new String[]{
-                                    String.valueOf((min + max) / 2.0),
-                                    String.valueOf(Math.max(1.0, (max - min) / 4.0))
-                            };
-                        }
-                    } else if (distribucio.equalsIgnoreCase("Exponencial")) {
-                        // Per a la distribució Exponencial s'espera un paràmetre extra: lambda
-                        if (parts.length > 6) {
-                            extraParams = new String[]{ parts[6] };
-                        } else {
-                            extraParams = new String[]{ "1.0" };
-                        }
-                    } else {
-                        extraParams = new String[0];
-                    }
-
-                    generarPunts(GENERADORS.get(distribucio), num, tp, min, max, extraParams);
-
-                    // Actualitzar la vista per mostrar els punts generats
+                    executar(GENERADORS.get(parts[2]), num, TipoPunt.valueOf(parts[3]), ALGORISMES.get(parts[4] + " " + parts[5] ));
                     finestra.comunicar("dibuixPunts");
-                } catch (NumberFormatException e) {
-                    System.err.println("MAIN: paràmetres numèrics invàlids en 'generar': " + msg);
-                } catch (Exception e) {
-                    System.err.println("MAIN: error en generar punts: " + e.getMessage());
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                         ClassNotFoundException | IllegalAccessException e) {
+                    System.out.println(e.getMessage());
                 }
+
                 break;
 
 
-            // Format esperat: calcular:<algorisme>
-            case "calcular":
-                try {
-                    String alg = parts[1].toLowerCase();
-                    Class<? extends Calcul> calculClass = ALGORISMES.get(alg);
-
-                    calcularAlgorisme(calculClass);
-                } catch (Exception e) {
-                    System.err.println("MAIN: error en executar el càlcul: " + e.getMessage());
-                }
-                break;
-
-            // Missatge per aturar els processos actius
             case "aturar":
                 for (Comunicar proces : processos) {
                     proces.comunicar("aturar");
                 }
-                processos.clear();
                 break;
-
-
             case "esborrar":
                 this.comunicar("aturar");
                //esborrar els punts
                 dades.clearPunts();
-                dades.clearForcaBruta();
-                dades.clearDividirVencer();
-                finestra.comunicar("pintar");
-                break;
 
-            // Altres missatges (com ara "pintar", "color", etc.)
-            default:
-                // Propagar altres missatges directament a la GUI
-                finestra.comunicar(msg);
+
+                finestra.comunicar("pintar");
                 break;
         }
 
+    }
+
+
+
+    private  void executar(Class<? extends Generador> classe, int num, TipoPunt tp, Class<? extends Calcul> algorisme)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
+
+
+        dades.setTp(tp);
+
+
+        String metodeGeneracio = tp == TipoPunt.p2D ? "genera2D" : "genera3D";
+
+        Object generador =  classe.getConstructor(int.class, int.class, int.class)
+                .newInstance(num, 0, 1000000);
+
+
+
+
+       Object o =  generador.getClass().getMethod(metodeGeneracio).invoke(generador);
+        if (o instanceof List<?>) {
+
+            dades.setPunts((List<Punt>) o);
+            System.out.println(dades.getPunts().toString());
+            //cridar a l'algorisme per calcular la distància
+            Calcul calcul = algorisme.getConstructor(Dades.class).newInstance(dades);
+
+            calcul.run();
+            System.out.println(dades.getForcaBruta().toString());;
+
+
+
+        } else {
+            System.out.println("Error a l'hora de generar la llista de punts.");
+        }
     }
 
     public Dades getDades() {
         return dades;
     }
 
-    public void setDades(Dades dades) {
-        this.dades = dades;
+    public Comunicar getFinestra(){
+        return finestra;
     }
 
-    // Mètode per generar els punts mitjançant el generador especificat
-    private void generarPunts(Class<? extends Generador> generadorClass, int num, TipoPunt tp, int min, int max, String[] extraParams)
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        dades.setTp(tp);
-        String metodeGeneracio = tp == TipoPunt.p2D ? "genera2D" : "genera3D";
 
-        Object generador = generadorClass.getConstructor(int.class, int.class, int.class).newInstance(num, min, max);
-        Object res = generador.getClass().getMethod(metodeGeneracio).invoke(generador);
-
-        if (res instanceof List<?>) {
-            dades.setPunts((List<Punt>) res);
-            System.out.println("Punts generats: " + dades.getPunts());
-        } else {
-            System.err.println("Error en generar la llista de punts.");
-        }
-    }
-
-    // Mètode per executar l'algorisme de càlcul
-    private void calcularAlgorisme(Class<? extends Calcul> calculClass)
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        executor.execute(() -> {
-            try {
-                Calcul calcul = calculClass.getConstructor(Dades.class).newInstance(dades);
-
-                if (calcul instanceof Comunicar) {
-                    synchronized (processos) {
-                        processos.add((Comunicar) calcul);
-                    }
-                }
-                calcul.run();
-                System.out.println("Resultats de càlcul FB: " + dades.getForcaBruta().toString());
-                System.out.println("Resultats de càlcul DV: " + dades.getDividirVencer().toString());
-                finestra.comunicar("pintar");
-            } catch (Exception e) {
-                System.err.println("Error en el càlcul: " + e.getMessage());
-            }
-        });
-    }
 }
