@@ -27,4 +27,11 @@ public class Punt2D implements Punt {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
+    @Override
+    public String toString() {
+        return "Punt2D{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

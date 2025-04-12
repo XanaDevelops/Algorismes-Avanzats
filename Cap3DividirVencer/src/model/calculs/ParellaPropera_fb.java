@@ -35,4 +35,6 @@ public class ParellaPropera_fb extends Calcul {
                 t = System.nanoTime() - t;
                 return new Dades.Resultat(p1, p2, min, t, "min");
         }
+
+
 }
