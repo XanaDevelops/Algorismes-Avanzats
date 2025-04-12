@@ -17,7 +17,7 @@ public class Eixos extends JPanel {
     private BufferedImage image;
     private int width;
     private int height;
-    private final static int MARGIN = 15;
+    protected final static int MARGIN = 15;
     private Resultat resultatADibuixar = null;
 
     public Eixos(int height, int width) {
@@ -112,7 +112,7 @@ public class Eixos extends JPanel {
 
     public void pintarDistancies(String algorisme) {
         if (dades.getPunts() != null && !dades.getPunts().isEmpty()) {
-            resultatADibuixar = (algorisme.equals("Força Bruta")) ? dades.getLastResultatFB() : dades.getLastResultatDV();
+            resultatADibuixar = (algorisme.equals("Força Bruta")) ? dades.getLastResultatFB().getValue() : dades.getLastResultatDV().getValue();
             repaint();
 
         }
@@ -131,14 +131,14 @@ public class Eixos extends JPanel {
         List<Punt> punts = dades.getPunts();
         int [] maxs = getMaxMin();
         int maxX = maxs[0], maxY = maxs[1];
-        int p1x = 50 + res.p1.getX() * (width - 60) / maxX;
-        int p1y = (height - 20) - (res.p1.getY() * (height - 40)) / maxY;
-        int p2x = 50 + res.p2.getX() * (width - 60) / maxX;
-        int p2y = (height - 20) - (res.p2.getY() * (height - 40)) / maxY;
+        int p1x = 50 + res.getP1().getX() * (width - 60) / maxX;
+        int p1y = (height - 20) - (res.getP1().getY() * (height - 40)) / maxY;
+        int p2x = 50 + res.getP2().getX() * (width - 60) / maxX;
+        int p2y = (height - 20) - (res.getP2().getY() * (height - 40)) / maxY;
 
 
-        dibuixaPunt(g, res.p1, getPointSize(punts), maxX, maxY, new Color(255, 153, 51));
-        dibuixaPunt(g, res.p2, getPointSize(punts), maxX, maxY, new Color(255, 153, 51));
+        dibuixaPunt(g, res.getP1(), getPointSize(punts), maxX, maxY, new Color(255, 153, 51));
+        dibuixaPunt(g, res.getP2(), getPointSize(punts), maxX, maxY, new Color(255, 153, 51));
 
         g2d.setStroke(new BasicStroke(2));
         g2d.setColor(Color.RED);
@@ -146,6 +146,6 @@ public class Eixos extends JPanel {
 
         int midX = (p1x + p2x) / 2;
         int midY = (p1y + p2y) / 2;
-        g2d.drawString(String.format("%.2f", res.distancia), midX, midY - 10);
+        g2d.drawString(String.format("%.2f", res.getDistancia()), midX, midY - 10);
     }
 }

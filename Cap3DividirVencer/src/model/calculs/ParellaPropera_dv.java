@@ -26,7 +26,7 @@ public class ParellaPropera_dv extends Calcul {
         Resultat resultat = divideix(punts);
 
         long time = System.nanoTime() - start;
-        dades.afegeixDividirVencer(punts.size(), resultat.p1, resultat.p2, resultat.distancia, time, "min");
+        dades.afegeixDividirVencer(punts.size(), resultat.getP1(), resultat.getP2(), resultat.getDistancia(), time, "min");
     }
 
     private Resultat divideix(List<Punt> punts) {
@@ -41,10 +41,10 @@ public class ParellaPropera_dv extends Calcul {
 
         Resultat leftResult = divideix(left);
         Resultat rightResult = divideix(right);
-        Resultat bestResult = leftResult.distancia < rightResult.distancia ? leftResult : rightResult;
+        Resultat bestResult = leftResult.getDistancia() < rightResult.getDistancia() ? leftResult : rightResult;
 
 
-        double dmin = bestResult.distancia;
+        double dmin = bestResult.getDistancia();
         int midX = punts.get(mid).getX();
 
         List<Punt> strip = new ArrayList<>();
