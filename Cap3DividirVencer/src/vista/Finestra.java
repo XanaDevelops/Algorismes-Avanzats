@@ -24,10 +24,12 @@ public class Finestra extends JFrame implements Comunicar {
     private final Eixos eixos;
     private JComboBox<Distribucio> distribucio;
 
+    FinestraTempsExec fte;
 
     public Finestra() {
         super();
         this.comunicar = Main.instance;
+        fte = new FinestraTempsExec();
 
         eixos = new Eixos(750, 890);
         setTitle("Distàncies a un núvol de punts");
@@ -183,6 +185,9 @@ public class Finestra extends JFrame implements Comunicar {
             case "dibiuxDistancia":
                 eixos.pintarDistancies((String) algorisme.getSelectedItem());
                     break;
+            case "pintaElement":
+                fte.comunicar("pintaElement");
+                break;
             default:
                 break;
         }

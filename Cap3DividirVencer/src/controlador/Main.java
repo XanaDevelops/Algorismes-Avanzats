@@ -12,7 +12,9 @@ import model.generadors.GeneradorGaussia;
 import model.generadors.GeneradorUniforme;
 import model.punts.Punt;
 import vista.Finestra;
+import vista.FinestraTempsExec;
 
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -42,6 +44,8 @@ public class Main implements Comunicar {
 
     public static void main(String[] args) {
         (new Main()).init();
+
+
     }
 
     private void init() {
@@ -59,12 +63,11 @@ public class Main implements Comunicar {
     public void comunicar(String msg) {
         // Dividim el missatge pels caràcters ":" per determinar la comanda
         String[] parts = msg.split(":");
-        System.out.println(Arrays.toString(parts));
         switch (parts[0]) {
             // --------------------------
             // Format esperat: generar:<num>:<distribucio>:<dimensio>:<min>:<max>[:<extra1>:<extra2>...]
             case "generar":
-                System.out.println(msg);
+//                System.out.println(msg);
                 punts.clear();
 
 
@@ -117,7 +120,6 @@ public class Main implements Comunicar {
             case "calcular":
                 try {
                     String alg = String.format("%s %s", parts[1], parts[2]);
-                    System.out.printf("Algorisme: %s%n", alg);
 
                     Class<? extends Calcul> calculClass = ALGORISMES.get(alg);
 
@@ -175,7 +177,7 @@ public class Main implements Comunicar {
 
         if (res instanceof List<?>) {
             dades.setPunts((List<Punt>) res);
-            System.out.println("Punts generats: " + dades.getPunts());
+//            System.out.println("Punts generats: " + dades.getPunts());
         } else {
             System.err.println("Error en generar la llista de punts.");
         }
@@ -198,6 +200,8 @@ public class Main implements Comunicar {
                 System.out.println("Resultats de càlcul DV: " + dades.getDividirVencer().toString());
 //                finestra.comunicar("pintar");
                 finestra.comunicar("dibiuxDistancia");
+                finestra.comunicar("pintaElement");
+
             } catch (Exception e) {
                 System.err.println("Error en el càlcul: " + e.getMessage());
             }

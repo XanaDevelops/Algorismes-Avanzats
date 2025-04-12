@@ -2,8 +2,8 @@ package model;
 
 import model.punts.Punt;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
@@ -56,11 +56,11 @@ public class Dades {
     public void clearDividirVencer() {
         dividirVencer.clear();
     }
-    public Resultat getLastResultatFB(){
-        return forcaBruta.get(forcaBruta.lastKey());
+    public Map.Entry<Integer, Resultat> getLastResultatFB(){
+        return forcaBruta.lastEntry();
     }
-    public Resultat getLastResultatDV(){
-        return dividirVencer.get(dividirVencer.lastKey());
+    public Map.Entry<Integer, Resultat> getLastResultatDV(){
+        return dividirVencer.lastEntry();
     }
     public void afegeixForcaBruta(int n, Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
         Resultat r = new Resultat(p1, p2, distancia, tempsNano, tipus);
@@ -81,11 +81,11 @@ public class Dades {
     }
 
     public static class Resultat {
-        public final long tempsNano;
-        public final Punt p1;
-        public final Punt p2;
-        public final double distancia;
-        public final String tipus; // "curta", "llarga", "aproximada", etc.
+        private final long tempsNano;
+        private final Punt p1;
+        private final Punt p2;
+        private final double distancia;
+        private final String tipus; // "curta", "llarga", "aproximada", etc.
 
         public Resultat(Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
             this.p1 = p1;
@@ -98,6 +98,26 @@ public class Dades {
         // Constructor auxiliar sense tipus (opcional)
         public Resultat(Punt p1, Punt p2, double distancia, long tempsNano) {
             this(p1, p2, distancia, tempsNano, "min");
+        }
+
+        public long getTempsNano() {
+            return tempsNano;
+        }
+
+        public Punt getP1() {
+            return p1;
+        }
+
+        public Punt getP2() {
+            return p2;
+        }
+
+        public double getDistancia() {
+            return distancia;
+        }
+
+        public String getTipus() {
+            return tipus;
         }
 
         @Override
