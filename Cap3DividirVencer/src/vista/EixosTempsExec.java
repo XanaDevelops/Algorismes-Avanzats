@@ -73,28 +73,9 @@ public class EixosTempsExec extends JPanel {
             Collections.sort(nPunts);
 
             int maxelement= nPunts.getLast();
-            System.out.println("maxelement: " + maxelement);
+
             //cerca el major temps registrat dins les operacions
-
-            long maxTemps = Long.MIN_VALUE;
-
-            if (dv != null) {
-                for (Map.Entry<Integer, Resultat> entry : dv.entrySet()) {
-                    Resultat resultat = entry.getValue();
-                    if (resultat != null && resultat.getTempsNano() > maxTemps) {
-                        maxTemps = resultat.getTempsNano();
-                    }
-                }
-            }
-
-            if (fb != null) {
-                for (Map.Entry<Integer, Resultat> entry : fb.entrySet()) {
-                    Resultat resultat = entry.getValue();
-                    if (resultat != null && resultat.getTempsNano() > maxTemps) {
-                        maxTemps = resultat.getTempsNano();
-                    }
-                }
-            }
+            long maxTemps = getMaxTemps(dv, fb);
 
 
             System.out.println("maxTemps: " + maxTemps);
@@ -121,9 +102,8 @@ public class EixosTempsExec extends JPanel {
             if (dv != null) {
                 for (Map.Entry<Integer, Resultat> r : dv.entrySet()) {
                     if (maxelement == 0 || r.getValue() == null) break;
-                    g.setColor(Color.green);
+                    g.setColor(FinestraTempsExec.VERD);
                     px = 50 + r.getKey() * (w - 60) / maxelement;
-//                    py = (h - 20) - ((int) (r.getValue().getTempsNano() * (h - 40) / Math.log10(maxTemps)));
                     py = (h - 20) - (int)((Math.log10(r.getValue().getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
 
                     g.fillOval(px - 3, py - 3, 7, 7);
@@ -141,9 +121,8 @@ public class EixosTempsExec extends JPanel {
             if (fb != null) {
                 for (Map.Entry<Integer, Resultat> r : fb.entrySet()) {
                     if (maxelement == 0 || r.getValue() == null) break;
-
+                    g.setColor(FinestraTempsExec.VERMELL);
                     px = 50 + r.getKey() * (w - 60) / maxelement;
-//                        py = (h - 20) - ((int) (r.getValue().getTempsNano() * (h - 40) / Math.log10(maxTemps)));
                     py = (h - 20) - (int)((Math.log10(r.getValue().getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
 
                     g.fillOval(px - 3, py - 3, 7, 7);
@@ -156,6 +135,27 @@ public class EixosTempsExec extends JPanel {
                 }
             }
         }
+    }
+
+    private static long getMaxTemps(NavigableMap<Integer, Resultat> dv, NavigableMap<Integer, Resultat> fb) {
+        long maxTemps = Long.MIN_VALUE;
+
+        maxTemps = getMaxTemps(dv, maxTemps);
+
+        maxTemps = getMaxTemps(fb, maxTemps);
+        return maxTemps;
+    }
+
+    private static long getMaxTemps(NavigableMap<Integer, Resultat> fb, long maxTemps) {
+        if (fb != null) {
+            for (Map.Entry<Integer, Resultat> entry : fb.entrySet()) {
+                Resultat resultat = entry.getValue();
+                if (resultat != null && resultat.getTempsNano() > maxTemps) {
+                    maxTemps = resultat.getTempsNano();
+                }
+            }
+        }
+        return maxTemps;
     }
 
 
