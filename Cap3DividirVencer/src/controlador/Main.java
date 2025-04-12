@@ -67,44 +67,38 @@ public class Main implements Comunicar {
             // --------------------------
             // Format esperat: generar:<num>:<distribucio>:<dimensio>:<min>:<max>[:<extra1>:<extra2>...]
             case "generar":
-//                System.out.println(msg);
                 punts.clear();
 
-
                 try {
-                    int num = Integer.parseInt(parts[1]);
-                    String distribucio = parts[2];  // "Uniforme", "Gaussiana", o "Exponencial"
-                    String dimensio = parts.length > 3 ? parts[3] : "p2D";
+                    List<Object> params = new ArrayList<>();
+                    params.add(Integer.parseInt(parts[1]));
 
-//                    int min = parts.length > 4 ? Integer.parseInt(parts[4]) : 0;
-//                    int max = parts.length > 5 ? Integer.parseInt(parts[5]) : 600;
                     int min = 0, max = 600;
-                    TipoPunt tp = dimensio.equalsIgnoreCase("p3D") ? TipoPunt.p3D : TipoPunt.p2D;
+                    params.add(min);
+                    params.add(max);
+                    String distribucio = parts[2];  // "Uniforme", "Gaussiana", o "Exponencial"
+
+
+                    TipoPunt tp = parts[3].equalsIgnoreCase("p3D") ? TipoPunt.p3D : TipoPunt.p2D;
 
                     // Capturar els possibles paràmetres extra per generadors com Gaussiana o Exponencial
-                    String[] extraParams;
+
                     if (distribucio.equalsIgnoreCase("Gaussiana")) {
                         // Per a la distribució Gaussiana s'esperen dos paràmetres extra: mitjana i desviació estàndard
-//                        if (parts.length > 7) {
-//                            extraParams = new String[]{ parts[6], parts[7] };
-//                        } else {
-                            extraParams = new String[]{
-                                    String.valueOf((min + max) / 2.0),
-                                    String.valueOf(Math.max(1.0, (max - min) / 4.0))
-                            };
-//                        }
+
+                        params.add((min + max) / 2.0);
+
+                        params.add(Math.max(1.0, (max - min) / 4.0));
+
                     } else if (distribucio.equalsIgnoreCase("Exponencial")) {
                         // Per a la distribució Exponencial s'espera un paràmetre extra: lambda
-//                        if (parts.length > 6) {
-//                            extraParams = new String[]{ parts[6] };
-//                        } else {
-                            extraParams = new String[]{ "1.0" };
-//                        }
-                    } else {
-                        extraParams = new String[0];
+
+                        Random rn = new Random();
+                        params.add(rn.nextDouble());
+
                     }
 
-                    generarPunts(GENERADORS.get(distribucio), num, tp, min, max, extraParams);
+                    generarPunts(GENERADORS.get(distribucio), tp, params);
 
                     // Actualitzar la vista per mostrar els punts generats
                     finestra.comunicar("dibuixPunts");
@@ -142,7 +136,7 @@ public class Main implements Comunicar {
 
             case "esborrar":
                 this.comunicar("aturar");
-               //esborrar els punts
+                //esborrar els punts
                 dades.clearPunts();
                 dades.clearForcaBruta();
                 dades.clearDividirVencer();
@@ -167,17 +161,28 @@ public class Main implements Comunicar {
     }
 
     // Mètode per generar els punts mitjançant el generador especificat
-    private void generarPunts(Class<? extends Generador> generadorClass, int num, TipoPunt tp, int min, int max, String[] extraParams)
+    private void generarPunts(Class<? extends Generador> generadorClass, TipoPunt tp, List<Object> params)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         dades.setTp(tp);
         String metodeGeneracio = tp == TipoPunt.p2D ? "genera2D" : "genera3D";
 
-        Object generador = generadorClass.getConstructor(int.class, int.class, int.class).newInstance(num, min, max);
+        Class<?>[] paramTypes = params.stream()
+                .map(p -> {
+                    if (p instanceof Integer) return int.class;
+                    if (p instanceof Double) return double.class;
+
+                    return p.getClass();
+                })
+                .toArray(Class<?>[]::new);
+
+        // Instanciar generador
+
+        Object generador = generadorClass.getConstructor(paramTypes).newInstance(params.toArray());
+
         Object res = generador.getClass().getMethod(metodeGeneracio).invoke(generador);
 
         if (res instanceof List<?>) {
             dades.setPunts((List<Punt>) res);
-//            System.out.println("Punts generats: " + dades.getPunts());
         } else {
             System.err.println("Error en generar la llista de punts.");
         }
