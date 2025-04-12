@@ -17,11 +17,12 @@ public class GeneradorGaussia extends Generador {
         this.mitjana = mitjana;
         this.desviacio = desviacio;
     }
-//public GeneradorGaussia(int n, int min, int max) {
-//    super(n, min, max);
-//    this.mitjana = 0;
-//    this.desviacio = 1;
-//}
+
+    public GeneradorGaussia(int n, int min, int max) {
+        super(n, min, max);
+        this.mitjana = 0;
+        this.desviacio = 1;
+    }
 
     private int limita(int valor) {
         return Math.max(min, Math.min(max, valor));

@@ -103,7 +103,7 @@ public class Eixos extends JPanel {
     public void dibuixaPunt(Graphics g, Punt punt2D, int pointSize, int maxX, int maxY, Color color) {
         int px, py;
         g.setColor(color);
-        px = 50 + punt2D.getX() * (width - 60) / maxX;
+        px = 50 + punt2D.getX() * (width - 80) / maxX;
         py = (height - 20) - (punt2D.getY() * (height - 40)) / maxY;
         g.fillOval(px - pointSize / 2, py - pointSize / 2, pointSize, pointSize);
         g.setColor(Color.black);
@@ -131,9 +131,9 @@ public class Eixos extends JPanel {
         List<Punt> punts = dades.getPunts();
         int [] maxs = getMaxMin();
         int maxX = maxs[0], maxY = maxs[1];
-        int p1x = 50 + res.getP1().getX() * (width - 60) / maxX;
+        int p1x = 50 + res.getP1().getX() * (width - 80) / maxX;
         int p1y = (height - 20) - (res.getP1().getY() * (height - 40)) / maxY;
-        int p2x = 50 + res.getP2().getX() * (width - 60) / maxX;
+        int p2x = 50 + res.getP2().getX() * (width - 80) / maxX;
         int p2y = (height - 20) - (res.getP2().getY() * (height - 40)) / maxY;
 
 
@@ -141,11 +141,15 @@ public class Eixos extends JPanel {
         dibuixaPunt(g, res.getP2(), getPointSize(punts), maxX, maxY, new Color(255, 153, 51));
 
         g2d.setStroke(new BasicStroke(2));
+
+
         g2d.setColor(Color.RED);
         g2d.drawLine(p1x - 1, p1y - 1, p2x - 1, p2y - 1);
 
         int midX = (p1x + p2x) / 2;
         int midY = (p1y + p2y) / 2;
+        Font font = new Font("Verdana", Font.BOLD, 10);
+        g2d.setFont(font);
         g2d.drawString(String.format("%.2f", res.getDistancia()), midX, midY - 10);
     }
 }
