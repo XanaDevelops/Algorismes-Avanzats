@@ -15,7 +15,7 @@ public class ParellaPropera_fb extends Calcul {
         @Override
         public void run() {
                 Dades.Resultat res = calc((ArrayList<Punt>) punts);
-                dades.afegeixForcaBruta(punts.size(), res.p1, res.p2, res.distancia, res.tempsNano,"min");
+                dades.afegeixForcaBruta(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(),"min");
         }
 
         public static Dades.Resultat calc(ArrayList<Punt> punts){
