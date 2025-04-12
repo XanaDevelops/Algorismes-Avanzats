@@ -1,11 +1,16 @@
 package vista;
 
 
+import com.sun.glass.events.WheelEvent;
+import com.sun.javafx.geom.transform.Translate2D;
 import controlador.Comunicar;
 import controlador.Main;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
+import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.input.MouseButton;
@@ -19,7 +24,9 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import model.Dades;
 import model.punts.Punt;
@@ -34,22 +41,23 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
     private final Material puntBlau = new PhongMaterial(Color.BLUE);
 
-    private Punt3D originPoints;
+    private Translate originPoints;
 
     private Group root, puntGroup;
 
-    private Rotate camRX = new Rotate(0, Rotate.X_AXIS);
-    private Rotate camRY = new Rotate(0, Rotate.Y_AXIS);
-    private Rotate camRZ = new Rotate(0, Rotate.Z_AXIS);
-    private Translate camTrans = new Translate(0,0,0);
-    private double cameraDistance = -100;
+    private Camera camera;
 
-    private Camera camera = new PerspectiveCamera(true);
+    private final Rotate[] puntsRotate = {new Rotate(0, Rotate.Z_AXIS),
+                                    new Rotate(0, Rotate.Y_AXIS),
+                                    new Rotate(0, Rotate.X_AXIS),};
+    private final double[] puntsRotVel = {0,0,0};
 
-    private double mousePosX, mousePosY;
-    private double mouseOldX, mouseOldY;
+    private final Translate camTranslate = new Translate(0,0,-750);
+    private final double[] camVel = {0,0,0};
 
-    //això impideix que JAvaFX s'aturi
+    private Point2D lastMouse = new Point2D(0,0);
+
+    //això impedeix que JAvaFX s'aturi tot sol
     static {
         Platform.setImplicitExit(false);
     }
@@ -68,25 +76,47 @@ public class Eixos3D extends JFXPanel implements Comunicar {
     private Scene createScene(){
         root = new Group();
         puntGroup = new Group();
-        Scene scene = new Scene(root, getWidth(), getHeight(), Color.BLACK);
-        buildCamera();
+        puntGroup.getTransforms().addAll(puntsRotate[0], puntsRotate[1], puntsRotate[2]);
+
+
+        Scene scene = new Scene(root, getWidth(), getHeight(),true, SceneAntialiasing.BALANCED);
+        scene.setFill(Color.BLACK);
+        camera = createCamera();
         scene.setCamera(camera);
 
         addMouseControls(scene);
-        root.getChildren().addAll(puntGroup);
+        root.getChildren().addAll(puntGroup, new AmbientLight(Color.WHITE));
 
         return scene;
     }
 
-    private void buildCamera() {
+    private Camera createCamera() {
+        Camera camera = new PerspectiveCamera(true);
+
         camera.setNearClip(0.1);
         camera.setFarClip(10000);
-        camera.setTranslateZ(cameraDistance);
-        camera.getTransforms().addAll(camRX, camRY, camRZ, camTrans);
+        camera.getTransforms().add(camTranslate);
+
+        return camera;
     }
 
     private void plotPunts(){
         puntGroup.getChildren().clear();
+
+        Cylinder eixX = new Cylinder(1, 500);
+        eixX.setMaterial(new PhongMaterial(Color.RED));
+
+        Cylinder eixY = new Cylinder(1, 500);
+        eixY.setMaterial(new PhongMaterial(Color.GREEN));
+        eixY.setRotationAxis(Rotate.Z_AXIS);
+        eixY.setRotate(90);
+
+        Cylinder eixZ = new Cylinder(1, 500);
+        eixZ.setMaterial(new PhongMaterial(Color.BLUE));
+        eixZ.setRotationAxis(Rotate.X_AXIS);
+        eixZ.setRotate(90);
+
+        puntGroup.getChildren().addAll(eixX, eixY, eixZ);
 
         List<Punt> punts =  dades.getPunts();
         if (!(punts.getFirst() instanceof Punt3D)) {
@@ -94,8 +124,8 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         }
         System.err.println("Lista de Punts: " + punts.size());
 
-        originPoints = new Punt3D((int) (getWidth()/2d), (int) (getHeight()/2d), 0);
-        System.err.println(getWidth());
+        originPoints = new Translate((int) (getWidth() / 2d), (int) (getHeight() / 2d), 0) {
+        };
         //plotPunts();
         //puntGroup.setTranslateX(originPoints.getX());
         //puntGroup.setTranslateY(originPoints.getY());
@@ -113,45 +143,73 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         }
     }
 
-    private void addMouseControls(Scene subScene) {
-        subScene.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent me) {
-                mouseOldX = me.getSceneX();
-                mouseOldY = me.getSceneY();
-            }
+    private void updateCamera() {
+
+    }
+
+    private void addMouseControls(Scene scene) {
+        final double THRESHOLD = 0.3; // Constante para el delta mínimo
+        final boolean[] isDragging = {false};
+
+        //codi per a la rotació del gràfic
+        scene.setOnMousePressed(event -> {
+           lastMouse = new Point2D(event.getSceneX(), event.getSceneY());
+           isDragging[0] = true;
         });
 
-        subScene.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent me) {
-                mousePosX = me.getSceneX();
-                mousePosY = me.getSceneY();
-                double deltaX = mousePosX - mouseOldX;
-                double deltaY = mousePosY - mouseOldY;
+        scene.setOnMouseDragReleased(event -> {
+            isDragging[0] = false;
+        });
 
-                if (me.getButton() == MouseButton.PRIMARY) {
-                    // Rotacion
-                    camRY.setAngle(camRY.getAngle() + deltaX * 0.2);
-                    camRX.setAngle(camRX.getAngle() - deltaY * 0.2);
-                } else if (me.getButton() == MouseButton.SECONDARY) {
-                    // Traslacion
-                    camTrans.setX(camTrans.getX() + deltaX);
-                    camTrans.setY(camTrans.getY() + deltaY);
+        scene.setOnMouseDragged(event -> {
+            if(event.isPrimaryButtonDown()){
+                Point2D newPos = new Point2D(event.getSceneX(), event.getSceneY());
+                double deltaX = newPos.getX() - lastMouse.getX();
+                double deltaY = newPos.getY() - lastMouse.getY();
+
+                if(Math.abs(deltaY) >= THRESHOLD) {
+                    puntsRotVel[0] += deltaY * 0.2;
+                    //puntsRotVel[2] += deltaY * 0.2 * Math.sin(Math.toRadians(puntsRotate[1].getAngle()));
+
                 }
-                mouseOldX = mousePosX;
-                mouseOldY = mousePosY;
-                System.err.println(camRX.getAngle());
+                if(Math.abs(deltaX) >= THRESHOLD) {
+                    puntsRotVel[1] += -deltaX*0.2;
+                }
+
+                lastMouse = newPos;
             }
+            System.err.println(puntsRotate[0].getAngle() + ", "+puntsRotate[1].getAngle() + ", " + puntsRotate[2].getAngle());
         });
 
-        subScene.setOnScroll(new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
-                cameraDistance += event.getDeltaY() * 0.5;
-                camera.setTranslateZ(cameraDistance);
-            }
+
+        //Codi per la roda del ratolí, apropa o allunya el grafic
+        scene.setOnScroll(event -> {
+            camVel[2] += event.getDeltaY() * 0.5;
         });
+
+        final int maxCamVel = 50;
+        final int maxRotVel = 20;
+        (new AnimationTimer() {
+
+            @Override
+            public void handle(long l) {
+                if (Math.abs(camVel[2]) < 0.5){
+                    camVel[2] = 0;
+                }
+                camVel[2] = Math.clamp(camVel[2], -maxCamVel, maxCamVel);
+                camTranslate.setZ(camTranslate.getZ() + camVel[2]);
+                camVel[2] *= 0.9;
+
+                for (int dim = 0; dim < puntsRotVel.length; dim++) {
+                    if(Math.abs(puntsRotVel[dim]) < 0.0001){
+                        puntsRotVel[dim] = 0;
+                    }
+                    puntsRotVel[dim] = Math.clamp(puntsRotVel[dim], -maxRotVel, maxRotVel);
+                    puntsRotate[2-dim].setAngle(puntsRotate[2-dim].getAngle() + puntsRotVel[dim]);
+                    puntsRotVel[dim] *= 0.95;
+                }
+            }
+        }).start();
     }
 
 
