@@ -72,8 +72,8 @@ public class Main implements Comunicar {
                 try {
                     List<Object> params = new ArrayList<>();
                     params.add(Integer.parseInt(parts[1]));
-
-                    int min = 0, max = 600;
+                    Random rn = new Random();
+                    int min = 0, max = rn.nextInt(100000);
                     params.add(min);
                     params.add(max);
                     String distribucio = parts[2];  // "Uniforme", "Gaussiana", o "Exponencial"
@@ -88,13 +88,14 @@ public class Main implements Comunicar {
 
                         params.add((min + max) / 2.0);
 
-                        params.add(Math.max(1.0, (max - min) / 4.0));
+//                        params.add(Math.max(1.0, (max - min) / 4.0));
+                        params.add((min + max) / rn.nextDouble(5.1, 7.3));
 
                     } else if (distribucio.equalsIgnoreCase("Exponencial")) {
                         // Per a la distribució Exponencial s'espera un paràmetre extra: lambda
 
-                        Random rn = new Random();
-                        params.add(rn.nextDouble());
+//                        params.add((double) 2 *100000 /(max));
+                        params.add(rn.nextDouble(0.1, 4.5));
 
                     }
 
@@ -183,6 +184,7 @@ public class Main implements Comunicar {
 
         if (res instanceof List<?>) {
             dades.setPunts((List<Punt>) res);
+            System.out.println( "punts generats" + res.toString());
         } else {
             System.err.println("Error en generar la llista de punts.");
         }
