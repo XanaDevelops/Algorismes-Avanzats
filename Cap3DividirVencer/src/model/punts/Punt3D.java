@@ -20,17 +20,18 @@ public class Punt3D extends Punt2D {
         int dx = this.getX() - altre.getX();
         int dy = this.getY() - altre.getY();
         int dz = this.z - altre.z;
-        return Math.sqrt(dx * dx + dy * dy  + dz * dz);
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
+
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {  //mateixa instancia
+        if (this == obj) {  //mateixa instància
             return true;
         }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        Punt3D other = (Punt3D) obj; //mateixos valors
+        Punt3D other = (Punt3D) obj; //mateixes coordenades
         return this.x == other.x && this.y == other.y && this.z == other.z;
     }
 

@@ -14,8 +14,8 @@ public class Parella_Propera_kd extends Calcul {
 
     private KdArbre kdArbre;
     private Node root;
-    private Node bestNode;
-    private double bestDistance;
+    private Node millorNode;
+    private double minDistancia;
 
     public Parella_Propera_kd(Dades dades) {
         super(dades);
@@ -27,34 +27,42 @@ public class Parella_Propera_kd extends Calcul {
     }
 
 
-    private void searchNN(Node current, Punt p) {
-        if (current == null) {
+    /**
+     * Mètode que cerca el veïnat més proper del punt p a partir del node actual de l'arbre.
+     * Actualitza les variables de classe (millorNode i minDistancia) si ha trobat millors resultats.
+     *
+     * @param actual
+     * @param p
+     */
+    private void searchNN(Node actual, Punt p) {
+        if (actual == null) {
             return;
         }
 
-        double d = p.distancia(current.punt);
+        double d = p.distancia(actual.punt);
 
-        if (d > 0 && d < bestDistance) {
-            bestDistance = d;
-            bestNode = current;
+        if (d > 0 && d < minDistancia) {
+            minDistancia = d;
+            millorNode = actual;
         }
 
-        int axis = current.profunditat % current.k;
-        Node next, other;
+        int axis = actual.profunditat % actual.k;
+        Node seguent1, seguent2;
 
-        if (compareByAxis(p, current.punt, axis) < 0) {
-            next = current.left;
-            other = current.right;
+        // Decidir quina branca explorar primer segons la posició de p respecte al pla de divisió
+        if (compareByAxis(p, actual.punt, axis) < 0) {
+            seguent1 = actual.left;
+            seguent2 = actual.right;
         } else {
-            next = current.right;
-            other = current.left;
+            seguent1 = actual.right;
+            seguent2 = actual.left;
         }
 
-        searchNN(next, p);
-
-        double diff = axisDiff(p, current.punt, axis);
-        if (diff < bestDistance) {
-            searchNN(other, p);
+        searchNN(seguent1, p);
+        //S'ha d'explorar l'altra branca de l'arbre?
+        double diff = axisDiff(p, actual.punt, axis);
+        if (diff < minDistancia) { // Sí. l'hiperplà pot contenir punts més propers
+            searchNN(seguent2, p);
         }
     }
 
@@ -69,7 +77,13 @@ public class Parella_Propera_kd extends Calcul {
         }
     }
 
-
+    /**
+     * Compara dos punts en funció d'un eix de coordenades: 0 per X, 1 per Y i 2 per Z.
+     * @param p1
+     * @param p2
+     * @param axis
+     * @return
+     */
     private double axisDiff(Punt p1, Punt p2, int axis) {
         if (axis == 0) {
             return Math.abs(p1.getX() - p2.getX());
@@ -83,14 +97,18 @@ public class Parella_Propera_kd extends Calcul {
 
     private Resultat NN(Punt p) {
 
-        bestDistance = Double.MAX_VALUE;
-        bestNode = null;
+        minDistancia = Double.MAX_VALUE;
+        millorNode = null;
         searchNN(root, p);
 
-        return new Resultat(p, bestNode != null ? bestNode.punt : null, bestDistance, 0, "min");
+        return new Resultat(p, millorNode != null ? millorNode.punt : null, minDistancia, 0, "min");
     }
 
-
+    /**
+     * Es calcula el veïnat més proper a cada punt de la llista per determinar la parella propera.
+     * @param punts
+     * @return
+     */
     public Resultat calc(ArrayList<Punt> punts) {
         long t = System.nanoTime();
         if (punts == null || punts.size() < 2) {
@@ -104,7 +122,7 @@ public class Parella_Propera_kd extends Calcul {
         for (Punt p : punts) {
             Resultat r = NN(p);
 
-            if (p.equals(r.getP2())) {
+            if (p.equals(r.getP2())) { // punts duplicats
                 continue;
             }
             if (r.getDistancia() < bestDist) {

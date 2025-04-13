@@ -37,13 +37,13 @@ public class Punt2D implements Punt {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {  //mateixa instancia
+        if (this == obj) {  //mateixa instància
             return true;
         }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        Punt2D other = (Punt2D) obj; //mateixos valors
+        Punt2D other = (Punt2D) obj; //mateixes coordenades
         return this.x == other.x && this.y == other.y;
     }
 
