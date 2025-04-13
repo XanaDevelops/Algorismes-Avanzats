@@ -1,40 +1,25 @@
 package vista;
 
 
-import com.sun.glass.events.WheelEvent;
-import com.sun.javafx.geom.transform.Translate2D;
 import controlador.Comunicar;
 import controlador.Main;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
-import javafx.scene.shape.Line;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import model.Dades;
 import model.punts.Punt;
-import model.punts.Punt2D;
 import model.punts.Punt3D;
 
-import java.awt.*;
 import java.util.List;
 
 public class Eixos3D extends JFXPanel implements Comunicar {
@@ -44,17 +29,15 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
     private Translate originPoints;
 
-    private Group root, puntGroup;
+    private Group root, puntGroup, camGroup, camGroup2, camGroup3;
 
     private Camera camera;
 
-    private final Rotate[] puntsRotate = {new Rotate(0, Rotate.Z_AXIS),
-                                    new Rotate(0, Rotate.Y_AXIS),
-                                    new Rotate(0, Rotate.X_AXIS),};
-    private final double[] puntsRotVel = {0,0,0};
+
 
     private final Translate camTranslate = new Translate(0,0,-750);
-    private final double[] camVel = {0,0,0};
+    private final Rotate camRotateY = new Rotate(-20, Rotate.Y_AXIS);
+    private final Rotate camRotateX = new Rotate(-20, Rotate.X_AXIS);
 
     private Point2D lastMouse = new Point2D(0,0);
 
@@ -80,18 +63,24 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         root = new Group();
         puntGroup = new Group();
         eixGroup = new Group();
+        camGroup = new Group();
+        camGroup2 = new Group();
+        camGroup3 = new Group();
 
-        Group camGroup = new Group();
-        camGroup.getTransforms().addAll(puntsRotate[0], puntsRotate[1], puntsRotate[2]);
-        
         genEixos();
 
 
         Scene scene = new Scene(root, getWidth(), getHeight(),true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
+
         camera = createCamera();
-        camGroup.getChildren().add(camera);
         scene.setCamera(camera);
+
+        camGroup.getTransforms().addAll(camRotateY, camRotateX);
+
+        camGroup.getChildren().add(camGroup2);
+        camGroup2.getChildren().add(camGroup3);
+        camGroup3.getChildren().add(camera);
 
         addMouseControls(scene);
         root.getChildren().addAll(puntGroup, camGroup, eixGroup);
@@ -104,7 +93,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
         camera.setNearClip(0.1);
         camera.setFarClip(10000);
-        camera.getTransforms().add(camTranslate);
+        camera.getTransforms().addAll(camTranslate);
 
         return camera;
     }
@@ -185,6 +174,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         //codi per a la rotació del gràfic
         scene.setOnMousePressed(event -> {
            lastMouse = new Point2D(event.getSceneX(), event.getSceneY());
+
            isDragging[0] = true;
         });
 
@@ -198,24 +188,17 @@ public class Eixos3D extends JFXPanel implements Comunicar {
                 double deltaX = newPos.getX() - lastMouse.getX();
                 double deltaY = newPos.getY() - lastMouse.getY();
 
-                if(Math.abs(deltaY) >= THRESHOLD) {
-                    puntsRotVel[0] += deltaY * 0.2;
-                    //puntsRotVel[2] += deltaY * 0.2 * Math.sin(Math.toRadians(puntsRotate[1].getAngle()));
-
-                }
-                if(Math.abs(deltaX) >= THRESHOLD) {
-                    puntsRotVel[1] += -deltaX*0.2;
-                }
+                camRotateY.setAngle(camRotateY.getAngle() + deltaX * 0.2);
+                camRotateX.setAngle(camRotateX.getAngle() - deltaY * 0.2);
 
                 lastMouse = newPos;
             }
-            System.err.println(puntsRotate[0].getAngle() + ", "+puntsRotate[1].getAngle() + ", " + puntsRotate[2].getAngle());
         });
 
 
         //Codi per la roda del ratolí, apropa o allunya el grafic
         scene.setOnScroll(event -> {
-            camVel[2] += event.getDeltaY() * 0.5;
+
         });
 
         final int maxCamVel = 50;
@@ -224,21 +207,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
             @Override
             public void handle(long l) {
-                if (Math.abs(camVel[2]) < 0.5){
-                    camVel[2] = 0;
-                }
-                camVel[2] = Math.clamp(camVel[2], -maxCamVel, maxCamVel);
-                camTranslate.setZ(camTranslate.getZ() + camVel[2]);
-                camVel[2] *= 0.9;
 
-                for (int dim = 0; dim < puntsRotVel.length; dim++) {
-                    if(Math.abs(puntsRotVel[dim]) < 0.0001){
-                        puntsRotVel[dim] = 0;
-                    }
-                    puntsRotVel[dim] = Math.clamp(puntsRotVel[dim], -maxRotVel, maxRotVel);
-                    puntsRotate[2-dim].setAngle(puntsRotate[2-dim].getAngle() + puntsRotVel[dim]);
-                    puntsRotVel[dim] *= 0.95;
-                }
             }
         }).start();
     }
