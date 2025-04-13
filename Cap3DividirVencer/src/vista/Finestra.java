@@ -12,7 +12,7 @@ public class Finestra extends JFrame implements Comunicar {
     public static final String GENERAR = "generar";
     public static final String ESBORRAR = "esborrar";
     public static final String CALCULAR = "calcular";
-    private final String[] opcionsAlgorisme = {"Força Bruta", "Dividir i vèncer"};
+    private final String[] opcionsAlgorisme = {"Força Bruta", "Dividir i vèncer", "Kd-Arbre"};
     private final Comunicar comunicar;
     private JTextField nPunts;
 
@@ -162,8 +162,10 @@ public class Finestra extends JFrame implements Comunicar {
 
     private JComboBox<String> generateComBox() {
         JComboBox<String> comboBox = new JComboBox<>();
-        comboBox.addItem("Força Bruta");
-        comboBox.addItem("Dividir i vèncer");
+        for (String s : opcionsAlgorisme) {
+            comboBox.addItem(s);
+        }
+
 
         comboBox.setSelectedIndex(0); //default a classic
 

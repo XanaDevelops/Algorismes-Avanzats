@@ -6,15 +6,16 @@ import model.TipoPunt;
 import model.calculs.Calcul;
 import model.calculs.ParellaPropera_dv;
 import model.calculs.ParellaPropera_fb;
+import model.calculs.kdTree.Parella_Propera_kd;
 import model.generadors.Generador;
 import model.generadors.GeneradorExponencial;
 import model.generadors.GeneradorGaussia;
 import model.generadors.GeneradorUniforme;
+import model.calculs.kdTree.KdArbre;
 import model.punts.Punt;
+import model.punts.Punt2D;
 import vista.Finestra;
-import vista.FinestraTempsExec;
 
-import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -38,13 +39,13 @@ public class Main implements Comunicar {
     );
     private static final Map<String, Class<? extends Calcul>> ALGORISMES = Map.of(
             "Parella propera Força Bruta", ParellaPropera_fb.class,
-            "Parella propera Dividir i vèncer", ParellaPropera_dv.class
+            "Parella propera Dividir i vèncer", ParellaPropera_dv.class,
+            "Parella propera Kd-Arbre", Parella_Propera_kd.class
 //                "Parella llunyana Força Bruta"
     );
 
     public static void main(String[] args) {
         (new Main()).init();
-
 
     }
 
@@ -205,6 +206,7 @@ public class Main implements Comunicar {
                 calcul.run();
                 System.out.println("Resultats de càlcul FB: " + dades.getForcaBruta().toString());
                 System.out.println("Resultats de càlcul DV: " + dades.getDividirVencer().toString());
+                System.out.println("Resultats de càlcul KD: " + dades.getKd().toString());
 //                finestra.comunicar("pintar");
                 finestra.comunicar("dibiuxDistancia");
                 finestra.comunicar("pintaElement");

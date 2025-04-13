@@ -112,7 +112,14 @@ public class Eixos extends JPanel {
 
     public void pintarDistancies(String algorisme) {
         if (dades.getPunts() != null && !dades.getPunts().isEmpty()) {
-            resultatADibuixar = (algorisme.equals("Força Bruta")) ? dades.getLastResultatFB().getValue() : dades.getLastResultatDV().getValue();
+            if (algorisme.equals("Força Bruta")){
+                resultatADibuixar = dades.getLastResultatFB().getValue();
+
+            }else if (algorisme.equals("Dividir i vèncer")){
+                resultatADibuixar = dades.getLastResultatDV().getValue();
+            }else{
+                resultatADibuixar = dades.getLastResultatKD().getValue();
+            }
             repaint();
 
         }
