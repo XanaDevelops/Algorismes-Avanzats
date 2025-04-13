@@ -82,21 +82,20 @@ public class Parella_Propera_kd extends Calcul {
 
 
     private Resultat NN(Punt p) {
-        long t = System.nanoTime();
+
         bestDistance = Double.MAX_VALUE;
         bestNode = null;
         searchNN(root, p);
-        t = System.nanoTime() - t;
 
-        return new Resultat(p, bestNode != null ? bestNode.punt : null, bestDistance, t, "min");
+        return new Resultat(p, bestNode != null ? bestNode.punt : null, bestDistance, 0, "min");
     }
 
 
     public Resultat calc(ArrayList<Punt> punts) {
+        long t = System.nanoTime();
         if (punts == null || punts.size() < 2) {
             return null;
         }
-
 
         double bestDist = Double.MAX_VALUE;
         Punt bestP1 = null;
@@ -114,7 +113,8 @@ public class Parella_Propera_kd extends Calcul {
                 bestP2 = r.getP2();
             }
         }
-        return new Resultat(bestP1, bestP2, bestDist, 0, "min");
+        t = System.nanoTime() - t;
+        return new Resultat(bestP1, bestP2, bestDist, t, "min");
     }
 
     @Override

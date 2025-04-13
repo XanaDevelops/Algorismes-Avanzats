@@ -4,6 +4,7 @@ import controlador.Comunicar;
 import controlador.Main;
 
 import javax.swing.*;
+import javax.xml.stream.Location;
 import java.awt.*;
 import java.util.Objects;
 
@@ -44,8 +45,8 @@ public class Finestra extends JFrame implements Comunicar {
         this.add(eixos, BorderLayout.CENTER);
 
         this.pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        this.setLocation(0,0);
+        this.setVisible(true);
 
     }
 

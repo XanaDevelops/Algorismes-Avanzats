@@ -22,7 +22,10 @@ public class FinestraTempsExec extends JFrame implements Comunicar {
         this.add(llegenda, BorderLayout.NORTH);
         this.add(eixosTempsExec, BorderLayout.CENTER);
         this.pack();
-        this.setLocationRelativeTo(null);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = screenSize.width - this.getWidth();
+        int y = 0;
+        this.setLocation(x, y);
         this.setVisible(true);
     }
 

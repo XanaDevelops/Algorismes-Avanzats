@@ -185,7 +185,7 @@ public class Main implements Comunicar {
 
         if (res instanceof List<?>) {
             dades.setPunts((List<Punt>) res);
-            System.out.println( "punts generats" + res.toString());
+//            System.out.println( "punts generats" + res.toString());
         } else {
             System.err.println("Error en generar la llista de punts.");
         }

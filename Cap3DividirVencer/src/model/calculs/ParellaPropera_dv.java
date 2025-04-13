@@ -72,6 +72,9 @@ public class ParellaPropera_dv extends Calcul {
                 double diffY = areaPossible.get(j).getY() - areaPossible.get(i).getY();
                 double diffZ = Math.abs(areaPossible.get(j).getZ() - areaPossible.get(i).getZ());
 
+                if (areaPossible.get(i).equals(areaPossible.get(j))) { //punts duplicats
+                    continue;
+                }
                 if (es3D) {
                     if (diffY >= dmin && diffZ >= dmin) break;
                 } else {
