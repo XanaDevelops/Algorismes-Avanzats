@@ -78,7 +78,7 @@ public class Main implements Comunicar {
 
                     params.add(Integer.parseInt(parts[1]));
                     Random rn = new Random();
-                    int max = rn.nextInt(Dades.RANG_PUNT);
+                    int max = Dades.RANG_PUNT;
                     int min = tp == TipoPunt.p2D ? 0 : -max;
                     params.add(min);
                     params.add(max);

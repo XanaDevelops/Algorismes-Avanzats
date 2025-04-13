@@ -37,12 +37,12 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
 
 
-    private final Translate camTranslate = new Translate(0,0,-750);
+    private final Translate camTranslate = new Translate(0,0,-tamGraf*(4/3d));
     private final Translate camCenter = new Translate(0,0,0);
     private final double[] transVels = new double[] {0,0,0};
 
-    private final Rotate camRotateY = new Rotate(-45, Rotate.Y_AXIS);
-    private final Rotate camRotateX = new Rotate(-20, Rotate.X_AXIS);
+    private final Rotate camRotateY = new Rotate(45, Rotate.Y_AXIS);
+    private final Rotate camRotateX = new Rotate(-20+ 180, Rotate.X_AXIS);
     private final double[] rotVels = new double[] {0,0};
 
     private Point2D lastMouse = new Point2D(0,0);
@@ -129,35 +129,36 @@ public class Eixos3D extends JFXPanel implements Comunicar {
     }
 
     private void genEixos() {
-        Cylinder eixX = new Cylinder(1, 500);
+        int tamGraf = this.tamGraf*2;
+        Cylinder eixX = new Cylinder(1, tamGraf);
         eixX.setMaterial(new PhongMaterial(Color.RED));
 
-        Cylinder eixY = new Cylinder(1, 500);
+        Cylinder eixY = new Cylinder(1, tamGraf);
         eixY.setMaterial(new PhongMaterial(Color.GREEN));
         eixY.setRotationAxis(Rotate.Z_AXIS);
         eixY.setRotate(90);
 
-        Cylinder eixZ = new Cylinder(1, 500);
+        Cylinder eixZ = new Cylinder(1, tamGraf);
         eixZ.setMaterial(new PhongMaterial(Color.BLUE));
         eixZ.setRotationAxis(Rotate.X_AXIS);
         eixZ.setRotate(90);
 
-        Box redArrow = new Box(1, 3, 1);   // Oriented along Y (red axis)
+        Box redArrow = new Box(10, 10, 10);   // Oriented along Y (red axis)
         redArrow.setMaterial(new PhongMaterial(Color.RED));
-        redArrow.setTranslateY(255);
+        redArrow.setTranslateY(tamGraf/2d);
 
-        Box greenArrow = new Box(3, 1, 1); // Oriented along X (green axis)
+        Box greenArrow = new Box(10, 10, 10); // Oriented along X (green axis)
         greenArrow.setMaterial(new PhongMaterial(Color.GREEN));
-        greenArrow.setTranslateX(255);
+        greenArrow.setTranslateX(tamGraf/2d);
 
-        Box blueArrow = new Box(1, 1, 3);  // Oriented along Z (blue axis)
+        Box blueArrow = new Box(10, 10, 10);  // Oriented along Z (blue axis)
         blueArrow.setMaterial(new PhongMaterial(Color.BLUE));
-        blueArrow.setTranslateZ(255);
+        blueArrow.setTranslateZ(tamGraf/2d);
 
         final Color colorPlano = new Color(0.4, 0.4, 0.4, 0.05);
 
 
-        Box planeXZ = new Box(600, 1, 600);  // Plano en el plano XZ
+        Box planeXZ = new Box(tamGraf, 0.1, tamGraf);  // Plano en el plano XZ
         planeXZ.setMaterial(new PhongMaterial(colorPlano));
 
         eixGroup.getChildren().addAll(eixX, eixY, eixZ, redArrow, greenArrow, blueArrow, planeXZ);
@@ -184,13 +185,12 @@ public class Eixos3D extends JFXPanel implements Comunicar {
             double deltaY = newPos.getY() - lastMouse.getY();
 
             if(event.isPrimaryButtonDown()){
-                rotVels[1] += deltaX * 0.2;
+                rotVels[1] -= deltaX * 0.2;
                 rotVels[0] += deltaY * 0.2;
             }else if (event.isSecondaryButtonDown()){
                 transVels[0] -= deltaX * 0.2;
                 transVels[1] -= deltaY * 0.2;
-//                camCenter.setX(camCenter.getX() - deltaX * 0.2);
-//                camCenter.setY(camCenter.getY() - deltaY * 0.2);
+
             }
 
             lastMouse = newPos;
