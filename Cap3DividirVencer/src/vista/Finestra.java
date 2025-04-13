@@ -5,15 +5,16 @@ import controlador.Main;
 import javafx.application.Platform;
 
 import javax.swing.*;
+import javax.xml.stream.Location;
 import java.awt.*;
 import java.util.Objects;
 
 public class Finestra extends JFrame implements Comunicar {
     public static final String ATURAR = "aturar";
-    public static final String COMENÇAR = "començar";
+    public static final String GENERAR = "generar";
     public static final String ESBORRAR = "esborrar";
-
-    private final String[] opcionsAlgorisme = {"Força Bruta", "Dividir i vèncer"};
+    public static final String CALCULAR = "calcular";
+    private final String[] opcionsAlgorisme = {"Força Bruta", "Dividir i vèncer", "Kd-Arbre"};
     private final Comunicar comunicar;
     private JTextField nPunts;
 
@@ -26,12 +27,14 @@ public class Finestra extends JFrame implements Comunicar {
     private Comunicar currentEixos;
     private JComboBox<Distribucio> distribucio;
 
+    FinestraTempsExec fte;
     private JPanel eixosPanel;
     private CardLayout cardLayout;
 
     public Finestra() {
         super();
         this.comunicar = Main.instance;
+        fte = new FinestraTempsExec();
 
         eixos = new Comunicar[]{new Eixos2D(750, 890), new Eixos3D()};
         currentEixos = eixos[0];
@@ -55,8 +58,8 @@ public class Finestra extends JFrame implements Comunicar {
         eixosPanel.add((Component) eixos[1], Dimensio.D3.getEtiqueta());
         this.add(eixosPanel, BorderLayout.CENTER);
         this.pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        this.setLocation(0,0);
+        this.setVisible(true);
 
         cardLayout.show(eixosPanel, Dimensio.D2.getEtiqueta());
 
@@ -73,7 +76,7 @@ public class Finestra extends JFrame implements Comunicar {
         distribucio = generateComBoxDistr();
         distancia = generarDistCombox();
 
-        ((JButton) panel.add(new JButton(COMENÇAR))).addActionListener(e -> {
+        ((JButton) panel.add(new JButton(GENERAR))).addActionListener(e -> {
             if (nPunts.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Si us plau, introdueix un número.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -92,7 +95,8 @@ public class Finestra extends JFrame implements Comunicar {
 
                         }
                     }
-                    comunicar.comunicar("generar:" + num + ":" + distribucio.getSelectedItem() + ":p" + dimensio.getSelectedItem() + ":" + distancia.getSelectedItem() + ":" + algorisme.getSelectedItem());
+                    comunicar.comunicar("generar:" + num + ":" + distribucio.getSelectedItem() + ":p" + dimensio.getSelectedItem());
+
                     currentEixos.comunicar("aturar");
                     cardLayout.show(eixosPanel, (String) dimensio.getSelectedItem());
                     currentEixos = eixos[dimensio.getSelectedIndex()];
@@ -100,6 +104,18 @@ public class Finestra extends JFrame implements Comunicar {
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+
+        });
+        ((JButton) panel.add(new JButton(CALCULAR))).addActionListener(e -> {
+
+            //FORMAT calcular:<Parella Propera | Parella llunyana>:<Força Bruta| Dividir i vèncer>
+            if (Main.instance.getDades().getPunts()!=null){
+                comunicar.comunicar("calcular:" + distancia.getSelectedItem() +":"+ algorisme.getSelectedItem());
+
+            }else{
+                JOptionPane.showMessageDialog(this, "Primer has de generar els punts","Error", JOptionPane.WARNING_MESSAGE);
 
             }
 
@@ -166,8 +182,9 @@ public class Finestra extends JFrame implements Comunicar {
 
     private JComboBox<String> generateComBoxAlgorisme() {
         JComboBox<String> comboBox = new JComboBox<>();
-        comboBox.addItem("Força Bruta");
-        comboBox.addItem("Dividir i vèncer");
+        for (String s : opcionsAlgorisme) {
+            comboBox.addItem(s);
+        }
 
         comboBox.setSelectedIndex(0); //default a classic
 
@@ -182,6 +199,12 @@ public class Finestra extends JFrame implements Comunicar {
             case "dibuixPunts":
             case "pintar":
                 currentEixos.comunicar(s);
+                break;
+            case "dibiuxDistancia":
+                //eixos.pintarDistancies((String) algorisme.getSelectedItem());
+                    break;
+            case "pintaElement":
+                fte.comunicar("pintaElement");
                 break;
             default:
                 break;

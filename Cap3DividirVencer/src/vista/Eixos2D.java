@@ -3,6 +3,7 @@ package vista;
 import controlador.Comunicar;
 import controlador.Main;
 import model.Dades;
+import model.Dades.Resultat;
 import model.punts.Punt;
 import model.punts.Punt2D;
 
@@ -17,7 +18,8 @@ public class Eixos2D extends JPanel implements Comunicar {
     private BufferedImage image;
     private int width;
     private int height;
-    private final static int MARGIN = 15;
+    protected final static int MARGIN = 15;
+    private Resultat resultatADibuixar = null;
 
     public Eixos2D(int height, int width) {
         this.dades = Main.instance.getDades();
@@ -34,13 +36,15 @@ public class Eixos2D extends JPanel implements Comunicar {
 
     public synchronized void pintar() {
 
-        if(this.getGraphics() != null){
+        if (this.getGraphics() != null) {
             paint(this.getGraphics());
         }
+
+
     }
 
     @Override
-    public void paintComponent (Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.white);
         g.fillRect(0, 0, width, height);
@@ -53,68 +57,108 @@ public class Eixos2D extends JPanel implements Comunicar {
         g.drawLine(MARGIN, height - MARGIN, MARGIN, MARGIN);
 
         g.setColor(new Color(64, 181, 217));
+        pintarPunts(g);
+        if (resultatADibuixar != null) {
 
-        if (dades != null && dades.getPunts() != null && !dades.getPunts().isEmpty()) {
-            List<Punt> punts = dades.getPunts();
-
-            int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
-            for (Punt punt2D : punts) {
-                if (punt2D != null) {
-                    if (punt2D.getX() > maxX) {
-                        maxX = punt2D.getX();
-                    }
-                    if (punt2D.getY() > maxY) {
-                        maxY = punt2D.getY();
-                    }
-                }
-            }
-            int px, py;
-            g.setColor(Color.LIGHT_GRAY);
-            int maxSizePoint = 10;
-            int minSizePoint = 4;
-            int MAX_POINTS = 10000;
-
-            double ratio = Math.min(1.0, (double)punts.size() / 10000);
-            int pointSize = (int)(maxSizePoint - ratio * (maxSizePoint - minSizePoint));
-
-//            System.out.println("pointSize: " + pointSize);
-            for (Punt punt2D : punts) {
-                if (maxX == 0) {
-                    break;
-                }
-                g.setColor(new Color(102, 178, 255));
-                px = 50 + punt2D.getX() * (width - 60) / maxX;
-                py = (height - 20) - (punt2D.getY() * (height - 40)) / maxY;
-                g.fillOval(px - pointSize/2, py -  pointSize/2, pointSize, pointSize);
-                g.setColor(Color.black);
-                g.drawOval(px - pointSize/2, py -  pointSize/2, pointSize, pointSize);
-
-
-            }
-
-            //draw linias de la distància
-            if (!punts.isEmpty()) {
-
-//                drawDistance(punts.get(0), punts.get(1), g, maxX, maxY);
-
-            }
-
+            pintarDistancia(g, resultatADibuixar);
+            resultatADibuixar = null;
         }
+
 
     }
 
-    private void drawDistance (Punt2D p1, Punt2D p2, Graphics g, int maxX, int maxY) {
-        g.setColor(Color.RED);
-        double distance = Math.sqrt(Math.pow(p1.getX()-p2.getX(), 2) + Math.pow(p1.getY()-p2.getY(), 2));
-        int p1x = 50 + p1.getX() * (width - 60) / maxX;
-        int p1y =  (height - 20) - (p1.getY() * (height - 40)) / maxY;
-        int p2x = 50 + p2.getX() * (width - 60) / maxX;
-        int p2y = (height - 20) - (p2.getY() * (height - 40)) / maxY;
-        g.drawLine(p1x-1, p1y-1, p2x-1, p2y-1);
+    private void pintarPunts(Graphics g) {
+        if (dades != null && dades.getPunts() != null && !dades.getPunts().isEmpty()) {
+            List<Punt> punts = dades.getPunts();
+            int[] maxims = getMaxMin();
+            g.setColor(Color.LIGHT_GRAY);
 
-        int midX = (p1x+p1y) / 2;
-        int midY = (p2x+p2y) / 2;
-        g.drawString(String.format("%.2f", distance), midX, midY - 10);
+            for (Punt punt2D : punts) {
+
+                dibuixaPunt(g, punt2D, getPointSize(punts), maxims[0], maxims[1],new Color(102, 178, 255) );
+
+
+            }
+
+
+        }
+    }
+
+    private int[] getMaxMin() {
+        List<Punt> punts = dades.getPunts();
+        int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
+
+        for (Punt punt2D : punts) {
+            if (punt2D != null) {
+                if (punt2D.getX() > maxX) {
+                    maxX = punt2D.getX();
+                }
+                if (punt2D.getY() > maxY) {
+                    maxY = punt2D.getY();
+                }
+            }
+        }
+        return new int[]{maxX, maxY};
+    }
+
+    public void dibuixaPunt(Graphics g, Punt punt2D, int pointSize, int maxX, int maxY, Color color) {
+        int px, py;
+        g.setColor(color);
+        px = 50 + punt2D.getX() * (width - 80) / maxX;
+        py = (height - 20) - (punt2D.getY() * (height - 40)) / maxY;
+        g.fillOval(px - pointSize / 2, py - pointSize / 2, pointSize, pointSize);
+        g.setColor(Color.black);
+        g.drawOval(px - pointSize / 2, py - pointSize / 2, pointSize, pointSize);
+    }
+
+    public void pintarDistancies(String algorisme) {
+        if (dades.getPunts() != null && !dades.getPunts().isEmpty()) {
+            if (algorisme.equals("Força Bruta")){
+                resultatADibuixar = dades.getLastResultatFB().getValue();
+
+            }else if (algorisme.equals("Dividir i vèncer")){
+                resultatADibuixar = dades.getLastResultatDV().getValue();
+            }else{
+                resultatADibuixar = dades.getLastResultatKD().getValue();
+            }
+            repaint();
+
+        }
+    }
+
+    public int getPointSize(List<Punt> punts){
+        int maxSizePoint = 10;
+        int minSizePoint = 4;
+
+        double ratio = Math.min(1.0, (double) punts.size() / 10000);
+        return (int) (maxSizePoint - ratio * (maxSizePoint - minSizePoint));
+    }
+
+    private void pintarDistancia(Graphics g, Resultat res) {
+        Graphics2D g2d = (Graphics2D) g;
+        List<Punt> punts = dades.getPunts();
+        int [] maxs = getMaxMin();
+        int maxX = maxs[0], maxY = maxs[1];
+        int p1x = 50 + res.getP1().getX() * (width - 80) / maxX;
+        int p1y = (height - 20) - (res.getP1().getY() * (height - 40)) / maxY;
+        int p2x = 50 + res.getP2().getX() * (width - 80) / maxX;
+        int p2y = (height - 20) - (res.getP2().getY() * (height - 40)) / maxY;
+
+
+        dibuixaPunt(g, res.getP1(), getPointSize(punts), maxX, maxY, new Color(255, 153, 51));
+        dibuixaPunt(g, res.getP2(), getPointSize(punts), maxX, maxY, new Color(255, 153, 51));
+
+        g2d.setStroke(new BasicStroke(2));
+
+
+        g2d.setColor(Color.RED);
+        g2d.drawLine(p1x - 1, p1y - 1, p2x - 1, p2y - 1);
+
+        int midX = (p1x + p2x) / 2;
+        int midY = (p1y + p2y) / 2;
+        Font font = new Font("Verdana", Font.BOLD, 10);
+        g2d.setFont(font);
+        g2d.drawString(String.format("%.2f", res.getDistancia()), midX, midY - 10);
     }
 
     @Override
