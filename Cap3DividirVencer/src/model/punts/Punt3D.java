@@ -17,10 +17,14 @@ public class Punt3D extends Punt2D implements Punt{
     public double distancia(Punt punt2) {
         Punt3D altre = (Punt3D) punt2;
 
-        int dx = this.getX() - altre.getX();
-        int dy = this.getY() - altre.getY();
-        int dz = this.z - altre.z;
-        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+        long dx = this.getX() - altre.getX();
+
+        long dy = this.getY() - altre.getY();
+
+        long dz = this.z - altre.z;
+
+//        return Math.sqrt(Math.pow(dx, 2 ) + Math.pow(dy, 2) + Math.pow( dz ,2 ));
+        return Math.sqrt(dx*dx + dy*dy + dz*dz);
     }
 
     @Override

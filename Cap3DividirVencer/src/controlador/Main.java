@@ -14,6 +14,7 @@ import model.generadors.GeneradorUniforme;
 import model.calculs.kdTree.KdArbre;
 import model.punts.Punt;
 import model.punts.Punt2D;
+import model.punts.Punt3D;
 import vista.Finestra;
 
 import javax.swing.*;
@@ -60,6 +61,7 @@ public class Main implements Comunicar {
 //            finestra = new Finestra();
 //        });
         SwingUtilities.invokeLater(() -> finestra = new Finestra());
+
     }
 
     @Override
