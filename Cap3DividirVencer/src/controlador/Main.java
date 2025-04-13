@@ -14,6 +14,7 @@ import model.generadors.GeneradorUniforme;
 import model.calculs.kdTree.KdArbre;
 import model.punts.Punt;
 import model.punts.Punt2D;
+import model.punts.Punt3D;
 import vista.Finestra;
 
 import javax.swing.*;
@@ -90,11 +91,9 @@ public class Main implements Comunicar {
 
                     if (distribucio.equalsIgnoreCase("Gaussiana")) {
                         // Per a la distribució Gaussiana s'esperen dos paràmetres extra: mitjana i desviació estàndard
+                        params.add(max / 2.0);
 
-                        params.add((min + max) / 2.0);
-
-//                        params.add(Math.max(1.0, (max - min) / 4.0));
-                        params.add((min + max) / rn.nextDouble(5.1, 7.3));
+                        params.add( max / rn.nextDouble(5.1, 7.3));
 
                     } else if (distribucio.equalsIgnoreCase("Exponencial")) {
                         // Per a la distribució Exponencial s'espera un paràmetre extra: lambda
