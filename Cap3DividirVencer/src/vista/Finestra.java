@@ -34,7 +34,6 @@ public class Finestra extends JFrame implements Comunicar {
     public Finestra() {
         super();
         this.comunicar = Main.instance;
-        fte = new FinestraTempsExec();
 
         eixos = new Comunicar[]{new Eixos2D(750, 890), new Eixos3D()};
         currentEixos = eixos[0];
@@ -62,6 +61,9 @@ public class Finestra extends JFrame implements Comunicar {
         this.setVisible(true);
 
         cardLayout.show(eixosPanel, Dimensio.D2.getEtiqueta());
+
+        fte = new FinestraTempsExec();
+
 
     }
 
