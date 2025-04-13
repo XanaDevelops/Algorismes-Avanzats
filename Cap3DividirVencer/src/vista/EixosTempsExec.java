@@ -2,7 +2,7 @@ package vista;
 
 import controlador.Main;
 import model.Dades;
-import  model.Dades.Resultat;
+import model.Dades.Resultat;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,14 +69,14 @@ public class EixosTempsExec extends JPanel {
                 nPunts.addAll(kd.keySet());
             }
 
-            if (nPunts.isEmpty()){
+            if (nPunts.isEmpty()) {
                 return;
             }
 
 
             Collections.sort(nPunts);
 
-            int maxelement= nPunts.getLast();
+            int maxelement = nPunts.getLast();
 
             //cerca el major temps registrat dins les operacions
             long maxTemps = getMaxTemps(dv, fb, kd);
@@ -108,7 +108,7 @@ public class EixosTempsExec extends JPanel {
                     if (maxelement == 0 || r.getValue() == null) break;
                     g.setColor(FinestraTempsExec.VERD);
                     px = 50 + r.getKey() * (w - 60) / maxelement;
-                    py = (h - 20) - (int)((Math.log10(r.getValue().getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
+                    py = (h - 20) - (int) ((Math.log10(r.getValue().getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
 
                     g.fillOval(px - 3, py - 3, 7, 7);
                     g.drawLine(pax, pay, px, py);
@@ -127,7 +127,7 @@ public class EixosTempsExec extends JPanel {
                     if (maxelement == 0 || r.getValue() == null) break;
                     g.setColor(FinestraTempsExec.VERMELL);
                     px = 50 + r.getKey() * (w - 60) / maxelement;
-                    py = (h - 20) - (int)((Math.log10(r.getValue().getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
+                    py = (h - 20) - (int) ((Math.log10(r.getValue().getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
 
                     g.fillOval(px - 3, py - 3, 7, 7);
                     g.drawLine(pax, pay, px, py);
@@ -146,7 +146,7 @@ public class EixosTempsExec extends JPanel {
                     if (maxelement == 0 || r.getValue() == null) break;
                     g.setColor(FinestraTempsExec.BLUE);
                     px = 50 + r.getKey() * (w - 60) / maxelement;
-                    py = (h - 20) - (int)((Math.log10(r.getValue().getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
+                    py = (h - 20) - (int) ((Math.log10(r.getValue().getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
 
                     g.fillOval(px - 3, py - 3, 7, 7);
                     g.drawLine(pax, pay, px, py);
