@@ -57,12 +57,16 @@ public class EixosTempsExec extends JPanel {
             //calcula el maxim valor de N (mida de la matriu)
             NavigableMap<Integer, Resultat> dv = dades.getDividirVencer();
             NavigableMap<Integer, Resultat> fb = dades.getForcaBruta();
+            NavigableMap<Integer, Resultat> kd = dades.getKd();
             ArrayList<Integer> nPunts = new ArrayList<>();
             if (dv != null && !dv.isEmpty()) {
                 nPunts.addAll(dv.keySet());
             }
             if (fb != null && !fb.isEmpty()) {
                 nPunts.addAll(fb.keySet());
+            }
+            if (kd != null && !kd.isEmpty()) {
+                nPunts.addAll(kd.keySet());
             }
 
             if (nPunts.isEmpty()){
@@ -75,7 +79,7 @@ public class EixosTempsExec extends JPanel {
             int maxelement= nPunts.getLast();
 
             //cerca el major temps registrat dins les operacions
-            long maxTemps = getMaxTemps(dv, fb);
+            long maxTemps = getMaxTemps(dv, fb, kd);
 
 
             System.out.println("maxTemps: " + maxTemps);
@@ -134,15 +138,35 @@ public class EixosTempsExec extends JPanel {
                     pay = py;
                 }
             }
+
+            pax = 50;
+            pay = h - 10;
+            if (kd != null) {
+                for (Map.Entry<Integer, Resultat> r : kd.entrySet()) {
+                    if (maxelement == 0 || r.getValue() == null) break;
+                    g.setColor(FinestraTempsExec.BLUE);
+                    px = 50 + r.getKey() * (w - 60) / maxelement;
+                    py = (h - 20) - (int)((Math.log10(r.getValue().getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
+
+                    g.fillOval(px - 3, py - 3, 7, 7);
+                    g.drawLine(pax, pay, px, py);
+                    g.drawString("(" + r.getKey() + ", " + r.getValue().getTempsNano() + ")", px - 20, py - 20);
+                    g.setColor(Color.black);
+                    g.drawOval(px - 3, py - 3, 7, 7);
+                    pax = px;
+                    pay = py;
+                }
+            }
         }
     }
 
-    private static long getMaxTemps(NavigableMap<Integer, Resultat> dv, NavigableMap<Integer, Resultat> fb) {
+    private static long getMaxTemps(NavigableMap<Integer, Resultat> dv, NavigableMap<Integer, Resultat> fb, NavigableMap<Integer, Resultat> kd) {
         long maxTemps = Long.MIN_VALUE;
 
         maxTemps = getMaxTemps(dv, maxTemps);
 
         maxTemps = getMaxTemps(fb, maxTemps);
+        maxTemps = getMaxTemps(kd, maxTemps);
         return maxTemps;
     }
 
