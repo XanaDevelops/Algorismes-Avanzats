@@ -6,12 +6,26 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-
+/**
+ * Classe representativa d'un arbre kd que permet un emmagatzematge eficient d'una llista de punts, facilitant
+ * la recerca de distàncies mínimes entre parelles de punts.
+ */
 public class KdArbre {
 
+    /**
+     * Nombre de dimensions dels punts de l'arbre
+     */
     private int k;
+    /**
+     * Node arrel de l'arbre
+     */
     private Node root = null;
 
+    /**
+     * Constructor de classe. Genera l'arbre kd a partir de la llista de punts que rep.
+     * @param punts llista de punts
+     * @param k nombre de dimensions
+     */
     public KdArbre(List<Punt> punts, int k) {
         this.k = k;
         root = crearNode(punts, k, 0);
@@ -21,7 +35,10 @@ public class KdArbre {
         return root;
     }
 
-    private static Comparator<Punt> comparatorX= new Comparator<Punt>() {
+    /**
+     * Comparator per a la coordenada X del punt
+     */
+    private static final Comparator<Punt> comparatorX= new Comparator<Punt>() {
         @Override
         public int compare(Punt o1, Punt o2) {
             if (o1.getX() > o2.getX()) {
@@ -32,8 +49,10 @@ public class KdArbre {
             return 0;
         }
     };
-
-    private static Comparator<Punt> comparatorY= new Comparator<Punt>() {
+    /**
+     * Comparator per a la coordenada Y del punt
+     */
+    private static final Comparator<Punt> comparatorY= new Comparator<Punt>() {
         @Override
         public int compare(Punt o1, Punt o2) {
             if (o1.getY() > o2.getY()) {
@@ -45,7 +64,10 @@ public class KdArbre {
         }
     };
 
-    private static Comparator<Punt> comparatorZ= new Comparator<Punt>() {
+    /**
+     * Comparator per a la coordenada Z del punt
+     */
+    private static final Comparator<Punt> comparatorZ= new Comparator<Punt>() {
         @Override
         public int compare(Punt o1, Punt o2) {
             if (o1.getZ() > o2.getZ()) {
@@ -57,11 +79,23 @@ public class KdArbre {
         }
     };
 
+    /**
+     * Mètode recursiu que genera l'arbre kd.
+     * En cada nivell es tria una coordenada a partir del qual s'insereixen els punts als subarbres corresponents
+     *
+     * @param punts llista de punts
+     * @param k dimensió dels punts
+     * @param profunditat profunditat actual
+     * @return node arrel
+     */
     private Node crearNode(List<Punt> punts, int k, int profunditat) {
         if (punts.isEmpty()) {
             return null;
         }
+        //determinar l'eix de comparació
         int axis = profunditat % k;
+
+        //ordenar la llista de punts segons l'eix de comparació d'aquest nivell de profunditat
         switch (axis) {
             case 0:
                 punts.sort(comparatorX);
@@ -74,18 +108,20 @@ public class KdArbre {
                 break;
         }
 
-        Node node = null;
+        int mitat = punts.size() / 2;
+        //Node central de la llista de punts
+        Node node = new Node(punts.get(mitat), k, profunditat);
+
+        //llista de punts coordenada inferior a la del node central
         List<Punt> puntsInferiors = new ArrayList<>();
+
+        //llista de punts coordenada superior a la del node central
         List<Punt> puntsSuperiors = new ArrayList<>();
 
 
-        int mitat = punts.size() / 2;
-        node = new Node(punts.get(mitat), k, profunditat);
-
-        //afegir els punts inferiors i superiors resprecte de node a les llistes
-        //corresponents
+        // Omplir les llistes de punts superiors i inferiors
         for (int i = 0; i < punts.size(); i++) {
-            if (i == mitat) {
+            if (i == mitat) { //no s'afegeix el node central als subarbres
                 continue;
             }
             Punt puntActual = punts.get(i);
@@ -96,20 +132,22 @@ public class KdArbre {
             }
 
         }
+
+        //Construcció recursiva del subarbre esquerre amb la llista de punts inferiors
         if (mitat - 1 >= 0 && !puntsInferiors.isEmpty()) {
             node.left = crearNode(puntsInferiors, k, profunditat + 1);
             if (node.left != null) {
-                node.left.pare = node;
+                node.left.pare = node; //Establir el node central com a pare del node esquerre
             }
-
         }
+        //Construcció recursiva del subarbre dreta amb la llista de punts superiors
+
         if (mitat <= punts.size() - 1 && !puntsInferiors.isEmpty()) {
             node.right = crearNode(puntsSuperiors, k, profunditat + 1);
-          if ( node.right != null) {
-              node.right.pare = node;
+          if (node.right != null) {
+              node.right.pare = node;  //Establir el node central com a pare del node dreta
           }
         }
-
 
         return node;
 
@@ -117,47 +155,17 @@ public class KdArbre {
 
     @Override
     public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//
-//        recorrerToString(root, sb, 0);
-//        return sb.toString();
-        return getString(root, "", true);
+        StringBuilder sb = new StringBuilder();
+        recorrerToString(root, sb, 0);
+        return sb.toString();
     }
 
-    private static String getString(Node node, String prefix, boolean isTail) {
-        StringBuilder builder = new StringBuilder();
-
-        if (node.pare != null) {
-            String side = "left";
-            if (node.pare.right != null && node.punt.equals(node.pare.right.punt))
-                side = "right";
-            builder.append(prefix + (isTail ? "└── " : "├── ") + "[" + side + "] " + "depth=" + node.profunditat + " id="
-                    + node.punt + "\n");
-        } else {
-            builder.append(prefix + (isTail ? "└── " : "├── ") + "depth=" + node.profunditat + " id=" + node.punt + "\n");
-        }
-        List<Node> children = null;
-        if (node.left != null || node.right != null) {
-            children = new ArrayList<Node>(2);
-            if (node.left != null)
-                children.add(node.left);
-            if (node.right != null)
-                children.add(node.right);
-        }
-        if (children != null) {
-            for (int i = 0; i < children.size() - 1; i++) {
-                builder.append(getString(children.get(i), prefix + (isTail ? "    " : "│   "), false));
-            }
-            if (children.size() >= 1) {
-                builder.append(getString(children.get(children.size() - 1), prefix + (isTail ? "    " : "│   "),
-                        true));
-            }
-        }
-
-        return builder.toString();
-    }
-
-
+    /**
+     * Mètode que recorre l'arbre recursivament per imprimir-lo.
+     * @param node node actual de l'arbre
+     * @param sb la cadena actual
+     * @param nivell nivell de profunditat de l'arbre
+     */
     private void recorrerToString(Node node, StringBuilder sb, int nivell) {
         if (node == null) {
             return;
@@ -173,14 +181,17 @@ public class KdArbre {
     }
 
 
+    /**
+     * Classe del node de l'arbre-kd.
+     */
     public static class Node {
 
-        Node pare = null;
-        Node left;
-        Node right;
-         Punt punt;
-        int k;
-        int profunditat;
+        protected Node pare = null;
+        protected Node left;
+        protected Node right;
+        protected Punt punt;
+        protected int k;
+        protected int profunditat;
 
         public Node(Punt punt, int k, int profunditat) {
             this.punt = punt;
@@ -203,7 +214,7 @@ public class KdArbre {
         @Override
         public String toString() {
             return "Node{" +
-//                    "pare=" + pare +
+                    "pare=" + pare +
                     ", left=" + left +
                     ", right=" + right +
                     ", punt=" + punt +

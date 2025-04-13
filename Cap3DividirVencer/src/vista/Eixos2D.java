@@ -5,7 +5,7 @@ import controlador.Main;
 import model.Dades;
 import model.Dades.Resultat;
 import model.punts.Punt;
-import model.punts.Punt2D;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,19 +28,13 @@ public class Eixos2D extends JPanel implements Comunicar {
         this.height = height;
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
-
         this.setBounds(0, 0, width, height);
-
     }
 
-
     public synchronized void pintar() {
-
         if (this.getGraphics() != null) {
             paint(this.getGraphics());
         }
-
-
     }
 
     @Override
@@ -52,7 +46,6 @@ public class Eixos2D extends JPanel implements Comunicar {
         g.setColor(new Color(64, 181, 217));
 
         //dibuixar eixos
-
         g.drawLine(MARGIN, height - MARGIN, width - MARGIN, height - MARGIN);
         g.drawLine(MARGIN, height - MARGIN, MARGIN, MARGIN);
 
@@ -63,8 +56,6 @@ public class Eixos2D extends JPanel implements Comunicar {
             pintarDistancia(g, resultatADibuixar);
             resultatADibuixar = null;
         }
-
-
     }
 
     private void pintarPunts(Graphics g) {
@@ -74,13 +65,8 @@ public class Eixos2D extends JPanel implements Comunicar {
             g.setColor(Color.LIGHT_GRAY);
 
             for (Punt punt2D : punts) {
-
-                dibuixaPunt(g, punt2D, getPointSize(punts), maxims[0], maxims[1],new Color(102, 178, 255) );
-
-
+                dibuixaPunt(g, punt2D, getPointSize(punts), maxims[0], maxims[1], new Color(102, 178, 255));
             }
-
-
         }
     }
 
@@ -113,20 +99,19 @@ public class Eixos2D extends JPanel implements Comunicar {
 
     public void pintarDistancies(String algorisme) {
         if (dades.getPunts() != null && !dades.getPunts().isEmpty()) {
-            if (algorisme.equals("Força Bruta")){
+            if (algorisme.equals("Força Bruta")) {
                 resultatADibuixar = dades.getLastResultatFB().getValue();
 
-            }else if (algorisme.equals("Dividir i vèncer")){
+            } else if (algorisme.equals("Dividir i vèncer")) {
                 resultatADibuixar = dades.getLastResultatDV().getValue();
-            }else{
+            } else {
                 resultatADibuixar = dades.getLastResultatKD().getValue();
             }
             repaint();
-
         }
     }
 
-    public int getPointSize(List<Punt> punts){
+    public int getPointSize(List<Punt> punts) {
         int maxSizePoint = 10;
         int minSizePoint = 4;
 
@@ -137,7 +122,7 @@ public class Eixos2D extends JPanel implements Comunicar {
     private void pintarDistancia(Graphics g, Resultat res) {
         Graphics2D g2d = (Graphics2D) g;
         List<Punt> punts = dades.getPunts();
-        int [] maxs = getMaxMin();
+        int[] maxs = getMaxMin();
         int maxX = maxs[0], maxY = maxs[1];
         int p1x = 50 + res.getP1().getX() * (width - 80) / maxX;
         int p1y = (height - 20) - (res.getP1().getY() * (height - 40)) / maxY;
@@ -149,7 +134,6 @@ public class Eixos2D extends JPanel implements Comunicar {
         dibuixaPunt(g, res.getP2(), getPointSize(punts), maxX, maxY, new Color(255, 153, 51));
 
         g2d.setStroke(new BasicStroke(2));
-
 
         g2d.setColor(Color.RED);
         g2d.drawLine(p1x - 1, p1y - 1, p2x - 1, p2y - 1);
