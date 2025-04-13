@@ -74,15 +74,17 @@ public class Main implements Comunicar {
 
                 try {
                     List<Object> params = new ArrayList<>();
+                    TipoPunt tp = parts[3].equalsIgnoreCase("p3D") ? TipoPunt.p3D : TipoPunt.p2D;
+
                     params.add(Integer.parseInt(parts[1]));
                     Random rn = new Random();
-                    int min = 0, max = rn.nextInt(100000);
+                    int max = rn.nextInt(Dades.RANG_PUNT);
+                    int min = tp == TipoPunt.p2D ? 0 : -max;
                     params.add(min);
                     params.add(max);
                     String distribucio = parts[2];  // "Uniforme", "Gaussiana", o "Exponencial"
 
 
-                    TipoPunt tp = parts[3].equalsIgnoreCase("p3D") ? TipoPunt.p3D : TipoPunt.p2D;
 
                     // Capturar els possibles paràmetres extra per generadors com Gaussiana o Exponencial
 
