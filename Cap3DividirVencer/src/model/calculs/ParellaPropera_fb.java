@@ -25,8 +25,10 @@ public class ParellaPropera_fb extends Calcul {
                 long t = System.nanoTime();
                 for (int i = 0; i < punts.size(); i++) {
                         for (int j = i + 1; j < punts.size(); j++) {
+
                                 double d = punts.get(i).distancia(punts.get(j));
-                                if (d < min) {
+
+                                if (d < min && (!punts.get(j).equals(punts.get(i)))) { //per si hi ha punts duplicats
                                         min = d;
                                         p1 = punts.get(i);
                                         p2 = punts.get(j);
