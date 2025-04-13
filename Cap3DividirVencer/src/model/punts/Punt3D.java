@@ -1,6 +1,6 @@
 package model.punts;
 
-public class Punt3D extends Punt2D {
+public class Punt3D extends Punt2D implements Punt{
     public final int z;
 
     public Punt3D(int x, int y, int z) {

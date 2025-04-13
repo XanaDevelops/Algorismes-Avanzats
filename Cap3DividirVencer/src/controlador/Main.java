@@ -16,6 +16,7 @@ import model.punts.Punt;
 import model.punts.Punt2D;
 import vista.Finestra;
 
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -55,9 +56,10 @@ public class Main implements Comunicar {
         punts = new ArrayList<>();
         processos = new ArrayList<>();
 
-        executor.execute(() -> {
-            finestra = new Finestra();
-        });
+//        executor.execute(() -> {
+//            finestra = new Finestra();
+//        });
+        SwingUtilities.invokeLater(() -> finestra = new Finestra());
     }
 
     @Override
@@ -72,15 +74,17 @@ public class Main implements Comunicar {
 
                 try {
                     List<Object> params = new ArrayList<>();
+                    TipoPunt tp = parts[3].equalsIgnoreCase("p3D") ? TipoPunt.p3D : TipoPunt.p2D;
+
                     params.add(Integer.parseInt(parts[1]));
                     Random rn = new Random();
-                    int min = 0, max = rn.nextInt(100000);
+                    int max = Dades.RANG_PUNT;
+                    int min = tp == TipoPunt.p2D ? 0 : -max;
                     params.add(min);
                     params.add(max);
                     String distribucio = parts[2];  // "Uniforme", "Gaussiana", o "Exponencial"
 
 
-                    TipoPunt tp = parts[3].equalsIgnoreCase("p3D") ? TipoPunt.p3D : TipoPunt.p2D;
 
                     // Capturar els possibles paràmetres extra per generadors com Gaussiana o Exponencial
 

@@ -1,5 +1,6 @@
 package vista;
 
+import controlador.Comunicar;
 import controlador.Main;
 import model.Dades;
 import model.Dades.Resultat;
@@ -12,7 +13,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 
-public class Eixos extends JPanel {
+public class Eixos2D extends JPanel implements Comunicar {
     private Dades dades;
     private BufferedImage image;
     private int width;
@@ -20,7 +21,7 @@ public class Eixos extends JPanel {
     protected final static int MARGIN = 15;
     private Resultat resultatADibuixar = null;
 
-    public Eixos(int height, int width) {
+    public Eixos2D(int height, int width) {
         this.dades = Main.instance.getDades();
 
         this.width = width;
@@ -142,5 +143,10 @@ public class Eixos extends JPanel {
         Font font = new Font("Verdana", Font.BOLD, 10);
         g2d.setFont(font);
         g2d.drawString(String.format("%.2f", res.getDistancia()), midX, midY - 10);
+    }
+
+    @Override
+    public void comunicar(String s) {
+        pintar();
     }
 }

@@ -2,6 +2,7 @@ package vista;
 
 import controlador.Comunicar;
 import controlador.Main;
+import javafx.application.Platform;
 
 import javax.swing.*;
 import javax.xml.stream.Location;
@@ -22,17 +23,22 @@ public class Finestra extends JFrame implements Comunicar {
     private JComboBox<String> algorisme;
     private JComboBox<String> distancia;
 
-    private final Eixos eixos;
+    private Comunicar[] eixos;
+    private Comunicar currentEixos;
     private JComboBox<Distribucio> distribucio;
 
     FinestraTempsExec fte;
+    private JPanel eixosPanel;
+    private CardLayout cardLayout;
 
     public Finestra() {
         super();
         this.comunicar = Main.instance;
         fte = new FinestraTempsExec();
 
-        eixos = new Eixos(750, 890);
+        eixos = new Comunicar[]{new Eixos2D(750, 890), new Eixos3D()};
+        currentEixos = eixos[0];
+
         setTitle("Distàncies a un núvol de punts");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -42,11 +48,20 @@ public class Finestra extends JFrame implements Comunicar {
         JPanel panellBotons = crearPanellBotons();
 
         this.add(panellBotons, BorderLayout.NORTH);
-        this.add(eixos, BorderLayout.CENTER);
+        //currentEixos = eixos2D;
+        //this.add((Component) currentEixos, BorderLayout.CENTER);
+        cardLayout = new CardLayout();
+        eixosPanel = new JPanel(cardLayout);
+        eixosPanel.setBorder(BorderFactory.createEmptyBorder());
 
+        eixosPanel.add((Component) eixos[0], Dimensio.D2.getEtiqueta());
+        eixosPanel.add((Component) eixos[1], Dimensio.D3.getEtiqueta());
+        this.add(eixosPanel, BorderLayout.CENTER);
         this.pack();
         this.setLocation(0,0);
         this.setVisible(true);
+
+        cardLayout.show(eixosPanel, Dimensio.D2.getEtiqueta());
 
     }
 
@@ -55,7 +70,7 @@ public class Finestra extends JFrame implements Comunicar {
         nPunts = new JTextField(5);
         panel.add(new JLabel("Nombre de Punts"));
         panel.add(nPunts);
-        algorisme = generateComBox();
+        algorisme = generateComBoxAlgorisme();
 
         dimensio = generateDim();
         distribucio = generateComBoxDistr();
@@ -82,6 +97,10 @@ public class Finestra extends JFrame implements Comunicar {
                     }
                     comunicar.comunicar("generar:" + num + ":" + distribucio.getSelectedItem() + ":p" + dimensio.getSelectedItem());
 
+                    currentEixos.comunicar("aturar");
+                    cardLayout.show(eixosPanel, (String) dimensio.getSelectedItem());
+                    currentEixos = eixos[dimensio.getSelectedIndex()];
+                    currentEixos.comunicar("pintar");
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -161,12 +180,11 @@ public class Finestra extends JFrame implements Comunicar {
         return comboBox;
     }
 
-    private JComboBox<String> generateComBox() {
+    private JComboBox<String> generateComBoxAlgorisme() {
         JComboBox<String> comboBox = new JComboBox<>();
         for (String s : opcionsAlgorisme) {
             comboBox.addItem(s);
         }
-
 
         comboBox.setSelectedIndex(0); //default a classic
 
@@ -179,13 +197,11 @@ public class Finestra extends JFrame implements Comunicar {
     public void comunicar(String s) {
         switch (s) {
             case "dibuixPunts":
-                eixos.pintar();
-                break;
             case "pintar":
-                eixos.repaint();
+                currentEixos.comunicar(s);
                 break;
             case "dibiuxDistancia":
-                eixos.pintarDistancies((String) algorisme.getSelectedItem());
+                //eixos.pintarDistancies((String) algorisme.getSelectedItem());
                     break;
             case "pintaElement":
                 fte.comunicar("pintaElement");

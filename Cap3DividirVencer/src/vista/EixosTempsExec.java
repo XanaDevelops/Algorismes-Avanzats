@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
-import static vista.Eixos.MARGIN;
+import static vista.Eixos2D.MARGIN;
 
 public class EixosTempsExec extends JPanel {
 
