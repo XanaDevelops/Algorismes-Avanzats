@@ -27,16 +27,18 @@ import java.util.List;
 public class Eixos3D extends JFXPanel implements Comunicar {
     private final Dades dades;
 
+    //color per defecte del punt
     private final Material puntBlau = new PhongMaterial(Color.BLUE);
 
+    //tamany del graf en 3D
     final int tamGraf = 1000;
 
     private Group root, puntGroup, camGroup, camGroup2, camGroup3;
+    private Group eixGroup;
 
     private Camera camera;
 
-
-
+    //Transformacions necessaries per a la rotació i traslació
     private final Translate camTranslate = new Translate(0,0,-tamGraf*(4/3d));
     private final Translate camCenter = new Translate(0,0,0);
     private final double[] transVels = new double[] {0,0,0};
@@ -45,6 +47,9 @@ public class Eixos3D extends JFXPanel implements Comunicar {
     private final Rotate camRotateX = new Rotate(-20+ 180, Rotate.X_AXIS);
     private final double[] rotVels = new double[] {0,0};
 
+    /**
+     * Reestableix la posició
+     */
     private void reset(){
         Arrays.fill(rotVels,0);
         Arrays.fill(transVels,0);
@@ -57,12 +62,10 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
     private Point2D lastMouse = new Point2D(0,0);
 
-    //això impedeix que JAvaFX s'aturi tot sol
+    //això impedeix que JavaFX s'aturi tot sol
     static {
         Platform.setImplicitExit(false);
     }
-
-    private Group eixGroup;
 
     public Eixos3D() {
         super();
@@ -90,9 +93,9 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         scene.setFill(Color.BLACK);
 
         camera = createCamera();
-        //camera.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
         scene.setCamera(camera);
 
+        //configura les transformacions i relacions
         camGroup.getTransforms().addAll(camRotateY, camRotateX);
         camGroup2.getTransforms().addAll(camCenter);
 
@@ -106,6 +109,10 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         return scene;
     }
 
+    /**
+     * Configura la camara
+     * @return camara
+     */
     private Camera createCamera() {
         Camera camera = new PerspectiveCamera(true);
 
@@ -116,6 +123,9 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         return camera;
     }
 
+    /**
+     * Dibuixa els punts en 3D
+     */
     private void plotPunts(){
         puntGroup.getChildren().clear();
 
@@ -125,11 +135,11 @@ public class Eixos3D extends JFXPanel implements Comunicar {
             return;
         }
 
-
         for(Punt p : punts) {
             Punt3D punt = (Punt3D) p;
-            Sphere puntS = new Sphere(5);
+            Sphere puntS = new Sphere(5); //els punts en 3D son esferes
             puntS.setMaterial(puntBlau);
+            //fer coordenades relatives
             puntS.setTranslateX(punt.x/(double)Dades.RANG_PUNT * tamGraf);
             puntS.setTranslateY(punt.y/(double)Dades.RANG_PUNT * tamGraf);
             puntS.setTranslateZ(punt.z/(double)Dades.RANG_PUNT * tamGraf);
@@ -138,10 +148,15 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         }
     }
 
+    /**
+     * Mostra els eixos
+     */
     private void genEixos() {
         final int tamGraf = this.tamGraf*2;
         final int tamEix = 5;
         final int boxSize = 20;
+
+        //els eixos com a tal
         Cylinder eixX = new Cylinder(tamEix, tamGraf);
         eixX.setMaterial(new PhongMaterial(Color.RED));
 
@@ -155,6 +170,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         eixZ.setRotationAxis(Rotate.X_AXIS);
         eixZ.setRotate(90);
 
+        //simbolitzen la direcció positiva
         Box redArrow = new Box(boxSize, boxSize, boxSize);   // Oriented along Y (red axis)
         redArrow.setMaterial(new PhongMaterial(Color.RED));
         redArrow.setTranslateY(tamGraf/2d);
@@ -168,8 +184,6 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         blueArrow.setTranslateZ(tamGraf/2d);
 
         final Color colorPlano = new Color(0.4, 0.4, 0.4, 0.05);
-
-
         Box planeXZ = new Box(tamGraf, 0.01, tamGraf);  // Plano en el plano XZ
         planeXZ.setMaterial(new PhongMaterial(colorPlano));
 
@@ -177,10 +191,11 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
     }
 
-    private void updateCamera() {
-
-    }
-
+    /**
+     * Configura la interacció amb la grafica
+     * Utilitza velocitats per donar la sensació de moviment més responsiu i natural
+     * @param scene
+     */
     private void addMouseControls(Scene scene) {
 
         //codi per a la rotació del gràfic
@@ -196,10 +211,10 @@ public class Eixos3D extends JFXPanel implements Comunicar {
             double deltaX = newPos.getX() - lastMouse.getX();
             double deltaY = newPos.getY() - lastMouse.getY();
 
-            if(event.isPrimaryButtonDown()){
+            if(event.isPrimaryButtonDown()){ //rotació
                 rotVels[1] -= deltaX * 0.2;
                 rotVels[0] += deltaY * 0.2;
-            }else if (event.isSecondaryButtonDown()){
+            }else if (event.isSecondaryButtonDown()){ //translació
                 transVels[0] -= deltaX * 0.2;
                 transVels[1] -= deltaY * 0.2;
 
@@ -209,16 +224,17 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         });
 
         scene.setOnScroll(event -> {
-            transVels[2] += event.getDeltaY() *1.25;
+            transVels[2] += event.getDeltaY() *1.25; //el zoom
         });
-
 
         final int maxTVel = 20;
         final int maxRVel = 20;
-        (new AnimationTimer() {
 
+        //Executa a cada frame
+        (new AnimationTimer() {
             @Override
             public void handle(long l) {
+                //limita velocitat
                 for (int dim = 0; dim < transVels.length; dim++) {
                     transVels[dim] = Math.abs(transVels[dim]) > 0.05 ? Math.clamp(transVels[dim], -maxTVel, maxTVel): 0;
                 }
@@ -226,6 +242,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
                     rotVels[dim] = Math.abs(rotVels[dim]) > 0.05 ? Math.clamp(rotVels[dim], -maxRVel, maxRVel): 0;
                 }
 
+                //fa els moviments
                 camRotateY.setAngle(camRotateY.getAngle() + rotVels[1]);
                 camRotateX.setAngle(camRotateX.getAngle() - rotVels[0]);
 
@@ -233,6 +250,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
                 camCenter.setY(camCenter.getY() + transVels[1]);
                 camTranslate.setZ(camTranslate.getZ() + transVels[2]);
 
+                //redueix la velocitat
                 for (int dim = 0; dim < transVels.length; dim++) {
                     transVels[dim] *= 0.95;
                 }
@@ -252,8 +270,6 @@ public class Eixos3D extends JFXPanel implements Comunicar {
             }
         });
     }
-
-
 
     @Override
     public void comunicar(String s) {

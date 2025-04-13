@@ -47,8 +47,7 @@ public class Finestra extends JFrame implements Comunicar {
         JPanel panellBotons = crearPanellBotons();
 
         this.add(panellBotons, BorderLayout.NORTH);
-        //currentEixos = eixos2D;
-        //this.add((Component) currentEixos, BorderLayout.CENTER);
+
         cardLayout = new CardLayout();
         eixosPanel = new JPanel(cardLayout);
         eixosPanel.setBorder(BorderFactory.createEmptyBorder());
