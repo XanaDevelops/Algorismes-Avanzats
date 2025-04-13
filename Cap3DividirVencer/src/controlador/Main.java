@@ -46,20 +46,6 @@ public class Main implements Comunicar {
 
     public static void main(String[] args) {
         (new Main()).init();
-//        GeneradorUniforme gu = new GeneradorUniforme(100, 0, 10000);
-//        List<Punt> punts = gu.genera2D();
-//
-//        Dades d = new Dades(punts, TipoPunt.p2D);
-//
-//        Parella_Propera_kd kd = new Parella_Propera_kd(d);
-//        kd.run();
-//        System.out.println("kd "+ d.getLastResultatKD());
-//
-//        ParellaPropera_fb fb = new ParellaPropera_fb(d);
-//        fb.run();
-//        System.out.println("fb "+ d.getLastResultatFB());
-
-
 
     }
 
