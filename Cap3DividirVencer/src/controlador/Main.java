@@ -92,11 +92,8 @@ public class Main implements Comunicar {
 
                     if (distribucio.equalsIgnoreCase("Gaussiana")) {
                         // Per a la distribució Gaussiana s'esperen dos paràmetres extra: mitjana i desviació estàndard
-                        System.out.println(max / 2.0);
                         params.add(max / 2.0);
 
-//                        params.add(Math.max(1.0, (max - min) / 4.0));
-                        System.out.println(max / rn.nextDouble(5.1, 7.3));
                         params.add( max / rn.nextDouble(5.1, 7.3));
 
                     } else if (distribucio.equalsIgnoreCase("Exponencial")) {
