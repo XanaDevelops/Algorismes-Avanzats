@@ -1,6 +1,5 @@
 package model.calculs;
 
-import model.Dades;
 import model.Dades.Resultat;
 import model.punts.Punt;
 
@@ -9,8 +8,8 @@ import java.util.ArrayList;
 
 public class ParellaPropera_fb extends Calcul {
 
-        public ParellaPropera_fb(Dades dades) {
-            super(dades);
+        public ParellaPropera_fb() {
+            super();
         }
 
         @Override

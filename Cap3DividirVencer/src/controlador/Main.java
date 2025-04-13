@@ -189,7 +189,8 @@ public class Main implements Comunicar {
 
         if (res instanceof List<?>) {
             dades.setPunts((List<Punt>) res);
-//            System.out.println( "punts generats" + res.toString());
+            System.err.println( "punts generats" + ((List<?>) res).size());
+            System.err.println(Arrays.toString(((List<?>) res).toArray()));
         } else {
             System.err.println("Error en generar la llista de punts.");
         }
@@ -200,7 +201,7 @@ public class Main implements Comunicar {
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         executor.execute(() -> {
             try {
-                Calcul calcul = calculClass.getConstructor(Dades.class).newInstance(dades);
+                Calcul calcul = calculClass.getConstructor().newInstance();
 
                 if (calcul instanceof Comunicar) {
                     synchronized (processos) {

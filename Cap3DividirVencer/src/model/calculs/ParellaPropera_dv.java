@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ParellaPropera_dv extends Calcul {
 
-    public ParellaPropera_dv(Dades dades) {
-        super(dades);
+    public ParellaPropera_dv() {
+        super();
     }
 
     @Override
