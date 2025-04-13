@@ -36,6 +36,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
 
     private final Translate camTranslate = new Translate(0,0,-750);
+    private final Translate camCenter = new Translate(0,0,0);
     private final Rotate camRotateY = new Rotate(-20, Rotate.Y_AXIS);
     private final Rotate camRotateX = new Rotate(-20, Rotate.X_AXIS);
 
@@ -77,6 +78,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         scene.setCamera(camera);
 
         camGroup.getTransforms().addAll(camRotateY, camRotateX);
+        camGroup2.getTransforms().addAll(camCenter);
 
         camGroup.getChildren().add(camGroup2);
         camGroup2.getChildren().add(camGroup3);
@@ -183,23 +185,25 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         });
 
         scene.setOnMouseDragged(event -> {
-            if(event.isPrimaryButtonDown()){
-                Point2D newPos = new Point2D(event.getSceneX(), event.getSceneY());
-                double deltaX = newPos.getX() - lastMouse.getX();
-                double deltaY = newPos.getY() - lastMouse.getY();
+            Point2D newPos = new Point2D(event.getSceneX(), event.getSceneY());
+            double deltaX = newPos.getX() - lastMouse.getX();
+            double deltaY = newPos.getY() - lastMouse.getY();
 
+            if(event.isPrimaryButtonDown()){
                 camRotateY.setAngle(camRotateY.getAngle() + deltaX * 0.2);
                 camRotateX.setAngle(camRotateX.getAngle() - deltaY * 0.2);
-
-                lastMouse = newPos;
+            }else if (event.isSecondaryButtonDown()){
+                camCenter.setX(camCenter.getX() - deltaX * 0.2);
+                camCenter.setY(camCenter.getY() - deltaY * 0.2);
             }
+
+            lastMouse = newPos;
         });
 
-
-        //Codi per la roda del ratolí, apropa o allunya el grafic
         scene.setOnScroll(event -> {
-
+            camTranslate.setZ(camTranslate.getZ() + event.getDeltaY());
         });
+
 
         final int maxCamVel = 50;
         final int maxRotVel = 20;
