@@ -29,7 +29,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
     private final Material puntBlau = new PhongMaterial(Color.BLUE);
 
-    private Translate originPoints;
+    final int tamGraf = 1000;
 
     private Group root, puntGroup, camGroup, camGroup2, camGroup3;
 
@@ -100,7 +100,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         Camera camera = new PerspectiveCamera(true);
 
         camera.setNearClip(0.1);
-        camera.setFarClip(10000);
+        camera.setFarClip(Dades.RANG_PUNT*2);
         camera.getTransforms().addAll(camTranslate);
 
         return camera;
@@ -111,25 +111,18 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
 
         List<Punt> punts =  dades.getPunts();
-        if (!(punts.getFirst() instanceof Punt3D)) {
+        if (punts== null || punts.isEmpty() || !(punts.getFirst() instanceof Punt3D)) {
             return;
         }
-        System.err.println("Lista de Punts: " + punts.size());
 
-        originPoints = new Translate((int) (getWidth() / 2d), (int) (getHeight() / 2d), 0) {
-        };
-        //plotPunts();
-        //puntGroup.setTranslateX(originPoints.getX());
-        //puntGroup.setTranslateY(originPoints.getY());
-        //puntGroup.setTranslateZ(originPoints.getZ());
 
         for(Punt p : punts) {
             Punt3D punt = (Punt3D) p;
             Sphere puntS = new Sphere(5);
             puntS.setMaterial(puntBlau);
-            puntS.setTranslateX(punt.x);
-            puntS.setTranslateY(punt.y);
-            puntS.setTranslateZ(punt.z);
+            puntS.setTranslateX(punt.x/(double)Dades.RANG_PUNT * tamGraf);
+            puntS.setTranslateY(punt.y/(double)Dades.RANG_PUNT * tamGraf);
+            puntS.setTranslateZ(punt.z/(double)Dades.RANG_PUNT * tamGraf);
 
             puntGroup.getChildren().add(puntS);
         }

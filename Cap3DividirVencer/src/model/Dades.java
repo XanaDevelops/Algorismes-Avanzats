@@ -17,7 +17,7 @@ public class Dades {
     private final TreeMap<Integer, Resultat> forcaBruta;
     private final TreeMap<Integer, Resultat> dividirVencer;
 
-    public static final int RANG_PUNT = 100;
+    public static final int RANG_PUNT = 100000;
     private final TreeMap<Integer, Resultat> kd;
 
     public Dades() {
