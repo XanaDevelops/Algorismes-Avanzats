@@ -19,6 +19,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.Line;
@@ -62,6 +63,8 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         Platform.setImplicitExit(false);
     }
 
+    private Group eixGroup;
+
     public Eixos3D() {
         super();
         dades = Main.instance.getDades();
@@ -76,16 +79,22 @@ public class Eixos3D extends JFXPanel implements Comunicar {
     private Scene createScene(){
         root = new Group();
         puntGroup = new Group();
-        puntGroup.getTransforms().addAll(puntsRotate[0], puntsRotate[1], puntsRotate[2]);
+        eixGroup = new Group();
+
+        Group camGroup = new Group();
+        camGroup.getTransforms().addAll(puntsRotate[0], puntsRotate[1], puntsRotate[2]);
+        
+        genEixos();
 
 
         Scene scene = new Scene(root, getWidth(), getHeight(),true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
         camera = createCamera();
+        camGroup.getChildren().add(camera);
         scene.setCamera(camera);
 
         addMouseControls(scene);
-        root.getChildren().addAll(puntGroup, new AmbientLight(Color.WHITE));
+        root.getChildren().addAll(puntGroup, camGroup, eixGroup);
 
         return scene;
     }
@@ -103,20 +112,6 @@ public class Eixos3D extends JFXPanel implements Comunicar {
     private void plotPunts(){
         puntGroup.getChildren().clear();
 
-        Cylinder eixX = new Cylinder(1, 500);
-        eixX.setMaterial(new PhongMaterial(Color.RED));
-
-        Cylinder eixY = new Cylinder(1, 500);
-        eixY.setMaterial(new PhongMaterial(Color.GREEN));
-        eixY.setRotationAxis(Rotate.Z_AXIS);
-        eixY.setRotate(90);
-
-        Cylinder eixZ = new Cylinder(1, 500);
-        eixZ.setMaterial(new PhongMaterial(Color.BLUE));
-        eixZ.setRotationAxis(Rotate.X_AXIS);
-        eixZ.setRotate(90);
-
-        puntGroup.getChildren().addAll(eixX, eixY, eixZ);
 
         List<Punt> punts =  dades.getPunts();
         if (!(punts.getFirst() instanceof Punt3D)) {
@@ -141,6 +136,42 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
             puntGroup.getChildren().add(puntS);
         }
+    }
+
+    private void genEixos() {
+        Cylinder eixX = new Cylinder(1, 500);
+        eixX.setMaterial(new PhongMaterial(Color.RED));
+
+        Cylinder eixY = new Cylinder(1, 500);
+        eixY.setMaterial(new PhongMaterial(Color.GREEN));
+        eixY.setRotationAxis(Rotate.Z_AXIS);
+        eixY.setRotate(90);
+
+        Cylinder eixZ = new Cylinder(1, 500);
+        eixZ.setMaterial(new PhongMaterial(Color.BLUE));
+        eixZ.setRotationAxis(Rotate.X_AXIS);
+        eixZ.setRotate(90);
+
+        Box redArrow = new Box(1, 3, 1);   // Oriented along Y (red axis)
+        redArrow.setMaterial(new PhongMaterial(Color.RED));
+        redArrow.setTranslateY(255);
+
+        Box greenArrow = new Box(3, 1, 1); // Oriented along X (green axis)
+        greenArrow.setMaterial(new PhongMaterial(Color.GREEN));
+        greenArrow.setTranslateX(255);
+
+        Box blueArrow = new Box(1, 1, 3);  // Oriented along Z (blue axis)
+        blueArrow.setMaterial(new PhongMaterial(Color.BLUE));
+        blueArrow.setTranslateZ(255);
+
+        final Color colorPlano = new Color(0.4, 0.4, 0.4, 0.05);
+
+
+        Box planeXZ = new Box(600, 1, 600);  // Plano en el plano XZ
+        planeXZ.setMaterial(new PhongMaterial(colorPlano));
+
+        eixGroup.getChildren().addAll(eixX, eixY, eixZ, redArrow, greenArrow, blueArrow, planeXZ);
+
     }
 
     private void updateCamera() {
