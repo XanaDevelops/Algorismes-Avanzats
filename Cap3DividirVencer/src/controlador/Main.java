@@ -91,7 +91,7 @@ public class Main implements Comunicar {
 
                     if (distribucio.equalsIgnoreCase("Gaussiana")) {
                         // Per a la distribució Gaussiana s'esperen dos paràmetres extra: mitjana i desviació estàndard
-                        params.add(max / 2.0);
+                        params.add(tp == TipoPunt.p2D ? max /2.0 : 0.0);
 
                         params.add( max / rn.nextDouble(5.1, 7.3));
 
@@ -188,8 +188,7 @@ public class Main implements Comunicar {
 
         if (res instanceof List<?>) {
             dades.setPunts((List<Punt>) res);
-            System.err.println( "punts generats" + ((List<?>) res).size());
-            System.err.println(Arrays.toString(((List<?>) res).toArray()));
+
         } else {
             System.err.println("Error en generar la llista de punts.");
         }

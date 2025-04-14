@@ -208,6 +208,7 @@ public class Finestra extends JFrame implements Comunicar {
                 fte.comunicar("pintaElement");
                 break;
             default:
+                System.err.println("Finestra missatge? :"+s);
                 break;
         }
 
