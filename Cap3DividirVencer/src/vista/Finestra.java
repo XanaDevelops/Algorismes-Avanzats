@@ -139,7 +139,7 @@ public class Finestra extends JFrame implements Comunicar {
         combox.setSelectedIndex(0);
         combox.addActionListener(e -> {
             String selected = Objects.requireNonNull(combox.getSelectedItem()).toString();
-            comunicar.comunicar(selected);
+            //comunicar.comunicar(selected);
             if (selected.equals("Parella llunyana")) {
                 updateOptionsAlgorisme(opcionsAlgorismeMaxim);
             } else {

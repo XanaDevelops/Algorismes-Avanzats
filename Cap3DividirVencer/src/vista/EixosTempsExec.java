@@ -75,6 +75,10 @@ public class EixosTempsExec extends JPanel {
             List<Resultat> fb = resultats.get(TipusCalcul.FB_MIN);
             List<Resultat> kd = resultats.get(TipusCalcul.KD_MIN);
 
+            if (dv != null) dv.sort(Comparator.comparingInt(Resultat::getN));;
+            if (fb != null) fb.sort(Comparator.comparingInt(Resultat::getN));;
+            if (kd != null) kd.sort(Comparator.comparingInt(Resultat::getN));;
+
             int maxelement = nPunts.getLast();
 
             //cerca el major temps registrat dins les operacions
