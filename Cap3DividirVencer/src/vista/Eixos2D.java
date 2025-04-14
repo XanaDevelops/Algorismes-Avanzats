@@ -2,6 +2,7 @@ package vista;
 
 import controlador.Comunicar;
 import controlador.Main;
+import javafx.application.Platform;
 import model.Dades;
 import model.Dades.Resultat;
 import model.TipoPunt;
@@ -146,6 +147,16 @@ public class Eixos2D extends JPanel implements Comunicar {
 
     @Override
     public void comunicar(String s) {
-        pintar();
+        String[] args = s.split(":");
+        switch(args[0]){
+            case "dibuixPunts":
+            case "pintar":
+                pintar();
+                break;
+            case "dibuixDistancia":
+                pintarDistancies(args[1]);
+            case "aturar":
+                break;
+        }
     }
 }
