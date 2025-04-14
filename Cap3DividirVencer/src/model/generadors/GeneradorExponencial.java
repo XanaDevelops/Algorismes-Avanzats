@@ -51,9 +51,9 @@ public class GeneradorExponencial extends Generador {
     public List<Punt> genera3D() {
         List<Punt> punts = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            int x = limita((int) exponencial(lambda));
-            int y = limita((int) exponencial(lambda));
-            int z = limita((int) exponencial(lambda));
+            int x = limita((int) exponencial(lambda)) * (rand.nextBoolean() ? 1 : -1);
+            int y = limita((int) exponencial(lambda)) * (rand.nextBoolean() ? 1 : -1);
+            int z = limita((int) exponencial(lambda)) * (rand.nextBoolean() ? 1 : -1);
             punts.add(new Punt3D(x, y, z));
         }
         return punts;
