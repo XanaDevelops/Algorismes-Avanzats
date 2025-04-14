@@ -13,7 +13,7 @@ import java.util.List;
 public class ParellaMaxima extends Calcul {
 
     public ParellaMaxima(Dades dades) {
-        super(dades);
+        super();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ParellaMaxima extends Calcul {
         long time = System.nanoTime() - start;
 
         // Guardam el resultat
-        dades.afegeixDistMax(punts.size(), resultat.p1, resultat.p2, resultat.distancia, time, "max");
+        dades.afegeixDistMax(punts.size(), resultat.getP1(), resultat.getP2(), resultat.getDistancia(), time, "max");
     }
 
     private Resultat calculaParellaMaxima(List<Punt> punts) {

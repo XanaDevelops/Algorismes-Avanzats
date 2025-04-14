@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="Càlcul parella màxima primera versió.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaMaxima.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaMaxima.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +88,7 @@
     "Application.ParellaMaxima.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "parellaMaxima",
+    "git-widget-placeholder": "dev",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/h/IdeaProjects/Subcadena/Subcadena",
     "node.js.detected.package.eslint": "true",
