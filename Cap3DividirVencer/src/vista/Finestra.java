@@ -201,7 +201,7 @@ public class Finestra extends JFrame implements Comunicar {
             case "pintar":
                 currentEixos.comunicar(s);
                 break;
-            case "dibiuxDistancia":
+            case "dibuixDistancia":
                 //eixos.pintarDistancies((String) algorisme.getSelectedItem());
                     break;
             case "pintaElement":
