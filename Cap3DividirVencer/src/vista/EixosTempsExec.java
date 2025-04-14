@@ -2,11 +2,13 @@ package vista;
 
 import controlador.Main;
 import model.Dades;
-import model.Dades.Resultat;
+import model.Resultat;
+import model.TipusCalcul;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import static vista.Eixos2D.MARGIN;
 
@@ -53,28 +55,21 @@ public class EixosTempsExec extends JPanel {
 
 
         if (dades != null && dades.getPunts() != null) {
-
-            //calcula el maxim valor de N (mida de la matriu)
-            NavigableMap<Integer, Resultat> dv = dades.getDividirVencer();
-            NavigableMap<Integer, Resultat> fb = dades.getForcaBruta();
-            NavigableMap<Integer, Resultat> kd = dades.getKd();
             ArrayList<Integer> nPunts = new ArrayList<>();
-            if (dv != null && !dv.isEmpty()) {
-                nPunts.addAll(dv.keySet());
-            }
-            if (fb != null && !fb.isEmpty()) {
-                nPunts.addAll(fb.keySet());
-            }
-            if (kd != null && !kd.isEmpty()) {
-                nPunts.addAll(kd.keySet());
-            }
 
+            NavigableMap<Integer, Resultat> resultats = dades.getResultats();
+            if(resultats!=null) {
+                nPunts.addAll(resultats.keySet());
+            }
             if (nPunts.isEmpty()) {
                 return;
             }
 
 
             Collections.sort(nPunts);
+            List<Map.Entry<Integer, Resultat>> dv= dades.getResultatsTipus(TipusCalcul.DV_MIN);
+            List<Map.Entry<Integer, Resultat>> fb= dades.getResultatsTipus(TipusCalcul.FB_MIN);
+            List<Map.Entry<Integer, Resultat>> kd= dades.getResultatsTipus(TipusCalcul.KD_MIN);
 
             int maxelement = nPunts.getLast();
 
@@ -104,7 +99,7 @@ public class EixosTempsExec extends JPanel {
             pax = 50;
             pay = h - 10;
             if (dv != null) {
-                for (Map.Entry<Integer, Resultat> r : dv.entrySet()) {
+                for (Map.Entry<Integer, Resultat> r : dv) {
                     if (maxelement == 0 || r.getValue() == null) break;
                     g.setColor(FinestraTempsExec.VERD);
                     px = 50 + r.getKey() * (w - 60) / maxelement;
@@ -123,7 +118,7 @@ public class EixosTempsExec extends JPanel {
             pax = 50;
             pay = h - 10;
             if (fb != null) {
-                for (Map.Entry<Integer, Resultat> r : fb.entrySet()) {
+                for (Map.Entry<Integer, Resultat> r : fb) {
                     if (maxelement == 0 || r.getValue() == null) break;
                     g.setColor(FinestraTempsExec.VERMELL);
                     px = 50 + r.getKey() * (w - 60) / maxelement;
@@ -142,7 +137,7 @@ public class EixosTempsExec extends JPanel {
             pax = 50;
             pay = h - 10;
             if (kd != null) {
-                for (Map.Entry<Integer, Resultat> r : kd.entrySet()) {
+                for (Map.Entry<Integer, Resultat> r : kd) {
                     if (maxelement == 0 || r.getValue() == null) break;
                     g.setColor(FinestraTempsExec.BLUE);
                     px = 50 + r.getKey() * (w - 60) / maxelement;
@@ -160,7 +155,7 @@ public class EixosTempsExec extends JPanel {
         }
     }
 
-    private static long getMaxTemps(NavigableMap<Integer, Resultat> dv, NavigableMap<Integer, Resultat> fb, NavigableMap<Integer, Resultat> kd) {
+    private static long getMaxTemps(List<Map.Entry<Integer, Resultat>> dv, List<Map.Entry<Integer, Resultat>> fb, List<Map.Entry<Integer, Resultat>> kd) {
         long maxTemps = Long.MIN_VALUE;
 
         maxTemps = getMaxTemps(dv, maxTemps);
@@ -170,9 +165,9 @@ public class EixosTempsExec extends JPanel {
         return maxTemps;
     }
 
-    private static long getMaxTemps(NavigableMap<Integer, Resultat> fb, long maxTemps) {
+    private static long getMaxTemps(List<Map.Entry<Integer, Resultat>> fb, long maxTemps) {
         if (fb != null) {
-            for (Map.Entry<Integer, Resultat> entry : fb.entrySet()) {
+            for (Map.Entry<Integer, Resultat> entry : fb) {
                 Resultat resultat = entry.getValue();
                 if (resultat != null && resultat.getTempsNano() > maxTemps) {
                     maxTemps = resultat.getTempsNano();

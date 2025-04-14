@@ -1,8 +1,9 @@
 package model.calculs.maxim;
 
+import model.TipusCalcul;
 import model.calculs.Calcul;
 import model.punts.Punt;
-import model.Dades.Resultat;
+import model.Resultat;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +29,7 @@ public class ParellaMaximaUniforme extends Calcul {
         long time = System.nanoTime() - start;
 
         // Guardam el resultat
-        dades.afegeixDistMax(punts.size(), resultat.getP1(), resultat.getP2(), resultat.getDistancia(), time, "max");
+        dades.afegeixResultat(punts.size(), resultat.getP1(), resultat.getP2(), resultat.getDistancia(), time, TipusCalcul.UNI_MAX);
     }
 
     private Resultat calculaParellaMaxima(List<Punt> punts) {

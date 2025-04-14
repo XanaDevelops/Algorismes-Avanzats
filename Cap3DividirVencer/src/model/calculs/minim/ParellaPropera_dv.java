@@ -1,7 +1,8 @@
 package model.calculs.minim;
 
-import model.Dades.Resultat;
+import model.Resultat;
 import model.TipoPunt;
+import model.TipusCalcul;
 import model.calculs.Calcul;
 import model.punts.Punt;
 
@@ -27,7 +28,7 @@ public class ParellaPropera_dv extends Calcul {
 
 
         long time = System.nanoTime() - t;
-        dades.afegeixDividirVencer(punts.size(), resultat.getP1(), resultat.getP2(), resultat.getDistancia(), time, "min");
+        dades.afegeixResultat(punts.size(), resultat.getP1(), resultat.getP2(), resultat.getDistancia(), time, TipusCalcul.DV_MIN);
     }
 
     private Resultat divideix(List<Punt> punts) {
@@ -83,7 +84,7 @@ public class ParellaPropera_dv extends Calcul {
 
                 double d = areaPossible.get(i).distancia(areaPossible.get(j));
                 if (d < dmin) {
-                    bestResult = new Resultat(areaPossible.get(i), areaPossible.get(j), d, 0);
+                    bestResult = new Resultat(areaPossible.get(i), areaPossible.get(j), d, 0, null, null, null);
                     dmin = d;
                 }
             }
