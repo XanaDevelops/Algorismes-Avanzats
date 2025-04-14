@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="mapping dels algorismes">
-      <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_dv.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaPropera_fb.java" afterDir="false" />
-    </list>
+    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="xml" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -86,7 +83,7 @@
     "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "visual",
+    "git-widget-placeholder": "dev",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/h/IdeaProjects/Subcadena/Subcadena",
     "node.js.detected.package.eslint": "true",
@@ -195,6 +192,7 @@
     <MESSAGE value="canvia a interfice punt" />
     <MESSAGE value="parella propre dividir i vencer" />
     <MESSAGE value="mapping dels algorismes" />
-    <option name="LAST_COMMIT_MESSAGE" value="mapping dels algorismes" />
+    <MESSAGE value="xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="xml" />
   </component>
 </project>
