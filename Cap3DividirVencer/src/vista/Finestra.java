@@ -1,18 +1,20 @@
 package vista;
 
 import controlador.Comunicar;
-import model.Dades;
+import controlador.Main;
+import javafx.application.Platform;
 
 import javax.swing.*;
+import javax.xml.stream.Location;
 import java.awt.*;
 import java.util.Objects;
 
 public class Finestra extends JFrame implements Comunicar {
     public static final String ATURAR = "aturar";
-    public static final String COMENÇAR = "començar";
+    public static final String GENERAR = "generar";
     public static final String ESBORRAR = "esborrar";
-
-    private final String[] opcionsAlgorisme = {"Força Bruta", "Dividir i vèncer"};
+    public static final String CALCULAR = "calcular";
+    private final String[] opcionsAlgorisme = {"Força Bruta", "Dividir i vèncer", "Kd-Arbre"};
     private final Comunicar comunicar;
     private JTextField nPunts;
 
@@ -21,28 +23,46 @@ public class Finestra extends JFrame implements Comunicar {
     private JComboBox<String> algorisme;
     private JComboBox<String> distancia;
 
-    private final Eixos eixos;
+    private Comunicar[] eixos;
+    private Comunicar currentEixos;
     private JComboBox<Distribucio> distribucio;
 
+    FinestraTempsExec fte;
+    private JPanel eixosPanel;
+    private CardLayout cardLayout;
 
-    public Finestra(Comunicar comunicar, Dades dades) {
+    public Finestra() {
         super();
-        this.comunicar = comunicar;
-        eixos = new Eixos(750, 890, dades);
+        this.comunicar = Main.instance;
+
+        eixos = new Comunicar[]{new Eixos2D(), new Eixos3D()};
+        currentEixos = eixos[0];
+
         setTitle("Distàncies a un núvol de punts");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(900, 900));
+        setPreferredSize(new Dimension(1080, 900));
 
         JPanel panellBotons = crearPanellBotons();
 
         this.add(panellBotons, BorderLayout.NORTH);
-        this.add(eixos, BorderLayout.CENTER);
 
+        cardLayout = new CardLayout();
+        eixosPanel = new JPanel(cardLayout);
+        eixosPanel.setBorder(BorderFactory.createEmptyBorder());
+
+        eixosPanel.add((Component) eixos[0], Dimensio.D2.getEtiqueta());
+        eixosPanel.add((Component) eixos[1], Dimensio.D3.getEtiqueta());
+        this.add(eixosPanel, BorderLayout.CENTER);
         this.pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        this.setLocation(0,0);
+        this.setVisible(true);
+
+        cardLayout.show(eixosPanel, Dimensio.D2.getEtiqueta());
+
+        fte = new FinestraTempsExec();
+
 
     }
 
@@ -51,13 +71,13 @@ public class Finestra extends JFrame implements Comunicar {
         nPunts = new JTextField(5);
         panel.add(new JLabel("Nombre de Punts"));
         panel.add(nPunts);
-        algorisme = generateComBox();
+        algorisme = generateComBoxAlgorisme();
 
         dimensio = generateDim();
         distribucio = generateComBoxDistr();
         distancia = generarDistCombox();
 
-        ((JButton) panel.add(new JButton(COMENÇAR))).addActionListener(e -> {
+        ((JButton) panel.add(new JButton(GENERAR))).addActionListener(e -> {
             if (nPunts.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Si us plau, introdueix un número.", "Error", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -76,10 +96,27 @@ public class Finestra extends JFrame implements Comunicar {
 
                         }
                     }
-                    comunicar.comunicar("generar:" + num + ":" + distribucio.getSelectedItem() + ":p" + dimensio.getSelectedItem() + ":" + distancia.getSelectedItem() + ":" + algorisme.getSelectedItem());
+                    comunicar.comunicar("generar:" + num + ":" + distribucio.getSelectedItem() + ":p" + dimensio.getSelectedItem());
+
+                    currentEixos.comunicar("aturar");
+                    cardLayout.show(eixosPanel, (String) dimensio.getSelectedItem());
+                    currentEixos = eixos[dimensio.getSelectedIndex()];
+                    currentEixos.comunicar("pintar");
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "El valor introduït no és un número vàlid.", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+
+        });
+        ((JButton) panel.add(new JButton(CALCULAR))).addActionListener(e -> {
+
+            //FORMAT calcular:<Parella Propera | Parella llunyana>:<Força Bruta| Dividir i vèncer>
+            if (Main.instance.getDades().getPunts()!=null){
+                comunicar.comunicar("calcular:" + distancia.getSelectedItem() +":"+ algorisme.getSelectedItem());
+
+            }else{
+                JOptionPane.showMessageDialog(this, "Primer has de generar els punts","Error", JOptionPane.WARNING_MESSAGE);
 
             }
 
@@ -144,10 +181,11 @@ public class Finestra extends JFrame implements Comunicar {
         return comboBox;
     }
 
-    private JComboBox<String> generateComBox() {
+    private JComboBox<String> generateComBoxAlgorisme() {
         JComboBox<String> comboBox = new JComboBox<>();
-        comboBox.addItem("Força Bruta");
-        comboBox.addItem("Dividir i vèncer");
+        for (String s : opcionsAlgorisme) {
+            comboBox.addItem(s);
+        }
 
         comboBox.setSelectedIndex(0); //default a classic
 
@@ -160,13 +198,17 @@ public class Finestra extends JFrame implements Comunicar {
     public void comunicar(String s) {
         switch (s) {
             case "dibuixPunts":
-                eixos.pintar();
-                break;
             case "pintar":
-                eixos.repaint();
+                currentEixos.comunicar(s);
                 break;
-
+            case "dibiuxDistancia":
+                //eixos.pintarDistancies((String) algorisme.getSelectedItem());
+                    break;
+            case "pintaElement":
+                fte.comunicar("pintaElement");
+                break;
             default:
+                System.err.println("Finestra missatge? :"+s);
                 break;
         }
 

@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="openjfx.javafx.graphics" type="repository">
+    <properties maven-id="org.openjfx:javafx-graphics:23.0.2" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/javafx-graphics-23.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-graphics-23.0.2-win.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-base-23.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-base-23.0.2-win.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/javafx-graphics-23.0.2-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-graphics-23.0.2-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-base-23.0.2-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-base-23.0.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
