@@ -1,6 +1,7 @@
 package model.calculs.maxim;
 
-import model.Dades.Resultat;
+import model.Resultat;
+import model.TipusCalcul;
 import model.calculs.Calcul;
 import model.punts.Punt;
 
@@ -16,7 +17,7 @@ public class ParellaLlunyana_fb extends Calcul {
         @Override
         public void run() {
                 Resultat res = calc((ArrayList<Punt>) punts);
-                dades.afegeixForcaBruta(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(),"min");
+                dades.afegeixResultat(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(), TipusCalcul.FB_MAX);
         }
 
         public static Resultat calc(ArrayList<Punt> punts){
@@ -36,7 +37,7 @@ public class ParellaLlunyana_fb extends Calcul {
                         }
                 }
                 t = System.nanoTime() - t;
-                return new Resultat(p1, p2, max, t, "max");
+                return new Resultat(punts.size(), p1, p2, max, t);
         }
 
 

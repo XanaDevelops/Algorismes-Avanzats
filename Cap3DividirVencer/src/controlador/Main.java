@@ -144,8 +144,7 @@ public class Main implements Comunicar {
                 this.comunicar("aturar");
                 //esborrar els punts
                 dades.clearPunts();
-                dades.clearForcaBruta();
-                dades.clearDividirVencer();
+                dades.clearResultats();
                 finestra.comunicar("pintar");
                 break;
 
