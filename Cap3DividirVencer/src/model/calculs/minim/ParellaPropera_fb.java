@@ -1,6 +1,7 @@
-package model.calculs;
+package model.calculs.minim;
 
 import model.Dades.Resultat;
+import model.calculs.Calcul;
 import model.punts.Punt;
 
 import java.util.ArrayList;

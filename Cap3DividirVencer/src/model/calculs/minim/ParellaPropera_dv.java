@@ -1,8 +1,8 @@
-package model.calculs;
+package model.calculs.minim;
 
-import model.Dades;
 import model.Dades.Resultat;
 import model.TipoPunt;
+import model.calculs.Calcul;
 import model.punts.Punt;
 
 import java.util.ArrayList;

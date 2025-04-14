@@ -1,7 +1,6 @@
-package model.calculs;
+package model.calculs.maxim;
 
-import model.Dades;
-import model.generadors.GeneradorUniforme;
+import model.calculs.Calcul;
 import model.punts.Punt;
 import model.Dades.Resultat;
 
@@ -10,9 +9,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ParellaMaxima extends Calcul {
+public class ParellaMaximaUniforme extends Calcul {
 
-    public ParellaMaxima(Dades dades) {
+    public ParellaMaximaUniforme() {
         super();
     }
 

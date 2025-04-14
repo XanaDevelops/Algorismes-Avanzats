@@ -4,17 +4,16 @@ package controlador;
 import model.Dades;
 import model.TipoPunt;
 import model.calculs.Calcul;
-import model.calculs.ParellaPropera_dv;
-import model.calculs.ParellaPropera_fb;
-import model.calculs.kdTree.Parella_Propera_kd;
+import model.calculs.maxim.ParellaLlunyana_fb;
+import model.calculs.maxim.ParellaMaximaUniforme;
+import model.calculs.minim.ParellaPropera_dv;
+import model.calculs.minim.ParellaPropera_fb;
+import model.calculs.minim.kdTree.Parella_Propera_kd;
 import model.generadors.Generador;
 import model.generadors.GeneradorExponencial;
 import model.generadors.GeneradorGaussia;
 import model.generadors.GeneradorUniforme;
-import model.calculs.kdTree.KdArbre;
 import model.punts.Punt;
-import model.punts.Punt2D;
-import model.punts.Punt3D;
 import vista.Finestra;
 
 import javax.swing.*;
@@ -42,8 +41,10 @@ public class Main implements Comunicar {
     private static final Map<String, Class<? extends Calcul>> ALGORISMES = Map.of(
             "Parella propera Força Bruta", ParellaPropera_fb.class,
             "Parella propera Dividir i vèncer", ParellaPropera_dv.class,
-            "Parella propera Kd-Arbre", Parella_Propera_kd.class
-//                "Parella llunyana Força Bruta"
+            "Parella propera Kd-Arbre", Parella_Propera_kd.class,
+
+            "Parella llunyana Força Bruta", ParellaLlunyana_fb.class,
+            "Parella llunyana Uniforme", ParellaMaximaUniforme.class
     );
 
     public static void main(String[] args) {
@@ -207,16 +208,16 @@ public class Main implements Comunicar {
                     }
                 }
                 calcul.run();
-                System.out.println("Resultats de càlcul FB: " + dades.getForcaBruta().toString());
+                /*System.out.println("Resultats de càlcul FB: " + dades.getForcaBruta().toString());
                 System.out.println("Resultats de càlcul DV: " + dades.getDividirVencer().toString());
-                System.out.println("Resultats de càlcul KD: " + dades.getKd().toString());
+                System.out.println("Resultats de càlcul KD: " + dades.getKd().toString());*/
 //                finestra.comunicar("pintar");
-                finestra.comunicar("dibuixDistancia");
-                finestra.comunicar("pintaElement");
 
             } catch (Exception e) {
                 System.err.println("Error en el càlcul: " + e.getMessage());
             }
+            finestra.comunicar("dibuixDistancia");
+            finestra.comunicar("pintaElement");
         });
     }
 }

@@ -1,12 +1,11 @@
 
-package model.calculs.kdTree;
+package model.calculs.minim.kdTree;
 
-import model.Dades;
 import model.Dades.Resultat;
 import model.TipoPunt;
 import model.calculs.Calcul;
 import model.punts.Punt;
-import model.calculs.kdTree.KdArbre.Node;
+import model.calculs.minim.kdTree.KdArbre.Node;
 
 import java.util.ArrayList;
 

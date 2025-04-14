@@ -2,10 +2,8 @@ package vista;
 
 import controlador.Comunicar;
 import controlador.Main;
-import javafx.application.Platform;
 
 import javax.swing.*;
-import javax.xml.stream.Location;
 import java.awt.*;
 import java.util.Objects;
 
@@ -14,7 +12,9 @@ public class Finestra extends JFrame implements Comunicar {
     public static final String GENERAR = "generar";
     public static final String ESBORRAR = "esborrar";
     public static final String CALCULAR = "calcular";
-    private final String[] opcionsAlgorisme = {"Força Bruta", "Dividir i vèncer", "Kd-Arbre"};
+    private final String[] opcionsAlgorismeMinim = {"Força Bruta", "Dividir i vèncer", "Kd-Arbre"};
+    private final String[] opcionsAlgorismeMaxim = {"Força Bruta", "Uniforme"};
+
     private final Comunicar comunicar;
     private JTextField nPunts;
 
@@ -141,9 +141,9 @@ public class Finestra extends JFrame implements Comunicar {
             String selected = Objects.requireNonNull(combox.getSelectedItem()).toString();
             comunicar.comunicar(selected);
             if (selected.equals("Parella llunyana")) {
-                updateOptionsAlgorisme(new String[]{"Força Bruta"});
+                updateOptionsAlgorisme(opcionsAlgorismeMaxim);
             } else {
-                updateOptionsAlgorisme(opcionsAlgorisme);
+                updateOptionsAlgorisme(opcionsAlgorismeMinim);
             }
         });
         return combox;
@@ -183,7 +183,7 @@ public class Finestra extends JFrame implements Comunicar {
 
     private JComboBox<String> generateComBoxAlgorisme() {
         JComboBox<String> comboBox = new JComboBox<>();
-        for (String s : opcionsAlgorisme) {
+        for (String s : opcionsAlgorismeMinim) {
             comboBox.addItem(s);
         }
 
