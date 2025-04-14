@@ -4,6 +4,7 @@ import controlador.Comunicar;
 import controlador.Main;
 import model.Dades;
 import model.Dades.Resultat;
+import model.TipoPunt;
 import model.punts.Punt;
 
 
@@ -59,7 +60,7 @@ public class Eixos2D extends JPanel implements Comunicar {
     }
 
     private void pintarPunts(Graphics g) {
-        if (dades != null && dades.getPunts() != null && !dades.getPunts().isEmpty()) {
+        if (dades != null && dades.getPunts() != null && !dades.getPunts().isEmpty() && dades.getTp() == TipoPunt.p2D) {
             List<Punt> punts = dades.getPunts();
             int[] maxims = getMaxMin();
             g.setColor(Color.LIGHT_GRAY);

@@ -34,7 +34,6 @@ public class Finestra extends JFrame implements Comunicar {
     public Finestra() {
         super();
         this.comunicar = Main.instance;
-        fte = new FinestraTempsExec();
 
         eixos = new Comunicar[]{new Eixos2D(750, 890), new Eixos3D()};
         currentEixos = eixos[0];
@@ -48,8 +47,7 @@ public class Finestra extends JFrame implements Comunicar {
         JPanel panellBotons = crearPanellBotons();
 
         this.add(panellBotons, BorderLayout.NORTH);
-        //currentEixos = eixos2D;
-        //this.add((Component) currentEixos, BorderLayout.CENTER);
+
         cardLayout = new CardLayout();
         eixosPanel = new JPanel(cardLayout);
         eixosPanel.setBorder(BorderFactory.createEmptyBorder());
@@ -62,6 +60,9 @@ public class Finestra extends JFrame implements Comunicar {
         this.setVisible(true);
 
         cardLayout.show(eixosPanel, Dimensio.D2.getEtiqueta());
+
+        fte = new FinestraTempsExec();
+
 
     }
 
@@ -207,6 +208,7 @@ public class Finestra extends JFrame implements Comunicar {
                 fte.comunicar("pintaElement");
                 break;
             default:
+                System.err.println("Finestra missatge? :"+s);
                 break;
         }
 

@@ -17,8 +17,8 @@ public class Parella_Propera_kd extends Calcul {
     private Node millorNode;
     private double minDistancia;
 
-    public Parella_Propera_kd(Dades dades) {
-        super(dades);
+    public Parella_Propera_kd() {
+        super();
 
         int k = dades.getTp() == TipoPunt.p2D ? 2 : 3;
         this.kdArbre = new KdArbre(dades.getPunts(), k);

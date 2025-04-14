@@ -61,7 +61,6 @@ public class Main implements Comunicar {
 //            finestra = new Finestra();
 //        });
         SwingUtilities.invokeLater(() -> finestra = new Finestra());
-
     }
 
     @Override
@@ -92,7 +91,7 @@ public class Main implements Comunicar {
 
                     if (distribucio.equalsIgnoreCase("Gaussiana")) {
                         // Per a la distribució Gaussiana s'esperen dos paràmetres extra: mitjana i desviació estàndard
-                        params.add(max / 2.0);
+                        params.add(tp == TipoPunt.p2D ? max /2.0 : 0.0);
 
                         params.add( max / rn.nextDouble(5.1, 7.3));
 
@@ -189,7 +188,7 @@ public class Main implements Comunicar {
 
         if (res instanceof List<?>) {
             dades.setPunts((List<Punt>) res);
-            System.out.println( "punts generats" + res.toString());
+
         } else {
             System.err.println("Error en generar la llista de punts.");
         }
@@ -200,7 +199,7 @@ public class Main implements Comunicar {
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         executor.execute(() -> {
             try {
-                Calcul calcul = calculClass.getConstructor(Dades.class).newInstance(dades);
+                Calcul calcul = calculClass.getConstructor().newInstance();
 
                 if (calcul instanceof Comunicar) {
                     synchronized (processos) {
