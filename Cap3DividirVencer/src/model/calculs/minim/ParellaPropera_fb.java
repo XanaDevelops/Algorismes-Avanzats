@@ -37,7 +37,7 @@ public class ParellaPropera_fb extends Calcul {
                         }
                 }
                 t = System.nanoTime() - t;
-                return new Resultat(p1, p2, min, t);
+                return new Resultat(punts.size(), p1, p2, min, t);
         }
 
 

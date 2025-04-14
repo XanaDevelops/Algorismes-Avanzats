@@ -34,7 +34,7 @@ public class ParellaMaximaUniforme extends Calcul {
 
     private Resultat calculaParellaMaxima(List<Punt> punts) {
         if (punts.size() < 2) {
-            return new Resultat(null, null, 0.0, 0);
+            return new Resultat(punts.size(), null, null, 0.0, 0);
         }
 
         Punt adaltEsquerra = Collections.min(punts, Comparator.comparingInt(p -> p.getX() + p.getY()));
@@ -47,9 +47,9 @@ public class ParellaMaximaUniforme extends Calcul {
         double dist2 = adaltDreta.distancia(abaixEsquerra);
 
         if (dist1 >= dist2) {
-            return new Resultat(adaltEsquerra, abaixDreta, dist1, 0);
+            return new Resultat(punts.size(), adaltEsquerra, abaixDreta, dist1, 0);
         } else {
-            return new Resultat(adaltDreta, abaixEsquerra, dist2, 0);
+            return new Resultat(punts.size(), adaltDreta, abaixEsquerra, dist2, 0);
         }
     }
 

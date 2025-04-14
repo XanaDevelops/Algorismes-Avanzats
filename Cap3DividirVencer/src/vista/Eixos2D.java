@@ -97,7 +97,7 @@ public class Eixos2D extends JPanel implements Comunicar {
 
     public void pintarDistancies(String algorisme) {
         if (dades.getPunts() != null && !dades.getPunts().isEmpty()) {
-            resultatADibuixar = dades.getLastResultat().getValue();
+            resultatADibuixar = dades.getLastResultat();
             repaint();
         }
     }

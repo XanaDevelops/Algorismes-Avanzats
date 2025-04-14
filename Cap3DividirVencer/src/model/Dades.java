@@ -10,14 +10,16 @@ public class Dades {
     private List<Punt> punts; // llista original de punts
     private TipoPunt tp;
     private Distribucio dist;
+    private TipusCalcul tipusCalcul;
 
-    private final TreeMap<Integer, Resultat> resultats;
+    private final TreeMap<TipusCalcul, List<Resultat>> resultats;
 
     public static final int RANG_PUNT = 100000;
 
     public Dades() {
         this.resultats = new TreeMap<>();
         this.dist = Distribucio.Uniforme;
+        this.tipusCalcul = TipusCalcul.FB_MIN;
     }
 
     public Dades(List<Punt> punts, TipoPunt tp) {
@@ -27,8 +29,11 @@ public class Dades {
     }
 
     public void afegeixResultat(int n, Punt p1, Punt p2, double distancia, long tempsNano, TipusCalcul calcul) {
-        Resultat r = new Resultat(p1, p2, distancia, tempsNano, dist, tp, calcul);
-        resultats.put(n, r);
+        Resultat r = new Resultat(n, p1, p2, distancia, tempsNano, dist, tp, calcul);
+        List<Resultat> l = resultats.getOrDefault(calcul, new ArrayList<>());
+        l.add(r);
+        this.tipusCalcul = calcul;
+        resultats.put(calcul, l);
     }
 
     public void setTp(TipoPunt tp) {
@@ -47,6 +52,22 @@ public class Dades {
         return punts;
     }
 
+    public TipusCalcul getTipusCalcul() {
+        return tipusCalcul;
+    }
+
+    public void setTipusCalcul(TipusCalcul tipusCalcul) {
+        this.tipusCalcul = tipusCalcul;
+    }
+
+    public Distribucio getDist() {
+        return dist;
+    }
+
+    public void setDist(Distribucio dist) {
+        this.dist = dist;
+    }
+
     public void clearPunts() {
         punts.clear();
     }
@@ -55,15 +76,11 @@ public class Dades {
         resultats.clear();
     }
 
-    public Map.Entry<Integer, Resultat> getLastResultat() {
-        return resultats.lastEntry();
+    public Resultat getLastResultat() {
+        return resultats.get(tipusCalcul).getLast();
     }
 
-    public List<Map.Entry<Integer, Resultat>> getResultatsTipus(TipusCalcul tc){
-        return resultats.entrySet().stream().filter(x ->x.getValue().getTc() == tc).collect(Collectors.toList());
-    }
-
-    public NavigableMap<Integer, Resultat> getResultats() {
+    public NavigableMap<TipusCalcul, List<Resultat>> getResultats() {
         return resultats;
     }
 

@@ -101,7 +101,7 @@ public class Parella_Propera_kd extends Calcul {
         millorNode = null;
         searchNN(root, p);
 
-        return new Resultat(p, millorNode != null ? millorNode.punt : null, minDistancia, 0);
+        return new Resultat(punts.size(), p, millorNode != null ? millorNode.punt : null, minDistancia, 0);
     }
 
     /**
@@ -132,7 +132,7 @@ public class Parella_Propera_kd extends Calcul {
             }
         }
         t = System.nanoTime() - t;
-        return new Resultat(bestP1, bestP2, bestDist, t);
+        return new Resultat(punts.size(), bestP1, bestP2, bestDist, t);
     }
 
     @Override

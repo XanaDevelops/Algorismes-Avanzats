@@ -1,8 +1,10 @@
 package model.generadors;
 
+import controlador.Main;
 import model.punts.Punt;
 import model.punts.Punt2D;
 import model.punts.Punt3D;
+import vista.Distribucio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +18,18 @@ public class GeneradorGaussia extends Generador {
         super(n, min, max);
         this.mitjana = mitjana;
         this.desviacio = desviacio;
+
+        Main.instance.getDades().setDist(Distribucio.Gaussiana);
+
     }
 
     public GeneradorGaussia(int n, int min, int max) {
         super(n, min, max);
         this.mitjana = 0;
         this.desviacio = 1;
+
+        Main.instance.getDades().setDist(Distribucio.Gaussiana);
+
     }
 
     private int limita(int valor) {

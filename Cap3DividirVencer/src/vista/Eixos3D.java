@@ -192,14 +192,13 @@ public class Eixos3D extends JFXPanel implements Comunicar {
      * Mostra el resultat d'una operació
      */
     private void mostrarResultat(String algorisme){
-        Resultat r = dades.getLastResultat().getValue();
+        Resultat r = dades.getLastResultat();
 
         if (r.getTc().isMin()){
             puntGroup.getChildren().add(createPunt((Punt3D) r.getP1(), puntGroc));
             puntGroup.getChildren().add(createPunt((Punt3D) r.getP2(), puntGroc));
         }else{ //max
-            // TODO: IMPLEMENTAR CORRECTAMENT ALGORISME DISTANCIA!!
-            puntGroup.getChildren().add(createLine((Punt3D) dades.getPunts().getFirst(), (Punt3D) dades.getPunts().getLast(), puntGroc));
+            puntGroup.getChildren().add(createLine((Punt3D) r.getP1(), (Punt3D) r.getP2(), puntGroc));
         }
     }
 

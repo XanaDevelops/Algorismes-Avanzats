@@ -84,7 +84,7 @@ public class ParellaPropera_dv extends Calcul {
 
                 double d = areaPossible.get(i).distancia(areaPossible.get(j));
                 if (d < dmin) {
-                    bestResult = new Resultat(areaPossible.get(i), areaPossible.get(j), d, 0, null, null, null);
+                    bestResult = new Resultat(punts.size(), areaPossible.get(i), areaPossible.get(j), d, 0, null, null, null);
                     dmin = d;
                 }
             }

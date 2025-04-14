@@ -1,8 +1,10 @@
 package model.generadors;
 
+import controlador.Main;
 import model.punts.Punt;
 import model.punts.Punt2D;
 import model.punts.Punt3D;
+import vista.Distribucio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ public class GeneradorUniforme extends Generador {
 
     public GeneradorUniforme(int n, int min, int max) {
         super(n, min, max);
+        Main.instance.getDades().setDist(Distribucio.Uniforme);
+
     }
 
     @Override

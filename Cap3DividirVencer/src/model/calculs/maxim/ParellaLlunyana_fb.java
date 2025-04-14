@@ -37,7 +37,7 @@ public class ParellaLlunyana_fb extends Calcul {
                         }
                 }
                 t = System.nanoTime() - t;
-                return new Resultat(p1, p2, max, t);
+                return new Resultat(punts.size(), p1, p2, max, t);
         }
 
 

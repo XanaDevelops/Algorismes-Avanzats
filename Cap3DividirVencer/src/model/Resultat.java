@@ -8,15 +8,17 @@ public class Resultat {
     private final long tempsNano;
     private final Punt p1;
     private final Punt p2;
+    private final int n;
     private final double distancia;
     private final Distribucio dist;
     private final TipoPunt tp;
     private final TipusCalcul tc;
 
 
-    public Resultat(Punt p1, Punt p2, double distancia, long tempsNano) {
+    public Resultat(int n, Punt p1, Punt p2, double distancia, long tempsNano) {
         this.p1 = p1;
         this.p2 = p2;
+        this.n = n;
         this.distancia = distancia;
         this.tempsNano = tempsNano;
         this.dist = null;
@@ -24,9 +26,10 @@ public class Resultat {
         this.tc = null;
     }
 
-    public Resultat(Punt p1, Punt p2, double distancia, long tempsNano, Distribucio dist, TipoPunt tp, TipusCalcul tc) {
+    public Resultat(int n, Punt p1, Punt p2, double distancia, long tempsNano, Distribucio dist, TipoPunt tp, TipusCalcul tc) {
         this.p1 = p1;
         this.p2 = p2;
+        this.n = n;
         this.distancia = distancia;
         this.tempsNano = tempsNano;
         this.dist = dist;
@@ -64,9 +67,14 @@ public class Resultat {
         return tc;
     }
 
+    public int getN() {
+        return n;
+    }
+
     @Override
     public String toString() {
         return "Resultat{" +
+                "n=" + n +
                 "tempsNano=" + tempsNano +
                 ", p1=" + p1 +
                 ", p2=" + p2 +
