@@ -7,14 +7,13 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Sphere;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import model.Dades;
@@ -29,7 +28,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
     //color per defecte del punt
     private final Material puntBlau = new PhongMaterial(Color.BLUE);
-
+    private final Material puntGroc = new PhongMaterial(Color.GOLD);
     //tamany del graf en 3D
     final int tamGraf = 1000;
 
@@ -125,11 +124,26 @@ public class Eixos3D extends JFXPanel implements Comunicar {
     }
 
     /**
+     * Crea una esfera per visualitzar el Punt3D
+     * @param punt punt
+     * @param mat color
+     * @return Sphere
+     */
+    private Sphere createPunt(Punt3D punt, Material mat) {
+        Sphere puntS = new Sphere(5); //els punts en 3D son esferes
+        puntS.setMaterial(mat);
+        //fer coordenades relatives
+        puntS.setTranslateX(punt.x / (double) Dades.RANG_PUNT * tamGraf);
+        puntS.setTranslateY(punt.y / (double) Dades.RANG_PUNT * tamGraf);
+        puntS.setTranslateZ(punt.z / (double) Dades.RANG_PUNT * tamGraf);
+
+        return puntS;
+    }
+    /**
      * Dibuixa els punts en 3D
      */
     private void plotPunts(){
         puntGroup.getChildren().clear();
-
 
         List<Punt> punts =  dades.getPunts();
         if (punts== null || punts.isEmpty() || !(punts.getFirst() instanceof Punt3D)) {
@@ -138,14 +152,65 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
         for(Punt p : punts) {
             Punt3D punt = (Punt3D) p;
-            Sphere puntS = new Sphere(5); //els punts en 3D son esferes
-            puntS.setMaterial(puntBlau);
-            //fer coordenades relatives
-            puntS.setTranslateX(punt.x/(double)Dades.RANG_PUNT * tamGraf);
-            puntS.setTranslateY(punt.y/(double)Dades.RANG_PUNT * tamGraf);
-            puntS.setTranslateZ(punt.z/(double)Dades.RANG_PUNT * tamGraf);
+            puntGroup.getChildren().add(createPunt(punt, puntBlau));
+        }
+    }
 
-            puntGroup.getChildren().add(puntS);
+    private Shape3D createLine(Punt3D a, Punt3D b, Material mat){
+        Point3D p1 = new Point3D(a.x / (double) Dades.RANG_PUNT * tamGraf,a.y/ (double) Dades.RANG_PUNT * tamGraf,a.z/ (double) Dades.RANG_PUNT * tamGraf);
+        Point3D p2 = new Point3D(b.x/ (double) Dades.RANG_PUNT * tamGraf,b.y/ (double) Dades.RANG_PUNT * tamGraf,b.z/ (double) Dades.RANG_PUNT * tamGraf);
+
+        Point3D diff = p2.subtract(p1);
+        double height = diff.magnitude();
+
+        // Create the cylinder with the computed height
+        Cylinder cylinder = new Cylinder(2, height);
+        cylinder.setMaterial(mat);
+
+        // Position the cylinder at the midpoint of p1 and p2
+        Point3D mid = p1.midpoint(p2);
+        cylinder.setTranslateX(mid.getX());
+        cylinder.setTranslateY(mid.getY());
+        cylinder.setTranslateZ(mid.getZ());
+
+        // Align the cylinder to the vector between p1 and p2
+        Point3D yAxis = new Point3D(0, 1, 0);
+        Point3D axisOfRotation = diff.crossProduct(yAxis);
+        double angle = Math.acos(diff.normalize().dotProduct(yAxis));
+        angle = Math.toDegrees(angle);
+
+        if (axisOfRotation.magnitude() > 0) {
+            cylinder.getTransforms().add(new Rotate(-angle, axisOfRotation));
+        }
+        return cylinder;
+    }
+
+    /**
+     * Mostra el resultat d'una operació
+     */
+    private void mostrarResultat(String algorisme){
+        Dades.Resultat r;
+
+        switch (algorisme){
+            case "Força Bruta":
+                r = dades.getLastResultatFB().getValue();
+                break;
+            case "Dividir i vèncer":
+                r = dades.getLastResultatDV().getValue();
+                break;
+            case "Kd-Arbre":
+                r = dades.getLastResultatKD().getValue();
+                break;
+            default:
+                System.err.println("Eixos3D algorisme?? "+algorisme);
+                return;
+        }
+        if (r.getTipus().equalsIgnoreCase("min")){
+            puntGroup.getChildren().add(createPunt((Punt3D) r.getP1(), puntGroc));
+            puntGroup.getChildren().add(createPunt((Punt3D) r.getP2(), puntGroc));
+        }else{ //max
+            // TODO: IMPLEMENTAR CORRECTAMENT ALGORISME DISTANCIA!!
+            puntGroup.getChildren().add(createLine((Punt3D) dades.getPunts().getFirst(), (Punt3D) dades.getPunts().getLast(), puntGroc));
         }
     }
 
@@ -274,11 +339,14 @@ public class Eixos3D extends JFXPanel implements Comunicar {
 
     @Override
     public void comunicar(String s) {
-        switch(s){
+        String[] args = s.split(":");
+        switch(args[0]){
             case "dibuixPunts":
             case "pintar":
                 Platform.runLater(this::plotPunts);
                 break;
+            case "dibuixDistancia":
+                Platform.runLater(() -> this.mostrarResultat(args[1]));
             case "aturar":
                 break;
         }

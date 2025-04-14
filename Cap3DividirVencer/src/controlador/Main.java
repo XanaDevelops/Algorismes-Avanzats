@@ -211,7 +211,7 @@ public class Main implements Comunicar {
                 System.out.println("Resultats de càlcul DV: " + dades.getDividirVencer().toString());
                 System.out.println("Resultats de càlcul KD: " + dades.getKd().toString());
 //                finestra.comunicar("pintar");
-                finestra.comunicar("dibiuxDistancia");
+                finestra.comunicar("dibuixDistancia");
                 finestra.comunicar("pintaElement");
 
             } catch (Exception e) {

@@ -203,6 +203,7 @@ public class Finestra extends JFrame implements Comunicar {
                 break;
             case "dibuixDistancia":
                 //eixos.pintarDistancies((String) algorisme.getSelectedItem());
+                currentEixos.comunicar(s+":"+ algorisme.getSelectedItem());
                     break;
             case "pintaElement":
                 fte.comunicar("pintaElement");
