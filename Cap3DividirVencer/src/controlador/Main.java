@@ -49,6 +49,7 @@ public class Main implements Comunicar {
     public static void main(String[] args) {
         (new Main()).init();
 
+
     }
 
     private void init() {
@@ -86,7 +87,6 @@ public class Main implements Comunicar {
                     String distribucio = parts[2];  // "Uniforme", "Gaussiana", o "Exponencial"
 
 
-
                     // Capturar els possibles paràmetres extra per generadors com Gaussiana o Exponencial
 
                     if (distribucio.equalsIgnoreCase("Gaussiana")) {
@@ -98,7 +98,6 @@ public class Main implements Comunicar {
                     } else if (distribucio.equalsIgnoreCase("Exponencial")) {
                         // Per a la distribució Exponencial s'espera un paràmetre extra: lambda
 
-//                        params.add((double) 2 *100000 /(max));
                         params.add(rn.nextDouble(0.1, 4.5));
 
                     }
