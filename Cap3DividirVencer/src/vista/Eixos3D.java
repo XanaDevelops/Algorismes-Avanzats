@@ -70,6 +70,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
     public Eixos3D() {
         super();
         dades = Main.instance.getDades();
+        System.err.println("WARNING: ignorar l'altre warning de JavaFX, funciona perfectament");
         Platform.runLater(this::initFX);
     }
 

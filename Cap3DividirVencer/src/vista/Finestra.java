@@ -35,14 +35,14 @@ public class Finestra extends JFrame implements Comunicar {
         super();
         this.comunicar = Main.instance;
 
-        eixos = new Comunicar[]{new Eixos2D(750, 890), new Eixos3D()};
+        eixos = new Comunicar[]{new Eixos2D(), new Eixos3D()};
         currentEixos = eixos[0];
 
         setTitle("Distàncies a un núvol de punts");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(900, 900));
+        setPreferredSize(new Dimension(1080, 900));
 
         JPanel panellBotons = crearPanellBotons();
 
