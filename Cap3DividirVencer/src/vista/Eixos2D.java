@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Eixos2D extends JPanel implements Comunicar {
     private Dades dades;
-    private BufferedImage image;
+
     private int width;
     private int height;
     protected final static int MARGIN = 15;
