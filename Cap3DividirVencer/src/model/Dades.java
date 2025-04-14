@@ -3,6 +3,7 @@ package model;
 import model.punts.Punt;
 import model.punts.Punt3D;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -16,6 +17,7 @@ public class Dades {
 
     private final TreeMap<Integer, Resultat> forcaBruta;
     private final TreeMap<Integer, Resultat> dividirVencer;
+    private final TreeMap<Integer, Resultat> distanciaMaxima;
 
     public static final int RANG_PUNT = 100000;
     private final TreeMap<Integer, Resultat> kd;
@@ -23,6 +25,7 @@ public class Dades {
     public Dades() {
         this.forcaBruta = new TreeMap<>();
         this.dividirVencer = new TreeMap<>();
+        this.distanciaMaxima = new TreeMap<>();
         this.kd = new TreeMap<>();
     }
 
@@ -31,6 +34,7 @@ public class Dades {
         this.tp = tp;
         this.forcaBruta = new TreeMap<>();
         this.dividirVencer = new TreeMap<>();
+        this.distanciaMaxima = new TreeMap<>();
         this.kd = new TreeMap<>();
     }
 
@@ -60,6 +64,10 @@ public class Dades {
         return dividirVencer;
     }
 
+    public NavigableMap<Integer, Resultat> getDistanciaMaxima() {
+        return distanciaMaxima;
+    }
+
     public void clearForcaBruta() {
         forcaBruta.clear();
     }
@@ -80,6 +88,10 @@ public class Dades {
         return kd.lastEntry();
     }
 
+    public void clearDistanciaMaxima() {
+        distanciaMaxima.clear();
+    }
+
     public void afegeixForcaBruta(int n, Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
         Resultat r = new Resultat(p1, p2, distancia, tempsNano, tipus);
         forcaBruta.put(n, r);
@@ -93,6 +105,11 @@ public class Dades {
     public void afegeixKD(int n, Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
         Resultat r = new Resultat(p1, p2, distancia, tempsNano, tipus);
         kd.put(n, r);
+    }
+
+    public void afegeixDistMax(int n, Punt p1, Punt p2, double distancia, long tempsNano, String tipus) {
+        Resultat r = new Resultat(p1, p2, distancia, tempsNano, tipus);
+        distanciaMaxima.put(n, r);
     }
 
     public List<Punt> getPunts() {
