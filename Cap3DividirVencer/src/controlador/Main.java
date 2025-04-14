@@ -49,7 +49,6 @@ public class Main implements Comunicar {
     public static void main(String[] args) {
         (new Main()).init();
 
-
     }
 
     private void init() {
@@ -134,7 +133,9 @@ public class Main implements Comunicar {
                 for (Comunicar proces : processos) {
                     proces.comunicar("aturar");
                 }
+
                 processos.clear();
+
                 break;
 
 

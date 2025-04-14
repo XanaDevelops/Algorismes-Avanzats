@@ -24,7 +24,11 @@ public class GeneradorExponencial extends Generador {
 
 
     private int limita(int valor) {
-        return Math.max(min, Math.min(max, valor));
+        int maxim = Math.max(min, Math.min(max, valor));
+        if (maxim <0){
+            maxim *= -1;
+        }
+        return maxim;
     }
 
     @Override
@@ -42,18 +46,42 @@ public class GeneradorExponencial extends Generador {
         return punts;
     }
 
+//    @Override
+//    public List<Punt> genera3D() {
+//        List<Punt> punts = new ArrayList<>();
+//        for (int i = 0; i < n; i++) {
+//            int x = (limita (rand.nextInt(max/2)));
+//
+//            int y =limita((int) exponencial(x ));
+//            int z = limita((int) exponencial(y+x));
+//
+//
+//            punts.add(new Punt3D(x, y, z));
+//        }
+//        return punts;
+//    }
+
+
     @Override
     public List<Punt> genera3D() {
         List<Punt> punts = new ArrayList<>();
+        int spread = max / rand.nextInt(4, 16); //parametre de dispersió
+        System.out.println(spread);
         for (int i = 0; i < n; i++) {
-            int x = (limita (rand.nextInt(max/2)));
+            int x = limita(rand.nextInt(max ));
 
-            int y =limita((int) exponencial(x ));
-            int z = limita( rand.nextInt(max ));
+            int y = limita(limita((int) exponencial(x)) );
+            int z = limita(x+ rand.nextInt(spread*2));
+//
+//
+//            int z = limita(x + (rand.nextInt(2 * spread) - spread/2 ));
+
+//            System.out.println("x: " + x + " y: " + y + " z: " + z);
             punts.add(new Punt3D(x, y, z));
         }
         return punts;
     }
+
 
 }
 
