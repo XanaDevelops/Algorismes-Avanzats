@@ -3,14 +3,13 @@ package vista;
 import controlador.Comunicar;
 import controlador.Main;
 import model.Dades;
-import model.Dades.Resultat;
+import model.Resultat;
 import model.TipoPunt;
 import model.punts.Punt;
 
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 
@@ -98,14 +97,7 @@ public class Eixos2D extends JPanel implements Comunicar {
 
     public void pintarDistancies(String algorisme) {
         if (dades.getPunts() != null && !dades.getPunts().isEmpty()) {
-            if (algorisme.equals("Força Bruta")) {
-                resultatADibuixar = dades.getLastResultatFB().getValue();
-
-            } else if (algorisme.equals("Dividir i vèncer")) {
-                resultatADibuixar = dades.getLastResultatDV().getValue();
-            } else {
-                resultatADibuixar = dades.getLastResultatKD().getValue();
-            }
+            resultatADibuixar = dades.getLastResultat();
             repaint();
         }
     }
@@ -146,6 +138,16 @@ public class Eixos2D extends JPanel implements Comunicar {
 
     @Override
     public void comunicar(String s) {
-        pintar();
+        String[] args = s.split(":");
+        switch(args[0]){
+            case "dibuixPunts":
+            case "pintar":
+                pintar();
+                break;
+            case "dibuixDistancia":
+                pintarDistancies(args[1]);
+            case "aturar":
+                break;
+        }
     }
 }

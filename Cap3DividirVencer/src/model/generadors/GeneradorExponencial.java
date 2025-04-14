@@ -1,9 +1,10 @@
 package model.generadors;
 
-import model.Dades;
+import controlador.Main;
 import model.punts.Punt;
 import model.punts.Punt2D;
 import model.punts.Punt3D;
+import vista.Distribucio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,23 +13,34 @@ public class GeneradorExponencial extends Generador {
 
     private final double lambda;  // Paràmetre de la distribució exponencial
 
+
+
     public GeneradorExponencial(int n, int min, int max, double lambda) {
         super(n, min, max);
         this.lambda = lambda;
+
+        Main.instance.getDades().setDist(Distribucio.Exponencial);
     }
 
-    private double exponencial(int x) {
-        double exp = -Math.log(1.0 - (double) x / Dades.RANG_PUNT);
-        return exp * ((double) max / 2) / lambda;
+    public GeneradorExponencial(int n, int min, int max) {
+        super(n, min, max);
+        this.lambda = Math.E;
+
+        Main.instance.getDades().setDist(Distribucio.Exponencial);
+
+    }
+
+    //    private double exponencial(double lambda) {
+//        return -Math.log(1.0 - rand.nextDouble()) / lambda;
+//    }
+    private double exponencial(double lambda) {
+        double exp = -Math.log(1.0 - rand.nextDouble());
+        return exp * ((double) max /2) / lambda;
     }
 
 
     private int limita(int valor) {
-        int maxim = Math.max(min, Math.min(max, valor));
-        if (maxim <0){
-            maxim *= -1;
-        }
-        return maxim;
+        return Math.max(min, Math.min(max, valor));
     }
 
     @Override
@@ -36,52 +48,25 @@ public class GeneradorExponencial extends Generador {
         // Generació 2D amb exponencial
         List<Punt> punts = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-
-            int x = limita(rand.nextInt(max / 2));
-
-            int y = limita((int) exponencial(x));
+            int x = limita((int) exponencial(lambda));
+            int y = limita((int) exponencial(lambda));
 
             punts.add(new Punt2D(x, y));
         }
         return punts;
     }
 
-//    @Override
-//    public List<Punt> genera3D() {
-//        List<Punt> punts = new ArrayList<>();
-//        for (int i = 0; i < n; i++) {
-//            int x = (limita (rand.nextInt(max/2)));
-//
-//            int y =limita((int) exponencial(x ));
-//            int z = limita((int) exponencial(y+x));
-//
-//
-//            punts.add(new Punt3D(x, y, z));
-//        }
-//        return punts;
-//    }
-
-
     @Override
     public List<Punt> genera3D() {
         List<Punt> punts = new ArrayList<>();
-        int spread = max / rand.nextInt(4, 16); //parametre de dispersió
-        System.out.println(spread);
         for (int i = 0; i < n; i++) {
-            int x = limita(rand.nextInt(max ));
-
-            int y = limita(limita((int) exponencial(x)) );
-            int z = limita(x+ rand.nextInt(spread*2));
-//
-//
-//            int z = limita(x + (rand.nextInt(2 * spread) - spread/2 ));
-
-//            System.out.println("x: " + x + " y: " + y + " z: " + z);
+            int x = limita((int) exponencial(lambda)) * (rand.nextBoolean() ? 1 : -1);
+            int y = limita((int) exponencial(lambda)) * (rand.nextBoolean() ? 1 : -1);
+            int z = limita((int) exponencial(lambda)) * (rand.nextBoolean() ? 1 : -1);
             punts.add(new Punt3D(x, y, z));
         }
         return punts;
     }
-
 
 }
 

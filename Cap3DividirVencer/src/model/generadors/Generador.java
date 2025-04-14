@@ -1,5 +1,6 @@
 package model.generadors;
 
+import controlador.Main;
 import model.punts.Punt;
 
 import java.util.List;

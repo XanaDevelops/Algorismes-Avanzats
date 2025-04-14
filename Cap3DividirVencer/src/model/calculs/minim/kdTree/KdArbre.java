@@ -1,4 +1,4 @@
-package model.calculs.kdTree;
+package model.calculs.minim.kdTree;
 
 import model.punts.Punt;
 
