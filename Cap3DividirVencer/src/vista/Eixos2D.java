@@ -22,14 +22,9 @@ public class Eixos2D extends JPanel implements Comunicar {
     protected final static int MARGIN = 15;
     private Resultat resultatADibuixar = null;
 
-    public Eixos2D(int height, int width) {
+    public Eixos2D() {
         this.dades = Main.instance.getDades();
 
-        this.width = width;
-        this.height = height;
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        this.setBounds(0, 0, width, height);
     }
 
     public synchronized void pintar() {
@@ -41,6 +36,9 @@ public class Eixos2D extends JPanel implements Comunicar {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        this.width = this.getWidth();
+        this.height = this.getHeight();
+
         g.setColor(Color.white);
         g.fillRect(0, 0, width, height);
 
