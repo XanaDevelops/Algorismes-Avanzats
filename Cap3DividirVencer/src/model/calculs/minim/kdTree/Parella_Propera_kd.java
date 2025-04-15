@@ -111,7 +111,7 @@ public class Parella_Propera_kd extends Calcul {
      * @param punts
      * @return
      */
-    public Resultat calc(ArrayList<Punt> punts) {
+    public Resultat calc2(ArrayList<Punt> punts) {
         long t = System.nanoTime();
         if (punts == null || punts.size() < 2) {
             return null;
@@ -147,10 +147,42 @@ public class Parella_Propera_kd extends Calcul {
         return new Resultat(punts.size(), bestP1, bestP2, bestDist, t);
     }
 
+    public Resultat calc(ArrayList<Punt> punts) {
+        long t = System.nanoTime();
+        if (punts == null || punts.size() < 2) {
+            return null;
+        }
+
+        double bestDist = Double.MAX_VALUE;
+        Punt bestP1 = null;
+        Punt bestP2 = null;
+
+        for (Punt p : punts) {
+            Resultat r = NN(p);
+
+            if (p.equals(r.getP2())) { // punts duplicats
+                continue;
+            }
+            if (r.getDistancia() < bestDist) {
+                bestDist = r.getDistancia();
+                bestP1 = p;
+                bestP2 = r.getP2();
+            }
+        }
+        t = System.nanoTime() - t;
+        return new Resultat(punts.size(), bestP1, bestP2, bestDist, t);
+    }
+
     @Override
     public void run() {
 
-        Resultat res = calc(new ArrayList<>(punts));
+        Resultat res = null;
+        if (Main.instance.isModeConcurrentOn()){
+            res = calc2((ArrayList<Punt>) punts);
+        }else{
+            res = calc((ArrayList<Punt>) punts);
+        }
+
 
         dades.afegeixResultat(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(), TipusCalcul.KD_MIN);
     }

@@ -28,7 +28,10 @@ public class Main implements Comunicar {
     Comunicar finestra;
     Dades dades;
     private List<Punt> punts;
+    private final static int LIMIT_PUNTS = 100000;
 
+
+    private boolean modeConcurrentOn = false;
     private ArrayList<Comunicar> processos = null;
 
     public ThreadPoolExecutor getExecutor() {
@@ -63,6 +66,7 @@ public class Main implements Comunicar {
         punts = new ArrayList<>();
         processos = new ArrayList<>();
 
+
 //        executor.execute(() -> {
 //            finestra = new Finestra();
 //        });
@@ -77,12 +81,14 @@ public class Main implements Comunicar {
             // --------------------------
             // Format esperat: generar:<num>:<distribucio>:<dimensio>:<min>:<max>[:<extra1>:<extra2>...]
             case "generar":
+
                 punts.clear();
 
                 try {
                     List<Object> params = new ArrayList<>();
                     TipoPunt tp = parts[3].equalsIgnoreCase("p3D") ? TipoPunt.p3D : TipoPunt.p2D;
-
+                    int n = Integer.parseInt(parts[1]);
+                    modeConcurrentOn = n >= LIMIT_PUNTS;
                     params.add(Integer.parseInt(parts[1]));
                     Random rn = new Random();
                     int max = Dades.RANG_PUNT;
@@ -96,9 +102,9 @@ public class Main implements Comunicar {
 
                     if (distribucio.equalsIgnoreCase("Gaussiana")) {
                         // Per a la distribució Gaussiana s'esperen dos paràmetres extra: mitjana i desviació estàndard
-                        params.add(tp == TipoPunt.p2D ? max /2.0 : 0.0);
+                        params.add(tp == TipoPunt.p2D ? max / 2.0 : 0.0);
 
-                        params.add( max / rn.nextDouble(5.1, 7.3));
+                        params.add(max / rn.nextDouble(5.1, 7.3));
 
                     } else if (distribucio.equalsIgnoreCase("Exponencial")) {
                         // Per a la distribució Exponencial s'espera un paràmetre extra: lambda
@@ -170,6 +176,10 @@ public class Main implements Comunicar {
         this.dades = dades;
     }
 
+    public boolean isModeConcurrentOn() {
+        return modeConcurrentOn;
+    }
+
     // Mètode per generar els punts mitjançant el generador especificat
     private void generarPunts(Class<? extends Generador> generadorClass, TipoPunt tp, List<Object> params)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ExecutionException, InterruptedException {
@@ -188,9 +198,9 @@ public class Main implements Comunicar {
 
         // Instanciar generador
         List<Future<List<Punt>>> futures = new ArrayList<>();
-        int numPunts = (int)params.getFirst();
+        int numPunts = (int) params.getFirst();
 
-        int subConjunt = numPunts / (executor.getCorePoolSize() -executor.getActiveCount());
+        int subConjunt = numPunts / (executor.getCorePoolSize() - executor.getActiveCount());
 
 
         for (int i = 0; i < 4; i++) {
@@ -207,16 +217,6 @@ public class Main implements Comunicar {
         }
         dades.setPunts(totalPunts);
 
-//        Object generador = generadorClass.getConstructor(paramTypes).newInstance(params.toArray());
-//
-//        Object res = generador.getClass().getMethod(metodeGeneracio).invoke(generador);
-//
-//        if (res instanceof List<?>) {
-//            dades.setPunts((List<Punt>) res);
-//
-//        } else {
-//            System.err.println("Error en generar la llista de punts.");
-//        }
     }
 
     // Mètode per executar l'algorisme de càlcul
@@ -232,17 +232,9 @@ public class Main implements Comunicar {
                     }
                 }
                 calcul.run();
-//                System.out.println("Resultats FB" + dades.getResultats().get(TipusCalcul.FB_MIN));
-//                System.out.println("Resultats DV" + dades.getResultats().get(TipusCalcul.DV_MIN));
-//                System.out.println("Resultats KD" + dades.getResultats().get(TipusCalcul.KD_MIN));
-                System.out.println("Resultat FB "+ dades.getResultats().get(TipusCalcul.FB_MAX));
-                System.out.println("Resultat uni "+ dades.getResultats().get(TipusCalcul.UNI_MAX));
+//                System.out.println("Resultat FB "+ dades.getResultats().get(TipusCalcul.FB_MAX));
+//                System.out.println("Resultat uni "+ dades.getResultats().get(TipusCalcul.UNI_MAX));
 
-
-                /*System.out.println("Resultats de càlcul FB: " + dades.getForcaBruta().toString());
-                System.out.println("Resultats de càlcul DV: " + dades.getDividirVencer().toString());
-                System.out.println("Resultats de càlcul KD: " + dades.getKd().toString());*/
-//                finestra.comunicar("pintar");
 
             } catch (Exception e) {
                 System.err.println("Error en el càlcul: " + e.getMessage());

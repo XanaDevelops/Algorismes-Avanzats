@@ -22,7 +22,13 @@ public class ParellaLlunyana_fb extends Calcul {
 
         @Override
         public void run() {
-                Resultat res = calc((ArrayList<Punt>) punts);
+                Resultat res = null;
+                if (Main.instance.isModeConcurrentOn()){
+                        res = calc2((ArrayList<Punt>) punts);
+                }else{
+                        res = calc((ArrayList<Punt>) punts);
+                }
+
                 dades.afegeixResultat(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(), TipusCalcul.FB_MAX);
         }
 
@@ -45,6 +51,8 @@ public class ParellaLlunyana_fb extends Calcul {
                 t = System.nanoTime() - t;
                 return new Resultat(punts.size(), p1, p2, max, t);
         }
+
+        //versió amb concurrencia
         public static Resultat calc2(ArrayList<Punt> punts) {
 
                 int n = punts.size();
