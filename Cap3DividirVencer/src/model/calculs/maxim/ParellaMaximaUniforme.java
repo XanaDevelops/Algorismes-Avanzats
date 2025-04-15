@@ -75,24 +75,46 @@ public class ParellaMaximaUniforme extends Calcul {
     }
 
     /**
-     * Estratègia per punts 3D: comparació entre franges extrems en X.
+     * Estratègia per punts 3D amb distribució uniforme:
+     * Seleccionam punts extrems a partir de dues projeccions diagonals (X+Y i Y−X)
+     * per calcular aproximadament la parella més allunyada en O(n).
      */
     private Resultat calculaParellaMaxima3D() {
         int n = punts.size();
-        int k = (int) Math.sqrt(n);
+        int k = (int) Math.sqrt(n); // Mida del subconjunt de candidats
 
-        List<Punt> ordenatsX = new ArrayList<>(punts);
-        ordenatsX.sort(Comparator.comparingInt(Punt::getX));
+        // Ordenació per la primera projecció (X + Y)
+        List<Punt> ordenatsDiagonalXY = new ArrayList<>(punts);
+        ordenatsDiagonalXY.sort(Comparator.comparingInt(p -> p.getX() + p.getY()));
 
-        List<Punt> franjaEsquerra = ordenatsX.subList(0, Math.min(k, n));
-        List<Punt> franjaDreta = ordenatsX.subList(Math.max(0, n - k), n);
+        // Ordenació per la segona projecció (Y − X)
+        List<Punt> ordenatsDiagonalYX = new ArrayList<>(punts);
+        ordenatsDiagonalYX.sort(Comparator.comparingInt(p -> -p.getX() + p.getY()));
 
+        // Selecció de franges extrems a cada projecció
+        List<Punt> diagonalXYInici = ordenatsDiagonalXY.subList(0, Math.min(k, n));
+        List<Punt> diagonalXYFi = ordenatsDiagonalXY.subList(Math.max(0, n - k), n);
+        List<Punt> diagonalYXInici = ordenatsDiagonalYX.subList(0, Math.min(k, n));
+        List<Punt> diagonalYXFi = ordenatsDiagonalYX.subList(Math.max(0, n - k), n);
+
+        // Càlcul de la millor parella entre les dues diagonals
+        Resultat millorXY = millorParellaEntreFranges(diagonalXYInici, diagonalXYFi);
+        Resultat millorYX = millorParellaEntreFranges(diagonalYXInici, diagonalYXFi);
+
+        // Retornam la millor parella trobada entre ambdues projeccions
+        return (millorXY.getDistancia() > millorYX.getDistancia()) ? millorXY : millorYX;
+    }
+
+    /**
+     * Donades dues franges de punts, calcula la parella més allunyada entre elles.
+     */
+    private Resultat millorParellaEntreFranges(List<Punt> franjaA, List<Punt> franjaB) {
         double maxDist = 0.0;
         Punt millorA = null;
         Punt millorB = null;
 
-        for (Punt a : franjaEsquerra) {
-            for (Punt b : franjaDreta) {
+        for (Punt a : franjaA) {
+            for (Punt b : franjaB) {
                 double dist = a.distancia(b);
                 if (dist > maxDist) {
                     maxDist = dist;
@@ -104,4 +126,5 @@ public class ParellaMaximaUniforme extends Calcul {
 
         return new Resultat(punts.size(), millorA, millorB, maxDist, 0);
     }
+
 }
