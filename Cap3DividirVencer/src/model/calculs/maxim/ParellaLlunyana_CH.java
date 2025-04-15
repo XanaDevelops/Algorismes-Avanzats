@@ -1,9 +1,11 @@
 package model.calculs.maxim;
 
 import model.Resultat;
+import model.TipoPunt;
 import model.TipusCalcul;
 import model.calculs.Calcul;
 import model.punts.Punt;
+import model.punts.Punt2D;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +35,14 @@ public class ParellaLlunyana_CH extends Calcul {
     @Override
     public void run() {
         long startTime = System.nanoTime();
-        Resultat r = calcular();
+        Resultat r;
+        if (dades.getTp() == TipoPunt.p2D){
+            r = calcular();
+        }else{
+            System.err.println("P3D");
+            ParellaLlunyana_QH qh = new ParellaLlunyana_QH();
+            r = qh.calcular();
+        }
         long elapsedTime = System.nanoTime() - startTime;
         System.err.println(r);
         dades.afegeixResultat(punts.size(), r.getP1(), r.getP2(), r.getDistancia(), elapsedTime, TipusCalcul.CH_MAX);

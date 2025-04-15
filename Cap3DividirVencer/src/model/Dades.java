@@ -34,7 +34,7 @@ public class Dades {
         l.add(r);
         this.tipusCalcul = calcul;
         resultats.put(calcul, l);
-        System.out.println("Resultat " + r.getP1()+"," +r.getP2() + ": " + r.getDistancia());
+        System.out.println("Resultat " + r.getP1()+"," +r.getP2() + ": " + r.getDistancia() + ", "+ r.getTc());
     }
 
     public void setTp(TipoPunt tp) {
