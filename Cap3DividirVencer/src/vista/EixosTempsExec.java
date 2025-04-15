@@ -93,10 +93,6 @@ public class EixosTempsExec extends JPanel {
             long maxTemps = getMaxTemps(dv, fb, kd);
 
 
-            System.out.println("maxTemps: " + maxTemps);
-            int px, py, pax, pay;
-
-
             // Dibuixar línies guia
             g.setFont(new Font("Arial", Font.PLAIN, 10));
             g.setColor(Color.LIGHT_GRAY);
