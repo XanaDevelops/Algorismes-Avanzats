@@ -8,35 +8,56 @@ import java.awt.*;
 public class FinestraTempsExec extends JFrame implements Comunicar {
 
     private final EixosTempsExec eixosTempsExec;
-    JPanel llegenda;
+
 
     protected final static Color VERD = new Color(34, 139, 34);
     protected final static Color VERMELL =  new Color(178, 34, 34);
     protected final static Color BLUE = new Color(102, 178, 255);
+
+    protected final static Color MVERD = VERD.darker();
+    protected final static Color MVERMELL = VERMELL.darker();
+    protected final static Color MBLUE = BLUE.darker();
+
     public FinestraTempsExec() {
         super("Temps d'execució");
-        llegenda = afegirLlegenda();
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(600, 600));
         eixosTempsExec = new EixosTempsExec(this.getWidth(), this.getHeight());
-        this.add(llegenda, BorderLayout.NORTH);
+        JPanel llegendes = new JPanel(new BorderLayout());
+        llegendes.add(afegirLlegendaMin(), BorderLayout.NORTH);
+        llegendes.add(afegirLlegendaMax(), BorderLayout.CENTER);
+        this.add(llegendes, BorderLayout.NORTH);
+
         this.add(eixosTempsExec, BorderLayout.CENTER);
         this.pack();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = screenSize.width - this.getWidth();
         int y = 0;
         this.setLocation(x, y);
+        this.setResizable(false);
         this.setVisible(true);
     }
 
-    private JPanel afegirLlegenda() {
+    private JPanel afegirLlegendaMin() {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.CENTER));
         panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true));
-
+        panel.add(new JLabel("Min: "));
         afegirEtiqueta("Dividir i Vèncer", VERD, panel);
         afegirEtiqueta("Força Bruta",VERMELL, panel);
         afegirEtiqueta("Kd-Arbre", BLUE, panel);
+        afegirEtiqueta("x: Nº punts  y: log10(Temps)", Color.DARK_GRAY, panel);
+        return panel;
+    }
+
+    private JPanel afegirLlegendaMax() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true));
+        panel.add(new JLabel("Max: "));
+        afegirEtiqueta("Convex Hull", MVERD, panel);
+        afegirEtiqueta("Força Bruta",MVERMELL, panel);
+        afegirEtiqueta("Uniforme", MBLUE, panel);
         afegirEtiqueta("x: Nº punts  y: log10(Temps)", Color.DARK_GRAY, panel);
         return panel;
     }

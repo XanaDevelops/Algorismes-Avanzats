@@ -24,7 +24,7 @@ public class EixosTempsExec extends JPanel {
      */
     public EixosTempsExec(int w, int h) {
 
-        this.setBounds(0, 0, w, h);
+        this.setPreferredSize(new Dimension(w, h));
     }
 
     /**
@@ -69,15 +69,23 @@ public class EixosTempsExec extends JPanel {
                 return;
             }
 
-
             Collections.sort(nPunts);
+
             List<Resultat> dv = resultats.get(TipusCalcul.DV_MIN);
             List<Resultat> fb = resultats.get(TipusCalcul.FB_MIN);
             List<Resultat> kd = resultats.get(TipusCalcul.KD_MIN);
 
-            if (dv != null) dv.sort(Comparator.comparingInt(Resultat::getN));;
-            if (fb != null) fb.sort(Comparator.comparingInt(Resultat::getN));;
-            if (kd != null) kd.sort(Comparator.comparingInt(Resultat::getN));;
+            if (dv != null) dv.sort(Comparator.comparingInt(Resultat::getN));
+            if (fb != null) fb.sort(Comparator.comparingInt(Resultat::getN));
+            if (kd != null) kd.sort(Comparator.comparingInt(Resultat::getN));
+
+            List<Resultat> ch = resultats.get(TipusCalcul.CH_MAX);
+            List<Resultat> fbm = resultats.get(TipusCalcul.FB_MAX);
+            List<Resultat> uni = resultats.get(TipusCalcul.UNI_MAX);
+
+            if (ch != null) ch.sort(Comparator.comparingInt(Resultat::getN));
+            if (fbm != null) fbm.sort(Comparator.comparingInt(Resultat::getN));
+            if (uni != null) uni.sort(Comparator.comparingInt(Resultat::getN));
 
             int maxelement = nPunts.getLast();
 
@@ -104,61 +112,40 @@ public class EixosTempsExec extends JPanel {
             }
 
             // llista de resultats de l'algorisme de Dividir i Vèncer
-            pax = 50;
-            pay = h - 10;
-            if (dv != null) {
-                for (Resultat r : dv) {
-                    if (maxelement == 0) break;
-                    g.setColor(FinestraTempsExec.VERD);
-                    px = 50 + r.getN() * (w - 60) / maxelement;
-                    py = (h - 20) - (int) ((Math.log10(r.getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
-
-                    g.fillOval(px - 3, py - 3, 7, 7);
-                    g.drawLine(pax, pay, px, py);
-                    g.drawString("(" + r.getN() + ", " + r.getTempsNano() + ")", px - 20, py - 20);
-                    g.setColor(Color.black);
-                    g.drawOval(px - 3, py - 3, 7, 7);
-                    pax = px;
-                    pay = py;
-                }
-            }
+            pintarCalcul(g, h, w, dv, maxelement, maxTemps, FinestraTempsExec.VERD);
             // llista de resultats de l'algorisme de Força Bruta
-            pax = 50;
-            pay = h - 10;
-            if (fb != null) {
-                for (Resultat r : fb) {
-                    if (maxelement == 0) break;
-                    g.setColor(FinestraTempsExec.VERMELL);
-                    px = 50 + r.getN() * (w - 60) / maxelement;
-                    py = (h - 20) - (int) ((Math.log10(r.getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
+            pintarCalcul(g, h, w, fb, maxelement, maxTemps, FinestraTempsExec.VERMELL);
+            // llista resultats kd
+            pintarCalcul(g, h, w, kd, maxelement, maxTemps, FinestraTempsExec.BLUE);
 
-                    g.fillOval(px - 3, py - 3, 7, 7);
-                    g.drawLine(pax, pay, px, py);
-                    g.drawString("(" + r.getN() + ", " + r.getTempsNano() + ")", px - 20, py - 20);
-                    g.setColor(Color.black);
-                    g.drawOval(px - 3, py - 3, 7, 7);
-                    pax = px;
-                    pay = py;
-                }
-            }
+            // llista de resultats de l'algorisme de convex hull
+            pintarCalcul(g, h, w, ch, maxelement, maxTemps, FinestraTempsExec.MVERD);
+            // llista de resultats de l'algorisme de Força Bruta
+            pintarCalcul(g, h, w, fbm, maxelement, maxTemps, FinestraTempsExec.MVERMELL);
+            // llista resultats kd
+            pintarCalcul(g, h, w, uni, maxelement, maxTemps, FinestraTempsExec.MBLUE);
 
-            pax = 50;
-            pay = h - 10;
-            if (kd != null) {
-                for (Resultat r : kd) {
-                    if (maxelement == 0) break;
-                    g.setColor(FinestraTempsExec.BLUE);
-                    px = 50 + r.getN() * (w - 60) / maxelement;
-                    py = (h - 20) - (int) ((Math.log10(r.getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
+        }
+    }
 
-                    g.fillOval(px - 3, py - 3, 7, 7);
-                    g.drawLine(pax, pay, px, py);
-                    g.drawString("(" + r.getN() + ", " + r.getTempsNano() + ")", px - 20, py - 20);
-                    g.setColor(Color.black);
-                    g.drawOval(px - 3, py - 3, 7, 7);
-                    pax = px;
-                    pay = py;
-                }
+    private void pintarCalcul(Graphics g, int h, int w, List<Resultat> res, int maxelement,  long maxTemps, Color color) {
+        int pax = 50;;
+        int pay = h - 10;;
+        int px, py;
+        if (res != null) {
+            for (Resultat r : res) {
+                if (maxelement == 0) break;
+                g.setColor(color);
+                px = 50 + r.getN() * (w - 60) / maxelement;
+                py = (h - 20) - (int) ((Math.log10(r.getTempsNano()) * (h - 40)) / Math.log10(maxTemps));
+
+                g.fillOval(px - 3, py - 3, 7, 7);
+                g.drawLine(pax, pay, px, py);
+                g.drawString("(" + r.getN() + ", " + r.getTempsNano() + ")", px - 20, py - 20);
+                g.setColor(Color.black);
+                g.drawOval(px - 3, py - 3, 7, 7);
+                pax = px;
+                pay = py;
             }
         }
     }
