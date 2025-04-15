@@ -18,6 +18,7 @@ import model.generadors.GeneradorUniforme;
 import model.punts.Punt;
 import vista.Finestra;
 
+import javax.crypto.spec.PSource;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -68,6 +69,7 @@ public class Main implements Comunicar {
         punts = new ArrayList<>();
         processos = new ArrayList<>();
 
+        System.out.println("MODE CONCURRENT (dins calcul): " + modeConcurrentOn);
 
 //        executor.execute(() -> {
 //            finestra = new Finestra();

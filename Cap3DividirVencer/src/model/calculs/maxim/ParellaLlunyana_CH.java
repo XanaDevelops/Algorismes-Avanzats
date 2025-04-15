@@ -15,18 +15,16 @@ import java.util.stream.Collectors;
  */
 public class ParellaLlunyana_CH extends Calcul {
 
-    private List<Punt> qhull;
+
 
     public ParellaLlunyana_CH(){
         super();
-        qhull = new ArrayList<>();
         dades.setTipusCalcul(TipusCalcul.CH_MAX);
     }
     public ParellaLlunyana_CH(List<Punt> punts) {
         super();
         this.punts.clear();
         this.punts.addAll(punts);
-        qhull = new ArrayList<>();
 
     }
     /**
@@ -43,7 +41,6 @@ public class ParellaLlunyana_CH extends Calcul {
             r = qh.calcular();
         }
         long elapsedTime = System.nanoTime() - startTime;
-        System.err.println(r);
         dades.afegeixResultat(punts.size(), r.getP1(), r.getP2(), r.getDistancia(), elapsedTime, TipusCalcul.CH_MAX);
     }
 

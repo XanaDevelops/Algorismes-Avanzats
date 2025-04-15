@@ -29,7 +29,7 @@ public class ParellaLlunyana_QH extends Calcul {
     }
 
     protected Resultat calcular(){
-        System.err.println("3D");
+
         List<Point3d> points = new ArrayList<>();
         for (Punt p : this.punts){
             points.add(new Point3d(p.getX(), p.getY(), p.getZ()));
