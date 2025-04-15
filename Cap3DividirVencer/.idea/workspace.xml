@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="Càlcul parella màxima primera versió.">
+    <list default="true" id="739d782b-ca33-440a-87a3-67de115ff2de" name="Changes" comment="Canvi getters classe resultat">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/calculs/ParellaMaxima.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/calculs/ParellaMaxima.java" afterDir="false" />
     </list>
@@ -65,12 +65,12 @@
       </RecentBranches>
     </option>
   </component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/XanaDevelops/Algorismes-Avanzats.git&quot;,
-    &quot;accountId&quot;: &quot;b8b22d0a-3c79-49db-b938-b69ba5611d4f&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/XanaDevelops/Algorismes-Avanzats.git",
+    "accountId": "02e2fa3a-4f73-4871-b8e1-a8fbc06a85e3"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -82,33 +82,53 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Application.ParellaMaxima.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "dev",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/h/IdeaProjects/Subcadena/Subcadena",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ParellaMaxima.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/h/IdeaProjects/Subcadena/Subcadena&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ferri\Desenvolupament\Projectes\IdeaProjects\Algorismes-Avanzats\Cap3DividirVencer\src\model\calculs" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration name="ParellaMaxima" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="model.calculs.ParellaMaxima" />
+      <module name="Cap3DividirVencer" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="model.calculs.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ParellaMaxima" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
       </set>
     </attachedChunks>
   </component>
@@ -124,6 +144,7 @@
       <workItem from="1743691179542" duration="347000" />
       <workItem from="1744192867725" duration="2260000" />
       <workItem from="1744280502551" duration="1837000" />
+      <workItem from="1744647103657" duration="2529000" />
     </task>
     <task id="LOCAL-00001" summary="canvis de random i afegir generador 3D">
       <option name="closed" value="true" />
@@ -181,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744364141851</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Canvi getters classe resultat">
+      <option name="closed" value="true" />
+      <created>1744640243460</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1744640243460</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -206,6 +235,7 @@
     <MESSAGE value="parella propre dividir i vencer" />
     <MESSAGE value="mapping dels algorismes" />
     <MESSAGE value="Càlcul parella màxima primera versió." />
-    <option name="LAST_COMMIT_MESSAGE" value="Càlcul parella màxima primera versió." />
+    <MESSAGE value="Canvi getters classe resultat" />
+    <option name="LAST_COMMIT_MESSAGE" value="Canvi getters classe resultat" />
   </component>
 </project>
