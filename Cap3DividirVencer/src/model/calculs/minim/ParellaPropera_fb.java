@@ -40,7 +40,7 @@ public class ParellaPropera_fb extends Calcul {
                                 Punt p1 = null, p2 = null;
                                 for (int j = ii + 1; j < n; j++) {
                                         double d = punts.get(ii).distancia(punts.get(j));
-                                        if (d < min) {
+                                        if (d < min && (!punts.get(j).equals(punts.get(ii)))) {
                                                 min = d;
                                                 p1 = punts.get(ii);
                                                 p2 = punts.get(j);
