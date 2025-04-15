@@ -648,4 +648,17 @@ public class QuickHull3D {
             }
         }
     }
+
+    /**
+     * Returns the vertex points in this hull.
+     *
+     * @return array of vertex points
+     */
+    public Point3d[] getVertices() {
+        Point3d[] vtxs = new Point3d[numVertices];
+        for (int i = 0; i < numVertices; i++) {
+            vtxs[i] = pointBuffer[vertexPointIndices[i]].pnt;
+        }
+        return vtxs;
+    }
 }

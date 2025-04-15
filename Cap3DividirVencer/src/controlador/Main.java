@@ -46,7 +46,7 @@ public class Main implements Comunicar {
 
             "Parella llunyana Força Bruta", ParellaLlunyana_fb.class,
             "Parella llunyana Uniforme", ParellaMaximaUniforme.class,
-            "Parella llunyana Chan's", ParellaLlunyana_CH.class
+            "Parella llunyana Convex Hull", ParellaLlunyana_CH.class
     );
 
     public static void main(String[] args) {

@@ -25,7 +25,7 @@ public class ParellaLlunyana_QH extends Calcul {
 
     @Override
     public void run(){
-
+        //No pot ser cridat directament, sinó que ho crida s'altre
     }
 
     protected Resultat calcular(){

@@ -37,10 +37,9 @@ public class ParellaLlunyana_CH extends Calcul {
         long startTime = System.nanoTime();
         Resultat r;
         if (dades.getTp() == TipoPunt.p2D){
-            r = calcular();
+            r = calcular(); //Utilitza Graham
         }else{
-            System.err.println("P3D");
-            ParellaLlunyana_QH qh = new ParellaLlunyana_QH();
+            ParellaLlunyana_QH qh = new ParellaLlunyana_QH(); //Utilitza QuickHull3D
             r = qh.calcular();
         }
         long elapsedTime = System.nanoTime() - startTime;
