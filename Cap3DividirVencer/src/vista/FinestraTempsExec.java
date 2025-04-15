@@ -14,9 +14,10 @@ public class FinestraTempsExec extends JFrame implements Comunicar {
     protected final static Color VERMELL =  new Color(178, 34, 34);
     protected final static Color BLUE = new Color(102, 178, 255);
 
-    protected final static Color MVERD = VERD.darker();
-    protected final static Color MVERMELL = VERMELL.darker();
-    protected final static Color MBLUE = BLUE.darker();
+    protected final static Color MVERD = new Color(146, 191, 177);
+
+    protected final static Color ORANGE = new Color(244, 172, 69);
+    protected final static Color BLACK = Color.black;
 
     public FinestraTempsExec() {
         super("Temps d'execució");
@@ -56,8 +57,8 @@ public class FinestraTempsExec extends JFrame implements Comunicar {
         panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true));
         panel.add(new JLabel("Max: "));
         afegirEtiqueta("Convex Hull", MVERD, panel);
-        afegirEtiqueta("Força Bruta",MVERMELL, panel);
-        afegirEtiqueta("Uniforme", MBLUE, panel);
+        afegirEtiqueta("Força Bruta",ORANGE, panel);
+        afegirEtiqueta("Uniforme", BLACK, panel);
         afegirEtiqueta("x: Nº punts  y: log10(Temps)", Color.DARK_GRAY, panel);
         return panel;
     }

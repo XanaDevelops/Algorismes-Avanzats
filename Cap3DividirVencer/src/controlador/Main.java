@@ -69,11 +69,7 @@ public class Main implements Comunicar {
         punts = new ArrayList<>();
         processos = new ArrayList<>();
 
-        System.out.println("MODE CONCURRENT (dins calcul): " + modeConcurrentOn);
 
-//        executor.execute(() -> {
-//            finestra = new Finestra();
-//        });
         SwingUtilities.invokeLater(() -> finestra = new Finestra());
     }
 

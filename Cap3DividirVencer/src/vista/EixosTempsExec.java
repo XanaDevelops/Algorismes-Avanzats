@@ -121,9 +121,9 @@ public class EixosTempsExec extends JPanel {
             // llista de resultats de l'algorisme de convex hull
             pintarCalcul(g, h, w, ch, maxelement, maxTemps, FinestraTempsExec.MVERD);
             // llista de resultats de l'algorisme de Força Bruta
-            pintarCalcul(g, h, w, fbm, maxelement, maxTemps, FinestraTempsExec.MVERMELL);
+            pintarCalcul(g, h, w, fbm, maxelement, maxTemps, FinestraTempsExec.ORANGE);
             // llista resultats kd
-            pintarCalcul(g, h, w, uni, maxelement, maxTemps, FinestraTempsExec.MBLUE);
+            pintarCalcul(g, h, w, uni, maxelement, maxTemps, FinestraTempsExec.BLACK);
 
         }
     }

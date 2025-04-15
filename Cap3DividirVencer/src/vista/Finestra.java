@@ -42,7 +42,7 @@ public class Finestra extends JFrame implements Comunicar {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(1080, 900));
+        setPreferredSize(new Dimension(1080, 810));
 
         JPanel panellBotons = crearPanellBotons();
 

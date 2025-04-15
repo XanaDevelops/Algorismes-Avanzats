@@ -176,7 +176,7 @@ public class Parella_Propera_kd extends Calcul {
     @Override
     public void run() {
 
-        Resultat res = null;
+        Resultat res ;
         if (Main.instance.isModeConcurrentOn()){
             res = calc2((ArrayList<Punt>) punts);
         }else{
