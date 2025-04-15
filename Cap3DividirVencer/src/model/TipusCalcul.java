@@ -5,7 +5,8 @@ public enum TipusCalcul {
     FB_MAX,
     DV_MIN,
     KD_MIN,
-    UNI_MAX;
+    UNI_MAX,
+    CH_MAX;
 
     public String getFromString(String s){
         return null;

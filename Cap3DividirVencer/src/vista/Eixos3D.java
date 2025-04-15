@@ -309,7 +309,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
                     transVels[dim] *= 0.95;
                 }
                 for (int dim = 0; dim < rotVels.length; dim++) {
-                    rotVels[dim] *= 0.975;
+                    rotVels[dim] *= 0.965;
                 }
 
             }

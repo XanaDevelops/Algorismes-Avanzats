@@ -13,7 +13,7 @@ public class Finestra extends JFrame implements Comunicar {
     public static final String ESBORRAR = "esborrar";
     public static final String CALCULAR = "calcular";
     private final String[] opcionsAlgorismeMinim = {"Força Bruta", "Dividir i vèncer", "Kd-Arbre"};
-    private final String[] opcionsAlgorismeMaxim = {"Força Bruta", "Uniforme"};
+    private final String[] opcionsAlgorismeMaxim = {"Força Bruta", "Uniforme", "Convex Hull"};
 
     private final Comunicar comunicar;
     private JTextField nPunts;
@@ -200,6 +200,7 @@ public class Finestra extends JFrame implements Comunicar {
             case "dibuixPunts":
             case "pintar":
                 currentEixos.comunicar(s);
+                fte.comunicar(s);
                 break;
             case "dibuixDistancia":
                 //eixos.pintarDistancies((String) algorisme.getSelectedItem());

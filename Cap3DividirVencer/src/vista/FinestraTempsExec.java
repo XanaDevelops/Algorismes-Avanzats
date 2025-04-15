@@ -67,7 +67,7 @@ public class FinestraTempsExec extends JFrame implements Comunicar {
     @Override
     public void comunicar(String s) {
         switch (s){
-            case "pintaElement":
+            case "pintaElement", "pintar":
                 eixosTempsExec.pintar();
                 break;
             default:break;
