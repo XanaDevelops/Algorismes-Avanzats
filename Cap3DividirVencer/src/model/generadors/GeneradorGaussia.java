@@ -37,10 +37,10 @@ public class GeneradorGaussia extends Generador {
     }
 
     @Override
-    public List<Punt> genera2D() {
+    public List<Punt> genera2D(int numPunts) {
         // Generació 2D amb gaussiana
         List<Punt> punts = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < numPunts; i++) {
             int x = limita((int) (rand.nextGaussian() * desviacio + mitjana));
             int y = limita((int) (rand.nextGaussian() * desviacio + mitjana));
             punts.add(new Punt2D(x, y));
@@ -49,9 +49,9 @@ public class GeneradorGaussia extends Generador {
     }
 
     @Override
-    public List<Punt> genera3D() {
+    public List<Punt> genera3D(int numPunts) {
         List<Punt> punts = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < numPunts; i++) {
             int x = limita((int) (rand.nextGaussian() * desviacio + mitjana));
             int y = limita((int) (rand.nextGaussian() * desviacio + mitjana));
             int z = limita((int) (rand.nextGaussian() * desviacio + mitjana));

@@ -23,8 +23,8 @@ public abstract class Generador extends Random {
         this.rand = rand;
     }
 
-    public abstract List<Punt> genera2D();
+    public abstract List<Punt> genera2D(int numPunts);
 
-    public abstract List<Punt> genera3D();
+    public abstract List<Punt> genera3D(int numPunts);
 }
 

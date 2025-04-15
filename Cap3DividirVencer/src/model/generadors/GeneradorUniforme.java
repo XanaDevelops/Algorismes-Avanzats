@@ -19,10 +19,10 @@ public class GeneradorUniforme extends Generador {
     }
 
     @Override
-    public List<Punt> genera2D() {
+    public List<Punt> genera2D(int numPunts) {
         // Generació 2D amb uniforme
         List<Punt> punts = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < numPunts; i++) {
             int x = rand.nextInt(max - min + 1) + min;
             int y = rand.nextInt(max - min + 1) + min;
             punts.add(new Punt2D(x, y));
@@ -31,9 +31,9 @@ public class GeneradorUniforme extends Generador {
     }
 
     @Override
-    public List<Punt> genera3D() {
+    public List<Punt> genera3D(int numPunts) {
         List<Punt> punts = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < numPunts; i++) {
             int x = rand.nextInt(max - min + 1) + min;
             int y = rand.nextInt(max - min + 1) + min;
             int z = rand.nextInt(max - min + 1) + min;

@@ -47,4 +47,13 @@ public class Punt3D extends Punt2D implements Punt{
         result = 31 * result + z;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Punt3D{" +
+                "y=" + y +
+                ", x=" + x +
+                ", z=" + z +
+                '}';
+    }
 }
