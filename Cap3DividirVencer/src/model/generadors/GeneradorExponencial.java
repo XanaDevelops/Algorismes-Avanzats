@@ -44,10 +44,10 @@ public class GeneradorExponencial extends Generador {
     }
 
     @Override
-    public List<Punt> genera2D() {
+    public List<Punt> genera2D(int numPunts) {
         // Generació 2D amb exponencial
         List<Punt> punts = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < numPunts; i++) {
             int x = limita((int) exponencial(lambda));
             int y = limita((int) exponencial(lambda));
 
@@ -57,9 +57,9 @@ public class GeneradorExponencial extends Generador {
     }
 
     @Override
-    public List<Punt> genera3D() {
+    public List<Punt> genera3D(int numPunts) {
         List<Punt> punts = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < numPunts; i++) {
             int x = limita((int) exponencial(lambda)) * (rand.nextBoolean() ? 1 : -1);
             int y = limita((int) exponencial(lambda)) * (rand.nextBoolean() ? 1 : -1);
             int z = limita((int) exponencial(lambda)) * (rand.nextBoolean() ? 1 : -1);

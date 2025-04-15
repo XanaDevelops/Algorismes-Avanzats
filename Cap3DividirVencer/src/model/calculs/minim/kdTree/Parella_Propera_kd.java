@@ -1,6 +1,7 @@
 
 package model.calculs.minim.kdTree;
 
+import controlador.Main;
 import model.Resultat;
 import model.TipoPunt;
 import model.TipusCalcul;
@@ -9,19 +10,22 @@ import model.punts.Punt;
 import model.calculs.minim.kdTree.KdArbre.Node;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class Parella_Propera_kd extends Calcul {
 
-    private KdArbre kdArbre;
-    private Node root;
-    private Node millorNode;
-    private double minDistancia;
+    private final KdArbre kdArbre;
+    private final Node root;
+//    private Node millorNode;
+//    private double minDistancia;
 
     public Parella_Propera_kd() {
         super();
 
         int k = dades.getTp() == TipoPunt.p2D ? 2 : 3;
-        this.kdArbre = new KdArbre(dades.getPunts(), k);
+        this.kdArbre = new KdArbre((ArrayList<Punt>) dades.getPunts(), k);
 
         root = kdArbre.getRoot();
     }
@@ -34,16 +38,16 @@ public class Parella_Propera_kd extends Calcul {
      * @param actual
      * @param p
      */
-    private void searchNN(Node actual, Punt p) {
+    private Resultat searchNN(Node actual, Punt p, NNResult nn) {
         if (actual == null) {
-            return;
+            return new Resultat(punts.size(), p, nn.bestNode.punt, nn.bestDist, 0);
         }
 
         double d = p.distancia(actual.punt);
 
-        if (d > 0 && d < minDistancia) {
-            minDistancia = d;
-            millorNode = actual;
+        if (d > 0 && d < nn.bestDist) {
+            nn.bestDist = d;
+            nn.bestNode = actual;
         }
 
         int axis = actual.profunditat % actual.k;
@@ -58,12 +62,13 @@ public class Parella_Propera_kd extends Calcul {
             seguent2 = actual.left;
         }
 
-        searchNN(seguent1, p);
+        Resultat r1 = searchNN(seguent1, p, nn);
         //S'ha d'explorar l'altra branca de l'arbre?
         double diff = axisDiff(p, actual.punt, axis);
-        if (diff < minDistancia) { // Sí. l'hiperplà pot contenir punts més propers
-            searchNN(seguent2, p);
+        if (diff < r1.getDistancia()) { // Sí. l'hiperplà pot contenir punts més propers
+            return searchNN(seguent2, p,nn);
         }
+        return r1;
     }
 
 
@@ -96,13 +101,10 @@ public class Parella_Propera_kd extends Calcul {
 
 
     private Resultat NN(Punt p) {
-
-        minDistancia = Double.MAX_VALUE;
-        millorNode = null;
-        searchNN(root, p);
-
-        return new Resultat(punts.size(), p, millorNode != null ? millorNode.punt : null, minDistancia, 0);
+        Resultat nn = searchNN(root, p, new NNResult(Double.MAX_VALUE, null));
+        return new Resultat(punts.size(), p, nn.getP2() != null ? nn.getP2() : null, nn.getDistancia(), 0);
     }
+
 
     /**
      * Es calcula el veïnat més proper a cada punt de la llista per determinar la parella propera.
@@ -115,20 +117,30 @@ public class Parella_Propera_kd extends Calcul {
             return null;
         }
 
+        List<Future<Resultat>> futures = new ArrayList<>();
+        for (Punt p : punts) {
+            futures.add(Main.instance.getExecutor().submit(() -> {
+                Resultat r = NN(p);
+                if (!p.equals(r.getP2())) {
+                    return new Resultat(punts.size(), p, r.getP2(), r.getDistancia(), 0);
+                }
+                return null;
+            }));
+        }
         double bestDist = Double.MAX_VALUE;
         Punt bestP1 = null;
         Punt bestP2 = null;
 
-        for (Punt p : punts) {
-            Resultat r = NN(p);
-
-            if (p.equals(r.getP2())) { // punts duplicats
-                continue;
-            }
-            if (r.getDistancia() < bestDist) {
-                bestDist = r.getDistancia();
-                bestP1 = p;
-                bestP2 = r.getP2();
+        for (Future<Resultat> future : futures) {
+            try {
+                Resultat r = future.get();
+                if (r != null && r.getDistancia() < bestDist) {
+                    bestDist = r.getDistancia();
+                    bestP1 = r.getP1();
+                    bestP2 = r.getP2();
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
         }
         t = System.nanoTime() - t;
@@ -142,4 +154,14 @@ public class Parella_Propera_kd extends Calcul {
 
         dades.afegeixResultat(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(), TipusCalcul.KD_MIN);
     }
+    private static class NNResult {
+        double bestDist;
+        Node bestNode;
+
+        public NNResult(double bestDist, Node bestNode) {
+            this.bestDist = bestDist;
+            this.bestNode = bestNode;
+        }
+    }
+
 }

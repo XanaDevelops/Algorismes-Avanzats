@@ -26,7 +26,7 @@ public class KdArbre {
      * @param punts llista de punts
      * @param k nombre de dimensions
      */
-    public KdArbre(List<Punt> punts, int k) {
+    public KdArbre(ArrayList<Punt> punts, int k) {
         this.k = k;
         root = crearNode(punts, k, 0);
     }
@@ -88,7 +88,7 @@ public class KdArbre {
      * @param profunditat profunditat actual
      * @return node arrel
      */
-    private Node crearNode(List<Punt> punts, int k, int profunditat) {
+    private Node crearNode(ArrayList<Punt> punts, int k, int profunditat) {
         if (punts.isEmpty()) {
             return null;
         }
@@ -113,10 +113,10 @@ public class KdArbre {
         Node node = new Node(punts.get(mitat), k, profunditat);
 
         //llista de punts coordenada inferior a la del node central
-        List<Punt> puntsInferiors = new ArrayList<>();
+        ArrayList<Punt> puntsInferiors = new ArrayList<>();
 
         //llista de punts coordenada superior a la del node central
-        List<Punt> puntsSuperiors = new ArrayList<>();
+        ArrayList<Punt> puntsSuperiors = new ArrayList<>();
 
 
         // Omplir les llistes de punts superiors i inferiors

@@ -71,6 +71,7 @@ public class Resultat {
         return n;
     }
 
+
     @Override
     public String toString() {
         return "Resultat{" +

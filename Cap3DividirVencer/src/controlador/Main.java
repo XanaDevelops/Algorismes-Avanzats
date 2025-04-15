@@ -3,6 +3,7 @@ package controlador;
 
 import model.Dades;
 import model.TipoPunt;
+import model.TipusCalcul;
 import model.calculs.Calcul;
 import model.calculs.maxim.ParellaLlunyana_fb;
 import model.calculs.maxim.ParellaMaximaUniforme;
@@ -19,8 +20,7 @@ import vista.Finestra;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class Main implements Comunicar {
     public static Main instance; //singleton
@@ -31,7 +31,11 @@ public class Main implements Comunicar {
 
     private ArrayList<Comunicar> processos = null;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(16);
+    public ThreadPoolExecutor getExecutor() {
+        return executor;
+    }
+
+    private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(16);
 
     private static final Map<String, Class<? extends Generador>> GENERADORS = Map.of(
             "Uniforme", GeneradorUniforme.class,
@@ -49,6 +53,7 @@ public class Main implements Comunicar {
 
     public static void main(String[] args) {
         (new Main()).init();
+
 
     }
 
@@ -87,7 +92,6 @@ public class Main implements Comunicar {
                     String distribucio = parts[2];  // "Uniforme", "Gaussiana", o "Exponencial"
 
 
-
                     // Capturar els possibles paràmetres extra per generadors com Gaussiana o Exponencial
 
                     if (distribucio.equalsIgnoreCase("Gaussiana")) {
@@ -99,7 +103,6 @@ public class Main implements Comunicar {
                     } else if (distribucio.equalsIgnoreCase("Exponencial")) {
                         // Per a la distribució Exponencial s'espera un paràmetre extra: lambda
 
-//                        params.add((double) 2 *100000 /(max));
                         params.add(rn.nextDouble(0.1, 4.5));
 
                     }
@@ -136,7 +139,9 @@ public class Main implements Comunicar {
                 for (Comunicar proces : processos) {
                     proces.comunicar("aturar");
                 }
+
                 processos.clear();
+
                 break;
 
 
@@ -167,7 +172,7 @@ public class Main implements Comunicar {
 
     // Mètode per generar els punts mitjançant el generador especificat
     private void generarPunts(Class<? extends Generador> generadorClass, TipoPunt tp, List<Object> params)
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ExecutionException, InterruptedException {
         dades.setTp(tp);
         String metodeGeneracio = tp == TipoPunt.p2D ? "genera2D" : "genera3D";
 
@@ -180,18 +185,38 @@ public class Main implements Comunicar {
                 })
                 .toArray(Class<?>[]::new);
 
+
         // Instanciar generador
+        List<Future<List<Punt>>> futures = new ArrayList<>();
+        int numPunts = (int)params.getFirst();
 
-        Object generador = generadorClass.getConstructor(paramTypes).newInstance(params.toArray());
+        int subConjunt = numPunts / (executor.getCorePoolSize() -executor.getActiveCount());
 
-        Object res = generador.getClass().getMethod(metodeGeneracio).invoke(generador);
 
-        if (res instanceof List<?>) {
-            dades.setPunts((List<Punt>) res);
-
-        } else {
-            System.err.println("Error en generar la llista de punts.");
+        for (int i = 0; i < 4; i++) {
+            futures.add(executor.submit(() -> {
+                Generador generador = generadorClass
+                        .getConstructor(paramTypes)
+                        .newInstance(params.toArray());
+                return tp == TipoPunt.p2D ? generador.genera2D(subConjunt) : generador.genera3D(subConjunt);
+            }));
         }
+        List<Punt> totalPunts = new ArrayList<>();
+        for (Future<List<Punt>> future : futures) {
+            totalPunts.addAll(future.get()); // .get() espera a que el hilo termine
+        }
+        dades.setPunts(totalPunts);
+
+//        Object generador = generadorClass.getConstructor(paramTypes).newInstance(params.toArray());
+//
+//        Object res = generador.getClass().getMethod(metodeGeneracio).invoke(generador);
+//
+//        if (res instanceof List<?>) {
+//            dades.setPunts((List<Punt>) res);
+//
+//        } else {
+//            System.err.println("Error en generar la llista de punts.");
+//        }
     }
 
     // Mètode per executar l'algorisme de càlcul
@@ -207,6 +232,13 @@ public class Main implements Comunicar {
                     }
                 }
                 calcul.run();
+//                System.out.println("Resultats FB" + dades.getResultats().get(TipusCalcul.FB_MIN));
+//                System.out.println("Resultats DV" + dades.getResultats().get(TipusCalcul.DV_MIN));
+//                System.out.println("Resultats KD" + dades.getResultats().get(TipusCalcul.KD_MIN));
+                System.out.println("Resultat FB "+ dades.getResultats().get(TipusCalcul.FB_MAX));
+                System.out.println("Resultat uni "+ dades.getResultats().get(TipusCalcul.UNI_MAX));
+
+
                 /*System.out.println("Resultats de càlcul FB: " + dades.getForcaBruta().toString());
                 System.out.println("Resultats de càlcul DV: " + dades.getDividirVencer().toString());
                 System.out.println("Resultats de càlcul KD: " + dades.getKd().toString());*/
