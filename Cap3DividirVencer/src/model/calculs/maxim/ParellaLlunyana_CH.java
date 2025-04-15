@@ -43,40 +43,70 @@ public class ParellaLlunyana_CH extends Calcul {
         punts.sort(Comparator.comparingInt(Punt::getY));
         final Punt a = punts.getFirst();
 
-        punts.sort((o1, o2) -> {
-            int order = cross(a, o1, o2);
-            if (order == 0) {
-                int distA = (o1.getX() - a.getX()) * (o1.getX() - a.getX()) + (o1.getY() - a.getY()) * (o1.getY() - a.getY());
-                int distB = (o2.getX() - a.getX()) * (o2.getX() - a.getX()) + (o2.getY() - a.getY()) * (o2.getY() - a.getY());
-                return Integer.compare(distA, distB);
-            }
+        punts.sort(new Comparator<Punt>() {
+            @Override
+            public int compare(Punt o1, Punt o2) {
+                if (o1.equals(o2)){
+                    return 0;
+                }
+                double ta = Math.atan2(o1.getY() - a.getY(), o1.getX() - a.getX());
+                double tb = Math.atan2(o2.getY() - a.getY(), o2.getX() - a.getX());
 
-            return order > 0 ? -1 : 1;
+                if (ta < tb){
+                    return -1;
+                }
+                if (ta > tb){
+                    return 1;
+                }
+                //formen una linea
+                return 0;
+            }
         });
 
         Stack<Punt> stack = new Stack<>();
         stack.push(punts.get(0));
         stack.push(punts.get(1));
 
-        for (int i = 2; i < punts.size(); i++) {
-            while (stack.size() >= 2) {
-                Punt second = stack.pop();
-                Punt first = stack.peek();
-                if (cross(first, second, punts.get(i)) > 0) {
-                    stack.push(second);
-                    break;
-                }
+        for (int i = 2; i < punts.size(); i++){
+            Punt aux = punts.get(i);
+            Punt m = stack.pop();
+            Punt t = stack.peek();
+
+            int auxT = getTurn(t, m, aux);
+            if (auxT == 1){
+                stack.push(m);
+                stack.push(aux);
             }
-            stack.push(punts.get(i));
+            if (auxT == -1){
+                i--;
+            }
+            if (auxT == 0){
+                stack.push(aux);
+            }
         }
 
         return ParellaLlunyana_fb.calc(new ArrayList<>(stack));
     }
 
-    // Cross product of OA and OB vectors, returns positive for counter-clockwise turn
-    public static int cross(Punt O, Punt A, Punt B) {
-        return (A.getX() - O.getX()) * (B.getY() - O.getY()) - (A.getY() - O.getY()) * (B.getX() - O.getX());
+
+    private int getTurn(Punt a, Punt b, Punt c) {
+
+        // use longs to guard against int-over/underflow
+        long crossProduct = (((long)b.getX() - a.getX()) * ((long)c.getY() - a.getY())) -
+                (((long)b.getY() - a.getY()) * ((long)c.getX() - a.getX()));
+
+        if(crossProduct > 0) {
+            return 1;
+        }
+        else if(crossProduct < 0) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
     }
+
+
 
 
 }
