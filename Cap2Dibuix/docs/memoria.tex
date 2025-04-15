@@ -207,13 +207,13 @@ Aquesta classe abstracta permet encapsular la lògica del doble buffer per als a
 \item\textbf{DibuixSierpinski}
 Classe encarregada de dibuixar el Triangle de Sierpinski en un panell gràfic (\texttt{CanvasDobleBuffer}). Recorre una matriu de dades per determinar quins triangles ha de pintar i utilitza colors per diferenciar les profunditats de la figura. Inclou un "easter egg" per canviar el color a daurat en determinades condicions. \cite{easter_egg}
 \item\textbf{DibuixTromino}
-S'encarrega de representar la solució del problema dels Trominos. Dibuixa una quadrícula i pinta les peces dels trominos amb colors diferenciats quan l'opció de color està activada. També detecta clics de l'usuari per identificar caselles i enviar informació a la classe principal (\texttt{Main}).
+S'encarrega de representar la solució del problema dels Trominos. Dibuixa una quadrícula i pinta les peces dels trominos amb colors diferenciats quan l'opció de color està activada. També detecta clics de l'usuari per identificar caselles i enviar informació a la classe principal (\texttt{controlador.Main}).
 
 \item \textbf{Altres:} Per pintar els resultats de l'estora i els arbres hi ha les dues classes encarregades, (\texttt{DibuixCarpet}) i (\texttt{DibuixImage}) respectivament.
 \end{itemize}
 
 \item\textbf{Controlador}
-La classe \texttt{Main} actua com a controlador principal de l'aplicació, gestionant les interaccions de l'usuari i coordinant les operacions entre el model i la vista. També és responsable de la gestió de processos i de l'execució de les diferents funcionalitats.
+La classe \texttt{controlador.Main} actua com a controlador principal de l'aplicació, gestionant les interaccions de l'usuari i coordinant les operacions entre el model i la vista. També és responsable de la gestió de processos i de l'execució de les diferents funcionalitats.
 
 \textbf{Elements principals}
 \begin{itemize}
@@ -238,7 +238,7 @@ La classe \texttt{Main} actua com a controlador principal de l'aplicació, gesti
     
     \item \textbf{Comunicació}:
     \begin{itemize}
-        \item La classe \texttt{Main} implementa la interfície \texttt{Comunicar}, que defineix el mètode \texttt{comunicar}.
+        \item La classe \texttt{controlador.Main} implementa la interfície \texttt{Comunicar}, que defineix el mètode \texttt{comunicar}.
         \item Aquest mètode rep instruccions en forma de cadena de text i executa les accions corresponents mitjançant un sistema de control de missatges.
         \item Exemples de missatges:
             \begin{itemize}
@@ -250,7 +250,7 @@ La classe \texttt{Main} actua com a controlador principal de l'aplicació, gesti
     
     \item \textbf{Gestió de processos d'execució}:
     \begin{itemize}
-        \item Quan es rep un missatge de tipus \texttt{"executar"}, la classe \texttt{Main} inicia el càlcul corresponent segons el tipus de visualització:
+        \item Quan es rep un missatge de tipus \texttt{"executar"}, la classe \texttt{controlador.Main} inicia el càlcul corresponent segons el tipus de visualització:
         \begin{itemize}
             \item \texttt{"tromino"}: Executa el solver dels Trominos.
             \item \texttt{"triangles"}: Executa el solver del Triangle de Sierpinski.
@@ -273,9 +273,9 @@ També s'ha de comentar que la interfície \texttt{Comunicar} defineix el contra
 \texttt{void comunicar(String s);}
 \end{quote}
 
-Aquest mètode és utilitzat per transmetre missatges entre les diferents parts del sistema, especialment entre la vista (finestra gràfica), el controlador (\texttt{Main}) i el model (en aquest cas, la classe \texttt{Dades}). La interfície \texttt{Comunicar} és una eina fonamental per mantenir una separació clara entre la lògica de l'aplicació i la interfície d'usuari, permetent una comunicació eficient i flexible.
+Aquest mètode és utilitzat per transmetre missatges entre les diferents parts del sistema, especialment entre la vista (finestra gràfica), el controlador (\texttt{controlador.Main}) i el model (en aquest cas, la classe \texttt{Dades}). La interfície \texttt{Comunicar} és una eina fonamental per mantenir una separació clara entre la lògica de l'aplicació i la interfície d'usuari, permetent una comunicació eficient i flexible.
 
-En resum, la classe \texttt{Main} és el nucli de l'aplicació, ja que actua com a intermediari entre la interfície gràfica i el model de dades. La seva estructura modular permet gestionar diferents tipus de visualitzacions i optimitzar el rendiment mitjançant execució concurrent.
+En resum, la classe \texttt{controlador.Main} és el nucli de l'aplicació, ja que actua com a intermediari entre la interfície gràfica i el model de dades. La seva estructura modular permet gestionar diferents tipus de visualitzacions i optimitzar el rendiment mitjançant execució concurrent.
 \end{itemize}
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.45\textwidth]{docs/png/diagrma_clases.png}}
@@ -296,8 +296,8 @@ public interface Comunicar {
 }
 \end{lstlisting}
 
-\subsubsection{Classe \texttt{Main}}
-La classe \texttt{Main} actua com a controlador central de l'aplicació i és responsable de gestionar la comunicació entre els components, com s'ha explicat anteriorment. Quan l'usuari interactua amb la interfície gràfica, la classe \texttt{Main} rep els missatges corresponents i els processa per iniciar, aturar o actualitzar les operacions de generació de figures. El mètode \texttt{comunicar} de la classe \texttt{Main} processa els missatges i crida als mètodes adequats per gestionar les operacions.
+\subsubsection{Classe \texttt{controlador.Main}}
+La classe \texttt{controlador.Main} actua com a controlador central de l'aplicació i és responsable de gestionar la comunicació entre els components, com s'ha explicat anteriorment. Quan l'usuari interactua amb la interfície gràfica, la classe \texttt{controlador.Main} rep els missatges corresponents i els processa per iniciar, aturar o actualitzar les operacions de generació de figures. El mètode \texttt{comunicar} de la classe \texttt{controlador.Main} processa els missatges i crida als mètodes adequats per gestionar les operacions.
 
 \subsubsection{Classes de \texttt{solvers}}
 Tots els solvers implementen la interfície Comunicar per rebre missatges del controlador i aturar els fils d'execució quan sigui necessari. Quan es rep un missatge per aturar l’operació, el mètode comunicar d’aquestes classes estableix una variable booleana stop a true, la qual cosa fa que el mètode principal  s’aturi.
@@ -310,8 +310,8 @@ El flux de comunicació entre els components es pot resumir en els següents pas
 
 \begin{enumerate}
     \item L'usuari interactua amb la interfície gràfica mitjançant la classe \textsf{\texttt{Finestra}}, per exemple, seleccionant una opció del menú o introduint un valor per dibuixar una figura.
-    \item La classe \texttt{Finestra} envia un missatge al controlador (\texttt{Main}) mitjançant el mètode \texttt{comunicar}.
-    \item El controlador (\texttt{Main}) processa el missatge i, si és necessari, executa un procés concret (per exemple, \texttt{TrominoSolver}, \texttt{SierpinskiSolver}, \texttt{RecursiveTree} o \texttt{CarpetSierpinski}) en un fil separat utilitzant un \texttt{ExecutorService}.
+    \item La classe \texttt{Finestra} envia un missatge al controlador (\texttt{controlador.Main}) mitjançant el mètode \texttt{comunicar}.
+    \item El controlador (\texttt{controlador.Main}) processa el missatge i, si és necessari, executa un procés concret (per exemple, \texttt{TrominoSolver}, \texttt{SierpinskiSolver}, \texttt{RecursiveTree} o \texttt{CarpetSierpinski}) en un fil separat utilitzant un \texttt{ExecutorService}.
     \item Els solucionadors (\texttt{TrominoSolver}, \texttt{SierpinskiSolver}, etc.) realitzen els càlculs corresponents en paral·lel i, durant l'execució, envien missatges al controlador per actualitzar l'estat del procés.
     \item El controlador informa la interfície gràfica (\texttt{Finestra}) sobre l'estat de l'execució mitjançant missatges com \texttt{tempsReal} o \texttt{tempsEsperat}.
     \item Quan un procés finalitza o es rep un missatge per aturar-lo, aquest comunica al controlador la seva terminació (\texttt{aturar}), i aquest ho notifica a la interfície perquè actualitzi els resultats.
@@ -344,7 +344,7 @@ Aquest algoritme segueix l'estratègia de divideix i venceràs, fragmentant el t
 \subsubsection{SierpinskiTriangleSolver}
 La fractal dels triangles de Sierpinski tracta de dividir un triangle en tres triangles més petits de manera recursiva, eliminant el triangle central en cada iteració. Aquest procés continua fins que s'arriba a un nivell de profunditat determinat.
 
-La classe SierpinskiTriangleSolver resol aquest problema aplicant recursivitat per generar la figura. Comença amb un triangle gran i divideix recursivament l'espai en tres sub-triangles fins que la mida mínima s'assoleix. La classe utilitza un tauler bidimensional int[][] tauler per representar la figura i marca les posicions corresponents amb data.setValor(x, y, 1). L'execució es fa de manera asíncrona mitjançant fils (runThread), permetent una representació dinàmica de la construcció del fractal. A més, mesura el temps d'execució i estima el temps esperat basant-se en la profunditat de recursió, comunicant la informació a través de p.comunicar, sent p la instància del Programa principal Main.
+La classe SierpinskiTriangleSolver resol aquest problema aplicant recursivitat per generar la figura. Comença amb un triangle gran i divideix recursivament l'espai en tres sub-triangles fins que la mida mínima s'assoleix. La classe utilitza un tauler bidimensional int[][] tauler per representar la figura i marca les posicions corresponents amb data.setValor(x, y, 1). L'execució es fa de manera asíncrona mitjançant fils (runThread), permetent una representació dinàmica de la construcció del fractal. A més, mesura el temps d'execució i estima el temps esperat basant-se en la profunditat de recursió, comunicant la informació a través de p.comunicar, sent p la instància del Programa principal controlador.Main.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.4\textwidth]{docs/png/FiguraTriangle7.png}}
@@ -411,9 +411,9 @@ Els elements principals de la interfície inclouen:
 Les classes \texttt{DibuixTromino} i \texttt{Finestra} es comuniquen mitjançant la interfície \texttt{Comunicar}, que permet enviar missatges per actualitzar l'estat de la interfície i la representació gràfica.
 
 \subsection{Gestió de Fils d'Execució}
-La classe \texttt{Main} utilitza un \texttt{ExecutorService} per gestionar els fils d'execució dels distints solvers. Això permet executar les operacions de manera concurrent i millorar l'eficiència de l'aplicació. Els fils es poden iniciar i aturar mitjançant missatges enviats a través de la interfície \texttt{Comunicar}.
+La classe \texttt{controlador.Main} utilitza un \texttt{ExecutorService} per gestionar els fils d'execució dels distints solvers. Això permet executar les operacions de manera concurrent i millorar l'eficiència de l'aplicació. Els fils es poden iniciar i aturar mitjançant missatges enviats a través de la interfície \texttt{Comunicar}.
 \subsubsection{ExecutorService}
-L'\texttt{ExecutorService} és una interfície que proporciona mecanismes per gestionar un conjunt de fils d'execució. En aquest projecte, s'utilitza per executar els distints solvers en fils separats\cite{oracleExecutorService}. La classe \texttt{Main} crea un \texttt{ExecutorService} amb un grup de fils fixos mitjançant el mètode \texttt{Executors.newFixedThreadPool(16)}:
+L'\texttt{ExecutorService} és una interfície que proporciona mecanismes per gestionar un conjunt de fils d'execució. En aquest projecte, s'utilitza per executar els distints solvers en fils separats\cite{oracleExecutorService}. La classe \texttt{controlador.Main} crea un \texttt{ExecutorService} amb un grup de fils fixos mitjançant el mètode \texttt{Executors.newFixedThreadPool(16)}:
 \begin{lstlisting}[language=Java, basicstyle=\ttfamily\small]
 executor = Executors.newFixedThreadPool(16);
 \end{lstlisting}
@@ -426,7 +426,7 @@ Això permet tenir fins a 16 fils d'execució simultanis, assegurant que les ope
 \end{figure}
 
 \subsubsection{Inici i Aturada de Fils}
-Quan l'usuari interactua amb la interfície gràfica per iniciar una operació, la classe \texttt{Main} rep un missatge mitjançant el mètode \texttt{comunicar}. Aquest mètode processa el missatge i, si és necessari, crea instàncies de les classes \texttt{TrominoSolver}, \texttt{SierpinskiSolver}, \texttt{RecursiveTree} o \texttt{CarpetaSierpinski} per executar les operacions en fils separats. Per exemple, quan es rep un missatge per iniciar l'execució del Tromino Solver, es crea i s'executa una instància de la classe corresponent en un fil separat:
+Quan l'usuari interactua amb la interfície gràfica per iniciar una operació, la classe \texttt{controlador.Main} rep un missatge mitjançant el mètode \texttt{comunicar}. Aquest mètode processa el missatge i, si és necessari, crea instàncies de les classes \texttt{TrominoSolver}, \texttt{SierpinskiSolver}, \texttt{RecursiveTree} o \texttt{CarpetaSierpinski} per executar les operacions en fils separats. Per exemple, quan es rep un missatge per iniciar l'execució del Tromino Solver, es crea i s'executa una instància de la classe corresponent en un fil separat:
 
 \begin{lstlisting}[language=Java, basicstyle=\ttfamily\small]
 TrominoSolver trominoTask = new TrominoSolver(this, dades);
@@ -446,7 +446,7 @@ L'aplicació pot gestionar diferents casos de concurrència, depenent de les ope
 
     \begin{lstlisting}[language=Java, basicstyle=\ttfamily\small]
     Comunicar proces = (Comunicar) classe
-        .getConstructor(Main.class, Dades.class)
+        .getConstructor(controlador.Main.class, Dades.class)
         .newInstance(this, dades);
     processos.add(proces);
     executor.execute((Runnable) proces);
@@ -454,7 +454,7 @@ L'aplicació pot gestionar diferents casos de concurrència, depenent de les ope
 \end{itemize}
 
 \subsubsection{Aturada de Fils}
-Quan es rep un missatge per aturar una operació, el mètode \texttt{comunicar} de la classe \texttt{Main} envia un missatge a les instàncies dels solvers per aturar els fils d'execució. Això es fa establint la variable booleana \texttt{stop} a \texttt{true}, la qual cosa fa que el bucle principal de cada solver s'aturi de forma controlada. Per exemple:
+Quan es rep un missatge per aturar una operació, el mètode \texttt{comunicar} de la classe \texttt{controlador.Main} envia un missatge a les instàncies dels solvers per aturar els fils d'execució. Això es fa establint la variable booleana \texttt{stop} a \texttt{true}, la qual cosa fa que el bucle principal de cada solver s'aturi de forma controlada. Per exemple:
 
 \begin{lstlisting}[language=Java, basicstyle=\ttfamily\small]
 for (Comunicar enmarxa : processos) {
@@ -463,11 +463,11 @@ for (Comunicar enmarxa : processos) {
 \end{lstlisting}
 
 Això assegura que les operacions es puguin aturar de manera controlada i que els recursos es puguin alliberar correctament.
-\subsubsection{Implementació de la Classe \texttt{Main}}
-La classe \texttt{Main} és la responsable de gestionar els processos i filtrar els missatges. A continuació es mostra una part de la classe \texttt{Main}, que inclou la gestió d'operacions en fils d'execució:
+\subsubsection{Implementació de la Classe \texttt{controlador.Main}}
+La classe \texttt{controlador.Main} és la responsable de gestionar els processos i filtrar els missatges. A continuació es mostra una part de la classe \texttt{controlador.Main}, que inclou la gestió d'operacions en fils d'execució:
 
 \begin{lstlisting}[language=Java, basicstyle=\ttfamily\small]
-public class Main implements Comunicar {
+public class controlador.Main implements Comunicar {
 
     private Comunicar finestra;
     private Dades dades;
@@ -505,7 +505,7 @@ public class Main implements Comunicar {
         }
         processos.clear();
         dades.setProfunditat(profunditat);
-        Comunicar proces = (Comunicar) clase.getConstructor(Main.class, Dades.class).newInstance(this, dades);
+        Comunicar proces = (Comunicar) clase.getConstructor(controlador.Main.class, Dades.class).newInstance(this, dades);
         processos.add(proces);
         executor.execute((Runnable) proces);
     }
@@ -513,7 +513,7 @@ public class Main implements Comunicar {
 \end{lstlisting}
 
 \subsubsection{Conclusió}
-L'ús de l'\texttt{ExecutorService} en la classe \texttt{Main} i \texttt{RecursiveSolver} per gestionar els fils d'execució és fonamental per a la implementació concurrent de les operacions. Aquesta gestió permet a l'aplicació realitzar càlculs intensius de manera eficient, millorant el rendiment i mantenint l'aplicació responsiva. Gràcies a la separació de les operacions en fils independents, es garanteix una bona escalabilitat i flexibilitat del sistema.
+L'ús de l'\texttt{ExecutorService} en la classe \texttt{controlador.Main} i \texttt{RecursiveSolver} per gestionar els fils d'execució és fonamental per a la implementació concurrent de les operacions. Aquesta gestió permet a l'aplicació realitzar càlculs intensius de manera eficient, millorant el rendiment i mantenint l'aplicació responsiva. Gràcies a la separació de les operacions en fils independents, es garanteix una bona escalabilitat i flexibilitat del sistema.
 
 També gràcies al \textbf{MVC} ha estat possible implementar de forma independent els \textbf{solvers} com els \textbf{visualitzadors}, permetent una millora continua d'un sense perill de rompre l'altre.
 

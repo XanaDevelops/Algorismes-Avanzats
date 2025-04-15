@@ -6,7 +6,6 @@ import model.solvers.SierpinskiCarpetSolver;
 import model.solvers.SierpinskiTriangleSolver;
 import model.solvers.TreeSolver;
 import model.solvers.TrominoSolver;
-import vista.Finestra;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -77,6 +76,7 @@ public class Main implements Comunicar {
                         break;
 
                     case "triangles":
+                        dades.setInici(0,0);
                         try {
                             executar(SierpinskiTriangleSolver.class,(int) Math.pow(2, (double)Integer.parseInt(params[2])-1));
                         } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |
