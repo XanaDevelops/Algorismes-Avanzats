@@ -5,6 +5,7 @@ import model.Dades;
 import model.TipoPunt;
 import model.TipusCalcul;
 import model.calculs.Calcul;
+import model.calculs.maxim.ParellaLlunyana_CH;
 import model.calculs.maxim.ParellaLlunyana_fb;
 import model.calculs.maxim.ParellaMaximaUniforme;
 import model.calculs.minim.ParellaPropera_dv;
@@ -51,7 +52,8 @@ public class Main implements Comunicar {
             "Parella propera Kd-Arbre", Parella_Propera_kd.class,
 
             "Parella llunyana Força Bruta", ParellaLlunyana_fb.class,
-            "Parella llunyana Uniforme", ParellaMaximaUniforme.class
+            "Parella llunyana Uniforme", ParellaMaximaUniforme.class,
+            "Parella llunyana Convex Hull", ParellaLlunyana_CH.class
     );
 
     public static void main(String[] args) {
