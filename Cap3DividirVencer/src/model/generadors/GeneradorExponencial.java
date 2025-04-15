@@ -1,8 +1,10 @@
 package model.generadors;
 
+import controlador.Main;
 import model.punts.Punt;
 import model.punts.Punt2D;
 import model.punts.Punt3D;
+import vista.Distribucio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +13,21 @@ public class GeneradorExponencial extends Generador {
 
     private final double lambda;  // Paràmetre de la distribució exponencial
 
+
+
     public GeneradorExponencial(int n, int min, int max, double lambda) {
         super(n, min, max);
         this.lambda = lambda;
+
+        Main.instance.getDades().setDist(Distribucio.Exponencial);
     }
 
     public GeneradorExponencial(int n, int min, int max) {
         super(n, min, max);
         this.lambda = Math.E;
+
+        Main.instance.getDades().setDist(Distribucio.Exponencial);
+
     }
 
     //    private double exponencial(double lambda) {

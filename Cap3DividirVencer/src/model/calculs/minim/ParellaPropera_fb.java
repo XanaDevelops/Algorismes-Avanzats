@@ -1,6 +1,8 @@
-package model.calculs;
+package model.calculs.minim;
 
-import model.Dades.Resultat;
+import model.Resultat;
+import model.TipusCalcul;
+import model.calculs.Calcul;
 import model.punts.Punt;
 
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ public class ParellaPropera_fb extends Calcul {
         @Override
         public void run() {
                 Resultat res = calc((ArrayList<Punt>) punts);
-                dades.afegeixForcaBruta(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(),"min");
+                dades.afegeixResultat(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(), TipusCalcul.FB_MIN);
         }
 
         public static Resultat calc(ArrayList<Punt> punts){
@@ -35,7 +37,7 @@ public class ParellaPropera_fb extends Calcul {
                         }
                 }
                 t = System.nanoTime() - t;
-                return new Resultat(p1, p2, min, t, "min");
+                return new Resultat(punts.size(), p1, p2, min, t);
         }
 
 

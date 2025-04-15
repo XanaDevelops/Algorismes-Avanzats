@@ -1,12 +1,12 @@
 
-package model.calculs.kdTree;
+package model.calculs.minim.kdTree;
 
-import model.Dades;
-import model.Dades.Resultat;
+import model.Resultat;
 import model.TipoPunt;
+import model.TipusCalcul;
 import model.calculs.Calcul;
 import model.punts.Punt;
-import model.calculs.kdTree.KdArbre.Node;
+import model.calculs.minim.kdTree.KdArbre.Node;
 
 import java.util.ArrayList;
 
@@ -101,7 +101,7 @@ public class Parella_Propera_kd extends Calcul {
         millorNode = null;
         searchNN(root, p);
 
-        return new Resultat(p, millorNode != null ? millorNode.punt : null, minDistancia, 0, "min");
+        return new Resultat(punts.size(), p, millorNode != null ? millorNode.punt : null, minDistancia, 0);
     }
 
     /**
@@ -132,7 +132,7 @@ public class Parella_Propera_kd extends Calcul {
             }
         }
         t = System.nanoTime() - t;
-        return new Resultat(bestP1, bestP2, bestDist, t, "min");
+        return new Resultat(punts.size(), bestP1, bestP2, bestDist, t);
     }
 
     @Override
@@ -140,6 +140,6 @@ public class Parella_Propera_kd extends Calcul {
 
         Resultat res = calc(new ArrayList<>(punts));
 
-        dades.afegeixKD(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(), "min");
+        dades.afegeixResultat(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(), TipusCalcul.KD_MIN);
     }
 }

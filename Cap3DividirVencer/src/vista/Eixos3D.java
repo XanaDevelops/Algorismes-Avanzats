@@ -17,10 +17,13 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import model.Dades;
+import model.Resultat;
+import model.TipusCalcul;
 import model.punts.Punt;
 import model.punts.Punt3D;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class Eixos3D extends JFXPanel implements Comunicar {
@@ -69,7 +72,7 @@ public class Eixos3D extends JFXPanel implements Comunicar {
     public Eixos3D() {
         super();
         dades = Main.instance.getDades();
-        System.err.println("WARNING: ignorar l'altre warning de JavaFX, funciona perfectament");
+        System.out.println("NO WARNING: ignorar l'altre warning de JavaFX, funciona perfectament");
         Platform.runLater(this::initFX);
     }
 
@@ -189,28 +192,13 @@ public class Eixos3D extends JFXPanel implements Comunicar {
      * Mostra el resultat d'una operació
      */
     private void mostrarResultat(String algorisme){
-        Dades.Resultat r;
+        Resultat r = dades.getLastResultat();
 
-        switch (algorisme){
-            case "Força Bruta":
-                r = dades.getLastResultatFB().getValue();
-                break;
-            case "Dividir i vèncer":
-                r = dades.getLastResultatDV().getValue();
-                break;
-            case "Kd-Arbre":
-                r = dades.getLastResultatKD().getValue();
-                break;
-            default:
-                System.err.println("Eixos3D algorisme?? "+algorisme);
-                return;
-        }
-        if (r.getTipus().equalsIgnoreCase("min")){
+        if (r.getTc().isMin()){
             puntGroup.getChildren().add(createPunt((Punt3D) r.getP1(), puntGroc));
             puntGroup.getChildren().add(createPunt((Punt3D) r.getP2(), puntGroc));
         }else{ //max
-            // TODO: IMPLEMENTAR CORRECTAMENT ALGORISME DISTANCIA!!
-            puntGroup.getChildren().add(createLine((Punt3D) dades.getPunts().getFirst(), (Punt3D) dades.getPunts().getLast(), puntGroc));
+            puntGroup.getChildren().add(createLine((Punt3D) r.getP1(), (Punt3D) r.getP2(), puntGroc));
         }
     }
 
