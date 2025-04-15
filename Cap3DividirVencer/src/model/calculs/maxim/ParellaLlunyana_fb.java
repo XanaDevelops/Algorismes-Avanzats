@@ -6,6 +6,7 @@ import model.calculs.Calcul;
 import model.punts.Punt;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ParellaLlunyana_fb extends Calcul {
@@ -20,7 +21,7 @@ public class ParellaLlunyana_fb extends Calcul {
                 dades.afegeixResultat(punts.size(), res.getP1(), res.getP2(), res.getDistancia(), res.getTempsNano(), TipusCalcul.FB_MAX);
         }
 
-        public static Resultat calc(ArrayList<Punt> punts){
+        public static Resultat calc(List<Punt> punts){
                 double max = Double.MIN_VALUE;
                 Punt p1 = null, p2 = null;
                 long t = System.nanoTime();

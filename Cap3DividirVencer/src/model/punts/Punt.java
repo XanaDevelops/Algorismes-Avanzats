@@ -12,4 +12,5 @@ public interface Punt {
     default int getZ() {
         return 0; // per defecte: 0 per 2D, sobreescrit en 3D
     }
+
 }
