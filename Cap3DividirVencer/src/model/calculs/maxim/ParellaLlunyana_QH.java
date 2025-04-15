@@ -37,7 +37,7 @@ public class ParellaLlunyana_QH extends Calcul {
 
         QuickHull3D qh = new QuickHull3D(points.toArray(new Point3d[0]));
         Point3d[] res = qh.getVertices();
-        List<Punt> res3d = new ArrayList<>();
+        ArrayList<Punt> res3d = new ArrayList<>();
         for (Point3d p: res){
             res3d.add(new Punt3D((int) p.x, (int) p.y, (int) p.z));
         }
