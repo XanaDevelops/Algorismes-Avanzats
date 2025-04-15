@@ -22,7 +22,6 @@ import java.util.List;
  *
  * Aquesta heurística pot no ser precisa si la distribució dels punts no és uniforme.
  */
-public class ParellaMaxima extends Calcul {
 public class ParellaMaximaUniforme extends Calcul {
 
     public ParellaMaximaUniforme() {
