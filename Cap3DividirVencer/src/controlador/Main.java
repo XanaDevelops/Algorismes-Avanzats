@@ -113,7 +113,7 @@ public class Main implements Comunicar {
                     } else if (distribucio.equalsIgnoreCase("Exponencial")) {
                         // Per a la distribució Exponencial s'espera un paràmetre extra: lambda
 
-                        params.add(rn.nextDouble(0.1, 4.5));
+                        params.add(rn.nextDouble(3.5, 6));
 
                     }
 

@@ -278,11 +278,11 @@ public class Eixos3D extends JFXPanel implements Comunicar {
         });
 
         scene.setOnScroll(event -> {
-            transVels[2] += event.getDeltaY() *1.25; //el zoom
+            transVels[2] += event.getDeltaY() * 1.75; //el zoom
         });
 
         final int maxTVel = 20;
-        final int maxRVel = 20;
+        final int maxRVel = 12;
 
         //Executa a cada frame
         (new AnimationTimer() {
