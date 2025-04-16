@@ -123,7 +123,7 @@ public class Huffman implements Runnable {
 
     private void recursiveAccumulate(int id, int l, int r){
         for (int i = l; i < r; i++) {
-            //bytes en C2
+            //bytes en C2, necessari index positiu
             int b = fileBytes[i];
             if(b < 0){
                 b = b+256;
@@ -136,6 +136,9 @@ public class Huffman implements Runnable {
         runnables.add(executor.submit(r));
     }
 
+    /**
+     * Espera a que tots el fils acabin
+     */
     private void joinAll(){
         for (Future<?> runnable : runnables) {
             try {
@@ -148,14 +151,28 @@ public class Huffman implements Runnable {
         runnables.clear();
     }
 
+    /**
+     * retona array de freqüecies absolutes
+     * @return Array on a[byte] = freq
+     */
     public final int[] getFreqs() {
         return freqs;
     }
 
+    /**
+     * Retorna la rel de l'arbre
+     * @return Node rel
+     */
     public final Node getTree(){
         return treeRoot;
     }
 
+    /**
+     * Retorna la tabla de traducció:<br>
+     * Byte -> Byte <br>
+     * Original -> Codi
+     * @return tabla traducció
+     */
     public final Map<Byte, Byte> getTable(){
         return table;
     }
