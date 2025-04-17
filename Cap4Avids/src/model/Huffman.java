@@ -1,14 +1,32 @@
 package model;
 
+import model.cues.FibonacciHeap;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.*;
 
 public class Huffman implements Runnable {
+    public static enum TipusCua{
+        BIN_HEAP(PriorityQueue.class),
+        FIB_HEAP(FibonacciHeap.class)
+        ;
+
+        private Class<? extends AbstractQueue> cua;
+
+        TipusCua(Class<? extends AbstractQueue> cua) {
+            this.cua = cua;
+        }
+
+        public Class<? extends AbstractQueue> getCua() {
+            return this.cua;
+        }
+    }
     public static class Node implements Comparable<Node> {
         public int val;
         public int bval;
@@ -41,11 +59,18 @@ public class Huffman implements Runnable {
     private byte[] fileBytes;
     private int[] freqs = new int[BITSIZE];
 
+    private final TipusCua tipusCua;
+
     private Node treeRoot;
 
-    private final ConcurrentHashMap<Byte, Byte> table = new ConcurrentHashMap<Byte, Byte>();
+    private final ConcurrentHashMap<Byte, Byte> table = new ConcurrentHashMap<>();
 
     public Huffman(String fileName) {
+        this(fileName, TipusCua.BIN_HEAP);
+    }
+
+    public Huffman(String fileName, TipusCua tipusCua) {
+        this.tipusCua = tipusCua;
         try {
             fileIn = new BufferedInputStream(new FileInputStream(fileName));
         } catch (IOException e) {
@@ -64,7 +89,11 @@ public class Huffman implements Runnable {
         }
         //calcular frecuencies en valor absolut
         calculateFreqs();
-        genTree();
+        try {
+            genTree();
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
 
         createTable(treeRoot, (byte) 0);
         joinAll();
@@ -77,13 +106,16 @@ public class Huffman implements Runnable {
         if (node.isLeaf()){
             table.put((byte) node.bval, (byte) val);
         }else{
-            if (node.left != null) createTable(node.left, (val<<1));
-            if (node.right != null) createTable(node.right, (val<<1) + 1);
+            if (node.left != null) addConcurrent(() -> createTable(node.left, (val<<1)));
+            if (node.right != null) addConcurrent(() -> createTable(node.right, (val<<1) + 1));
+//            if (node.left != null) createTable(node.left, (val<<1));
+//            if (node.right != null) createTable(node.right, (val<<1) + 1);
         }
     }
 
-    private void genTree(){
-        PriorityQueue<Node> pq = new PriorityQueue<>();
+    @SuppressWarnings("unchecked")
+    private void genTree() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Queue<Node> pq = tipusCua.getCua().getConstructor().newInstance();
         for (int i = 0; i < freqs.length; i++) {
             if(freqs[i] == 0){
                 continue;
@@ -140,15 +172,16 @@ public class Huffman implements Runnable {
      * Espera a que tots el fils acabin
      */
     private void joinAll(){
-        for (Future<?> runnable : runnables) {
+        while (!runnables.isEmpty()) {
+            Future<?> runnable = runnables.removeFirst();
+            if(runnable == null) continue;
             try {
                 runnable.get();
+
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }
-
-        runnables.clear();
     }
 
     /**
