@@ -38,11 +38,28 @@ public class Huffman implements Runnable {
         }
 
         public boolean isLeaf() {
-            return left == null && right == null && bval != -1;
+            return left == null && right == null && bval != Integer.MIN_VALUE;
         }
         @Override
         public int compareTo(Node o) {
-            return Integer.compare(val, o.val);
+            int valCompare = Integer.compare(this.val, o.val);
+            if (valCompare == 0) {
+                return Integer.compare(this.bval, o.bval);
+            }
+            return valCompare;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            return val == node.val;
+        }
+
+        @Override
+        public String toString() {
+            return "Node(val=" + val + ", byte" + bval + ")";
         }
 
     }
@@ -125,7 +142,7 @@ public class Huffman implements Runnable {
         while (pq.size() > 1){
             Node first = pq.poll();
             Node second = pq.poll();
-            Node parent = new Node(first.val + second.val, -1);
+            Node parent = new Node(first.val + second.val, Integer.MIN_VALUE);
             parent.left = first;
             parent.right = second;
             pq.add(parent);

@@ -17,20 +17,22 @@ class FibonacciHeapTest {
 
     @org.junit.jupiter.api.Test
     public void testRandom(){
-        final int tam = 3;
+        final int tam = 1000000;
         Queue<Integer> priorityQueue = new PriorityQueue<>();
         Queue<Integer> fibonacciQueue = new FibonacciHeap<>();
         for (int i = 0; i < tam; i++) {
-            int nextInt = random.nextInt(100);
+            int nextInt = random.nextInt(tam);
             priorityQueue.add(nextInt);
             fibonacciQueue.add(nextInt);
+            assertEquals(priorityQueue.peek(), fibonacciQueue.peek());
         }
 
 
         for (int i = 0; i < tam; i++) {
-            int delta = random.nextInt(-10,10);
+            int delta = random.nextInt(-tam,tam);
             priorityQueue.add(priorityQueue.poll() + delta);
             fibonacciQueue.add(fibonacciQueue.poll() + delta);
+            assertEquals(priorityQueue.peek(), fibonacciQueue.peek());
         }
 
         while (!priorityQueue.isEmpty() || !fibonacciQueue.isEmpty()){
