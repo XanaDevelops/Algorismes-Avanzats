@@ -1,5 +1,6 @@
 package model.cues;
 
+import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
@@ -24,11 +25,14 @@ class FibonacciHeapTest {
             priorityQueue.add(nextInt);
             fibonacciQueue.add(nextInt);
         }
+
+
         for (int i = 0; i < tam; i++) {
             int delta = random.nextInt(-10,10);
             priorityQueue.add(priorityQueue.poll() + delta);
             fibonacciQueue.add(fibonacciQueue.poll() + delta);
         }
+
         while (!priorityQueue.isEmpty() || !fibonacciQueue.isEmpty()){
             assertEquals(fibonacciQueue.poll(), priorityQueue.poll());
         }
