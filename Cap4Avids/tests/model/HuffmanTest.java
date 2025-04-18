@@ -1,6 +1,10 @@
 package model;
 
+import org.junit.jupiter.api.IndicativeSentencesGeneration;
+
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +22,14 @@ class HuffmanTest {
         }
 
         System.out.println(huffman.getTable());
+
+        Set<String> values = new HashSet<>();
+        for (String b: huffman.getTable().values()){
+            if(values.contains(b)){
+                fail("Duplicate value: "+b);
+            }
+            values.add(b);
+        }
 
         Huffman huffman2 = new Huffman("res/testAll.txt", Huffman.TipusCua.FIB_HEAP);
         huffman2.run();

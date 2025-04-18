@@ -12,10 +12,9 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class Huffman implements Runnable {
-    public static enum TipusCua{
+    public enum TipusCua {
         BIN_HEAP(PriorityQueue.class),
-        FIB_HEAP(FibonacciHeap.class)
-        ;
+        FIB_HEAP(FibonacciHeap.class);
 
         private Class<? extends AbstractQueue> cua;
 
@@ -27,6 +26,9 @@ public class Huffman implements Runnable {
             return this.cua;
         }
     }
+
+    public static final boolean DO_CONCURRENT = false;
+
     public static class Node implements Comparable<Node> {
         public int val;
         public int bval;
@@ -40,11 +42,12 @@ public class Huffman implements Runnable {
         public boolean isLeaf() {
             return left == null && right == null && bval != Integer.MIN_VALUE;
         }
+
         @Override
         public int compareTo(Node o) {
             int valCompare = Integer.compare(this.val, o.val);
             if (valCompare == 0) {
-                return Integer.compare(this.bval, o.bval);
+                return -Integer.compare(this.bval, o.bval);
             }
             return valCompare;
         }
@@ -63,6 +66,7 @@ public class Huffman implements Runnable {
         }
 
     }
+
     private final BufferedInputStream fileIn;
     private final static int N_THREADS = 16;
 
@@ -80,7 +84,7 @@ public class Huffman implements Runnable {
 
     private Node treeRoot;
 
-    private final ConcurrentHashMap<Byte, Byte> table = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Byte, String> table = new ConcurrentHashMap<>();
 
     public Huffman(String fileName) {
         this(fileName, TipusCua.BIN_HEAP);
@@ -108,25 +112,33 @@ public class Huffman implements Runnable {
         calculateFreqs();
         try {
             genTree();
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 
-        createTable(treeRoot, (byte) 0);
+        createTable(treeRoot, "", 0);
         joinAll();
     }
 
-    private void createTable(Node node, int val){
+    private void createTable(Node node, String val, int dbgval) {
         if (node == null) {
             return;
         }
-        if (node.isLeaf()){
-            table.put((byte) node.bval, (byte) val);
-        }else{
-            if (node.left != null) addConcurrent(() -> createTable(node.left, (val<<1)));
-            if (node.right != null) addConcurrent(() -> createTable(node.right, (val<<1) + 1));
-//            if (node.left != null) createTable(node.left, (val<<1));
-//            if (node.right != null) createTable(node.right, (val<<1) + 1);
+        if (node.isLeaf()) {
+            System.err.println(node.bval+ " dgb:"+ dbgval + ", val 0b" +val);
+
+            table.put((byte) node.bval, val);
+        } else {
+            final int fdeep = dbgval;
+            if (DO_CONCURRENT) {
+                if (node.left != null) addConcurrent(() -> createTable(node.left, val + "0", fdeep+1));
+                if (node.right != null) addConcurrent(() -> createTable(node.right, val + "1", fdeep+1));
+            }else{
+                if (node.left != null) createTable(node.left, val + "0", dbgval+1);
+                if (node.right != null) createTable(node.right, val + "1", dbgval+1);
+            }
+
         }
     }
 
@@ -134,12 +146,12 @@ public class Huffman implements Runnable {
     private void genTree() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Queue<Node> pq = tipusCua.getCua().getConstructor().newInstance();
         for (int i = 0; i < freqs.length; i++) {
-            if(freqs[i] == 0){
+            if (freqs[i] == 0) {
                 continue;
             }
             pq.add(new Node(freqs[i], i));
         }
-        while (pq.size() > 1){
+        while (pq.size() > 1) {
             Node first = pq.poll();
             Node second = pq.poll();
             Node parent = new Node(first.val + second.val, Integer.MIN_VALUE);
@@ -153,12 +165,16 @@ public class Huffman implements Runnable {
 
     private void calculateFreqs() {
         int split = fileBytes.length / N_THREADS;
-        for (int i = 0; i < N_THREADS-1 && split > 0; i++) {
+        for (int i = 0; i < N_THREADS - 1 && split > 0; i++) {
             int j = i;
-            addConcurrent(() -> {recursiveAccumulate(j, j*split, (j+1)*split);});
+            addConcurrent(() -> {
+                recursiveAccumulate(j, j * split, (j + 1) * split);
+            });
         }
         //assegurar-se final
-        addConcurrent(() -> {recursiveAccumulate(N_THREADS-1, (N_THREADS-1)*split, fileBytes.length);});
+        addConcurrent(() -> {
+            recursiveAccumulate(N_THREADS - 1, (N_THREADS - 1) * split, fileBytes.length);
+        });
 
         //esperar
         joinAll();
@@ -170,28 +186,28 @@ public class Huffman implements Runnable {
         }
     }
 
-    private void recursiveAccumulate(int id, int l, int r){
+    private void recursiveAccumulate(int id, int l, int r) {
         for (int i = l; i < r; i++) {
             //bytes en C2, necessari index positiu
             int b = fileBytes[i];
-            if(b < 0){
-                b = b+256;
+            if (b < 0) {
+                b = b + 256;
             }
             acumulators[id][b]++;
         }
     }
 
-    private void addConcurrent(Runnable r){
+    private void addConcurrent(Runnable r) {
         runnables.add(executor.submit(r));
     }
 
     /**
      * Espera a que tots el fils acabin
      */
-    private void joinAll(){
+    private void joinAll() {
         while (!runnables.isEmpty()) {
             Future<?> runnable = runnables.removeFirst();
-            if(runnable == null) continue;
+            if (runnable == null) continue;
             try {
                 runnable.get();
 
@@ -203,6 +219,7 @@ public class Huffman implements Runnable {
 
     /**
      * retona array de freqüecies absolutes
+     *
      * @return Array on a[byte] = freq
      */
     public final int[] getFreqs() {
@@ -211,9 +228,10 @@ public class Huffman implements Runnable {
 
     /**
      * Retorna la rel de l'arbre
+     *
      * @return Node rel
      */
-    public final Node getTree(){
+    public final Node getTree() {
         return treeRoot;
     }
 
@@ -221,9 +239,10 @@ public class Huffman implements Runnable {
      * Retorna la tabla de traducció:<br>
      * Byte -> Byte <br>
      * Original -> Codi
+     *
      * @return tabla traducció
      */
-    public final Map<Byte, Byte> getTable(){
+    public final Map<Byte, String> getTable() {
         return table;
     }
 }
