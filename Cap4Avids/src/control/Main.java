@@ -4,6 +4,7 @@ import model.Dades;
 import vista.Finestra;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -38,11 +39,61 @@ public class Main implements Comunicar {
      */
     @Override
     public void comunicar(String s) {
-        String[] args = s.split(":");
-        switch (args[0]) {
+        // Missatges de la forma "Comanda:fitxer"
+        String[] parts = s.split(":", 2);
+        String cmd  = parts[0];
+        String path  = parts.length > 1 ? parts[1] : null;
+
+        switch (cmd) {
+            case "Carregar" -> carregarFitxers(path);
+            case "Eliminar"-> {
+                assert path != null;
+                removeFitxer(path, path.endsWith(".huf"));
+            }
+
+            case "Comprimir"->System.out.println("Esperant per comprimir");
+            case "Descomprimir"->System.out.println("Esperant per descomprimir");
+            case "Guardar"->System.out.println("Esperant per guardar");
+
             default -> System.err.println("WARNING: Main reb missatge?: " + s);
         }
     }
+
+    /**
+     * Carregar fitxers
+     */
+    private void carregarFitxers(String arg) {
+        assert arg != null;
+        File f = new File(arg);
+        String nom = f.getName().toLowerCase();
+        if (nom.endsWith(".huf")) {
+            dades.addComprimit(f);
+            finestra.comunicar("actualitzar:comprimit");
+        } else if (nom.endsWith(".txt") || nom.endsWith(".bin")) {
+            dades.addDescomprimit(f);
+            finestra.comunicar("actualitzar:descomprimit");
+        } else {
+            JOptionPane.showMessageDialog(finestra,
+                    "Extensió no vàlida: " + f.getName(),
+                    "Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    /**
+     * Elimina un fitxer
+     */
+    private void removeFitxer(String arg, boolean descomprimir) {
+        assert arg != null;
+        File f = new File(arg);
+        if (!descomprimir) {
+            dades.removeDescomprimit(f);
+            finestra.comunicar("actualitzar:descomprimit");
+        } else {
+            dades.removeComprimit(f);
+            finestra.comunicar("actualitzar:comprimit");
+        }
+    }
+
 
     public Comunicar getFinestra(){
         return finestra;
