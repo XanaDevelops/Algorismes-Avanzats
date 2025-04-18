@@ -27,7 +27,7 @@ public class Huffman implements Runnable {
         }
     }
 
-    public static final boolean DO_CONCURRENT = false;
+    public static final boolean DO_CONCURRENT = true;
 
     public static class Node implements Comparable<Node> {
         public int val;
@@ -126,7 +126,7 @@ public class Huffman implements Runnable {
             return;
         }
         if (node.isLeaf()) {
-            System.err.println(node.bval+ " dgb:"+ dbgval + ", val 0b" +val);
+            //System.err.println(node.bval+ " dgb:"+ dbgval + ", val 0b" +val);
 
             table.put((byte) node.bval, val);
         } else {
