@@ -16,7 +16,7 @@ class HuffmanTest {
     void testFileAll() {
         Huffman huffman = new Huffman("res/testAll.txt");
         huffman.run();
-        int[] freqs = huffman.getFreqs();
+        long[] freqs = huffman.getFreqs();
         for (int i = 0; i < freqs.length; i++) {
             assertEquals(i+1, freqs[i]);
         }
@@ -33,7 +33,7 @@ class HuffmanTest {
 
         Huffman huffman2 = new Huffman("res/testAll.txt", Huffman.TipusCua.FIB_HEAP);
         huffman2.run();
-        int[] freqs2 = huffman2.getFreqs();
+        long[] freqs2 = huffman2.getFreqs();
         for (int i = 0; i < freqs2.length; i++) {
             assertEquals(i+1, freqs2[i]);
         }

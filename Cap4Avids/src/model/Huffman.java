@@ -30,11 +30,11 @@ public class Huffman implements Runnable {
     public static final boolean DO_CONCURRENT = true;
 
     public static class Node implements Comparable<Node> {
-        public int val;
+        public long val;
         public int bval;
         private Node left, right;
 
-        public Node(int val, int bval) {
+        public Node(long val, int bval) {
             this.val = val;
             this.bval = bval;
         }
@@ -45,7 +45,7 @@ public class Huffman implements Runnable {
 
         @Override
         public int compareTo(Node o) {
-            int valCompare = Integer.compare(this.val, o.val);
+            int valCompare = Long.compare(this.val, o.val);
             if (valCompare == 0) {
                 return -Integer.compare(this.bval, o.bval);
             }
@@ -74,11 +74,11 @@ public class Huffman implements Runnable {
     public static final int BITSIZE = 256;
 
     private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS);
-    private final List<Future<?>> runnables = new ArrayList<>();
+    private final List<Future<?>> runnables = Collections.synchronizedList(new ArrayList<>());
 
-    private final int[][] acumulators = new int[N_THREADS][BITSIZE];
+    private final long[][] acumulators = new long[N_THREADS][BITSIZE];
     private byte[] fileBytes;
-    private int[] freqs = new int[BITSIZE];
+    private long[] freqs = new long[BITSIZE];
 
     private final TipusCua tipusCua;
 
@@ -180,7 +180,7 @@ public class Huffman implements Runnable {
 
         //esperar
         joinAll();
-        int total = 0;
+        long total = 0;
         for (int i = 0; i < N_THREADS; i++) {
             for (int j = 0; j < freqs.length; j++) {
                 freqs[j] += acumulators[i][j];
@@ -190,7 +190,7 @@ public class Huffman implements Runnable {
 
         //calcular entropia
         entropia = 0;
-        for(int i: freqs) {
+        for(long i: freqs) {
             if (i==0) continue;
             double freq =  i / (double) total;
             entropia += freq * Math.log10(freq)/Math.log10(2);
@@ -234,7 +234,7 @@ public class Huffman implements Runnable {
      *
      * @return Array on a[byte] = freq
      */
-    public final int[] getFreqs() {
+    public final long[] getFreqs() {
         return freqs;
     }
 
