@@ -84,6 +84,8 @@ public class Huffman implements Runnable {
 
     private Node treeRoot;
 
+    private double entropia = -1;
+
     private final ConcurrentHashMap<Byte, String> table = new ConcurrentHashMap<>();
 
     public Huffman(String fileName) {
@@ -178,12 +180,22 @@ public class Huffman implements Runnable {
 
         //esperar
         joinAll();
-
+        int total = 0;
         for (int i = 0; i < N_THREADS; i++) {
             for (int j = 0; j < freqs.length; j++) {
                 freqs[j] += acumulators[i][j];
+                total += acumulators[i][j];
             }
         }
+
+        //calcular entropia
+        entropia = 0;
+        for(int i: freqs) {
+            if (i==0) continue;
+            double freq =  i / (double) total;
+            entropia += freq * Math.log10(freq)/Math.log10(2);
+        }
+        entropia = -entropia;
     }
 
     private void recursiveAccumulate(int id, int l, int r) {
@@ -244,5 +256,13 @@ public class Huffman implements Runnable {
      */
     public final Map<Byte, String> getTable() {
         return table;
+    }
+
+    /**
+     * Retorna l'entropia del fitxer
+     * @return
+     */
+    public double getEntropia(){
+        return entropia;
     }
 }

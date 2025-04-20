@@ -10,6 +10,8 @@ def main() -> None:
         
         barr.extend([255]*(100))
         file.write(bytes(barr))
+    with open("testABC3.txt", "w") as file:
+        file.write("a"*10 + "b"*15 + "c"*30 + "d"*16 + "e"*29)
 
 if __name__ == "__main__":
     main()
