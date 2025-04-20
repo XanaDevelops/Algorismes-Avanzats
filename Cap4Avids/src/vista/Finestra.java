@@ -57,8 +57,6 @@ public class Finestra extends JFrame implements Comunicar {
         add(split, BorderLayout.CENTER);
 
 
-        // Estat inicial dels botons
-        updateBotons();
         setVisible(true);
     }
 
@@ -89,12 +87,6 @@ public class Finestra extends JFrame implements Comunicar {
 
     }
 
-    private void updateBotons() {
-        botons[1].setEnabled(!descomprimits.thereAreNotFiles());   // Comprimir
-        botons[2].setEnabled(!comprimits.thereAreNotFiles()); // Descomprimir
-        botons[3].setEnabled(true); // Guardar
-    }
-
 
     /**
      * Envia un missatge
@@ -112,9 +104,12 @@ public class Finestra extends JFrame implements Comunicar {
                 default -> System.err.println(
                         "Finestra: no sé refrescar -> " + s);
             }
-            updateBotons();
         } else {
             System.err.println("Finestra: missatge desconegut -> " + s);
         }
+    }
+
+    public JButton[] getBotons() {
+        return botons;
     }
 }
