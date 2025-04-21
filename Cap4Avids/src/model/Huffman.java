@@ -230,8 +230,7 @@ public class Huffman implements Runnable {
     }
 
     /**
-     * retona array de freqüecies absolutes
-     *
+     * Retorna array de frequencies absolutes
      * @return Array on a[byte] = freq
      */
     public final long[] getFreqs() {
@@ -239,8 +238,7 @@ public class Huffman implements Runnable {
     }
 
     /**
-     * Retorna la rel de l'arbre
-     *
+     * Retorna l'arrel de l'arbre
      * @return Node rel
      */
     public final Node getTree() {
