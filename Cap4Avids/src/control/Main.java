@@ -38,16 +38,17 @@ public class Main implements Comunicar {
     private void start(){
         dades = new Dades();
         Huffman huffman = new Huffman("src/model/text.txt");
-//        huffman.run();
-//        Comprimidor c = new Comprimidor("src/model/text.txt");
+        huffman.run();
+        Comprimidor c = new Comprimidor("src/model/text.txt");
+//        System.out.println("table "+ huffman.getTable());
 
 
-//        try {
-////            c.comprimir(huffman.getTable(), "sortida.txt", false);
-////            c.Descomprimir("sortida.txt", "descomprimir.txt");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            c.comprimir(huffman.getTable(), "sortida.txt", false);
+            c.Descomprimir("sortida.txt", "descomprimir.txt");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
 //        SwingUtilities.invokeLater(() -> finestra = new Finestra());
     }

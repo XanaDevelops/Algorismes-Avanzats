@@ -21,7 +21,6 @@ public class Comprimidor {
      */
     public void comprimir(Map<Byte, String> taula, String fileOutputName, boolean esSeriablitzable) throws IOException {
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileOutputName));
-        //guardam primer la taula de codificació + delimitador
         oos.writeObject(taula);
         StringBuilder sb = new StringBuilder();
         int b;
@@ -42,16 +41,17 @@ public class Comprimidor {
         }
 
 
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         for (int i = 0; i < sb.length(); i+=8) {
             StringBuilder current = new StringBuilder(sb.substring(i, Math.min(i + Byte.SIZE, sb.length())));
             while(current.length() < Byte.SIZE){
                 current.append("0");
             }
+
             baos.write((byte) Integer.parseInt(current.toString(), 2));
         }
         oos.writeObject(baos.toByteArray());
+        oos.writeInt( sb.length());  // Guardar la longitud real
         oos.flush();
         oos.close();
     }
@@ -66,18 +66,26 @@ public class Comprimidor {
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(inputFile));
 
         FileOutputStream fos = new FileOutputStream(outputFile);
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-
 
         try {
             Map<Byte, String> taula = (Map<Byte, String>) ois.readObject();
+            System.out.println("taula obtinguda : " + taula.toString());
             byte [] fileContent = (byte[]) ois.readObject();
+
+            int realBitLength = ois.readInt();  // Leer la longitud original
+
             StringBuilder sb = new StringBuilder();
-            //esborrar els 0 de relleno
-            for (int i = 0; i < fileContent.length; i++) {
-                sb.append(String.format("%8s", Integer.toBinaryString(fileContent[i])).replace(" ", "0"));
+
+            for (byte b : fileContent) {
+
+                sb.append(String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0'));
             }
-            //invirtirem la taula per poder cerca per la codificacio
+            sb.setLength(realBitLength); // Truncar els bits de farciment
+
+            System.out.println("tamany sb = "+ sb.length());
+
+
+            //invirtirem la taula per poder cercar per la codificacio
             Map<String, Byte> taulaIvertida = new HashMap<>();
             for (Map.Entry<Byte, String> entrada : taula.entrySet()) {
                 taulaIvertida.put(entrada.getValue(), entrada.getKey());
@@ -85,13 +93,15 @@ public class Comprimidor {
 
             //descomprimir els bytes
             StringBuilder sequenciaActual = new StringBuilder();
+            ByteArrayOutputStream bais = new ByteArrayOutputStream();
             for (int i = 0; i < sb.length(); i++) {
                 sequenciaActual.append(sb.charAt(i));
-                if (taulaIvertida.containsKey(sequenciaActual.toString())) {//hem trobat una seqûència vàlida
-                    fos.write(taulaIvertida.get(sequenciaActual.toString()));
+                if (taulaIvertida.containsKey(sequenciaActual.toString())) {//hem trobat una seqüència vàlida
+                    bais.write(taulaIvertida.get(sequenciaActual.toString()));
                     sequenciaActual.setLength(0); //buidar la sequencia
                 }
             }
+            fos.write(bais.toByteArray());
             fos.flush();
             fos.close();
 
@@ -101,7 +111,7 @@ public class Comprimidor {
         }
 
 
-
-
     }
+
+
 }
