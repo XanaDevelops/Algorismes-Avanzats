@@ -121,6 +121,7 @@ public class Huffman implements Runnable {
 
         createTable(treeRoot, "", 0);
         joinAll();
+        executor.shutdown();
     }
 
     private void createTable(Node node, String val, int dbgval) {
