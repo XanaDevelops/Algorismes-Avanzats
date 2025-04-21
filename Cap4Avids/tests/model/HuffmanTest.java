@@ -1,10 +1,15 @@
 package model;
 
-import org.junit.jupiter.api.IndicativeSentencesGeneration;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +17,7 @@ class HuffmanTest {
 
 
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testFileAll() {
         Huffman huffman = new Huffman("res/testAll.txt");
         huffman.run();
@@ -41,7 +46,7 @@ class HuffmanTest {
         System.out.println("Entropia2: " + huffman2.getEntropia());
         System.out.println("\n");
     }
-    @org.junit.jupiter.api.Test
+    @Test
     void testFileABC(){
         Huffman huffman = new Huffman("res/testABC.txt");
         huffman.run();
@@ -57,7 +62,7 @@ class HuffmanTest {
 
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testFileABC2(){
         Huffman huffman = new Huffman("res/testABC2.txt");
         huffman.run();
@@ -73,13 +78,28 @@ class HuffmanTest {
 
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testFileABC3(){
         Huffman huffman = new Huffman("res/testABC3.txt");
         huffman.run();
         System.out.println(Arrays.toString(huffman.getFreqs()));
         System.out.println(huffman.getTable());
         System.out.println(huffman.getEntropia());
+
+    }
+
+    @Test
+    void testThread(){
+        Huffman huffman = new Huffman("res/testAll.txt");
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(16);
+        Future<?> h = executor.submit(huffman);
+        try {
+            h.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(Arrays.toString(huffman.getFreqs()));
+        System.out.println(huffman.getTable());
 
     }
 }
