@@ -5,7 +5,8 @@ import control.Main;
 public class Dades {
     private final Main principal;
 
-    public Dades(){
+
+    public Dades() {
         principal = Main.instance;
     }
 
