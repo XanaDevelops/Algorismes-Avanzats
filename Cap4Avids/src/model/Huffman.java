@@ -52,6 +52,30 @@ public class Huffman implements Runnable {
             return valCompare;
         }
 
+        public int getBval() {
+            return bval;
+        }
+
+        public void setBval(int bval) {
+            this.bval = bval;
+        }
+
+        public Node getLeft() {
+            return left;
+        }
+
+        public void setLeft(Node left) {
+            this.left = left;
+        }
+
+        public Node getRight() {
+            return right;
+        }
+
+        public void setRight(Node right) {
+            this.right = right;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
