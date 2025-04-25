@@ -1,6 +1,7 @@
 package control;
 
 import model.Dades;
+import model.Huffman;
 import vista.Finestra;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ public class Main implements Comunicar {
 
     private Finestra finestra;
     private Dades dades;
+    private Huffman huffman;
 
     public final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(16);
 

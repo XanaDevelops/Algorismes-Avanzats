@@ -16,11 +16,12 @@ public class Finestra extends JFrame implements Comunicar {
     private final PanellFitxers descomprimits;
     private final PanellFitxers comprimits;
 
-
-    private final String[] nomsBtn = {"Carregar", "Comprimir", "Descomprimir", "Guardar"};
+    private final String[] nomsBtn = {
+            "Carregar", "Comprimir", "Descomprimir", "Guardar", "Veure Arbre"
+    };
     private final JButton[] botons = new JButton[nomsBtn.length];
 
-
+    private final JPanel panellVisualitzador;
 
     public Finestra() {
         super("Compressor Huffman");
@@ -29,11 +30,11 @@ public class Finestra extends JFrame implements Comunicar {
         dades = Main.instance.getDades();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1000, 600);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-
+        // Barra d'eines
         JToolBar barra = new JToolBar();
 
         for (int i = 0; i < nomsBtn.length; i++) {
@@ -52,10 +53,20 @@ public class Finestra extends JFrame implements Comunicar {
         // Panells inferiors: dos llistats amb drag & drop i botons add/remove
         descomprimits = new PanellFitxers(this, "Arxius descomprimits", true ,dades);
         comprimits = new PanellFitxers(this,"Arxius comprimits",false ,dades);
-        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, descomprimits, comprimits);
-        split.setResizeWeight(0.5);
-        add(split, BorderLayout.CENTER);
 
+        // Panell de fitxers (esquerra)
+        JSplitPane splitFitxers = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, descomprimits, comprimits);
+        splitFitxers.setResizeWeight(0.5);
+
+        // Panell de visualització de l'arbre (dreta)
+        panellVisualitzador = new JPanel(new BorderLayout());
+        panellVisualitzador.setBorder(BorderFactory.createTitledBorder("Arbre de Huffman"));
+        panellVisualitzador.add(new JLabel("Selecciona un fitxer .huf i fes clic a 'Veure Arbre'"), BorderLayout.CENTER);
+
+        // Panell principal
+        JSplitPane splitPrincipal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitFitxers, panellVisualitzador);
+        splitPrincipal.setResizeWeight(0.6);
+        add(splitPrincipal, BorderLayout.CENTER);
 
         setVisible(true);
     }
@@ -79,14 +90,41 @@ public class Finestra extends JFrame implements Comunicar {
                     principal.comunicar("Eliminar:" + f.getAbsolutePath());
                 }
             }
+            case "Veure Arbre" -> {
+                File[] seleccionats = comprimits.getSelectedFiles().toArray(new File[0]);
+                if (seleccionats.length == 1 && seleccionats[0].getName().endsWith(".huf")) {
+                    try {
+                        // get arbre
+                        // var arbre = Main.instance.getDades().getTree();
+                        // var v = new VistaArbreHuffman(arbre);
+                        // mostrarArbre(v);
+                    } catch (Exception e) {
+                        mostrarMissatge("Error en carregar l'arbre de Huffman.");
+                        e.printStackTrace();
+                    }
+                } else {
+                    mostrarMissatge("Selecciona exactament un fitxer .huf per visualitzar l'arbre.");
+                }
+            }
             default -> {
                 // Comprimir, Descomprimir, Guardar
                 Main.instance.comunicar(nom);
             }
         }
-
     }
 
+    private void mostrarArbre(VistaArbreHuffman v) {
+        SwingUtilities.invokeLater(() -> {
+            panellVisualitzador.removeAll();
+            panellVisualitzador.add(new JScrollPane(v), BorderLayout.CENTER);
+            panellVisualitzador.revalidate();
+            panellVisualitzador.repaint();
+        });
+    }
+
+    private void mostrarMissatge(String missatge) {
+        JOptionPane.showMessageDialog(this, missatge, "Informació", JOptionPane.INFORMATION_MESSAGE);
+    }
 
     /**
      * Envia un missatge

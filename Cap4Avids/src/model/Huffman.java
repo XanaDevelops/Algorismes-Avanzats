@@ -43,6 +43,22 @@ public class Huffman implements Runnable {
             return left == null && right == null && bval != Integer.MIN_VALUE;
         }
 
+        public Node getLeft() {
+            return left;
+        }
+
+        public Node getRight() {
+            return left;
+        }
+
+        public int getVal() {
+            return val;
+        }
+
+        public int getBval() {
+            return bval;
+        }
+
         @Override
         public int compareTo(Node o) {
             int valCompare = Integer.compare(this.val, o.val);
