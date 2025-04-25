@@ -1,6 +1,7 @@
 package model;
 
 import model.cues.FibonacciHeap;
+import model.cues.RankPairingHeap;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -14,7 +15,8 @@ import java.util.concurrent.*;
 public class Huffman implements Runnable {
     public enum TipusCua {
         BIN_HEAP(PriorityQueue.class),
-        FIB_HEAP(FibonacciHeap.class);
+        FIB_HEAP(FibonacciHeap.class),
+        RANK_PAIRING_HEAP(RankPairingHeap.class);
 
         private Class<? extends AbstractQueue> cua;
 

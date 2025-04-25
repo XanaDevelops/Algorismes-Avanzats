@@ -3,6 +3,7 @@ package control;
 import model.CompressorDecompressor;
 import model.Dades;
 import model.Huffman;
+import model.cues.RankPairingHeap;
 import vista.Finestra;
 
 import javax.swing.*;
@@ -37,7 +38,9 @@ public class Main implements Comunicar {
         dades = new Dades();
         String fileName = "testABC.txt";
         String path = "res/";
-        Huffman huffman = new Huffman(path+fileName);
+//        Huffman huffman = new Huffman(path+fileName, Huffman.TipusCua.FIB_HEAP);
+        Huffman huffman = new Huffman(path+fileName, Huffman.TipusCua.RANK_PAIRING_HEAP);
+
         huffman.run();
         CompressorDecompressor c = new CompressorDecompressor(huffman, path+fileName, path+ "Compressed"+ fileName);
 
@@ -53,6 +56,8 @@ public class Main implements Comunicar {
         byte[] b = inB.readAllBytes();
 
         System.out.println(Arrays.equals(a, b));
+
+
 //        SwingUtilities.invokeLater(() -> finestra = new Finestra());
     }
 
