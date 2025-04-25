@@ -19,7 +19,7 @@ class ComprimidorTest {
     @Test
     void testComprimidor() throws IOException {
 
-        String fileName = "100MB.pdf";
+        String fileName = "message.txt";
         String path = "res/";
         Huffman huffman = new Huffman(path+fileName);
         huffman.run();
