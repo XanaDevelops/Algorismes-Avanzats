@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,19 +19,23 @@ class ComprimidorTest {
     @Test
     void testComprimidor() throws IOException {
 
-        String in = "res/testAll.txt";
-        Huffman huffman = new Huffman(in);
+        String fileName = "message.txt";
+        String path = "res/";
+        Huffman huffman = new Huffman(path+fileName);
         huffman.run();
-        Comprimidor c = new Comprimidor(in);
+        CompressorDecompressor c = new CompressorDecompressor(huffman, path+fileName, path+ "Compressed"+ fileName);
 
-        c.comprimir(huffman.getTable(), in + ".cip", false);
-        c.Descomprimir(in + ".cip", in + ".txt");
+           c.compressFile();
+           c.decompressFile(path+ "Compressed"+ fileName, path+ "ORIGINAL " + fileName);
 
         //comparar
-        BufferedInputStream inA = new BufferedInputStream(new FileInputStream(in)),
-                    inB = new BufferedInputStream(new FileInputStream(in + ".txt"));
+        BufferedInputStream inA = new BufferedInputStream(new FileInputStream(path+fileName)),
+                inB = new BufferedInputStream(new FileInputStream( path+ "ORIGINAL " + fileName));
         byte[] a = inA.readAllBytes();
+        System.out.println(Arrays.toString(a));
+
         byte[] b = inB.readAllBytes();
+        System.out.println(Arrays.toString(b));
         assertArrayEquals(a, b);
     }
 }

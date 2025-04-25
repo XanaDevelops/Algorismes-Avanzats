@@ -28,7 +28,7 @@ public class Huffman implements Runnable {
     }
 
     public static final boolean DO_CONCURRENT = true;
-
+    private int[] codeLengths;
     public static class Node implements Comparable<Node> {
         public long val;
         public int bval;
@@ -50,6 +50,30 @@ public class Huffman implements Runnable {
                 return -Integer.compare(this.bval, o.bval);
             }
             return valCompare;
+        }
+
+        public int getBval() {
+            return bval;
+        }
+
+        public void setBval(int bval) {
+            this.bval = bval;
+        }
+
+        public Node getLeft() {
+            return left;
+        }
+
+        public void setLeft(Node left) {
+            this.left = left;
+        }
+
+        public Node getRight() {
+            return right;
+        }
+
+        public void setRight(Node right) {
+            this.right = right;
         }
 
         @Override
@@ -129,7 +153,6 @@ public class Huffman implements Runnable {
             return;
         }
         if (node.isLeaf()) {
-            //System.err.println(node.bval+ " dgb:"+ dbgval + ", val 0b" +val);
 
             table.put((byte) node.bval, val);
         } else {
@@ -229,6 +252,7 @@ public class Huffman implements Runnable {
             }
         }
     }
+
 
     /**
      * Retorna array de frequencies absolutes
