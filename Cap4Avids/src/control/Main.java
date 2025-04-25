@@ -36,29 +36,8 @@ public class Main implements Comunicar {
 
     private void start() throws IOException {
         dades = new Dades();
-        String fileName = "testABC.txt";
-        String path = "res/";
-//        Huffman huffman = new Huffman(path+fileName, Huffman.TipusCua.FIB_HEAP);
-        Huffman huffman = new Huffman(path+fileName, Huffman.TipusCua.RANK_PAIRING_HEAP);
-
-        huffman.run();
-        CompressorDecompressor c = new CompressorDecompressor(huffman, path+fileName, path+ "Compressed"+ fileName);
-
-        c.compressFile();
-        c.decompressFile(path+ "Compressed"+ fileName, path+ "ORIGINAL " + fileName);
-
-        //comparar
-        BufferedInputStream inA = new BufferedInputStream(new FileInputStream(path+fileName)),
-                inB = new BufferedInputStream(new FileInputStream( path+ "ORIGINAL " + fileName));
-        byte[] a = inA.readAllBytes();
-
-
-        byte[] b = inB.readAllBytes();
-
-        System.out.println(Arrays.equals(a, b));
-
-
-//        SwingUtilities.invokeLater(() -> finestra = new Finestra());
+       
+       SwingUtilities.invokeLater(() -> finestra = new Finestra());
     }
 
     /**
