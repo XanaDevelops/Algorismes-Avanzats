@@ -44,12 +44,23 @@ public class RankPairingHeap<E extends Comparable<E>> extends AbstractQueue<E> {
      * @return true
      */
     @Override
+
     public boolean offer(E e) {
-        roots.add(new Node<>(e));
+        Node<E> newNode = new Node<>(e);
+        if (roots.isEmpty()) {
+            roots.add(newNode);
+        } else {
+
+            roots.add(newNode);
+            if (newNode.key.compareTo(roots.getFirst().key) < 0) {
+                Collections.swap(roots, 0, roots.size() - 1);
+            }
+        }
         size++;
         consolidate();
         return true;
     }
+
 
     /**
      * Retrieves and removes the head of this queue, or returns null if this queue is empty.
@@ -82,6 +93,7 @@ public class RankPairingHeap<E extends Comparable<E>> extends AbstractQueue<E> {
 
     /**
      * Consolidates the roots by merging sub queues with the same rank
+     *
      */
     private void consolidate() {
         if (roots.size() <= 1) return;
@@ -102,7 +114,25 @@ public class RankPairingHeap<E extends Comparable<E>> extends AbstractQueue<E> {
         }
         //update the roots list
         roots = new ArrayList<>(bucket.values());
+        moveMinToFront();
     }
+
+    /**
+     * Moves the minimum value to the first positions en the roots list
+     */
+    private void moveMinToFront() {
+        if (roots.isEmpty()) return;
+        int minIndex = 0;
+        for (int i = 1; i < roots.size(); i++) {
+            if (roots.get(i).key.compareTo(roots.get(minIndex).key) < 0) {
+                minIndex = i;
+            }
+        }
+        if (minIndex != 0) {
+            Collections.swap(roots, 0, minIndex);
+        }
+    }
+
 
     /**
      * Links two given nodes.
@@ -114,7 +144,7 @@ public class RankPairingHeap<E extends Comparable<E>> extends AbstractQueue<E> {
      */
     private Node<E> link(Node<E> node1, Node<E> node2) {
 
-        if (node1.key.compareTo(node2.key) < 0) {
+        if (node1.key.compareTo(node2.key) <= 0) {
             node1.children.add(node2);
             node1.rank++;
             return node1;
