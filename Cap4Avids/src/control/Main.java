@@ -51,8 +51,8 @@ public class Main implements Comunicar {
                 removeFitxer(path, path.endsWith(".huf"));
             }
 
-            case "Comprimir"->System.out.println("Esperant per comprimir");
-            case "Descomprimir"->System.out.println("Esperant per descomprimir");
+            case "Comprimir"->System.out.println("Esperant per comprimir" + s);
+            case "Descomprimir"->System.out.println("Esperant per descomprimir" + s);
             case "Guardar"->System.out.println("Esperant per guardar");
 
             default -> System.err.println("WARNING: Main reb missatge?: " + s);
