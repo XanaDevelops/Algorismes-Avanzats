@@ -51,7 +51,7 @@ public class Finestra extends JFrame implements Comunicar {
 
         // Panells inferiors: dos llistats amb drag & drop i botons add/remove
         descomprimits = new PanellFitxers(this, "Arxius a comprimir", true, dades);
-        comprimits = new PanellFitxers(this, "Arxius a descomrmir comprimir", false, dades);
+        comprimits = new PanellFitxers(this, "Arxius a descomprimir", false, dades);
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, descomprimits, comprimits);
         split.setResizeWeight(0.5);
         add(split, BorderLayout.CENTER);
