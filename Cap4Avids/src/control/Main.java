@@ -79,13 +79,9 @@ public class Main implements Comunicar {
         if (nom.endsWith(".huf")) {
             dades.addComprimit(f);
             finestra.comunicar("actualitzar:comprimit");
-        } else if (nom.endsWith(".txt") || nom.endsWith(".bin")) {
+        } else {
             dades.addDescomprimit(f);
             finestra.comunicar("actualitzar:descomprimit");
-        } else {
-            JOptionPane.showMessageDialog(finestra,
-                    "Extensió no vàlida: " + f.getName(),
-                    "Error", JOptionPane.WARNING_MESSAGE);
         }
     }
 
