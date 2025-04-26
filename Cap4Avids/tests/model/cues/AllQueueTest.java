@@ -1,5 +1,8 @@
 package model.cues;
 
+import model.Huffman;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,12 +16,12 @@ class AllQueueTest {
     }
 
     @org.junit.jupiter.api.Test
-    public void testRandom(){
+    public void testRandom() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         final int tam = 1000000;
         List<Queue<Integer>> queues = new ArrayList<>();
-        queues.add(new PriorityQueue<>());
-        queues.add(new FibonacciHeap<>());
-        queues.add(new RankPairingHeap<>());
+        for(Huffman.TipusCua c : Huffman.TipusCua.values()){
+            queues.add(c.getCua().getConstructor().newInstance());
+        }
 
         for (int i = 0; i < tam; i++) {
             int nextInt = random.nextInt(tam);
