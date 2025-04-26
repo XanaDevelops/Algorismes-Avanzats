@@ -17,10 +17,10 @@ public class Dades {
     }
 
     public void addDescomprimit(File f){
-        descomprimits.add(f);
+        if(!descomprimits.contains(f))descomprimits.add(f);
     }
     public void addComprimit(File f){
-        comprimits.add(f);
+        if(!comprimits.contains(f))comprimits.add(f);
     }
 
     public void removeDescomprimit(File f){
