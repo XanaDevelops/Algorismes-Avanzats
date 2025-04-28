@@ -1,18 +1,11 @@
 package control;
 
-import model.CompressorDecompressor;
 import model.Dades;
-import model.Huffman;
-import model.cues.RankPairingHeap;
 import vista.Finestra;
 
 import javax.swing.*;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.io.File;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
