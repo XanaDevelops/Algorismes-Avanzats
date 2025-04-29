@@ -59,7 +59,7 @@ public class Decompressor {
 
             try (BitInputStream bitIn = new BitInputStream(fis);
                  OutputStream fosOut = new BufferedOutputStream(
-                         new FileOutputStream("Decompressed"+ extension))) {
+                         new FileOutputStream("Decompressed"+src+ extension))) {
                 int written = 0;
                 while (written < originalBytes) {
                     DecodeNode node = root;

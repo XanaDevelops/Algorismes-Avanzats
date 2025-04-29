@@ -12,7 +12,6 @@ public class Dades {
     private final List<File> descomprimits = new ArrayList<>();
     private final List<File> comprimits = new ArrayList<>();
     private Extensio extensioComprimit;
-
     public Extensio getExtensioComprimit() {
         return extensioComprimit;
     }

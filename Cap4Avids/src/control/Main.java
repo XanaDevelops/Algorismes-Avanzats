@@ -1,6 +1,9 @@
 package control;
 
+import model.Compressor;
 import model.Dades;
+import model.Extensio;
+import model.Huffman;
 import vista.Finestra;
 
 import javax.swing.*;
