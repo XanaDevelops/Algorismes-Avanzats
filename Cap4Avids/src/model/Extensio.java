@@ -10,6 +10,16 @@ public enum Extensio {
         this.magicBytes = magicBytes;
     }
 
+    public static String getExtensio(byte[] magicNumbers) {
+        if (magicNumbers ==RAR.magicBytes) {
+            return ".rar";
+        }else if (magicNumbers ==ZIP.magicBytes) {
+            return ".zip";
+        }else{
+            return ".lzh";
+        }
+    }
+
     public byte[] getMagicBytes() {
         return magicBytes;
     }

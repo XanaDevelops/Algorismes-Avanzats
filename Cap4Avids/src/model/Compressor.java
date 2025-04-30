@@ -6,12 +6,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Compressor {
     private final Huffman huffman;
     private final String input;
     private final String output;
     Dades data;
+    private static final int N_THREADS = 8;
+    private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS);
+
     public Compressor(Huffman huffman, Dades data, String input, String output) {
         this.huffman = huffman;
         this.input = input;
@@ -32,7 +37,7 @@ public class Compressor {
     public void compressFile() throws IOException {
         Map<Byte, String> table = huffman.getTable();
         //calcular la longitud de les codificaciones de cada byte
-        int[] codeLengths = new int[256];
+        int[] codeLengths = new int[Huffman.BITSIZE];
         int totalUnicSymbols = 0;
         List<Integer> symbols = new ArrayList<>();
         for (Map.Entry<Byte, String> e : table.entrySet()) {
@@ -43,14 +48,15 @@ public class Compressor {
         }
         //generar codi canònic a partir les longituds dels símbols
         byte[][] canonCodes = Huffman.generateCanonicalCodes(codeLengths, symbols);
+        byte [] magicNumbers = data.getExtensioComprimit().getMagicBytes();
 
-        try (OutputStream fos = Files.newOutputStream(Path.of(output));
+        //afegir la signatura de l'extensió manualment
+        try (OutputStream fos = Files.newOutputStream(Path.of(output+Extensio.getExtensio(magicNumbers)));
              BufferedOutputStream bufOut = new BufferedOutputStream(fos);
              DataOutputStream dos = new DataOutputStream(bufOut);
              BitOutputStream bitOut = new BitOutputStream(bufOut)) {
 
             //guardar l'extensió original de l'arxiu
-            byte [] magicNumbers = data.getExtensioComprimit().getMagicBytes();
             dos.writeShort(magicNumbers.length);
             dos.write(magicNumbers);
 
@@ -77,17 +83,55 @@ public class Compressor {
             dos.writeInt(originalBytes);
             dos.flush();
 
+
+
             //Escriure la codificació del contingut de l'arxiu d'entrada
+//            try (InputStream fis = new BufferedInputStream(Files.newInputStream(inputPath))) {
+//                int b;
+//                while ((b = fis.read()) != -1) {
+//                    byte[] codeBits = canonCodes[b & 0xFF];
+//                    for (byte codeBit : codeBits) {
+//                        bitOut.writeBit(codeBit == 1);
+//                    }
+//                }
+//            }
+//            bitOut.flush();
+
+            int blockSize = (originalBytes + N_THREADS - 1) / N_THREADS; // Ajusta el tamany per evitar desbordaments
+            List<byte[]> blocks = new ArrayList<>();
             try (InputStream fis = new BufferedInputStream(Files.newInputStream(inputPath))) {
-                int b;
-                while ((b = fis.read()) != -1) {
-                    byte[] codeBits = canonCodes[b & 0xFF];
-                    for (byte codeBit : codeBits) {
-                        bitOut.writeBit(codeBit == 1);
-                    }
+                byte[] buffer = new byte[blockSize];
+                int bytesRead;
+                while ((bytesRead = fis.read(buffer)) != -1) {
+                    blocks.add(Arrays.copyOf(buffer, bytesRead)); // Guarda només els bytes llegits
                 }
             }
+
+            // Assignar blocs al executor
+            for (byte[] block : blocks) {
+                executor.submit(() -> {
+                    for (byte b : block) {
+                        byte[] codeBits = canonCodes[b & 0xFF];
+                        synchronized (bitOut) { // Sincronitzar l'accés a bitOut
+                            for (byte codeBit : codeBits) {
+                                try {
+                                    bitOut.writeBit(codeBit == 1);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Esperar que totes les tasques finalitzin
+            executor.shutdown();
+            while (!executor.isTerminated()) {
+                // Bloquejar fins que es completi l'execució
+            }
             bitOut.flush();
+
         }
     }
 

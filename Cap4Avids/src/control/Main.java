@@ -1,9 +1,6 @@
 package control;
 
-import model.Compressor;
-import model.Dades;
-import model.Extensio;
-import model.Huffman;
+import model.*;
 import vista.Finestra;
 
 import javax.swing.*;
@@ -35,7 +32,14 @@ public class Main implements Comunicar {
     private void start() throws IOException {
         dades = new Dades();
 
-       SwingUtilities.invokeLater(() -> finestra = new Finestra());
+        String fileName = "tests/res/message.txt";
+        Huffman h = new Huffman(fileName );
+        dades.setExtensioComprimit(Extensio.LZH);
+        Compressor c = new Compressor(h, dades,fileName, "output");
+        c.compressFile();
+        Decompressor d = new Decompressor("output.lzh");
+        d.decompressFile();
+//       SwingUtilities.invokeLater(() -> finestra = new Finestra());
     }
 
     /**
