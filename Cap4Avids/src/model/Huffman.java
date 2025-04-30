@@ -4,11 +4,9 @@ import model.cues.FibonacciHeap;
 import model.cues.RankPairingHeap;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -99,12 +97,14 @@ public class Huffman implements Runnable {
     //un byte te 256 possibles valors
     public static final int BITSIZE = 256;
 
+    private final int byteSize;
+
     private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS);
     private final List<Future<?>> runnables = Collections.synchronizedList(new ArrayList<>());
 
-    private final long[][] acumulators = new long[N_THREADS][BITSIZE];
+    private final long[][] acumulators;
     private byte[] fileBytes;
-    private long[] freqs = new long[BITSIZE];
+    private final long[] freqs;
 
     private final TipusCua tipusCua;
 
@@ -112,26 +112,39 @@ public class Huffman implements Runnable {
 
     private double entropia = -1;
 
-    private final ConcurrentHashMap<Byte, String> table = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, String> table = new ConcurrentHashMap<>();
 
-    public Huffman(String fileName) {
-        this(fileName, TipusCua.BIN_HEAP);
-    }
 
-    public Huffman(String fileName, TipusCua tipusCua) {
+    public Huffman(String fileName, int byteSize, TipusCua tipusCua) {
         this.tipusCua = tipusCua;
+        this.byteSize = byteSize;
         try {
             fileIn = new BufferedInputStream(new FileInputStream(fileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        this.freqs = new long[1<< (8* byteSize)];
+        this.acumulators =  new long[N_THREADS][1<< (8* byteSize)];
+
     }
+
+    public Huffman(String filename) {
+        this(filename, 1, TipusCua.BIN_HEAP);
+    }
+    public Huffman(String fileName, int byteSize) {
+        this(fileName, byteSize, TipusCua.BIN_HEAP);
+    }
+
+    public Huffman(String fileName, TipusCua tipusCua) {
+        this(fileName, 1, tipusCua);
+    }
+
 
 
     @Override
     public void run() {
         try {
-            fileBytes = fileIn.readAllBytes();
+            fileBytes = fileIn.readAllBytes(); //TODO: cambiar a stream o algo... comprobar arxius > 4GB
             fileIn.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -156,7 +169,7 @@ public class Huffman implements Runnable {
         }
         if (node.isLeaf()) {
 
-            table.put((byte) node.bval, val);
+            table.put(node.bval, val);
         } else {
             final int fdeep = dbgval;
             if (DO_CONCURRENT) {
@@ -192,7 +205,8 @@ public class Huffman implements Runnable {
     }
 
     private void calculateFreqs() {
-        int split = fileBytes.length / N_THREADS;
+        int split = fileBytes.length / (N_THREADS / byteSize);
+        //assegurar-se amb split > 0 que te sentit dividir en threads
         for (int i = 0; i < N_THREADS - 1 && split > 0; i++) {
             int j = i;
             addConcurrent(() -> {
@@ -225,11 +239,15 @@ public class Huffman implements Runnable {
     }
 
     private void recursiveAccumulate(int id, int l, int r) {
-        for (int i = l; i < r; i++) {
+        for (int i = l; i < r && i < fileBytes.length; i+=byteSize) {
             //bytes en C2, necessari index positiu
             int b = fileBytes[i];
+            for (int j = 1; j < byteSize; j++){
+                b = b<<8;
+                b |= i+j < fileBytes.length ? fileBytes[i+j]: 0;
+            }
             if (b < 0) {
-                b = b + 256;
+                b = b + (1 << (8*byteSize));
             }
             acumulators[id][b]++;
         }
@@ -279,7 +297,7 @@ public class Huffman implements Runnable {
      *
      * @return tabla traducció
      */
-    public final Map<Byte, String> getTable() {
+    public final Map<Integer, String> getTable() {
         return table;
     }
 

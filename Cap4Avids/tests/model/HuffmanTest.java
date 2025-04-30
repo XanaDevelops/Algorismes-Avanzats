@@ -100,6 +100,20 @@ class HuffmanTest {
         }
         System.out.println(Arrays.toString(huffman.getFreqs()));
         System.out.println(huffman.getTable());
-
     }
+    @Test
+    void test16Bits(){
+        Huffman huffman = new Huffman("res/testABC.txt", 2);
+        huffman.run();
+        System.out.println(Arrays.toString(huffman.getFreqs()));
+        System.out.println(huffman.getTable());
+    }
+    @Test
+    void test32Bits(){
+        Huffman huffman = new Huffman("res/testABC.txt", 4);
+        huffman.run();
+        System.out.println(Arrays.toString(huffman.getFreqs()));
+        System.out.println(huffman.getTable());
+    }
+
 }

@@ -28,12 +28,12 @@ public class CompressorDecompressor {
      */
 
     public void compressFile() throws IOException {
-        Map<Byte, String> table = huffman.getTable();
+        Map<Integer, String> table = huffman.getTable();
         //calcular la longitud de les codificaciones de cada byte
         int[] codeLengths = new int[256];
         int totalUnicSymbols = 0;
         List<Integer> symbols = new ArrayList<>();
-        for (Map.Entry<Byte, String> e : table.entrySet()) {
+        for (Map.Entry<Integer, String> e : table.entrySet()) {
             int sym = e.getKey() & 0xFF; //byte positiu
             codeLengths[sym] = e.getValue().length();
             symbols.add(sym);
