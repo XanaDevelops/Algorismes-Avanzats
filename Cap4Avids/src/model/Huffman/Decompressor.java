@@ -102,7 +102,10 @@
 //    }
 //}
 
-package model;
+package model.Huffman;
+
+import model.BitsManagement.BitInputStream;
+import model.Extensio;
 
 import java.io.*;
 import java.nio.file.Files;

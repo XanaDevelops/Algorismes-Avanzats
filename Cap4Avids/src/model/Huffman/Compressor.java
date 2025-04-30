@@ -110,7 +110,11 @@
 //
 
 
-package model;
+package model.Huffman;
+
+import model.BitsManagement.BitOutputStream;
+import model.Dades;
+import model.Extensio;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

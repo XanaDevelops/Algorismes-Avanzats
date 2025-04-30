@@ -1,4 +1,4 @@
-package model;
+package model.BitsManagement;
 
 import java.io.Closeable;
 import java.io.EOFException;
