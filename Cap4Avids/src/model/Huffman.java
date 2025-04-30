@@ -30,7 +30,6 @@ public class Huffman implements Runnable {
     }
 
     public static final boolean DO_CONCURRENT = true;
-    private int[] codeLengths;
     public static class Node implements Comparable<Node> {
         public long val;
         public int bval;
@@ -253,6 +252,36 @@ public class Huffman implements Runnable {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public static byte[][] generateCanonicalCodes(int[] lengths, List<Integer> symbolList) {
+
+        //primer ordenar segons la longitud del símbol, i després en ordre lexicografic
+        symbolList.sort(Comparator
+                .comparingInt((Integer a) -> lengths[a])
+                .thenComparingInt(a -> a));
+
+        byte[][] codes = new byte[Huffman.BITSIZE][];
+
+        int code = 0, prevLen = 0;
+        //assigna codis canònics a cada símbol en funció de l'ordre establert
+        for (int sym : symbolList) {
+            int len = lengths[sym];
+            //si la longitud aumenta, es desplaça a l'esquerre el valor de code
+            code <<= (len - prevLen);
+
+            byte[] bits = new byte[len];
+            //afegir padding
+            for (int i = 0; i < len; i++) {
+                bits[i] = (byte) ((code >> (len - 1 - i)) & 1);
+
+            }
+            //guardar el codi canònic
+            codes[sym] = bits;
+            code++;
+            prevLen = len;
+        }
+        return codes;
     }
 
 

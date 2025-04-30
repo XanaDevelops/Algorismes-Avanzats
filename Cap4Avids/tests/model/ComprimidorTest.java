@@ -19,23 +19,21 @@ class ComprimidorTest {
     @Test
     void testComprimidor() throws IOException {
 
-        String fileName = "message.txt";
-        String path = "res/";
-        Huffman huffman = new Huffman(path+fileName);
-        huffman.run();
-        CompressorDecompressor c = new CompressorDecompressor(huffman, path+fileName, path+ "Compressed"+ fileName);
-
-           c.compressFile();
-           c.decompressFile(path+ "Compressed"+ fileName, path+ "ORIGINAL " + fileName);
-
+        Dades dades = new Dades();
+        String fileName = "tests/res/testABC.txt";
+        Huffman h = new Huffman(fileName );
+        h.run();
+        dades.setExtensioComprimit(Extensio.LZH);
+        Compressor c = new Compressor(h, dades,fileName, "tests/res/");
+        c.compressFile();
+        Decompressor d = new Decompressor("tests/res/Compressed testABC.lzh","tests/res/");
+        d.decompressFile();
         //comparar
-        BufferedInputStream inA = new BufferedInputStream(new FileInputStream(path+fileName)),
-                inB = new BufferedInputStream(new FileInputStream( path+ "ORIGINAL " + fileName));
+        BufferedInputStream inA = new BufferedInputStream(new FileInputStream(fileName)),
+                inB = new BufferedInputStream(new FileInputStream(  "tests/res/Decompressed testABC.txt"));
         byte[] a = inA.readAllBytes();
-        System.out.println(Arrays.toString(a));
 
         byte[] b = inB.readAllBytes();
-        System.out.println(Arrays.toString(b));
         assertArrayEquals(a, b);
     }
 }
