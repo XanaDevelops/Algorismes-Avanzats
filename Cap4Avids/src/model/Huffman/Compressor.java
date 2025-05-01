@@ -147,17 +147,17 @@ public class Compressor {
         Map<Long, String> table = huffman.getTable();
         long time = System.nanoTime();
         //calcular la longitud de les codificaciones de cada byte
-        int[] codeLengths = new int[256];
+        Map<Long, Integer> codeLengths = new TreeMap<>();
         int totalUnicSymbols = 0;
-        List<Integer> symbols = new ArrayList<>();
+        List<Long> symbols = new ArrayList<>();
         for (Map.Entry<Long, String> e : table.entrySet()) {
-            int sym = (int) (e.getKey() & 0xFF); //byte positiu //FIXME
-            codeLengths[sym] = e.getValue().length();
+            long sym = (e.getKey() & (-1L >> (63-(8*huffman.getByteSize())))); //byte positiu //FIXME
+            codeLengths.put(sym, e.getValue().length());
             symbols.add(sym);
             totalUnicSymbols++;
         }
         //generar codi canònic a partir les longituds dels símbols
-        byte[][] canonCodes = Huffman.generateCanonicalCodes(Arrays.copyOf(codeLengths,codeLengths.length), symbols);
+        byte[][] canonCodes = Huffman.generateCanonicalCodes(codeLengths, symbols);
 
         //afegir la signatura de l'extensió manualment
         String fileName = input.split("/")[input.split("/").length - 1];
@@ -180,12 +180,9 @@ public class Compressor {
 
             dos.writeInt(totalUnicSymbols);
             // llista de (simbol, longitud)
-            for (int symbol = 0; symbol < Huffman.BITSIZE; symbol++) {
-                int len = codeLengths[symbol];
-                if (len > 0) {
-                    dos.writeByte(symbol);
-                    dos.writeByte(len);
-                }
+            for (Map.Entry<Long, Integer> e : codeLengths.entrySet()) {
+                dos.writeLong(e.getKey());
+                dos.writeInt(e.getValue());
             }
 
             int originalBytes = (int) Files.size(inputPath);
