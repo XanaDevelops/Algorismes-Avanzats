@@ -15,8 +15,8 @@ public class Huffman implements Runnable {
     public enum WordSize{
         BIT8(1),
         BIT16(2),
-        BIT32(3),
-        BIT64(4);
+        BIT32(4),
+        BIT64(8);
         private int size;
         WordSize(int x){
             this.size = x;
@@ -352,5 +352,16 @@ public class Huffman implements Runnable {
      */
     public double getEntropia(){
         return entropia;
+    }
+
+    /**
+     * retorna el tamany en bytes de la paraula compresa
+     * Exemple:
+     * 1 -> 8b -> 1B
+     * 4 -> 32b -> 4B
+     * @return
+     */
+    public int getByteSize(){
+        return byteSize;
     }
 }

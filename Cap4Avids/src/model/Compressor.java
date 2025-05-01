@@ -141,13 +141,13 @@ public class Compressor {
      */
 
     public void compressFile() throws IOException {
-        Map<Byte, String> table = huffman.getTable();
+        Map<Long, String> table = huffman.getTable();
         //calcular la longitud de les codificaciones de cada byte
         int[] codeLengths = new int[256];
         int totalUnicSymbols = 0;
         List<Integer> symbols = new ArrayList<>();
-        for (Map.Entry<Byte, String> e : table.entrySet()) {
-            int sym = e.getKey() & 0xFF; //byte positiu
+        for (Map.Entry<Long, String> e : table.entrySet()) {
+            int sym = (int) (e.getKey() & 0xFF); //byte positiu //FIXME
             codeLengths[sym] = e.getValue().length();
             symbols.add(sym);
             totalUnicSymbols++;
