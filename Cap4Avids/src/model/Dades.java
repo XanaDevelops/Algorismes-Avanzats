@@ -11,16 +11,19 @@ public class Dades {
 
     private final List<File> descomprimits = new ArrayList<>();
     private final List<File> comprimits = new ArrayList<>();
+    public static final String EXTENSIO = ".kib";
+    public static final byte[] magicNumbers = new byte[]{0x4B, 0x49,0x42};
+
 
     public Dades(){
         principal = Main.instance;
     }
 
     public void addDescomprimit(File f){
-        descomprimits.add(f);
+        if(!descomprimits.contains(f))descomprimits.add(f);
     }
     public void addComprimit(File f){
-        comprimits.add(f);
+        if(!comprimits.contains(f))comprimits.add(f);
     }
 
     public void removeDescomprimit(File f){

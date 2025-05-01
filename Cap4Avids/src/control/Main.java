@@ -1,7 +1,6 @@
 package control;
 
-import model.Dades;
-import model.Huffman;
+import model.*;
 import vista.Finestra;
 
 import javax.swing.*;
@@ -16,7 +15,6 @@ public class Main implements Comunicar {
 
     private Finestra finestra;
     private Dades dades;
-    private Huffman huffman;
 
     public final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(16);
 
@@ -53,8 +51,8 @@ public class Main implements Comunicar {
                 removeFitxer(path, path.endsWith(".huf"));
             }
 
-            case "Comprimir"->System.out.println("Esperant per comprimir");
-            case "Descomprimir"->System.out.println("Esperant per descomprimir");
+            case "Comprimir"->System.out.println("Esperant per comprimir" + s);
+            case "Descomprimir"->System.out.println("Esperant per descomprimir" + s);
             case "Guardar"->System.out.println("Esperant per guardar");
 
             default -> System.err.println("WARNING: Main reb missatge?: " + s);
@@ -71,13 +69,9 @@ public class Main implements Comunicar {
         if (nom.endsWith(".huf")) {
             dades.addComprimit(f);
             finestra.comunicar("actualitzar:comprimit");
-        } else if (nom.endsWith(".txt") || nom.endsWith(".bin")) {
+        } else {
             dades.addDescomprimit(f);
             finestra.comunicar("actualitzar:descomprimit");
-        } else {
-            JOptionPane.showMessageDialog(finestra,
-                    "Extensió no vàlida: " + f.getName(),
-                    "Error", JOptionPane.WARNING_MESSAGE);
         }
     }
 

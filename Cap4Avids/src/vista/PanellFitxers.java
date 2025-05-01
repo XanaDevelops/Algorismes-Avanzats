@@ -15,7 +15,7 @@ import java.util.List;
 public class PanellFitxers extends JPanel {
 
     private final Dades dades;
-    private  final Finestra finestra;
+    private final Finestra finestra;
     private final boolean esDescomprimit;
 
     private final DefaultListModel<File> model = new DefaultListModel<>();
@@ -27,7 +27,7 @@ public class PanellFitxers extends JPanel {
         super(new BorderLayout());
         this.dades = dades;
         this.esDescomprimit = esDescomprimit;
-        this.finestra = (Finestra)  comunicar;
+        this.finestra = (Finestra) comunicar;
 
         setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), titol,
@@ -91,15 +91,14 @@ public class PanellFitxers extends JPanel {
     }
 
     private void carregarFitxer(File f) {
-        if (!esDescomprimit && f.getName().endsWith(".huf")) {
-            Main.instance.comunicar("Carregar:" + f.getAbsolutePath());
-        } else if (esDescomprimit && (f.getName().endsWith(".bin") || f.getName().endsWith(".txt"))) {
-            Main.instance.comunicar("Carregar:" + f.getAbsolutePath());
-        }
+        Main.instance.comunicar("Carregar:" + f.getAbsolutePath());
     }
 
     private void obrirSelector() {
         JFileChooser fc = new JFileChooser();
+        if (!esDescomprimit) fc.setFileFilter(new javax.swing.filechooser
+                .FileNameExtensionFilter("Huffman (*.huf)", "huf"));
+
         fc.setMultiSelectionEnabled(true);
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             for (File f : fc.getSelectedFiles()) carregarFitxer(f);
