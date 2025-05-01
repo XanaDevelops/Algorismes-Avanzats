@@ -11,6 +11,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PanellFitxers extends JPanel {
 
@@ -18,9 +19,9 @@ public class PanellFitxers extends JPanel {
     private final Finestra finestra;
     private final boolean esDescomprimit;
 
-    private final DefaultListModel<File> model = new DefaultListModel<>();
+    private final DefaultListModel<ElementFitxerLlista> model = new DefaultListModel<>();
 
-    private final JList<File> llistaFitxers = new JList<>(model);
+    private final JList<ElementFitxerLlista> llistaFitxers = new JList<>(model);
 
 
     public PanellFitxers(Comunicar comunicar, String titol, boolean esDescomprimit, Dades dades) {
@@ -33,6 +34,17 @@ public class PanellFitxers extends JPanel {
                 BorderFactory.createEtchedBorder(), titol,
                 TitledBorder.LEADING, TitledBorder.TOP));
 
+        llistaFitxers.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
+            if (isSelected) {
+                value.setBackground(list.getSelectionBackground());
+                value.setForeground(list.getSelectionForeground());
+            } else {
+                value.setBackground(list.getBackground());
+                value.setForeground(list.getForeground());
+            }
+            value.setPreferredSize(new Dimension(list.getWidth(), value.getPreferredSize().height));
+            return value;
+        });
 
         llistaFitxers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -83,15 +95,19 @@ public class PanellFitxers extends JPanel {
     public void refresh() {
         SwingUtilities.invokeLater(() -> {
             model.clear();
-            var src = esDescomprimit ? dades.getDescomprimits() : dades.getComprimits();
-            src.forEach(model::addElement);
+            List<File> src = esDescomprimit ? dades.getDescomprimits() : dades.getComprimits();
+            AtomicInteger id = new AtomicInteger();
+            src.forEach(f -> model.addElement(new ElementFitxerLlista(f, f.toPath(), id.getAndIncrement())));
             llistaFitxers.clearSelection();
             actualitzaBotons();
         });
     }
 
     private void carregarFitxer(File f) {
-        Main.instance.comunicar("Carregar:" + f.getAbsolutePath());
+        System.err.println(f.getAbsolutePath());
+        //Main.instance.comunicar("Carregar;" + f.getAbsolutePath()+ ";"+ (esDescomprimit ? "descomprimir" : "comprimir"));
+        Main.instance.getFinestra().comunicar("carregar;" + f.getAbsolutePath()+ ";"+ (esDescomprimit ? "descomprimir" : "comprimir"));
+
     }
 
     private void obrirSelector() {
@@ -107,9 +123,9 @@ public class PanellFitxers extends JPanel {
     }
 
     private void eliminarSeleccionats() {
-        for (File f : getSelectedFiles()) {
-            Main.instance.comunicar("Eliminar:" + f.getAbsolutePath());
-        }
+        File f = getSelectedFile();
+        Main.instance.comunicar("Eliminar;" + f.getAbsolutePath());
+
         refresh();
     }
 
@@ -122,7 +138,7 @@ public class PanellFitxers extends JPanel {
         }
     }
 
-    public List<File> getSelectedFiles() {
-        return llistaFitxers.getSelectedValuesList();
+    public File getSelectedFile() {
+        return llistaFitxers.getSelectedValue().getFile();
     }
 }

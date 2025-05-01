@@ -103,7 +103,7 @@ public class DialegExecucio extends JDialog {
             String fitxers = file.toString().replace("[", "").replace("]", ",");
             String prefix  = (tipus == Tipus.COMPRESS ? "Comprimir" : "Descomprimir");
 
-            resultMessage  = String.join(":", prefix, fitxers, queue, wordSize, outDir);
+            resultMessage  = String.join(";", prefix, fitxers, queue, wordSize, outDir);
             dispose();
         });
 

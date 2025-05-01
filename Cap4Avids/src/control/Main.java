@@ -1,10 +1,13 @@
 package control;
 
 import model.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import vista.Finestra;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -39,13 +42,12 @@ public class Main implements Comunicar {
      */
     @Override
     public void comunicar(String s) {
-        // Missatges de la forma "Comanda:fitxer"
-        String[] parts = s.split(":", 2);
+        String[] parts = s.split(";");
         String cmd  = parts[0];
         String path  = parts.length > 1 ? parts[1] : null;
 
         switch (cmd) {
-            case "Carregar" -> carregarFitxers(path);
+            case "carregar" -> carregarFitxers(path, parts[2].equalsIgnoreCase("comprimir"));
             case "Eliminar"-> {
                 assert path != null;
                 removeFitxer(path, path.endsWith(".huf"));
@@ -62,16 +64,15 @@ public class Main implements Comunicar {
     /**
      * Carregar fitxers
      */
-    private void carregarFitxers(String arg) {
-        assert arg != null;
+    private void carregarFitxers(@NotNull String arg, boolean esAComprimir) {
         File f = new File(arg);
-        String nom = f.getName().toLowerCase();
-        if (nom.endsWith(".huf")) {
+
+        if (esAComprimir) {
             dades.addComprimit(f);
-            finestra.comunicar("actualitzar:comprimit");
+            finestra.comunicar("actualitzar;comprimit");
         } else {
             dades.addDescomprimit(f);
-            finestra.comunicar("actualitzar:descomprimit");
+            finestra.comunicar("actualitzar;descomprimit");
         }
     }
 
@@ -83,10 +84,10 @@ public class Main implements Comunicar {
         File f = new File(arg);
         if (!descomprimir) {
             dades.removeDescomprimit(f);
-            finestra.comunicar("actualitzar:descomprimit");
+            finestra.comunicar("actualitzar;descomprimit");
         } else {
             dades.removeComprimit(f);
-            finestra.comunicar("actualitzar:comprimit");
+            finestra.comunicar("actualitzar;comprimit");
         }
     }
 

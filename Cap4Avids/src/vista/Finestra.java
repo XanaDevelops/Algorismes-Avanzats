@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.List;
+import java.util.MissingFormatArgumentException;
 
 public class Finestra extends JFrame implements Comunicar {
 
@@ -77,26 +78,26 @@ public class Finestra extends JFrame implements Comunicar {
                 fc.setMultiSelectionEnabled(true);
                 if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                     for (File f : fc.getSelectedFiles()) {
-                        Main.instance.comunicar("Carregar:" + f.getAbsolutePath());
+                        Main.instance.comunicar("Carregar;" + f.getAbsolutePath());
                     }
                 }
             }
             case "Eliminar" -> {
-                for (File f : descomprimits.getSelectedFiles()) {
-                    principal.comunicar("Eliminar:" + f.getAbsolutePath());
-                }
-                for (File f : comprimits.getSelectedFiles()) {
-                    principal.comunicar("Eliminar:" + f.getAbsolutePath());
-                }
+                File f = descomprimits.getSelectedFile();
+                principal.comunicar("Eliminar;" + f.getAbsolutePath());
+
+                f = comprimits.getSelectedFile();
+                principal.comunicar("Eliminar;" + f.getAbsolutePath());
+
             }
             case "Comprimir" -> {
-                File sel = descomprimits.getSelectedFiles().get(0);
+                File sel = descomprimits.getSelectedFile();
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.COMPRESS, sel);
                 String msg = dlg.mostra();
                 if (msg != null) Main.instance.comunicar(msg);
             }
             case "Descomprimir" -> {
-                File sel = descomprimits.getSelectedFiles().get(0);
+                File sel = descomprimits.getSelectedFile();
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.DECOMPRESS, sel);
                 String msg = dlg.mostra();
                 if (msg != null) Main.instance.comunicar(msg);
@@ -111,8 +112,8 @@ public class Finestra extends JFrame implements Comunicar {
             }
 
             case "Veure Arbre" -> {
-                File[] seleccionats = comprimits.getSelectedFiles().toArray(new File[0]);
-                if (seleccionats.length == 1 && seleccionats[0].getName().endsWith(".huf")) {
+                File seleccionat = comprimits.getSelectedFile();
+                if (seleccionat != null && seleccionat.getName().endsWith(".huf")) {
                     try {
                         // get arbre
                         // var arbre = Main.instance.getDades().getTree();
@@ -153,17 +154,25 @@ public class Finestra extends JFrame implements Comunicar {
      */
     @Override
     public void comunicar(String s) {
-        String[] p = s.split(":", 2);
-        if (p[0].equals("actualitzar") && p.length > 1) {
-
-            switch (p[1]) {
-                case "descomprimit" -> descomprimits.refresh();
-                case "comprimit" -> comprimits.refresh();
-                default -> System.err.println(
-                        "Finestra: no sé refrescar -> " + s);
-            }
-        } else {
-            System.err.println("Finestra: missatge desconegut -> " + s);
+        String[] p = s.split(";");
+        switch (p[0]){
+            case "actualitzar":
+                switch (p[1]) {
+                    case "descomprimit" -> descomprimits.refresh();
+                    case "comprimit" -> comprimits.refresh();
+                    default -> System.err.println(
+                            "Finestra: no sé refrescar -> " + s);
+                }
+                break;
+            case "carregar":
+                DialegExecucio dlg = new DialegExecucio(this, p[2].equalsIgnoreCase("comprimir") ? DialegExecucio.Tipus.DECOMPRESS : DialegExecucio.Tipus.COMPRESS, new File(p[1]));
+                String msg = dlg.mostra();
+                if (msg != null){
+                    Main.instance.comunicar(s);
+                    Main.instance.comunicar(msg);}
+                break;
+            default:
+                System.err.println("Finestra: missatge desconegut -> " + s);
         }
     }
 
