@@ -16,25 +16,35 @@ public class Dades {
     public static final String EXTENSIO = ".kib";
     public static final byte[] magicNumbers = new byte[]{0x4B, 0x49,0x42};
 
-    public static int taskID = 0;
+    public static int taskId = 0;
 
     public Dades(){
         principal = Main.instance;
     }
 
-    public void addDescomprimit(File f){
-        if(!descomprimits.containsValue(f))descomprimits.put(taskID++, f);
+    public void addDescomprimit(int id, File f){
+        if(!descomprimits.containsValue(f))descomprimits.put(id, f);
     }
-    public void addComprimit(File f){
-        if(!comprimits.containsValue(f))comprimits.put(taskID, f);
+    public void addComprimit(int id, File f){
+        if(!comprimits.containsValue(f))comprimits.put(id, f);
     }
 
     public void removeDescomprimit(File f){
-        descomprimits.remove(f);
+        for(Map.Entry<Integer, File> e : descomprimits.entrySet()){
+            if(e.getValue().equals(f)){
+                descomprimits.remove(e.getKey());
+                break;
+            }
+        }
     }
 
     public void removeComprimit(File f){
-        comprimits.remove(f);
+        for(Map.Entry<Integer, File> e : comprimits.entrySet()){
+            if(e.getValue().equals(f)){
+                comprimits.remove(e.getKey());
+                break;
+            }
+        }
     }
 
     public void clear(){

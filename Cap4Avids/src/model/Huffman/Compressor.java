@@ -155,7 +155,7 @@ public class Compressor implements Comunicar, Runnable {
 
     public void compressFile() throws IOException {
         huffman.run();
-
+        System.err.println("hola");
         Map<Long, String> table = huffman.getTable();
         long time = System.nanoTime();
         //calcular la longitud de les codificaciones de cada byte
@@ -172,9 +172,14 @@ public class Compressor implements Comunicar, Runnable {
         Map<Long, byte[]> canonCodes = Huffman.generateCanonicalCodes(codeLengths, symbols);
 
         //afegir la signatura de l'extensió manualment
-        String fileName = inputPath.split("/")[inputPath.split("/").length - 1];
+
+
+        String fileName = Path.of(inputPath).getFileName().toString();
+        if (!fileName.endsWith("\\")){
+            fileName += "\\";
+        }
         fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-        System.out.println("File:" +outputFolder + fileName + Dades.EXTENSIO);
+        System.out.println("File: " +outputFolder + fileName + Dades.EXTENSIO);
         try (OutputStream fos = Files.newOutputStream(Path.of(outputFolder + fileName + Dades.EXTENSIO));
              BufferedOutputStream bufOut = new BufferedOutputStream(fos);
              DataOutputStream dos = new DataOutputStream(bufOut);
@@ -215,6 +220,7 @@ public class Compressor implements Comunicar, Runnable {
                         int aux = fis.read();
                         b |= aux != -1 ? aux : 0;
                     }
+
                     byte[] codeBits = canonCodes.get(b);
                     assert codeBits != null;
                     for (byte codeBit : codeBits) {
@@ -228,6 +234,7 @@ public class Compressor implements Comunicar, Runnable {
 
 
         time = System.nanoTime() - time;
+        System.err.println("end " + id);
 //        data.addTempsCompressio(time, fileName, huffman.getTipusCua);
     }
 

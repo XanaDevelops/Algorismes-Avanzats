@@ -26,7 +26,7 @@ public class Main implements Comunicar {
     private Dades dades;
 
     public final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(16);
-    public final List<Future<? extends Comunicar>> runnables = new ArrayList<>();
+    public final List<Future<?>> runnables = new ArrayList<>();
 
     public static void main(String[] args) {
         instance.start();
@@ -54,14 +54,24 @@ public class Main implements Comunicar {
         String path  = parts.length > 1 ? parts[1] : null;
 
         switch (cmd) {
-            case "carregar" -> carregarFitxers(path, parts[2].equalsIgnoreCase("comprimir"));
+            case "carregar" -> carregarFitxers(path, parts[2].equalsIgnoreCase("comprimir"), Integer.parseInt(parts[3]));
             case "Eliminar"-> {
                 assert path != null;
                 removeFitxer(path, path.endsWith(".huf"));
             }
 
             case "Comprimir"->{
-                runnables.add(executor.submit(() -> new Compressor(-1, Huffman.WordSize.BIT8, Huffman.TipusCua.FIB_HEAP, path, parts[3])));
+                System.err.println(Arrays.toString(parts));
+//                runnables.add(executor.submit(() ->
+//                {Compressor c = new Compressor(Integer.parseInt(parts[5]), getWordSize(parts[2]),
+//                        getTipusCua(parts[3]), path, parts[4]);
+//                    c.run();
+//                }));
+                executor.execute(() ->
+                {Compressor c = new Compressor(Integer.parseInt(parts[5]), getWordSize(parts[2]),
+                        getTipusCua(parts[3]), path, parts[4]);
+                    c.run();
+                });
 
             }
             case "Descomprimir"->System.out.println("Esperant per descomprimir" + s);
@@ -71,17 +81,33 @@ public class Main implements Comunicar {
         }
     }
 
+    private Huffman.WordSize getWordSize(String s){
+        return switch (s) {
+            case "16 bits" -> Huffman.WordSize.BIT16;
+            case "32 bits" -> Huffman.WordSize.BIT32;
+            case "64 bits" -> Huffman.WordSize.BIT64;
+            default -> Huffman.WordSize.BIT8;
+        };
+    }
+    private Huffman.TipusCua getTipusCua(String s){
+        return switch (s) {
+            case "Fibonacci Heap" -> Huffman.TipusCua.FIB_HEAP;
+            case "Rank-Pairing Heap"-> Huffman.TipusCua.RANK_PAIRING_HEAP;
+            default -> Huffman.TipusCua.BIN_HEAP;
+        };
+    }
+
     /**
      * Carregar fitxers
      */
-    private void carregarFitxers(@NotNull String arg, boolean esAComprimir) {
+    private void carregarFitxers(@NotNull String arg, boolean esAComprimir, int id) {
         File f = new File(arg);
 
         if (esAComprimir) {
-            dades.addComprimit(f);
+            dades.addComprimit(id, f);
             finestra.comunicar("actualitzar;comprimit");
         } else {
-            dades.addDescomprimit(f);
+            dades.addDescomprimit(id, f);
             finestra.comunicar("actualitzar;descomprimit");
         }
     }

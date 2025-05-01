@@ -47,7 +47,7 @@ public class DialegExecucio extends JDialog {
 
             c.gridx = 1;
             tipusCoa = new JComboBox<>(
-                    new String[]{"Rank-Pairing Heap", "Binary Heap"});
+                    new String[]{"Fibonacci Heap", "Rank-Pairing Heap", "Binary Heap"});
             add(tipusCoa, c);
 
 
@@ -58,7 +58,7 @@ public class DialegExecucio extends JDialog {
 
             c.gridx = 1;
             midaP = new JComboBox<>(
-                    new String[]{"8 bits", "16 bits", "32 bits"});
+                    new String[]{"8 bits", "16 bits", "32 bits", "64 bits"});
             add(midaP, c);
         }
         // Destí

@@ -1,5 +1,6 @@
 package model.Huffman;
 
+import jdk.jfr.Unsigned;
 import model.cues.FibonacciHeap;
 import model.cues.RankPairingHeap;
 
@@ -277,6 +278,9 @@ public class Huffman implements Runnable {
                 b |= i+j < fileBytes.length ? fileBytes[i+j]: 0;
             }
 
+            if (b < 0){
+                b = b + (1L << (8*byteSize));
+            }
             acumulators[id].put(b, acumulators[id].getOrDefault(b, 0L) + 1L);
         }
     }

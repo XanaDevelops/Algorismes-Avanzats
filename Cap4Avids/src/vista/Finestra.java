@@ -168,8 +168,11 @@ public class Finestra extends JFrame implements Comunicar {
                 DialegExecucio dlg = new DialegExecucio(this, p[2].equalsIgnoreCase("comprimir") ? DialegExecucio.Tipus.DECOMPRESS : DialegExecucio.Tipus.COMPRESS, new File(p[1]));
                 String msg = dlg.mostra();
                 if (msg != null){
-                    Main.instance.comunicar(s);
-                    Main.instance.comunicar(msg);}
+                    int id = Dades.taskId++;
+
+                    Main.instance.comunicar(s+";"+id); //carregar
+                    Main.instance.comunicar(msg+";"+id); //comprimir/descomprimir
+                }
                 break;
             default:
                 System.err.println("Finestra: missatge desconegut -> " + s);

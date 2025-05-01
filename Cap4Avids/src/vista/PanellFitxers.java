@@ -25,6 +25,8 @@ public class PanellFitxers extends JPanel {
 
     private final JList<ElementFitxerLlista> llistaFitxers = new JList<>(model);
 
+    private Map<Integer, ElementFitxerLlista> elementFitxers = new HashMap<>();
+
     public PanellFitxers(Comunicar comunicar, String titol, boolean esDescomprimit, Dades dades) {
         super(new BorderLayout());
         this.dades = dades;
@@ -97,7 +99,13 @@ public class PanellFitxers extends JPanel {
         SwingUtilities.invokeLater(() -> {
             model.clear();
             Map<Integer, File> src = esDescomprimit ? dades.getDescomprimits() : dades.getComprimits();
-            src.forEach((k, v) -> model.addElement(new ElementFitxerLlista(v, v.toPath(), k)));
+            src.forEach((k, v) -> {
+                ElementFitxerLlista e = elementFitxers.get(k);
+                if (e == null) {
+                    return;
+                }
+                model.addElement(e);
+                    });
             llistaFitxers.clearSelection();
             actualitzaBotons();
         });
@@ -105,6 +113,7 @@ public class PanellFitxers extends JPanel {
 
     private void carregarFitxer(File f) {
         //Main.instance.comunicar("Carregar;" + f.getAbsolutePath()+ ";"+ (esDescomprimit ? "descomprimir" : "comprimir"));
+        elementFitxers.put(Dades.taskId, new ElementFitxerLlista(f, f.toPath(), Dades.taskId));
         Main.instance.getFinestra().comunicar("carregar;" + f.getAbsolutePath()+ ";"+ (esDescomprimit ? "descomprimir" : "comprimir"));
 
     }
