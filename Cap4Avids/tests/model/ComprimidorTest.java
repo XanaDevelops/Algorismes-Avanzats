@@ -1,5 +1,8 @@
 package model;
 
+import model.Huffman.Compressor;
+import model.Huffman.Decompressor;
+import model.Huffman.Huffman;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
