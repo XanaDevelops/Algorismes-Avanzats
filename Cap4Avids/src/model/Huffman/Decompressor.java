@@ -110,9 +110,7 @@ import model.Dades;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Decompressor {
 
@@ -125,7 +123,7 @@ public class Decompressor {
 
     private static class DecodeNode {
         DecodeNode left, right;
-        byte symbol;
+        long symbol;
 
         boolean isLeaf() {
             return left == null && right == null;
@@ -142,8 +140,12 @@ public class Decompressor {
             System.out.println(Arrays.toString(extensionBytesComprimit));
 
             if (!Arrays.equals(extensionBytesComprimit,Dades.magicNumbers)) {
-                System.err.println("Extension not supported");
+                System.err.println("Not a valid file");
+                //comunicar, etc, etc
+                return;
             }
+
+            short tamWords = dis.readShort();
 
             short length = dis.readShort();
             byte[] extensionBytes = new byte[length];
@@ -153,27 +155,26 @@ public class Decompressor {
 
             String extension = new String(extensionBytes);
             int totalUnicSymbols = dis.readInt();
-            int[] codeLengths = new int[Huffman.BITSIZE];
+            Map<Long, Integer> codeLengths = new TreeMap<>();
+            List<Long> symbols = new ArrayList<>();
 
-            List<Integer> symbols = new ArrayList<>();
             for (int i = 0; i < totalUnicSymbols; i++) {
-                int sym = dis.readUnsignedByte();
-                int len = dis.readUnsignedByte();
-                codeLengths[sym] = len;
+                long sym = dis.readLong();
+                int len = dis.readInt();
+                codeLengths.put(sym, len);
                 symbols.add(sym);
             }
 
-            int originalBytes = dis.readInt();
+            long originalBytes = dis.readLong();
 
-            byte[][] canonCodes = Huffman.generateCanonicalCodes(codeLengths, symbols);
+            Map<Long, byte[]> canonCodes = Huffman.generateCanonicalCodes(codeLengths, symbols);
             DecodeNode root = buildDecodingTree(canonCodes);
             String fileName = src.split("/")[src.split("/").length - 1];
             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-            fileName = fileName.split(" ", 2)[1];
             System.out.println("fileName = " + fileName);
             try (BitInputStream bitIn = new BitInputStream(fis);
                  OutputStream fosOut = new BufferedOutputStream(
-                         new FileOutputStream(outputFolder+ "Decompressed "+ fileName+ "."+ extension))) {
+                         new FileOutputStream(outputFolder+ fileName+ "."+ extension))) {
                 int written = 0;
                 while (written < originalBytes) {
                     DecodeNode node = root;
@@ -181,19 +182,26 @@ public class Decompressor {
                         boolean bit = bitIn.readBit();
                         node = bit ? node.right : node.left;
                     }
-                    fosOut.write(node.symbol & 0xFF);
-                    written++;
+                    //fosOut.write(node.symbol & 0xFF);
+                    //written++;
+                    long aux = node.symbol;
+                    for(int j = 0; j < tamWords && written < originalBytes; j++){
+                        int bits = (int) ((aux & (0xFFL << (8*(tamWords-j-1)))) >> (8* (tamWords-j-1)));
+                        fosOut.write(bits);
+                        written++;
+                    }
+                    //DEBUG
+                    fosOut.flush();
                 }
             }
-
         }
     }
 
 
-    private DecodeNode buildDecodingTree(byte[][] codes) {
+    private DecodeNode buildDecodingTree(Map<Long, byte[]> codes) {
         DecodeNode root = new DecodeNode();
-        for (int sym = 0; sym < Huffman.BITSIZE; sym++) {
-            byte[] code = codes[sym];
+        for (Map.Entry<Long, byte[]> entry : codes.entrySet()) {
+            byte[] code = entry.getValue();
             if (code == null) continue;
             DecodeNode node = root;
             for (byte c : code) {
@@ -205,7 +213,7 @@ public class Decompressor {
                     node = node.right;
                 }
             }
-            node.symbol = (byte) sym;
+            node.symbol = entry.getKey();
         }
         return root;
     }
