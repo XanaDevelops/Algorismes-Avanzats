@@ -157,7 +157,7 @@ public class Compressor {
             totalUnicSymbols++;
         }
         //generar codi canònic a partir les longituds dels símbols
-        byte[][] canonCodes = Huffman.generateCanonicalCodes(codeLengths, symbols);
+        Map<Long, byte[]> canonCodes = Huffman.generateCanonicalCodes(codeLengths, symbols);
 
         //afegir la signatura de l'extensió manualment
         String fileName = input.split("/")[input.split("/").length - 1];
@@ -167,8 +167,12 @@ public class Compressor {
              DataOutputStream dos = new DataOutputStream(bufOut);
              BitOutputStream bitOut = new BitOutputStream(bufOut)) {
 
+            /// HEADER
             //guardar l'extensió original de l'arxiu
             dos.write(Dades.magicNumbers);
+
+            //guardar el tamany de les paraules comprimides
+            dos.writeShort(huffman.getByteSize());
 
             Path inputPath = Path.of(input);
             String[] extension = input.split("\\.", 2);
@@ -185,15 +189,20 @@ public class Compressor {
                 dos.writeInt(e.getValue());
             }
 
-            int originalBytes = (int) Files.size(inputPath);
-            dos.writeInt(originalBytes);
+            long originalBytes = Files.size(inputPath);
+            dos.writeLong(originalBytes);
             dos.flush();
 
             //Escriure la codificació del contingut de l'arxiu d'entrada
             try (InputStream fis = new BufferedInputStream(Files.newInputStream(inputPath))) {
-                int b;
+                long b;
                 while ((b = fis.read()) != -1) {
-                    byte[] codeBits = canonCodes[b & 0xFF];
+                    for (int j = 1; j < huffman.getByteSize(); j++) {
+                        b = b<<8;
+                        int aux = fis.read();
+                        b |= aux != -1 ? aux : 0;
+                    }
+                    byte[] codeBits = canonCodes.get(b);
                     if (codeBits != null) {
                         for (byte codeBit : codeBits) {
                             bitOut.writeBit(codeBit == 1);

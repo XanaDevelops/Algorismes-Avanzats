@@ -105,9 +105,6 @@ public class Huffman implements Runnable {
     private final BufferedInputStream fileIn;
     private final static int N_THREADS = 16;
 
-    //un byte te 256 possibles valors
-    public static final int BITSIZE = 256;
-
     private final int byteSize;
 
     private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS);
@@ -291,19 +288,19 @@ public class Huffman implements Runnable {
         }
     }
 
-    public static byte[][] generateCanonicalCodes(int[] lengths, List<Integer> symbolList) {
+    public static Map<Long, byte[]> generateCanonicalCodes(Map<Long, Integer> lengths, List<Long> symbolList) {
 
         //primer ordenar segons la longitud del símbol, i després en ordre lexicografic
         symbolList.sort(Comparator
-                .comparingInt((Integer a) -> lengths[a])
-                .thenComparingInt(a -> a));
+                .comparingLong((Long a) -> lengths.get(a))
+                .thenComparingLong(a -> a));
 
-        byte[][] codes = new byte[Huffman.BITSIZE][];
-
+        //byte[][] codes = new byte[Huffman.BITSIZE][];
+        Map<Long, byte[]> codes = new HashMap<>();
         int code = 0, prevLen = 0;
         //assigna codis canònics a cada símbol en funció de l'ordre establert
-        for (int sym : symbolList) {
-            int len = lengths[sym];
+        for (long sym : symbolList) {
+            int len = lengths.get(sym);
             //si la longitud aumenta, es desplaça a l'esquerre el valor de code
             code <<= (len - prevLen);
 
@@ -314,7 +311,7 @@ public class Huffman implements Runnable {
 
             }
             //guardar el codi canònic
-            codes[sym] = bits;
+            codes.put(sym, bits);
             code++;
             prevLen = len;
         }
