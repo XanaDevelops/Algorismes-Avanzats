@@ -90,13 +90,13 @@ public class Finestra extends JFrame implements Comunicar {
                 }
             }
             case "Comprimir" -> {
-                List<File> sel = descomprimits.getSelectedFiles();
+                File sel = descomprimits.getSelectedFiles().get(0);
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.COMPRESS, sel);
                 String msg = dlg.mostra();
                 if (msg != null) Main.instance.comunicar(msg);
             }
             case "Descomprimir" -> {
-                List<File> sel = comprimits.getSelectedFiles();
+                File sel = descomprimits.getSelectedFiles().get(0);
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.DECOMPRESS, sel);
                 String msg = dlg.mostra();
                 if (msg != null) Main.instance.comunicar(msg);

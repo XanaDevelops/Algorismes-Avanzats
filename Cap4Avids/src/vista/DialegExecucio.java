@@ -14,7 +14,7 @@ public class DialegExecucio extends JDialog {
     JComboBox<String> tipusCoa;
     JComboBox<String> midaP;
 
-    public DialegExecucio(Frame parent, Tipus tipus, List<File> sel) {
+    public DialegExecucio(Frame parent, Tipus tipus, File file) {
         super(parent,
                 (tipus == Tipus.COMPRESS ? "Configurar Compressió" : "Configurar Descompressió"),
                 true);
@@ -25,17 +25,18 @@ public class DialegExecucio extends JDialog {
         c.insets = new Insets(4,4,4,4);
         c.anchor = GridBagConstraints.WEST;
 
-        // fitxersSeleciontas
+        // fitxerSeleccionat
         c.gridx = 0; c.gridy = 0;
-        add(new JLabel("Fitxers:"), c);
+        add(new JLabel("Fitxer:"), c);
 
         c.gridx = 1;
-        String noms = sel.toString().replace("[", "").replace("]", ",");
+        String nom = file.toString().replace("[", "").replace("]", "");
 
-        JTextArea fitxersSeleciontas = new JTextArea(noms);
-        fitxersSeleciontas.setEditable(false);
-        fitxersSeleciontas.setColumns(30);
-        add(new JScrollPane(fitxersSeleciontas), c);
+        JTextArea fitxerSeleccionat = new JTextArea(nom);
+        fitxerSeleccionat.setEditable(false);
+        fitxerSeleccionat.setColumns(30);
+        //add(new JScrollPane(fitxerSeleccionat), c);
+        add(fitxerSeleccionat, c);
 
 
         // elecio coa
@@ -99,7 +100,7 @@ public class DialegExecucio extends JDialog {
                 return;
             }
 
-            String fitxers = sel.toString().replace("[", "").replace("]", ",");
+            String fitxers = file.toString().replace("[", "").replace("]", ",");
             String prefix  = (tipus == Tipus.COMPRESS ? "Comprimir" : "Descomprimir");
 
             resultMessage  = String.join(":", prefix, fitxers, queue, wordSize, outDir);

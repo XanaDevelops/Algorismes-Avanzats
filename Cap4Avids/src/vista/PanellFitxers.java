@@ -34,7 +34,7 @@ public class PanellFitxers extends JPanel {
                 TitledBorder.LEADING, TitledBorder.TOP));
 
 
-        llistaFitxers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        llistaFitxers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         llistaFitxers.setDropMode(DropMode.ON);
         llistaFitxers.setTransferHandler(new TransferHandler() {
