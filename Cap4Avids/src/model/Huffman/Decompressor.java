@@ -185,13 +185,14 @@ public class Decompressor {
                     //written++;
                     long aux = node.symbol;
                     for(int j = 0; j < tamWords && written < originalBytes; j++){
-                        fosOut.write((int) (aux & 0xFF));
-                        aux = aux >> 8;
+                        int bits = (int) ((aux & (0xFFL << (8*(tamWords-j-1)))) >> (8* (tamWords-j-1)));
+                        fosOut.write(bits);
                         written++;
                     }
+                    //DEBUG
+                    fosOut.flush();
                 }
             }
-
         }
     }
 

@@ -119,6 +119,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.rmi.server.ExportException;
 import java.util.*;
 
 public class Compressor {
@@ -151,7 +152,7 @@ public class Compressor {
         int totalUnicSymbols = 0;
         List<Long> symbols = new ArrayList<>();
         for (Map.Entry<Long, String> e : table.entrySet()) {
-            long sym = (e.getKey() & (-1L >> (63-(8*huffman.getByteSize())))); //byte positiu //FIXME
+            long sym = e.getKey(); //byte positiu //FIXME
             codeLengths.put(sym, e.getValue().length());
             symbols.add(sym);
             totalUnicSymbols++;
@@ -203,11 +204,11 @@ public class Compressor {
                         b |= aux != -1 ? aux : 0;
                     }
                     byte[] codeBits = canonCodes.get(b);
-                    if (codeBits != null) {
-                        for (byte codeBit : codeBits) {
-                            bitOut.writeBit(codeBit == 1);
-                        }
+                    assert codeBits != null;
+                    for (byte codeBit : codeBits) {
+                        bitOut.writeBit(codeBit == 1);
                     }
+
                 }
             }
             bitOut.flush();

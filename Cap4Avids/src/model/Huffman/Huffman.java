@@ -44,14 +44,16 @@ public class Huffman implements Runnable {
         public long val;
         public long byteVal;
         private Node left, right;
+        boolean isLeaf;
 
-        public Node(long val, long byteVal) {
+        public Node(long val, long byteVal, boolean isLeaf) {
             this.val = val;
             this.byteVal = byteVal;
+            this.isLeaf = isLeaf;
         }
 
         public boolean isLeaf() {
-            return left == null && right == null && byteVal != Integer.MIN_VALUE;
+            return isLeaf;
         }
 
         @Override
@@ -200,12 +202,12 @@ public class Huffman implements Runnable {
         Queue<Node> pq = tipusCua.getCua().getConstructor().newInstance();
         for (Map.Entry<Long, Long> e : freqs.entrySet()) {
 
-            pq.add(new Node(e.getValue(), e.getKey()));
+            pq.add(new Node(e.getValue(), e.getKey(), true));
         }
         while (pq.size() > 1) {
             Node first = pq.poll();
             Node second = pq.poll();
-            Node parent = new Node(first.val + second.val, Integer.MIN_VALUE);
+            Node parent = new Node(first.val + second.val, -1L, false);
             parent.left = first;
             parent.right = second;
             pq.add(parent);
@@ -215,7 +217,8 @@ public class Huffman implements Runnable {
     }
 
     private void calculateFreqs() {
-        int split = fileBytes.length / (N_THREADS / byteSize);
+        int _split = fileBytes.length / (N_THREADS / byteSize);
+        final int split = _split + byteSize - (_split % byteSize);
         //assegurar-se amb split > 0 que te sentit dividir en threads
         for (int i = 0; i < N_THREADS - 1 && split > 0; i++) {
             int j = i;
@@ -261,9 +264,7 @@ public class Huffman implements Runnable {
                 b = b<<8;
                 b |= i+j < fileBytes.length ? fileBytes[i+j]: 0;
             }
-            if (b < 0) {
-                b = b + (1L << (8*byteSize));
-            }
+
             acumulators[id].put(b, acumulators[id].getOrDefault(b, 0L) + 1L);
         }
     }
