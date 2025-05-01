@@ -119,6 +119,11 @@ class HuffmanTest {
         huffman.run();
         System.out.println(huffman.getFreqs());
         System.out.println(huffman.getTable());
+
+        huffman = new Huffman("res/testAll.txt", Huffman.WordSize.BIT64);
+        huffman.run();
+        System.out.println(huffman.getFreqs());
+        System.out.println(huffman.getTable());
     }
 
 }
