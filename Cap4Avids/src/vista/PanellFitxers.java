@@ -10,7 +10,9 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PanellFitxers extends JPanel {
@@ -22,7 +24,6 @@ public class PanellFitxers extends JPanel {
     private final DefaultListModel<ElementFitxerLlista> model = new DefaultListModel<>();
 
     private final JList<ElementFitxerLlista> llistaFitxers = new JList<>(model);
-
 
     public PanellFitxers(Comunicar comunicar, String titol, boolean esDescomprimit, Dades dades) {
         super(new BorderLayout());
@@ -95,16 +96,14 @@ public class PanellFitxers extends JPanel {
     public void refresh() {
         SwingUtilities.invokeLater(() -> {
             model.clear();
-            List<File> src = esDescomprimit ? dades.getDescomprimits() : dades.getComprimits();
-            AtomicInteger id = new AtomicInteger();
-            src.forEach(f -> model.addElement(new ElementFitxerLlista(f, f.toPath(), id.getAndIncrement())));
+            Map<Integer, File> src = esDescomprimit ? dades.getDescomprimits() : dades.getComprimits();
+            src.forEach((k, v) -> model.addElement(new ElementFitxerLlista(v, v.toPath(), k)));
             llistaFitxers.clearSelection();
             actualitzaBotons();
         });
     }
 
     private void carregarFitxer(File f) {
-        System.err.println(f.getAbsolutePath());
         //Main.instance.comunicar("Carregar;" + f.getAbsolutePath()+ ";"+ (esDescomprimit ? "descomprimir" : "comprimir"));
         Main.instance.getFinestra().comunicar("carregar;" + f.getAbsolutePath()+ ";"+ (esDescomprimit ? "descomprimir" : "comprimir"));
 

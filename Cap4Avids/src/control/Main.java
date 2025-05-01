@@ -1,15 +1,21 @@
 package control;
 
 import model.*;
+import model.Huffman.Compressor;
+import model.Huffman.Huffman;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import vista.Finestra;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class Main implements Comunicar {
@@ -20,6 +26,7 @@ public class Main implements Comunicar {
     private Dades dades;
 
     public final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(16);
+    public final List<Future<? extends Comunicar>> runnables = new ArrayList<>();
 
     public static void main(String[] args) {
         instance.start();
@@ -53,7 +60,10 @@ public class Main implements Comunicar {
                 removeFitxer(path, path.endsWith(".huf"));
             }
 
-            case "Comprimir"->System.out.println("Esperant per comprimir" + s);
+            case "Comprimir"->{
+                runnables.add(executor.submit(() -> new Compressor(-1, Huffman.WordSize.BIT8, Huffman.TipusCua.FIB_HEAP, path, parts[3])));
+
+            }
             case "Descomprimir"->System.out.println("Esperant per descomprimir" + s);
             case "Guardar"->System.out.println("Esperant per guardar");
 

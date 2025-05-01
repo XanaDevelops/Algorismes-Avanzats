@@ -112,6 +112,8 @@
 
 package model.Huffman;
 
+import control.Comunicar;
+import control.Main;
 import model.BitsManagement.BitOutputStream;
 import model.Dades;
 
@@ -121,16 +123,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class Compressor {
+public class Compressor implements Comunicar, Runnable {
     private final Huffman huffman;
     private final String inputPath;
     private final String outputFolder;
+    private int id;
     Dades data;
+
+    public Compressor(int id, Huffman.WordSize wordSize, Huffman.TipusCua cua, String inputPath, String outputFolder) {
+        this(new Huffman(inputPath, wordSize, cua), Main.instance.getDades(), inputPath, outputFolder);
+        this.id = id;
+    }
     public Compressor(Huffman huffman, Dades data, String inputPath, String outputFolder) {
         this.huffman = huffman;
         this.data = data;
         this.inputPath = inputPath;
         this.outputFolder = outputFolder;
+
+        this.id = 0;
     }
 
     /**
@@ -144,6 +154,8 @@ public class Compressor {
      */
 
     public void compressFile() throws IOException {
+        huffman.run();
+
         Map<Long, String> table = huffman.getTable();
         long time = System.nanoTime();
         //calcular la longitud de les codificaciones de cada byte
@@ -220,4 +232,25 @@ public class Compressor {
     }
 
 
+    /**
+     * Envia un missatge
+     *
+     * @param s El missatge
+     */
+    @Override
+    public void comunicar(String s) {
+
+    }
+
+    /**
+     * Runs this operation.
+     */
+    @Override
+    public void run() {
+        try {
+            this.compressFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

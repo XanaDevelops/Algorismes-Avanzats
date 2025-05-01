@@ -4,26 +4,29 @@ import control.Main;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Dades {
     private final Main principal;
 
-    private final List<File> descomprimits = new ArrayList<>();
-    private final List<File> comprimits = new ArrayList<>();
+    private final Map<Integer, File> descomprimits = new HashMap<>();
+    private final Map<Integer, File> comprimits = new HashMap<>();
     public static final String EXTENSIO = ".kib";
     public static final byte[] magicNumbers = new byte[]{0x4B, 0x49,0x42};
 
+    public static int taskID = 0;
 
     public Dades(){
         principal = Main.instance;
     }
 
     public void addDescomprimit(File f){
-        if(!descomprimits.contains(f))descomprimits.add(f);
+        if(!descomprimits.containsValue(f))descomprimits.put(taskID++, f);
     }
     public void addComprimit(File f){
-        if(!comprimits.contains(f))comprimits.add(f);
+        if(!comprimits.containsValue(f))comprimits.put(taskID, f);
     }
 
     public void removeDescomprimit(File f){
@@ -39,11 +42,11 @@ public class Dades {
         comprimits.clear();
     }
 
-    public List<File> getComprimits() {
+    public Map<Integer, File> getComprimits() {
         return comprimits;
     }
 
-    public List<File> getDescomprimits() {
+    public Map<Integer, File> getDescomprimits() {
         return descomprimits;
     }
 }
