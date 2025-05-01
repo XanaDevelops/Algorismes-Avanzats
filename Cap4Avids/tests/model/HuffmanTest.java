@@ -1,6 +1,5 @@
 package model;
 
-import model.Huffman.Huffman;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

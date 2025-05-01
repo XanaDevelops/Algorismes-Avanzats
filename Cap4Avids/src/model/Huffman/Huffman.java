@@ -89,6 +89,18 @@ public class Huffman implements Runnable {
             this.right = right;
         }
 
+        public long getVal() {
+            return val;
+        }
+
+        public void setVal(long val) {
+            this.val = val;
+        }
+
+        public void setByteVal(long byteVal) {
+            this.byteVal = byteVal;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;

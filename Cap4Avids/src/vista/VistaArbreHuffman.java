@@ -1,6 +1,7 @@
 package vista;
 
-import model.Huffman;
+import model.Huffman.Huffman;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -43,7 +44,7 @@ public class VistaArbreHuffman extends JPanel {
         if (node == null) return;
 
         String label = node.isLeaf()
-                ? String.format("%d (%c)", node.getVal(), (char) node.getBval())
+                ? String.format("%d (%c)", node.getVal(), (char) node.getByteVal())
                 : String.valueOf(node.getVal());
 
         g.setColor(Color.CYAN);
