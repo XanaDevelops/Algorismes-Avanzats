@@ -9,8 +9,20 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Stream;
 
 public class Huffman implements Runnable {
+    public enum WordSize{
+        BIT8(1),
+        BIT16(2),
+        BIT32(3),
+        BIT64(4);
+        private int size;
+        WordSize(int x){
+            this.size = x;
+        }
+        public int getBitSize() {return size;}
+    }
     public enum TipusCua {
         BIN_HEAP(PriorityQueue.class),
         FIB_HEAP(FibonacciHeap.class),
@@ -31,33 +43,33 @@ public class Huffman implements Runnable {
     private int[] codeLengths;
     public static class Node implements Comparable<Node> {
         public long val;
-        public int bval;
+        public long byteVal;
         private Node left, right;
 
-        public Node(long val, int bval) {
+        public Node(long val, long byteVal) {
             this.val = val;
-            this.bval = bval;
+            this.byteVal = byteVal;
         }
 
         public boolean isLeaf() {
-            return left == null && right == null && bval != Integer.MIN_VALUE;
+            return left == null && right == null && byteVal != Integer.MIN_VALUE;
         }
 
         @Override
         public int compareTo(Node o) {
             int valCompare = Long.compare(this.val, o.val);
             if (valCompare == 0) {
-                return -Integer.compare(this.bval, o.bval);
+                return -Long.compare(this.byteVal, o.byteVal);
             }
             return valCompare;
         }
 
-        public int getBval() {
-            return bval;
+        public long getByteVal() {
+            return byteVal;
         }
 
-        public void setBval(int bval) {
-            this.bval = bval;
+        public void setByteVal(int byteVal) {
+            this.byteVal = byteVal;
         }
 
         public Node getLeft() {
@@ -86,7 +98,7 @@ public class Huffman implements Runnable {
 
         @Override
         public String toString() {
-            return "Node(val=" + val + ", byte" + bval + ")";
+            return "Node(val=" + val + ", byte" + byteVal + ")";
         }
 
     }
@@ -102,9 +114,9 @@ public class Huffman implements Runnable {
     private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS);
     private final List<Future<?>> runnables = Collections.synchronizedList(new ArrayList<>());
 
-    private final long[][] acumulators;
+    private final Map<Long, Long>[] acumulators;
     private byte[] fileBytes;
-    private final long[] freqs;
+    private final Map<Long, Long> freqs;
 
     private final TipusCua tipusCua;
 
@@ -112,31 +124,31 @@ public class Huffman implements Runnable {
 
     private double entropia = -1;
 
-    private final ConcurrentHashMap<Integer, String> table = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, String> table = new ConcurrentHashMap<>();
 
-
-    public Huffman(String fileName, int byteSize, TipusCua tipusCua) {
+    @SuppressWarnings("unchecked")
+    public Huffman(String fileName, WordSize byteSize, TipusCua tipusCua) {
         this.tipusCua = tipusCua;
-        this.byteSize = byteSize;
+        this.byteSize = byteSize.size;
         try {
             fileIn = new BufferedInputStream(new FileInputStream(fileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.freqs = new long[1<< (8* byteSize)];
-        this.acumulators =  new long[N_THREADS][1<< (8* byteSize)];
+        this.freqs = new HashMap<>((1<< (8* this.byteSize)));
+        this.acumulators = Stream.generate(() -> new TreeMap<Long, Long>()).limit(N_THREADS).toArray(TreeMap[]::new);
 
     }
 
     public Huffman(String filename) {
-        this(filename, 1, TipusCua.BIN_HEAP);
+        this(filename, WordSize.BIT8, TipusCua.BIN_HEAP);
     }
-    public Huffman(String fileName, int byteSize) {
+    public Huffman(String fileName, WordSize byteSize) {
         this(fileName, byteSize, TipusCua.BIN_HEAP);
     }
 
     public Huffman(String fileName, TipusCua tipusCua) {
-        this(fileName, 1, tipusCua);
+        this(fileName, WordSize.BIT8, tipusCua);
     }
 
 
@@ -169,7 +181,7 @@ public class Huffman implements Runnable {
         }
         if (node.isLeaf()) {
 
-            table.put(node.bval, val);
+            table.put(node.byteVal, val);
         } else {
             final int fdeep = dbgval;
             if (DO_CONCURRENT) {
@@ -186,11 +198,9 @@ public class Huffman implements Runnable {
     @SuppressWarnings("unchecked")
     private void genTree() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Queue<Node> pq = tipusCua.getCua().getConstructor().newInstance();
-        for (int i = 0; i < freqs.length; i++) {
-            if (freqs[i] == 0) {
-                continue;
-            }
-            pq.add(new Node(freqs[i], i));
+        for (Map.Entry<Long, Long> e : freqs.entrySet()) {
+
+            pq.add(new Node(e.getValue(), e.getKey()));
         }
         while (pq.size() > 1) {
             Node first = pq.poll();
@@ -222,15 +232,20 @@ public class Huffman implements Runnable {
         joinAll();
         long total = 0;
         for (int i = 0; i < N_THREADS; i++) {
-            for (int j = 0; j < freqs.length; j++) {
-                freqs[j] += acumulators[i][j];
-                total += acumulators[i][j];
+//            for (long j = 0; j < (1L << (8*byteSize)); j++) {
+//                //freqs.set(j, freqs.get(j) +  acumulators[i].get(j));
+//                freqs.put(j, freqs.getOrDefault(j, 0L) + acumulators[i].getOrDefault(j, 0L));
+//                total += acumulators[i].getOrDefault(j, 0L);
+//            }
+            for(Map.Entry<Long, Long> e : acumulators[i].entrySet()) {
+                total += e.getValue();
+                freqs.put(e.getKey(), freqs.getOrDefault(e.getKey(), 0L) + e.getValue());
             }
         }
 
         //calcular entropia
         entropia = 0;
-        for(long i: freqs) {
+        for(long i: freqs.values()) {
             if (i==0) continue;
             double freq =  i / (double) total;
             entropia += freq * Math.log10(freq)/Math.log10(2);
@@ -241,15 +256,15 @@ public class Huffman implements Runnable {
     private void recursiveAccumulate(int id, int l, int r) {
         for (int i = l; i < r && i < fileBytes.length; i+=byteSize) {
             //bytes en C2, necessari index positiu
-            int b = fileBytes[i];
+            long b = fileBytes[i];
             for (int j = 1; j < byteSize; j++){
                 b = b<<8;
                 b |= i+j < fileBytes.length ? fileBytes[i+j]: 0;
             }
             if (b < 0) {
-                b = b + (1 << (8*byteSize));
+                b = b + (1L << (8*byteSize));
             }
-            acumulators[id][b]++;
+            acumulators[id].put(b, acumulators[id].getOrDefault(b, 0L) + 1L);
         }
     }
 
@@ -278,9 +293,10 @@ public class Huffman implements Runnable {
      * Retorna array de frequencies absolutes
      * @return Array on a[byte] = freq
      */
-    public final long[] getFreqs() {
+    public final Map<Long, Long> getFreqs() {
         return freqs;
     }
+
 
     /**
      * Retorna l'arrel de l'arbre
@@ -297,7 +313,7 @@ public class Huffman implements Runnable {
      *
      * @return tabla traducció
      */
-    public final Map<Integer, String> getTable() {
+    public final Map<Long, String> getTable() {
         return table;
     }
 

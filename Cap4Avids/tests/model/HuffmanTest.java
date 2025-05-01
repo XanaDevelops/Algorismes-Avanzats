@@ -2,9 +2,7 @@ package model;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -21,9 +19,9 @@ class HuffmanTest {
     void testFileAll() {
         Huffman huffman = new Huffman("res/testAll.txt");
         huffman.run();
-        long[] freqs = huffman.getFreqs();
-        for (int i = 0; i < freqs.length; i++) {
-            assertEquals(i+1, freqs[i]);
+        Map<Long, Long> freqs = huffman.getFreqs();
+        for (Map.Entry<Long, Long> e : freqs.entrySet()) {
+            assertEquals(e.getKey()+1, e.getValue());
         }
 
         System.out.println(huffman.getTable());
@@ -38,9 +36,9 @@ class HuffmanTest {
 
         Huffman huffman2 = new Huffman("res/testAll.txt", Huffman.TipusCua.FIB_HEAP);
         huffman2.run();
-        long[] freqs2 = huffman2.getFreqs();
-        for (int i = 0; i < freqs2.length; i++) {
-            assertEquals(i+1, freqs2[i]);
+        Map<Long, Long> freqs2 = huffman.getFreqs();
+        for (Map.Entry<Long, Long> e : freqs2.entrySet()) {
+            assertEquals(e.getKey()+1, e.getValue());
         }
         System.out.println(huffman2.getTable());
         System.out.println("Entropia2: " + huffman2.getEntropia());
@@ -50,12 +48,12 @@ class HuffmanTest {
     void testFileABC(){
         Huffman huffman = new Huffman("res/testABC.txt");
         huffman.run();
-        System.out.println(Arrays.toString(huffman.getFreqs()));
+        System.out.println(huffman.getFreqs());
         System.out.println(huffman.getTable());
 
         Huffman huffman2 = new Huffman("res/testABC.txt", Huffman.TipusCua.FIB_HEAP);
         huffman2.run();
-        System.out.println(Arrays.toString(huffman2.getFreqs()));
+        System.out.println(huffman2.getFreqs());
         System.out.println(huffman2.getTable());
 
         System.out.println("\n");
@@ -66,12 +64,12 @@ class HuffmanTest {
     void testFileABC2(){
         Huffman huffman = new Huffman("res/testABC2.txt");
         huffman.run();
-        System.out.println(Arrays.toString(huffman.getFreqs()));
+        System.out.println(huffman.getFreqs());
         System.out.println(huffman.getTable());
 
         Huffman huffman2 = new Huffman("res/testABC2.txt", Huffman.TipusCua.FIB_HEAP);
         huffman2.run();
-        System.out.println(Arrays.toString(huffman2.getFreqs()));
+        System.out.println(huffman2.getFreqs());
         System.out.println(huffman2.getTable());
 
         System.out.println("\n");
@@ -82,7 +80,7 @@ class HuffmanTest {
     void testFileABC3(){
         Huffman huffman = new Huffman("res/testABC3.txt");
         huffman.run();
-        System.out.println(Arrays.toString(huffman.getFreqs()));
+        System.out.println(huffman.getFreqs());
         System.out.println(huffman.getTable());
         System.out.println(huffman.getEntropia());
 
@@ -98,21 +96,28 @@ class HuffmanTest {
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(Arrays.toString(huffman.getFreqs()));
+        System.out.println(huffman.getFreqs());
         System.out.println(huffman.getTable());
     }
     @Test
     void test16Bits(){
-        Huffman huffman = new Huffman("res/testABC.txt", 2);
+        Huffman huffman = new Huffman("res/testABC.txt", Huffman.WordSize.BIT16);
         huffman.run();
-        System.out.println(Arrays.toString(huffman.getFreqs()));
+        System.out.println(huffman.getFreqs());
         System.out.println(huffman.getTable());
     }
     @Test
     void test32Bits(){
-        Huffman huffman = new Huffman("res/testABC.txt", 4);
+        Huffman huffman = new Huffman("res/testABC.txt", Huffman.WordSize.BIT32);
         huffman.run();
-        System.out.println(Arrays.toString(huffman.getFreqs()));
+        System.out.println(huffman.getFreqs());
+        System.out.println(huffman.getTable());
+    }
+    @Test
+    void test64Bits(){
+        Huffman huffman = new Huffman("res/testABC.txt", Huffman.WordSize.BIT64);
+        huffman.run();
+        System.out.println(huffman.getFreqs());
         System.out.println(huffman.getTable());
     }
 
