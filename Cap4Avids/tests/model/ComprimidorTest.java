@@ -86,11 +86,11 @@ class ComprimidorTest {
         h.run();
         Compressor c = new Compressor(h, dades,fileName, "tests/res/");
         c.compressFile();
-        Decompressor d = new Decompressor("tests/res/Compressed testA.kib","tests/res/");
+        Decompressor d = new Decompressor("tests/res/testA.kib","tests/res/check/");
         d.decompressFile();
         //comparar
         BufferedInputStream inA = new BufferedInputStream(new FileInputStream(fileName)),
-                inB = new BufferedInputStream(new FileInputStream(  "tests/res/Decompressed testA.txt"));
+                inB = new BufferedInputStream(new FileInputStream(  "tests/res/check/testA.txt"));
         byte[] a = inA.readAllBytes();
 
         byte[] b = inB.readAllBytes();

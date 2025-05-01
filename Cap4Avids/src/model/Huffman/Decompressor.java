@@ -140,7 +140,9 @@ public class Decompressor {
             System.out.println(Arrays.toString(extensionBytesComprimit));
 
             if (!Arrays.equals(extensionBytesComprimit,Dades.magicNumbers)) {
-                System.err.println("Extension not supported");
+                System.err.println("Not a valid file");
+                //comunicar, etc, etc
+                return;
             }
 
             short tamWords = dis.readShort();
@@ -169,11 +171,10 @@ public class Decompressor {
             DecodeNode root = buildDecodingTree(canonCodes);
             String fileName = src.split("/")[src.split("/").length - 1];
             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-            fileName = fileName.split(" ", 2)[1];
             System.out.println("fileName = " + fileName);
             try (BitInputStream bitIn = new BitInputStream(fis);
                  OutputStream fosOut = new BufferedOutputStream(
-                         new FileOutputStream(outputFolder+ "Decompressed "+ fileName+ "."+ extension))) {
+                         new FileOutputStream(outputFolder+ fileName+ "."+ extension))) {
                 int written = 0;
                 while (written < originalBytes) {
                     DecodeNode node = root;

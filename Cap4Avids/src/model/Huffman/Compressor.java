@@ -119,18 +119,17 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.rmi.server.ExportException;
 import java.util.*;
 
 public class Compressor {
     private final Huffman huffman;
-    private final String input;
+    private final String inputPath;
     private final String outputFolder;
     Dades data;
-    public Compressor(Huffman huffman, Dades data, String input, String outputFolder) {
+    public Compressor(Huffman huffman, Dades data, String inputPath, String outputFolder) {
         this.huffman = huffman;
-        this.input = input;
         this.data = data;
+        this.inputPath = inputPath;
         this.outputFolder = outputFolder;
     }
 
@@ -152,7 +151,7 @@ public class Compressor {
         int totalUnicSymbols = 0;
         List<Long> symbols = new ArrayList<>();
         for (Map.Entry<Long, String> e : table.entrySet()) {
-            long sym = e.getKey(); //byte positiu //FIXME
+            long sym = e.getKey(); //byte positiu
             codeLengths.put(sym, e.getValue().length());
             symbols.add(sym);
             totalUnicSymbols++;
@@ -161,9 +160,10 @@ public class Compressor {
         Map<Long, byte[]> canonCodes = Huffman.generateCanonicalCodes(codeLengths, symbols);
 
         //afegir la signatura de l'extensió manualment
-        String fileName = input.split("/")[input.split("/").length - 1];
+        String fileName = inputPath.split("/")[inputPath.split("/").length - 1];
         fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-        try (OutputStream fos = Files.newOutputStream(Path.of(outputFolder + "Compressed "+ fileName + Dades.EXTENSIO));
+        System.out.println("File:" +outputFolder + fileName + Dades.EXTENSIO);
+        try (OutputStream fos = Files.newOutputStream(Path.of(outputFolder + fileName + Dades.EXTENSIO));
              BufferedOutputStream bufOut = new BufferedOutputStream(fos);
              DataOutputStream dos = new DataOutputStream(bufOut);
              BitOutputStream bitOut = new BitOutputStream(bufOut)) {
@@ -175,8 +175,8 @@ public class Compressor {
             //guardar el tamany de les paraules comprimides
             dos.writeShort(huffman.getByteSize());
 
-            Path inputPath = Path.of(input);
-            String[] extension = input.split("\\.", 2);
+            Path inputPath = Path.of(this.inputPath);
+            String[] extension = this.inputPath.split("\\.", 2);
             byte[] extensionBytes = extension[1].getBytes(StandardCharsets.UTF_8);
             //tamany de l'extensió
             dos.writeShort(extensionBytes.length);
