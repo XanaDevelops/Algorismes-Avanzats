@@ -11,14 +11,9 @@ public class Dades {
 
     private final List<File> descomprimits = new ArrayList<>();
     private final List<File> comprimits = new ArrayList<>();
-    private Extensio extensioComprimit;
-    public Extensio getExtensioComprimit() {
-        return extensioComprimit;
-    }
+    public static final String EXTENSIO = ".kib";
+    public static final byte[] magicNumbers = new byte[]{0x4B, 0x49,0x42};
 
-    public void setExtensioComprimit(Extensio extensioComprimit) {
-        this.extensioComprimit = extensioComprimit;
-    }
 
     public Dades(){
         principal = Main.instance;

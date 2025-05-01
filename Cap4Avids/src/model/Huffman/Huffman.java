@@ -1,4 +1,4 @@
-package model;
+package model.Huffman;
 
 import model.cues.FibonacciHeap;
 import model.cues.RankPairingHeap;
@@ -116,6 +116,10 @@ public class Huffman implements Runnable {
     private final Map<Long, Long>[] acumulators;
     private byte[] fileBytes;
     private final Map<Long, Long> freqs;
+
+    public TipusCua getTipusCua() {
+        return tipusCua;
+    }
 
     private final TipusCua tipusCua;
 
