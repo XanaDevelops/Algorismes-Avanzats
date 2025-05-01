@@ -1,14 +1,12 @@
-package model;
+package model.Huffman;
 
 import model.cues.FibonacciHeap;
 import model.cues.RankPairingHeap;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -104,6 +102,10 @@ public class Huffman implements Runnable {
     private final long[][] acumulators = new long[N_THREADS][BITSIZE];
     private byte[] fileBytes;
     private long[] freqs = new long[BITSIZE];
+
+    public TipusCua getTipusCua() {
+        return tipusCua;
+    }
 
     private final TipusCua tipusCua;
 

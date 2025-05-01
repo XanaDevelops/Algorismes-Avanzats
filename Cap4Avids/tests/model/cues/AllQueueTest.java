@@ -1,6 +1,6 @@
 package model.cues;
 
-import model.Huffman;
+import model.Huffman.Huffman;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
