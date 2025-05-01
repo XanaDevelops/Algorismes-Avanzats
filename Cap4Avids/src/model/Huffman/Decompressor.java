@@ -105,12 +105,13 @@
 package model.Huffman;
 
 import model.BitsManagement.BitInputStream;
-import model.Extensio;
+import model.Dades;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Decompressor {
@@ -135,17 +136,20 @@ public class Decompressor {
         Path srcPath = Path.of(src);
         try (InputStream fis = new BufferedInputStream(Files.newInputStream(srcPath));
              DataInputStream dis = new DataInputStream(fis)) {
-            short extensioComrpimitLength = dis.readShort();
-            byte[] extensionBytesComprimit = new byte[extensioComrpimitLength];
+            byte[] extensionBytesComprimit = new byte[Dades.magicNumbers.length];
 
             dis.readFully(extensionBytesComprimit);
-            if (Extensio.notValid(extensionBytesComprimit)) {
-                System.out.println("Extension not supported");
+            System.out.println(Arrays.toString(extensionBytesComprimit));
+
+            if (!Arrays.equals(extensionBytesComprimit,Dades.magicNumbers)) {
+                System.err.println("Extension not supported");
             }
 
-            short extensionLength = dis.readShort();
-            byte[] extensionBytes = new byte[extensionLength];
+            short length = dis.readShort();
+            byte[] extensionBytes = new byte[length];
             dis.readFully(extensionBytes);
+
+
 
             String extension = new String(extensionBytes);
             int totalUnicSymbols = dis.readInt();
@@ -169,7 +173,7 @@ public class Decompressor {
             System.out.println("fileName = " + fileName);
             try (BitInputStream bitIn = new BitInputStream(fis);
                  OutputStream fosOut = new BufferedOutputStream(
-                         new FileOutputStream(outputFolder+ "Decompressed "+ fileName+ extension))) {
+                         new FileOutputStream(outputFolder+ "Decompressed "+ fileName+ "."+ extension))) {
                 int written = 0;
                 while (written < originalBytes) {
                     DecodeNode node = root;

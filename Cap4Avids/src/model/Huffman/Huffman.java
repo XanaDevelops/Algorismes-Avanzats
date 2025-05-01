@@ -103,6 +103,10 @@ public class Huffman implements Runnable {
     private byte[] fileBytes;
     private long[] freqs = new long[BITSIZE];
 
+    public TipusCua getTipusCua() {
+        return tipusCua;
+    }
+
     private final TipusCua tipusCua;
 
     private Node treeRoot;

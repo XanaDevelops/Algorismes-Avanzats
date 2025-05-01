@@ -114,7 +114,6 @@ package model.Huffman;
 
 import model.BitsManagement.BitOutputStream;
 import model.Dades;
-import model.Extensio;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -145,6 +144,7 @@ public class Compressor {
      */
 
     public void compressFile() throws IOException {
+        long time = System.nanoTime();
         Map<Byte, String> table = huffman.getTable();
         //calcular la longitud de les codificaciones de cada byte
         int[] codeLengths = new int[256];
@@ -158,23 +158,20 @@ public class Compressor {
         }
         //generar codi canònic a partir les longituds dels símbols
         byte[][] canonCodes = Huffman.generateCanonicalCodes(Arrays.copyOf(codeLengths,codeLengths.length), symbols);
-        byte [] magicNumbers = data.getExtensioComprimit().getMagicBytes();
 
         //afegir la signatura de l'extensió manualment
         String fileName = input.split("/")[input.split("/").length - 1];
         fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-        try (OutputStream fos = Files.newOutputStream(Path.of(outputFolder + "Compressed "+ fileName + Extensio.getExtensio(magicNumbers)));
+        try (OutputStream fos = Files.newOutputStream(Path.of(outputFolder + "Compressed "+ fileName + Dades.EXTENSIO));
              BufferedOutputStream bufOut = new BufferedOutputStream(fos);
              DataOutputStream dos = new DataOutputStream(bufOut);
              BitOutputStream bitOut = new BitOutputStream(bufOut)) {
 
             //guardar l'extensió original de l'arxiu
-            dos.writeShort(magicNumbers.length);
-            dos.write(magicNumbers);
+            dos.write(Dades.magicNumbers);
 
             Path inputPath = Path.of(input);
             String[] extension = input.split("\\.", 2);
-            extension[1] = "."+ extension[1];
             byte[] extensionBytes = extension[1].getBytes(StandardCharsets.UTF_8);
             //tamany de l'extensió
             dos.writeShort(extensionBytes.length);
@@ -209,6 +206,11 @@ public class Compressor {
             }
             bitOut.flush();
         }
+
+
+        time = System.nanoTime() - time;
+//        data.addTempsCompressio(time, fileName, huffman.getTipusCua);
     }
+
 
 }
