@@ -68,8 +68,8 @@ public class Main implements Comunicar {
 //                    c.run();
 //                }));
                 executor.execute(() ->
-                {Compressor c = new Compressor(Integer.parseInt(parts[5]), getWordSize(parts[2]),
-                        getTipusCua(parts[3]), path, parts[4]);
+                {Compressor c = new Compressor(Integer.parseInt(parts[5]), getWordSize(parts[3]),
+                        getTipusCua(parts[2]), path, parts[4]);
                     c.run();
                 });
 

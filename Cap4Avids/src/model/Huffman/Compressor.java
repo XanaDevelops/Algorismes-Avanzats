@@ -154,8 +154,10 @@ public class Compressor implements Comunicar, Runnable {
      */
 
     public void compressFile() throws IOException {
+        System.err.println("comprimint " + inputPath + " to " + outputFolder);
+        System.err.println("settings bytes: " + huffman.getByteSize());
+
         huffman.run();
-        System.err.println("hola");
         Map<Long, String> table = huffman.getTable();
         long time = System.nanoTime();
         //calcular la longitud de les codificaciones de cada byte
@@ -175,12 +177,10 @@ public class Compressor implements Comunicar, Runnable {
 
 
         String fileName = Path.of(inputPath).getFileName().toString();
-        if (!fileName.endsWith("\\")){
-            fileName += "\\";
-        }
+
         fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-        System.out.println("File: " +outputFolder + fileName + Dades.EXTENSIO);
-        try (OutputStream fos = Files.newOutputStream(Path.of(outputFolder + fileName + Dades.EXTENSIO));
+        System.out.println("File: " +outputFolder +"\\"+ fileName + Dades.EXTENSIO);
+        try (OutputStream fos = Files.newOutputStream(Path.of(outputFolder +"\\"+ fileName + Dades.EXTENSIO));
              BufferedOutputStream bufOut = new BufferedOutputStream(fos);
              DataOutputStream dos = new DataOutputStream(bufOut);
              BitOutputStream bitOut = new BitOutputStream(bufOut)) {
