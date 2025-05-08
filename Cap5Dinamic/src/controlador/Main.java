@@ -23,16 +23,16 @@ public class Main implements Comunicar{
     }
 
     public Main(){
-
-    }
-
-    private void init(){
         if (instance == null){
             instance = this;
         }else{
             return;
         }
         dades = new Dades();
+    }
+
+    private void init(){
+
         SwingUtilities.invokeLater(() -> finestra = new Finestra());
     }
 
@@ -40,7 +40,9 @@ public class Main implements Comunicar{
     @Override
     public void calcular(Idioma a, Idioma b){
         System.out.println("Calculant D("+a+"-"+b);
-        Runnable r = () -> {};
+        Runnable r = () -> {
+            System.err.println("Calculant D("+a+"-"+b);
+        };
         executor.execute(r);
         runnables.add((r));
     }
