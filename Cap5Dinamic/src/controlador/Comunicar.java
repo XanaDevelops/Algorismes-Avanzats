@@ -3,6 +3,8 @@ package controlador;
 import Model.Idioma;
 
 public interface Comunicar {
+    public void comunicar(String s);
+
     public default void calcular(Idioma a, Idioma b){
         throw new UnsupportedOperationException("Not supported yet.");
     }

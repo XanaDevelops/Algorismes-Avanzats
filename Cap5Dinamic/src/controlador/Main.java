@@ -38,6 +38,11 @@ public class Main implements Comunicar{
 
 
     @Override
+    public void comunicar(String s) {
+
+    }
+
+    @Override
     public void calcular(Idioma a, Idioma b){
         System.out.println("Calculant D("+a+"-"+b);
         Runnable r = () -> {
