@@ -16,4 +16,12 @@ public interface Comunicar {
             }
         }
     }
+
+    public default void aturar(){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public default void actualitzar(){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
