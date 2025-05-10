@@ -3,10 +3,7 @@ package Model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Dades {
 
@@ -43,6 +40,14 @@ public class Dades {
         }
 
         diccionaris.put(idioma, paraulesIdioma);
+    }
+
+    public Set<Idioma> getIdiomes() {
+        return diccionaris.keySet();
+    }
+
+    public List<String> getParaules(Idioma idioma) {
+        return diccionaris.getOrDefault(idioma, Collections.emptyList());
     }
 
 }
