@@ -35,9 +35,7 @@ public class Main implements Comunicar{
     private void init(){
 
         SwingUtilities.invokeLater(() -> finestra = new Finestra());
-        CalculIdiomes calculIdiomes = new CalculIdiomes();
-        double d = calculIdiomes.calcularDistanciaIdiomes(Idioma.FRA,Idioma.CAT);
-        System.out.println("Distancia Idiomas: " + d);
+
     }
 
 
@@ -48,9 +46,35 @@ public class Main implements Comunicar{
 
     @Override
     public void calcular(Idioma a, Idioma b){
-        System.out.println("Calculant D("+a+"-"+b);
+        System.err.println("Calculant D("+a+"-"+b+")");
+        //es suposa que TOTS-TOTS es crida des de calcularTots()
+        //també es suposa que TOTS es gestiona a Finestra, però per si de cas...
+        if (a == Idioma.TOTS){
+            for(Idioma idioma : Idioma.values()){
+                if(idioma == Idioma.TOTS){
+                    continue;
+                }
+                addAndExec(idioma, b);
+            }
+        }else if(b == Idioma.TOTS){
+            for(Idioma idioma : Idioma.values()){
+                if(idioma == Idioma.TOTS){
+                    continue;
+                }
+                addAndExec(idioma, a);
+            }
+        }else{
+            addAndExec(a, b);
+        }
+
+    }
+
+    private void addAndExec(Idioma a, Idioma b){
         Runnable r = () -> {
-            System.err.println("Calculant D("+a+"-"+b);
+            System.err.println("INACABAT! "+a+ "-" +b);
+            CalculIdiomes c = new CalculIdiomes(); //TODO: FER RUNNABLE
+            double d = c.calcularDistanciaIdiomes(a, b);
+            System.err.println("POSAR A DADES: "+ d); //TODO: GUARDAR A DADES!
         };
         executor.execute(r);
         runnables.add((r));

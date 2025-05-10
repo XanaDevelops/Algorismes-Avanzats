@@ -12,7 +12,7 @@ public interface Comunicar {
     public default void calcularTot(){
         for(Idioma a : Idioma.values()){
             for(Idioma b : Idioma.values()){
-                if(a.compareTo(b) != 0){
+                if(a != b && a != Idioma.TOTS && b != Idioma.TOTS){
                     calcular(a,b);
                 }
             }
