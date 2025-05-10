@@ -1,5 +1,6 @@
 package controlador;
 
+import Model.CalculIdiomes;
 import Model.Dades;
 import Model.Idioma;
 import Vista.Finestra;
@@ -28,12 +29,15 @@ public class Main implements Comunicar{
         }else{
             return;
         }
-        dades = new Dades();
+       // dades = new Dades();
     }
 
     private void init(){
 
         SwingUtilities.invokeLater(() -> finestra = new Finestra());
+        CalculIdiomes calculIdiomes = new CalculIdiomes();
+        double d = calculIdiomes.calcularDistanciaIdiomes(Idioma.FRA,Idioma.CAT);
+        System.out.println("Distancia Idiomas: " + d);
     }
 
 
