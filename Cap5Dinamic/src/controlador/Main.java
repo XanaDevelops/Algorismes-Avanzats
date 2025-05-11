@@ -8,6 +8,7 @@ import Vista.Finestra;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -71,10 +72,17 @@ public class Main implements Comunicar{
 
     private void addAndExec(Idioma a, Idioma b){
         Runnable r = () -> {
+            double d =0.0;
             System.err.println("INACABAT! "+a+ "-" +b);
-            CalculIdiomes c = new CalculIdiomes(); //TODO: FER RUNNABLE
-            double d = c.calcularDistanciaIdiomes(a, b);
-            System.err.println("POSAR A DADES: "+ d); //TODO: GUARDAR A DADES!
+            CalculIdiomes c = new CalculIdiomes(dades,a,b); //TODO: FER RUNNABLE
+            try {
+                 d = c.call();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }finally {
+                System.err.println("POSAR A DADES: "+ d); //TODO: GUARDAR A DADES!
+            }
+
         };
         executor.execute(r);
         runnables.add((r));
