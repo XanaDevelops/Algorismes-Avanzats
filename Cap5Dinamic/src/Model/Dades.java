@@ -10,7 +10,7 @@ public class Dades {
     private Map<Idioma, List<String>> diccionaris = new HashMap<>();
 
     private static final String dictPath = "res/Diccionaris/";
-
+    private double[][] distancies;
     public Dades() {
         for (Idioma idi : Idioma.values()) {
             if (idi != Idioma.TOTS) { // TOTS idioma especial
@@ -18,6 +18,15 @@ public class Dades {
             }
         }
         System.out.println("carregats idiomes");
+        distancies = new double[Idioma.values().length][Idioma.values().length];
+    }
+
+    public void afegirDistancia (Idioma origen, Idioma desti, double distancia){
+        distancies[origen.ordinal()][desti.ordinal()] = distancia;
+    }
+
+    public Double getDistancia (Idioma origen, Idioma desti) {
+        return distancies[origen.ordinal()][desti.ordinal()];
     }
 
     private void carregarDiccionari(Idioma idioma) {
@@ -48,6 +57,8 @@ public class Dades {
     public Set<Idioma> getIdiomes() {
         return diccionaris.keySet();
     }
+
+
 
     public List<String> getParaules(Idioma idioma) {
         return diccionaris.getOrDefault(idioma, Collections.emptyList());

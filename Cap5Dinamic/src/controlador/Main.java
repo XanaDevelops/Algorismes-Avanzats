@@ -17,7 +17,7 @@ public class Main implements Comunicar{
     private Comunicar finestra;
     private Dades dades;
 
-    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(16);
+    private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(16);
     private final List<Runnable> runnables = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -72,15 +72,17 @@ public class Main implements Comunicar{
 
     private void addAndExec(Idioma a, Idioma b){
         Runnable r = () -> {
-            double d =0.0;
-            System.err.println("INACABAT! "+a+ "-" +b);
-            CalculIdiomes c = new CalculIdiomes(dades,a,b); //TODO: FER RUNNABLE
+//            double d =0.0;
+//            System.err.println("INACABAT! "+a+ "-" +b);
+            CalculIdiomes c = new CalculIdiomes(a,b); //TODO: FER RUNNABLE
             try {
-                 d = c.call();
+//                 d = c.call();
+                c.run();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }finally {
-                System.err.println("POSAR A DADES: "+ d); //TODO: GUARDAR A DADES!
+//                System.err.println("POSAR A DADES: "+ d); //TODO: GUARDAR A DADES!
+                System.err.println("POSAR A DADES: ");
             }
 
         };

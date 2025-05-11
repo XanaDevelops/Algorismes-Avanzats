@@ -1,27 +1,28 @@
 package Model;
 
 import controlador.Comunicar;
+import controlador.Main;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class CalculIdiomes implements Comunicar, Callable<Double> {
+public class CalculIdiomes implements Comunicar, Runnable{
     ExecutorService filsDistanci;
     private final Dades dades;
     private final Idioma A;
     private final Idioma B;
-
-    public CalculIdiomes(Dades dades, Idioma A, Idioma B) {
-        this.dades = dades;
+    public CalculIdiomes( Idioma A, Idioma B) {
+        this.dades = Main.getInstance().getDades();
         this.A = A;
         this.B = B;
     }
 
     @Override
-    public Double call() throws Exception {
+    public void run()  {
         filsDistanci = Executors.newFixedThreadPool(2);
-        return calcularDistanciaIdiomes(A,B);
+//        return calcularDistanciaIdiomes(A,B);
+        dades.afegirDistancia(A, B, calcularDistanciaIdiomes(A,B));
     }
 
     private double calcularDistanciaIdiomes(Idioma a, Idioma b) {
@@ -136,6 +137,11 @@ public class CalculIdiomes implements Comunicar, Callable<Double> {
     @Override
     public void comunicar(String s) {
 
+    }
+
+    @Override
+    public void aturar(){
+        filsDistanci.shutdown();
     }
 
 

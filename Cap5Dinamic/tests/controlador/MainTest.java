@@ -40,5 +40,6 @@ class MainTest {
     @Test
     void calcularESP_CAT() {
         Main.getInstance().calcular(Idioma.ESP, Idioma.CAT);
+//        System.out.println(Main.getInstance().getDades().getDistancia(Idioma.ESP, Idioma.CAT));;
     }
 }
