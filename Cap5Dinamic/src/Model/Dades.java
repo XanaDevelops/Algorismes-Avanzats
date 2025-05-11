@@ -9,6 +9,8 @@ public class Dades {
 
     private Map<Idioma, List<String>> diccionaris = new HashMap<>();
 
+    private static final String dictPath = "res/Diccionaris/";
+
     public Dades() {
         for (Idioma idi : Idioma.values()) {
             if (idi != Idioma.TOTS) { // TOTS idioma especial
@@ -18,7 +20,7 @@ public class Dades {
     }
 
     private void carregarDiccionari(Idioma idioma) {
-        String nomF = idioma.name().toLowerCase() + ".dic";
+        String nomF = dictPath + idioma.name().toUpperCase() + ".dic";
 
         List<String> paraulesIdioma = new ArrayList<>();
 
