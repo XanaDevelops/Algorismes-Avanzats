@@ -11,7 +11,14 @@ class CalculIdiomesTest {
 
     @org.junit.jupiter.api.Test
     void calcularTestESP_CAT(){
-        CalculIdiomes c = new CalculIdiomes();
-        double d = c.calcularDistanciaIdiomes(Idioma.ESP, Idioma.CAT);
+        double d = 0.0;
+        CalculIdiomes c = new CalculIdiomes(new Dades(),Idioma.FRA,Idioma.DEU);
+        try {
+            d = c.call();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {
+            System.err.println("POSAR A DADES: "+ d);
+        }
     }
 }
