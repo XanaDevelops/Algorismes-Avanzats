@@ -30,7 +30,7 @@ public class Main implements Comunicar{
         }else{
             return;
         }
-       // dades = new Dades();
+        dades = new Dades();
     }
 
     private void init(){

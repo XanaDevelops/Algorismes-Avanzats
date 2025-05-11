@@ -17,6 +17,7 @@ public class Dades {
                 carregarDiccionari(idi);
             }
         }
+        System.out.println("carregats idiomes");
     }
 
     private void carregarDiccionari(Idioma idioma) {
