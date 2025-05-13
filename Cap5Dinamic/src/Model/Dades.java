@@ -15,6 +15,7 @@ public class Dades {
         for (Idioma idi : Idioma.values()) {
             if (idi != Idioma.TOTS) { // TOTS idioma especial
                 carregarDiccionari(idi);
+                System.out.println("Carregat :" + idi);
             }
         }
         System.out.println("carregats idiomes");
@@ -50,7 +51,7 @@ public class Dades {
         } catch (IOException e) {
             System.err.println("Error carregant " + idioma + ": " + e.getMessage());
         }
-
+        paraulesIdioma.sort(Comparator.comparingInt(String::length));
         diccionaris.put(idioma, paraulesIdioma);
     }
 

@@ -27,8 +27,8 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
     private double calcularDistanciaIdiomes(Idioma a, Idioma b) {
 
-        Callable<Double> taskAB = () -> calcularDistancia(a, b);
-        Callable<Double> taskBA = () -> calcularDistancia(b, a);
+        Callable<Double> taskAB = () -> calcularDistanciaOrdenat(a, b);
+        Callable<Double> taskBA = () -> calcularDistanciaOrdenat(b, a);
 
         try {
             // llança fil per sentit
