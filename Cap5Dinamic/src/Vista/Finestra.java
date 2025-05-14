@@ -7,17 +7,18 @@ import controlador.Main;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Set;
 
 public class Finestra extends JFrame implements Comunicar {
     private final Comunicar comunicar;
+    private final String[] grafics = {"Gràfic 1", "Gràfic 2", "Gràfic 3"};
 
     private JComboBox<String> origen;
     private JComboBox<String> desti;
     private JTable taulaDistancies;
     private JPanel panellCalcul;
     private JPanel panellMatriu;
-    private JPanel panellGrafics;
 
     private JSplitPane splitSuperior;
     private JSplitPane splitInferior;
@@ -44,8 +45,9 @@ public class Finestra extends JFrame implements Comunicar {
         splitInferior = crearSplitInferior();
 
         splitGeneral = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitSuperior, splitInferior);
+        splitGeneral.setResizeWeight(0.3);
 
-        getContentPane().add(splitSuperior);
+        getContentPane().add(splitGeneral);
 
         this.setVisible(true);
     }
@@ -109,15 +111,32 @@ public class Finestra extends JFrame implements Comunicar {
 
 
     private JSplitPane crearSplitInferior() {
-        JPanel grafic1 = new JPanel();
-        JPanel grafic2 = new JPanel();
-        JPanel grafic3 = new JPanel();
+        ArrayList<JPanel> panells = new ArrayList<>();
 
-        JSplitPane split1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, grafic2, grafic3);
-        JSplitPane split2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, grafic1, split1);
+        for(String nomGrafic : grafics) {
+            JPanel panellGrafic = new JPanel(new BorderLayout());
+            panellGrafic.setBorder(BorderFactory.createTitledBorder(nomGrafic));
+            panellGrafic.setPreferredSize(new Dimension(300, 200));
 
+            JButton boto = new JButton("Actualitzar");
+            panellGrafic.add(boto, BorderLayout.SOUTH);
 
-        return split2;
+            panells.add(panellGrafic);
+        }
+
+        if (panells.isEmpty()) {
+            return new JSplitPane();
+        }
+
+        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panells.get(0), panells.get(1));
+        split.setResizeWeight(1.0 / panells.size());
+
+        for (int i = 2; i < panells.size(); i++) {
+            split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, split, panells.get(i));
+            split.setResizeWeight(1.0 / (i + 1));
+        }
+
+        return split;
     }
 
     @Override
@@ -139,7 +158,7 @@ public class Finestra extends JFrame implements Comunicar {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if(matriu[i][j] != 0) {
-                    modelDistancies.setValueAt(String.format("%.2f", matriu[i][j]), i, j + 1);
+                    modelDistancies.setValueAt(String.format("%.2f", matriu[i][j]), i + 1, j + 1);
                 }
             }
         }
