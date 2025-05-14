@@ -1,5 +1,6 @@
 package Vista;
 
+import Model.Dades;
 import Model.Idioma;
 import controlador.Comunicar;
 import controlador.Main;
@@ -12,26 +13,19 @@ import java.util.Set;
 
 public class Finestra extends JFrame implements Comunicar {
     private final Comunicar comunicar;
+    private final Dades dades;
+    private final Set<Idioma> idiomes;
+
     private final String[] grafics = {"Gràfic 1", "Gràfic 2", "Gràfic 3"};
 
-    private JComboBox<String> origen;
-    private JComboBox<String> desti;
-    private JTable taulaDistancies;
-    private JPanel panellCalcul;
-    private JPanel panellMatriu;
-
-    private JSplitPane splitSuperior;
-    private JSplitPane splitInferior;
-    private JSplitPane splitGeneral;
-
-    private Set<Idioma> idiomes;
     private DefaultTableModel modelDistancies;
-
 
 
     public Finestra() {
         super();
         this.comunicar = Main.getInstance();
+        this.dades = Main.getInstance().getDades();
+        this.idiomes = dades.getIdiomes();
 
         setTitle("Diferenciador d'idiomes");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,26 +33,23 @@ public class Finestra extends JFrame implements Comunicar {
         setSize(1000, 700);
         setLocationRelativeTo(null);
 
-        idiomes = Main.getInstance().getDades().getIdiomes();
+        JSplitPane splitSuperior = crearSplitSuperior();
+        JSplitPane splitInferior = crearSplitInferior();
 
-        splitSuperior = crearSplitSuperior();
-        splitInferior = crearSplitInferior();
-
-        splitGeneral = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitSuperior, splitInferior);
+        JSplitPane splitGeneral = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitSuperior, splitInferior);
         splitGeneral.setResizeWeight(0.3);
 
-        getContentPane().add(splitGeneral);
-
+        this.getContentPane().add(splitGeneral);
         this.setVisible(true);
     }
 
     private JSplitPane crearSplitSuperior() {
-        panellCalcul = new JPanel();
+        JPanel panellCalcul = new JPanel();
         panellCalcul.setLayout(new FlowLayout());
         panellCalcul.setBorder(BorderFactory.createTitledBorder("Opcions"));
 
-        origen = new JComboBox<>();
-        desti = new JComboBox<>();
+        JComboBox<String> origen = new JComboBox<>();
+        JComboBox<String> desti = new JComboBox<>();
 
         int n = idiomes.size();
         String[] columnes = new String[n + 1];
@@ -79,8 +70,8 @@ public class Finestra extends JFrame implements Comunicar {
             fila++;
         }
 
-        origen.addItem("Tots");
-        desti.addItem("Tots");
+        origen.addItem("TOTS");
+        desti.addItem("TOTS");
 
         panellCalcul.add(new JLabel("Idioma origen:"));
         panellCalcul.add(origen);
@@ -95,20 +86,21 @@ public class Finestra extends JFrame implements Comunicar {
         });
         panellCalcul.add(botoCalcular);
 
-        panellMatriu = new JPanel(new BorderLayout());
+
         modelDistancies = new DefaultTableModel(dades, columnes);
-        taulaDistancies = new JTable(modelDistancies);
+        JTable taulaDistancies = new JTable(modelDistancies);
         JScrollPane scroll = new JScrollPane(taulaDistancies);
         scroll.setBorder(BorderFactory.createTitledBorder("Matriu de distàncies"));
+
+        JPanel panellMatriu = new JPanel(new BorderLayout());
         panellMatriu.add(scroll, BorderLayout.CENTER);
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panellCalcul, panellMatriu);
-        split.setResizeWeight(0.3); // 30% per l'esquerra
+        split.setResizeWeight(0.3);
         split.setDividerSize(6);
 
         return split;
     }
-
 
     private JSplitPane crearSplitInferior() {
         ArrayList<JPanel> panells = new ArrayList<>();
@@ -119,6 +111,9 @@ public class Finestra extends JFrame implements Comunicar {
             panellGrafic.setPreferredSize(new Dimension(300, 200));
 
             JButton boto = new JButton("Actualitzar");
+            boto.addActionListener(e -> {
+               comunicar("actualitzar:" + nomGrafic);
+            });
             panellGrafic.add(boto, BorderLayout.SOUTH);
 
             panells.add(panellGrafic);
@@ -141,7 +136,14 @@ public class Finestra extends JFrame implements Comunicar {
 
     @Override
     public void comunicar(String s) {
-
+        switch (s) {
+            case "actualitzar":
+                // actualitzar gràfics
+                break;
+            default:
+                System.err.println("Finestra missatge? :" + s);
+                break;
+        }
     }
 
     @Override
@@ -150,7 +152,7 @@ public class Finestra extends JFrame implements Comunicar {
     }
 
     private void actualitzarMatriu() {
-        double[][] matriu = Main.getInstance().getDades().getDistancies();
+        double[][] matriu = dades.getDistancies();
         if (matriu == null) return;
 
         int n = matriu.length;
