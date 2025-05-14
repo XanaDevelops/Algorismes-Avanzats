@@ -60,7 +60,7 @@ public class Dades {
         return diccionaris.keySet();
     }
 
-
+    public double[][] getDistancies() { return distancies;}
 
     public List<String> getParaules(Idioma idioma) {
         return diccionaris.getOrDefault(idioma, Collections.emptyList());
