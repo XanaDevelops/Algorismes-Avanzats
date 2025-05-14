@@ -6,6 +6,7 @@ import controlador.Main;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.*;
 
 public class CalculIdiomes implements Comunicar, Runnable{
     ExecutorService filsDistanci;
@@ -56,7 +57,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
     }
 
 
-    private double calcularDistancia(Idioma origen, Idioma desti) {
+    /*private double calcularDistancia(Idioma origen, Idioma desti) {
         List<String> paraulesA = dades.getParaules(origen);
         List<String> paraulesB = dades.getParaules(desti);
 
@@ -79,7 +80,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
             suma += minim;
         }
         return suma / paraulesA.size();
-    }
+    }*/
 
     private double calcularDistanciaOrdenat(Idioma origen, Idioma desti) {
         List<String> paraulesA = dades.getParaules(origen);
@@ -96,7 +97,13 @@ public class CalculIdiomes implements Comunicar, Runnable{
         double minim = Double.MAX_VALUE;
 
         int n = B.size();
-        int pos = Collections.binarySearch(B, w);
+
+        Comparator<String> comp = Comparator.comparingInt(String::length);
+        int pos = Collections.binarySearch(B, w, comp);
+        if (pos < 0) {
+            pos = -pos - 1;
+        }
+
         int lenW = w.length();
 
 
