@@ -42,7 +42,7 @@ public class Dades {
                 paraula = paraula.trim();
 
                 if (!paraula.isEmpty()) {
-                    paraulesIdioma.add(paraula);
+                    paraulesIdioma.add(paraula.toLowerCase());
                 }
 
                 paraula = br.readLine();
@@ -51,7 +51,8 @@ public class Dades {
         } catch (IOException e) {
             System.err.println("Error carregant " + idioma + ": " + e.getMessage());
         }
-        paraulesIdioma.sort(Comparator.comparingInt(String::length));
+        Comparator<String> comp = Comparator.comparingInt(String::length);
+        paraulesIdioma.sort(comp);
         diccionaris.put(idioma, paraulesIdioma);
     }
 
