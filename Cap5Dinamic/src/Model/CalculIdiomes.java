@@ -10,7 +10,7 @@ import java.util.*;
 
 public class CalculIdiomes implements Comunicar, Runnable{
     ExecutorService filsDistanci;
-    private static final int N_THREADS = Runtime.getRuntime().availableProcessors();
+    private static final int N_THREADS = Runtime.getRuntime().availableProcessors()*2;
 
     private final ThreadPoolExecutor executorA = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2),
             executorB = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2);
@@ -63,13 +63,13 @@ public class CalculIdiomes implements Comunicar, Runnable{
         }
     }
 
-    private double calcularDistanciaOrdenat(Idioma origen, Idioma desti, boolean isA) {
+    private double calcularDistanciaOrdenat(Idioma origen, Idioma desti, boolean isA) throws ExecutionException, InterruptedException {
         List<String> paraulesA = dades.getParaules(origen);
         List<String> paraulesB = dades.getParaules(desti);
 
         double[] acumulator = new double[N_THREADS/2];
         ThreadPoolExecutor executor = isA ? executorA : executorB;
-        List<Runnable> tasks = new ArrayList<>();
+        List<Future<?>> tasks = new ArrayList<>();
 
         int size = paraulesA.size()/ (N_THREADS/2);
         if (size == 0){
@@ -78,19 +78,20 @@ public class CalculIdiomes implements Comunicar, Runnable{
         for(int i = 0; i < acumulator.length; i++){
             int finalSize = size;
             int finalI = i;
-            Runnable r = () ->{
+
+            tasks.add(executor.submit(() -> {
                 calcularConcurrent(paraulesA.subList(finalI * finalSize, (finalI +1)* finalSize), paraulesB, finalI, acumulator);
-            };
-            tasks.add(r);
-            executor.execute(r);
+
+            }));
         }
 
         while (!tasks.isEmpty()) {
-
+            tasks.getFirst().get();
+            tasks.removeFirst();
         }
         double suma = 0;
-        for (String w : paraulesA) {
-            suma += distanciaMin(w, paraulesB);
+        for (double i : acumulator) {
+            suma += i;
         }
         return suma / paraulesA.size();
     }

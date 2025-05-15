@@ -21,7 +21,10 @@ public class Main implements Comunicar{
     private final List<Runnable> runnables = new ArrayList<>();
 
     public static void main(String[] args) {
-        (new Main()).init();
+        if (args.length == 0)
+            (new Main()).init();
+        else
+            new Main();
     }
 
     public Main(){
