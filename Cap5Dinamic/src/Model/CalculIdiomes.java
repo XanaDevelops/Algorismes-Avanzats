@@ -72,18 +72,20 @@ public class CalculIdiomes implements Comunicar, Runnable{
         List<Future<?>> tasks = new ArrayList<>();
 
         int size = paraulesA.size()/ (N_THREADS/2);
-        if (size == 0){
-            size++;
-        }
-        for(int i = 0; i < acumulator.length; i++){
-            int finalSize = size;
+
+        for(int i = 0; i < acumulator.length-1; i++){
             int finalI = i;
 
             tasks.add(executor.submit(() -> {
-                calcularConcurrent(paraulesA.subList(finalI * finalSize, (finalI +1)* finalSize), paraulesB, finalI, acumulator);
+                calcularConcurrent(paraulesA.subList(finalI * size, (finalI +1)* size), paraulesB, finalI, acumulator);
 
             }));
         }
+        //final
+        tasks.add(executor.submit(() -> {
+            calcularConcurrent(paraulesA.subList((acumulator.length-1) * size, paraulesA.size()), paraulesB, acumulator.length-1, acumulator);
+
+        }));
 
         while (!tasks.isEmpty()) {
             tasks.getFirst().get();
