@@ -10,6 +10,11 @@ import java.util.*;
 
 public class CalculIdiomes implements Comunicar, Runnable{
     ExecutorService filsDistanci;
+    private static final int N_THREADS = Runtime.getRuntime().availableProcessors();
+
+    private final ThreadPoolExecutor executorA = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2),
+            executorB = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2);
+
     private final Dades dades;
     private final Idioma A;
     private final Idioma B;
@@ -17,6 +22,8 @@ public class CalculIdiomes implements Comunicar, Runnable{
         this.dades = Main.getInstance().getDades();
         this.A = A;
         this.B = B;
+
+        System.err.println(N_THREADS);
     }
 
     @Override
@@ -28,8 +35,8 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
     private double calcularDistanciaIdiomes(Idioma a, Idioma b) {
 
-        Callable<Double> taskAB = () -> calcularDistanciaOrdenat(a, b);
-        Callable<Double> taskBA = () -> calcularDistanciaOrdenat(b, a);
+        Callable<Double> taskAB = () -> calcularDistanciaOrdenat(a, b, true);
+        Callable<Double> taskBA = () -> calcularDistanciaOrdenat(b, a, false);
 
         try {
             // llança fil per sentit
@@ -56,41 +63,44 @@ public class CalculIdiomes implements Comunicar, Runnable{
         }
     }
 
-
-    /*private double calcularDistancia(Idioma origen, Idioma desti) {
+    private double calcularDistanciaOrdenat(Idioma origen, Idioma desti, boolean isA) {
         List<String> paraulesA = dades.getParaules(origen);
         List<String> paraulesB = dades.getParaules(desti);
 
-        double suma = 0.0;
+        double[] acumulator = new double[N_THREADS/2];
+        ThreadPoolExecutor executor = isA ? executorA : executorB;
+        List<Runnable> tasks = new ArrayList<>();
 
-        for (String paraulaA : paraulesA) {
-            double minim = Double.MAX_VALUE;
-
-            for (String paraulaB : paraulesB) {
-
-                int dist = CalculLevenshtein.calcularDistanciaLevenshtein(paraulaA, paraulaB);
-                double distNorm = (double) dist / Math.max(paraulaA.length(), paraulaB.length());
-
-                if (distNorm < minim) {
-                    minim = distNorm;
-                    if (minim == 0.0) break;
-                }
-            }
-
-            suma += minim;
+        int size = paraulesA.size()/ (N_THREADS/2);
+        if (size == 0){
+            size++;
         }
-        return suma / paraulesA.size();
-    }*/
+        for(int i = 0; i < acumulator.length; i++){
+            int finalSize = size;
+            int finalI = i;
+            Runnable r = () ->{
+                calcularConcurrent(paraulesA.subList(finalI * finalSize, (finalI +1)* finalSize), paraulesB, finalI, acumulator);
+            };
+            tasks.add(r);
+            executor.execute(r);
+        }
 
-    private double calcularDistanciaOrdenat(Idioma origen, Idioma desti) {
-        List<String> paraulesA = dades.getParaules(origen);
-        List<String> paraulesB = dades.getParaules(desti);
+        while (!tasks.isEmpty()) {
 
+        }
         double suma = 0;
         for (String w : paraulesA) {
             suma += distanciaMin(w, paraulesB);
         }
         return suma / paraulesA.size();
+    }
+
+    private void calcularConcurrent(List<String> slice, List<String> paraulesB, int id, double[] acumulators){
+        double aux = 0;
+        for (String w : slice) {
+            aux += distanciaMin(w, paraulesB);
+        }
+        acumulators[id] = aux;
     }
 
     private double distanciaMin(String w, List<String> B) {
