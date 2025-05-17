@@ -9,16 +9,43 @@ public class Dades {
 
     private Map<Idioma, List<String>> diccionaris = new HashMap<>();
 
+    private static final String dictPath = "res/Diccionaris/";
+    public double[][] getDistancies() {
+        return distancies;
+    }
+
+
+    private double[][] distancies;
+    private boolean parellaOTot = true; //true si es calcula la distancia entre un idioma i tota la resta o entre tots i tots
     public Dades() {
         for (Idioma idi : Idioma.values()) {
             if (idi != Idioma.TOTS) { // TOTS idioma especial
                 carregarDiccionari(idi);
             }
         }
+        System.out.println("carregats idiomes");
+        distancies = new double[Idioma.values().length-1][Idioma.values().length-1];
+
+
+    }
+
+    public void setParellaOTot(boolean v) {
+        this.parellaOTot = v;
+    }
+    public boolean isParellaOTot() {
+        return parellaOTot;
+    }
+
+    public void afegirDistancia (Idioma origen, Idioma desti, double distancia){
+        distancies[origen.ordinal()][desti.ordinal()] = distancia;
+    }
+
+    public double getDistancia (Idioma origen, Idioma desti) {
+        return distancies[origen.ordinal()][desti.ordinal()];
     }
 
     private void carregarDiccionari(Idioma idioma) {
-        String nomF = idioma.name().toLowerCase() + ".dic";
+        String nomF = dictPath + idioma.name().toUpperCase() + ".dic";
 
         List<String> paraulesIdioma = new ArrayList<>();
 
@@ -43,8 +70,11 @@ public class Dades {
     }
 
     public Set<Idioma> getIdiomes() {
+
         return diccionaris.keySet();
     }
+
+
 
     public List<String> getParaules(Idioma idioma) {
         return diccionaris.getOrDefault(idioma, Collections.emptyList());
