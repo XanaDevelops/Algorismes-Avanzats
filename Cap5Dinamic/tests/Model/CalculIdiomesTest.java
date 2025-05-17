@@ -9,7 +9,7 @@ class CalculIdiomesTest {
 
     @BeforeAll
     static void setUpBeforeClass() throws Exception {
-        Main.main(null);
+        Main.main(new String[]{"test"});
     }
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
