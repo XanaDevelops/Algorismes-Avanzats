@@ -82,7 +82,13 @@ public class Finestra extends JFrame implements Comunicar {
         botoCalcular.addActionListener(e -> {
             String idiomaOrigen = (String) origen.getSelectedItem();
             String idiomaDest = (String) desti.getSelectedItem();
-            comunicar.comunicar("calcular:" + idiomaOrigen + ":" + idiomaDest);
+            Idioma a = Idioma.valueOf(idiomaOrigen);
+            Idioma b = Idioma.valueOf(idiomaDest);
+            if(a==Idioma.TOTS && b==Idioma.TOTS) {
+                comunicar.calcularTot();
+            }else{
+                comunicar.calcular(a,b);
+            }
         });
         panellCalcul.add(botoCalcular);
 
