@@ -32,7 +32,10 @@ public class CalculIdiomes implements Comunicar, Runnable{
     @Override
     public void run()  {
         filsDistanci = Executors.newFixedThreadPool(2);
-        dades.afegirDistancia(A, B, calcularDistanciaIdiomes(A,B));
+        double dist = calcularDistanciaIdiomes(A,B);
+        //Al final "dist" es la distancia final A<->B, no A->B o B->A...
+        dades.afegirDistancia(A, B, dist);
+        dades.afegirDistancia(B, A, dist);
         Main.getInstance().actualitzar();
     }
 
