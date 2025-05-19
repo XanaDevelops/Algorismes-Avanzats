@@ -27,19 +27,19 @@ class MainTest {
     }
     @Test
     void calcularTOTS_TOTS(){
-        Main.getInstance().calcularTot();
+        Main.getInstance().calcularTot(666);
     }
     @Test
     void calcularNomesTOTS_L(){
-        Main.getInstance().calcular(Idioma.TOTS, Idioma.CAT);
+        Main.getInstance().calcular(Idioma.TOTS, Idioma.ESP, -1);
     }
     @Test
     void calcularNomesTOTS_R(){
-        Main.getInstance().calcular(Idioma.CAT, Idioma.TOTS);
+        Main.getInstance().calcular(Idioma.CAT, Idioma.TOTS, -1);
     }
     @Test
     void calcularESP_CAT() {
-        Main.getInstance().calcular(Idioma.ESP, Idioma.CAT);
+        Main.getInstance().calcular(Idioma.ESP, Idioma.CAT, -1);
 //        System.out.println(Main.getInstance().getDades().getDistancia(Idioma.ESP, Idioma.CAT));;
     }
 }

@@ -6,8 +6,7 @@ import Model.Idioma;
 import Vista.Finestra;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -18,7 +17,7 @@ public class Main implements Comunicar{
     private Dades dades;
 
     private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(16);
-    private final List<Runnable> runnables = new ArrayList<>();
+    private final Map<Integer, Comunicar> runnables = new TreeMap();
 
     public static void main(String[] args) {
         if (args.length == 0)
@@ -51,7 +50,7 @@ public class Main implements Comunicar{
     }
 
     @Override
-    public void calcular(Idioma a, Idioma b){
+    public void calcular(Idioma a, Idioma b, int id){
         System.err.println("Calculant D("+a+"-"+b+")");
         //es suposa que TOTS-TOTS es crida des de calcularTots()
         //també es suposa que TOTS es gestiona a Finestra, però per si de cas...
@@ -60,41 +59,43 @@ public class Main implements Comunicar{
                 if(idioma == Idioma.TOTS){
                     continue;
                 }
-                addAndExec(idioma, b);
+                addAndExec(idioma, b, id); //per favor, que tots es fasi des de la Finestra...
             }
         }else if(b == Idioma.TOTS){
             for(Idioma idioma : Idioma.values()){
                 if(idioma == Idioma.TOTS){
                     continue;
                 }
-                addAndExec(idioma, a);
+                addAndExec(idioma, a, id);
             }
         }else{
-            addAndExec(a, b);
+            addAndExec(a, b, id);
         }
 
     }
 
-    private void addAndExec(Idioma a, Idioma b){
-        Runnable r = () -> {
-            CalculIdiomes c = new CalculIdiomes(a,b);
-            c.run();
-        };
-        executor.execute(r);
-        runnables.add((r));
+    private void addAndExec(Idioma a, Idioma b, int id){
+
+        CalculIdiomes c = new CalculIdiomes(a,b, id);
+
+        executor.execute(c);
+        runnables.put(id, c);
     }
 
     @Override
-    public void aturar(){
-        for(Runnable r : runnables){
-            ((Comunicar) r).aturar();
+    public void aturar(int id){
+        Comunicar c = runnables.remove(id);
+        if(c != null){
+            c.aturar(id);
+            finestra.aturar(id);
         }
-        runnables.clear();
+
+
     }
 
     @Override
-    public void actualitzar(){
-        finestra.actualitzar();
+    public void actualitzar(int id){
+        finestra.actualitzar(id);
     }
 
     public static Main getInstance() {

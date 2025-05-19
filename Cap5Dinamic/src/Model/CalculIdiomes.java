@@ -10,7 +10,7 @@ import java.util.*;
 
 public class CalculIdiomes implements Comunicar, Runnable{
     ExecutorService filsDistanci;
-    private static final int N_THREADS = Runtime.getRuntime().availableProcessors()*2;
+    private static final int N_THREADS = Runtime.getRuntime().availableProcessors();
 
     private final ThreadPoolExecutor executorA = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2),
             executorB = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2);
@@ -19,13 +19,15 @@ public class CalculIdiomes implements Comunicar, Runnable{
     private final Idioma A;
     private final Idioma B;
 
+    private int id;
+
     private boolean aturar = false;
 
-    public CalculIdiomes( Idioma A, Idioma B) {
+    public CalculIdiomes(Idioma A, Idioma B, int id) {
         this.dades = Main.getInstance().getDades();
         this.A = A;
         this.B = B;
-
+        this.id = id;
         System.err.println(N_THREADS);
     }
 
@@ -33,7 +35,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
     public void run()  {
         filsDistanci = Executors.newFixedThreadPool(2);
         dades.afegirDistancia(A, B, calcularDistanciaIdiomes(A,B));
-        Main.getInstance().actualitzar();
+        Main.getInstance().actualitzar(id);
     }
 
     private double calcularDistanciaIdiomes(Idioma a, Idioma b) {
@@ -166,7 +168,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
     }
 
     @Override
-    public void aturar(){
+    public void aturar(int id){
         aturar = true;
         filsDistanci.shutdown();
     }
