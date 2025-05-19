@@ -16,8 +16,8 @@ public class Main implements Comunicar{
     private Comunicar finestra;
     private Dades dades;
 
-    private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(16);
-    private final Map<Integer, Comunicar> runnables = new TreeMap();
+    private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(3);
+    private final Map<Integer, Comunicar> runnables = new TreeMap<>();
 
     public static void main(String[] args) {
         if (args.length == 0)
@@ -50,36 +50,40 @@ public class Main implements Comunicar{
     }
 
     @Override
-    public void calcular(Idioma a, Idioma b, int id){
-        System.err.println("Calculant D("+a+"-"+b+")");
+    public void calcular(Idioma a, Idioma b){
         //es suposa que TOTS-TOTS es crida des de calcularTots()
         //també es suposa que TOTS es gestiona a Finestra, però per si de cas...
         if (a == Idioma.TOTS){
             for(Idioma idioma : Idioma.values()){
-                if(idioma == Idioma.TOTS){
+                if(idioma == Idioma.TOTS || idioma == b){
                     continue;
                 }
-                addAndExec(idioma, b, id); //per favor, que tots es fasi des de la Finestra...
+                addAndExec(idioma, b, dades.getIdCount()); //per favor, que tots es fasi des de la Finestra...
             }
         }else if(b == Idioma.TOTS){
             for(Idioma idioma : Idioma.values()){
-                if(idioma == Idioma.TOTS){
+                if(idioma == Idioma.TOTS || idioma == a){
                     continue;
                 }
-                addAndExec(idioma, a, id);
+                addAndExec(idioma, a, dades.getIdCount());
             }
         }else{
-            addAndExec(a, b, id);
+            addAndExec(a, b, dades.getIdCount());
         }
 
     }
 
     private void addAndExec(Idioma a, Idioma b, int id){
+        if(a==b){
+            System.err.println("S'ha intentat calcular la distancia entre iguals "+a+"=="+b);
+        }
+        System.err.println("Calculant D("+a+"-"+b+") "+id);
 
         CalculIdiomes c = new CalculIdiomes(a,b, id);
 
         executor.execute(c);
         runnables.put(id, c);
+        finestra.calcular(a,b, id);
     }
 
     @Override

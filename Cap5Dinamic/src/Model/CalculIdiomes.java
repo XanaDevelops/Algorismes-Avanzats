@@ -33,6 +33,8 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
     @Override
     public void run()  {
+        Main.getInstance().getFinestra().calcular(A, B, id);
+
         filsDistanci = Executors.newFixedThreadPool(2);
         dades.afegirDistancia(A, B, calcularDistanciaIdiomes(A,B));
         Main.getInstance().actualitzar(id);
@@ -100,6 +102,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
         for (double i : acumulator) {
             suma += i;
         }
+        executor.shutdown();
         return suma / paraulesA.size();
     }
 
@@ -169,8 +172,10 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
     @Override
     public void aturar(int id){
+        if(!aturar)
+            filsDistanci.shutdown();
         aturar = true;
-        filsDistanci.shutdown();
+
     }
 
 

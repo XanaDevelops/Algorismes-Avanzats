@@ -16,6 +16,7 @@ public class BarraCarrega extends JPanel {
     private int id;
 
     private boolean hasEnd = false;
+    private boolean actiu = false;
 
     private Dades dades;
 
@@ -59,7 +60,12 @@ public class BarraCarrega extends JPanel {
         this.setVisible(true);
     }
 
+    public void iniciar(){
+        actiu = true;
+    }
+
     public void tick(){
+        if(!actiu)return;
         if(hasEnd){
             progressBar.setValue(progressBar.getMaximum());
             return;
@@ -73,6 +79,7 @@ public class BarraCarrega extends JPanel {
 
     public void end(){
         hasEnd = true;
+        progressBar.setValue(progressBar.getMaximum());
         cancel.setEnabled(false);
         Thread.startVirtualThread(this::esperarEliminar);
     }
