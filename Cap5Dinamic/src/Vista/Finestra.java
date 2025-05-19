@@ -9,15 +9,28 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Set;
 
 public class Finestra extends JFrame implements Comunicar {
+    private enum Grafiques{
+        ARBRE_DIST("Arbre distàncies", ArbreDistancies.class),
+        ARBRE_FLEXIC("Arbre FiloLexic", ArbreFiloLexic.class),
+        DIA_BARRES("Diagrama Barres", DiagramaBarres.class);
+
+
+        String titol;
+        Class<? extends JPanel> c;
+        Grafiques(String title, Class<? extends JPanel> clazz){
+            this.titol = title;
+            this.c = clazz;
+        }
+    }
     private final Comunicar comunicar;
     private final Dades dades;
     private final Set<Idioma> idiomes;
 
-    private final String[] grafics = {"Gràfic 1", "Gràfic 2", "Gràfic 3"};
 
     private DefaultTableModel modelDistancies;
 
@@ -35,7 +48,12 @@ public class Finestra extends JFrame implements Comunicar {
         setLocationRelativeTo(null);
 
         JSplitPane splitSuperior = crearSplitSuperior();
-        JSplitPane splitInferior = crearSplitInferior();
+        JSplitPane splitInferior = null;
+        try {
+            splitInferior = crearSplitInferior();
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
 
         JSplitPane splitGeneral = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitSuperior, splitInferior);
         splitGeneral.setResizeWeight(0.3);
@@ -133,17 +151,19 @@ public class Finestra extends JFrame implements Comunicar {
         return split;
     }
 
-    private JSplitPane crearSplitInferior() {
+    private JSplitPane crearSplitInferior() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         ArrayList<JPanel> panells = new ArrayList<>();
 
-        for(String nomGrafic : grafics) {
+        for(Grafiques g : Grafiques.values()) {
             JPanel panellGrafic = new JPanel(new BorderLayout());
-            panellGrafic.setBorder(BorderFactory.createTitledBorder(nomGrafic));
+            panellGrafic.setBorder(BorderFactory.createTitledBorder(g.titol));
             panellGrafic.setPreferredSize(new Dimension(300, 200));
+
+            panellGrafic.add(g.c.getConstructor().newInstance(), BorderLayout.NORTH);
 
             JButton boto = new JButton("Actualitzar");
             boto.addActionListener(e -> {
-               comunicar("actualitzar:" + nomGrafic);
+               comunicar("actualitzar:" + g.titol);
             });
             panellGrafic.add(boto, BorderLayout.SOUTH);
 
@@ -191,7 +211,7 @@ public class Finestra extends JFrame implements Comunicar {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if(matriu[i][j] != 0) {
-                    modelDistancies.setValueAt(String.format("%.2f", matriu[i][j]), i-1, j);
+                    modelDistancies.setValueAt(String.format("%.4f", matriu[i][j]), i, j);
                 }
             }
         }
