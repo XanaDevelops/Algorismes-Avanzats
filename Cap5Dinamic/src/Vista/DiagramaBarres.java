@@ -3,6 +3,8 @@ package Vista;
 
 import Model.Dades;
 import Model.Idioma;
+import controlador.Main;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,11 +15,11 @@ public class DiagramaBarres extends JPanel {
     private final Idioma idioma;
     private final int totalIds;
 
-    public DiagramaBarres(Dades dades, Idioma idioma) {
-        this.dades = dades;
+    public DiagramaBarres() {
+        this.dades = Main.getInstance().getDades();
         this.height = 200;
         this.width = 300;
-        this.idioma = idioma;
+        this.idioma = Idioma.ESP; //TODO: desplegable, PLACEHOLDER!!!
         this.totalIds = Idioma.values().length-1;
         setPreferredSize(new Dimension(width, height));
     }

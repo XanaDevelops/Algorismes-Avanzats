@@ -2,6 +2,7 @@ package Vista;
 
 import Model.Dades;
 import Model.Idioma;
+import controlador.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,8 +36,8 @@ public class ArbreDistancies extends JPanel {
     private final int tamanyText;
     private final int tamanyDist;
 
-    public ArbreDistancies(Dades dades) {
-        this.dades = dades;
+    public ArbreDistancies() {
+        this.dades = Main.getInstance().getDades();
 
         this.NODES = dades.getIdiomes().size();
         this.height = 600;

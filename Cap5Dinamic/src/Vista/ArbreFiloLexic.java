@@ -2,6 +2,8 @@ package Vista;
 
 import Model.Dades;
 import Model.Idioma;
+import controlador.Main;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,8 +15,8 @@ public class ArbreFiloLexic extends JPanel {
     private final int width;
     private final int height;
     private Node root;
-    public ArbreFiloLexic(Dades dades) {
-        this.dades = dades;
+    public ArbreFiloLexic() {
+        this.dades = Main.getInstance().getDades();
         //s'han de passar per parametre o es poden obtenir de la classe Dades
         this.width = 300;
         this.height = 300;
