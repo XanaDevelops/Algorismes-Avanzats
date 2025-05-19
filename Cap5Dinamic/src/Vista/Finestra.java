@@ -7,6 +7,7 @@ import controlador.Main;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Set;
@@ -64,7 +65,7 @@ public class Finestra extends JFrame implements Comunicar {
             dades[fila][0] = idiom.toString();
 
             for (int col = 1; col <= n; col++) {
-                dades[fila][col] = "-";
+                dades[fila][col] = fila==(col-1)? "": "-";
             }
 
             fila++;
@@ -82,13 +83,43 @@ public class Finestra extends JFrame implements Comunicar {
         botoCalcular.addActionListener(e -> {
             String idiomaOrigen = (String) origen.getSelectedItem();
             String idiomaDest = (String) desti.getSelectedItem();
-            comunicar.comunicar("calcular:" + idiomaOrigen + ":" + idiomaDest);
+            Idioma a = Idioma.valueOf(idiomaOrigen);
+            Idioma b = Idioma.valueOf(idiomaDest);
+            if(a==Idioma.TOTS && b==Idioma.TOTS) {
+                comunicar.calcularTot();
+            }else if(a==b){
+                JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
+            }
+            else{
+                comunicar.calcular(a,b);
+            }
         });
         panellCalcul.add(botoCalcular);
 
 
-        modelDistancies = new DefaultTableModel(dades, columnes);
-        JTable taulaDistancies = new JTable(modelDistancies);
+        modelDistancies = new DefaultTableModel(dades, columnes){
+            //Impedeix editar els valors
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        JTable taulaDistancies = new JTable(modelDistancies){
+            @Override
+            public Component prepareRenderer(TableCellRenderer r, int row, int column) {
+                Component c = super.prepareRenderer(r, row, column);
+                if ((row+1) == column){
+                    c.setBackground(Color.BLACK);
+                }else if(row %2 == 0){
+                    c.setBackground(Color.LIGHT_GRAY);
+                }
+                else{
+                    c.setBackground(Color.WHITE);
+                }
+                return c;
+            }
+        };
+        taulaDistancies.getTableHeader().setReorderingAllowed(false);
         JScrollPane scroll = new JScrollPane(taulaDistancies);
         scroll.setBorder(BorderFactory.createTitledBorder("Matriu de distàncies"));
 
@@ -160,7 +191,7 @@ public class Finestra extends JFrame implements Comunicar {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if(matriu[i][j] != 0) {
-                    modelDistancies.setValueAt(String.format("%.2f", matriu[i][j]), i + 1, j + 1);
+                    modelDistancies.setValueAt(String.format("%.2f", matriu[i][j]), i-1, j);
                 }
             }
         }

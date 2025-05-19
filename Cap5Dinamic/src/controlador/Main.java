@@ -45,7 +45,9 @@ public class Main implements Comunicar{
 
     @Override
     public void comunicar(String s) {
+        String[] args = s.split(":");
 
+        System.err.println("MAIN: missatge? " + s);
     }
 
     @Override
@@ -75,19 +77,8 @@ public class Main implements Comunicar{
 
     private void addAndExec(Idioma a, Idioma b){
         Runnable r = () -> {
-//            double d =0.0;
-//            System.err.println("INACABAT! "+a+ "-" +b);
-            CalculIdiomes c = new CalculIdiomes(a,b); //TODO: FER RUNNABLE
-            try {
-//                 d = c.call();
-                c.run();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }finally {
-//                System.err.println("POSAR A DADES: "+ d); //TODO: GUARDAR A DADES!
-                System.err.println("POSAR A DADES: ");
-            }
-
+            CalculIdiomes c = new CalculIdiomes(a,b);
+            c.run();
         };
         executor.execute(r);
         runnables.add((r));

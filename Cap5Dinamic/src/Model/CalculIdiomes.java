@@ -18,6 +18,9 @@ public class CalculIdiomes implements Comunicar, Runnable{
     private final Dades dades;
     private final Idioma A;
     private final Idioma B;
+
+    private boolean aturar = false;
+
     public CalculIdiomes( Idioma A, Idioma B) {
         this.dades = Main.getInstance().getDades();
         this.A = A;
@@ -29,8 +32,8 @@ public class CalculIdiomes implements Comunicar, Runnable{
     @Override
     public void run()  {
         filsDistanci = Executors.newFixedThreadPool(2);
-//        return calcularDistanciaIdiomes(A,B);
         dades.afegirDistancia(A, B, calcularDistanciaIdiomes(A,B));
+        Main.getInstance().actualitzar();
     }
 
     private double calcularDistanciaIdiomes(Idioma a, Idioma b) {
@@ -73,31 +76,21 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
         int size = paraulesA.size()/ (N_THREADS/2);
 
-        for(int i = 0; i < acumulator.length-1; i++){
+        for(int i = 0; i < acumulator.length-1 && !aturar; i++){
             int finalI = i;
-            if (isA){
-                System.err.println("A: "+"i: "+finalI+": " + finalI * size + ", " + (finalI +1)* size);
-            }else{
-                System.err.println("B: "+"i: "+finalI+": " + finalI * size + ", " + (finalI +1)* size);
-            }
+
             tasks.add(executor.submit(() -> {
                 calcularConcurrent(paraulesA.subList(finalI * size, (finalI +1)* size), paraulesB, finalI, acumulator);
 
             }));
         }
         //final
-        if (isA){
-            System.err.println("A: "+"i: " + (acumulator.length-1) +": " + (acumulator.length-1) * size + ", " + paraulesA.size());
-        }
-        else{
-            System.err.println("B: "+"i: " + (acumulator.length-1) +": " + (acumulator.length-1) * size + ", " + paraulesA.size());
-        }
         tasks.add(executor.submit(() -> {
             calcularConcurrent(paraulesA.subList((acumulator.length-1) * size, paraulesA.size()), paraulesB, acumulator.length-1, acumulator);
 
         }));
 
-        while (!tasks.isEmpty()) {
+        while (!tasks.isEmpty() && !aturar) {
             tasks.getFirst().get();
             tasks.removeFirst();
         }
@@ -131,6 +124,9 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
 
         for (int i = 0; i < n; i++) {
+            if (aturar){
+                return Double.MAX_VALUE;
+            }
             boolean capEsq = false, capDret = false, esDreta = true;
 
             for (int j = 0; j < 2; j++) {
@@ -171,6 +167,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
     @Override
     public void aturar(){
+        aturar = true;
         filsDistanci.shutdown();
     }
 
