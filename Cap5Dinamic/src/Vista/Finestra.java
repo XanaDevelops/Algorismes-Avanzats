@@ -188,7 +188,7 @@ public class Finestra extends JFrame implements Comunicar {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if(matriu[i][j] != 0) {
-                    modelDistancies.setValueAt(String.format("%.2f", matriu[i][j]), i + 1, j + 1);
+                    modelDistancies.setValueAt(String.format("%.2f", matriu[i][j]), i-1, j);
                 }
             }
         }

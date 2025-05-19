@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Dades {
 
-    private Map<Idioma, List<String>> diccionaris = new HashMap<>();
+    private Map<Idioma, List<String>> diccionaris = new TreeMap<>();
 
     private static final String dictPath = "res/Diccionaris/";
     private double[][] distancies;
