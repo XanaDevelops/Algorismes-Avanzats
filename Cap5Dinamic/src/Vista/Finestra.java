@@ -87,7 +87,10 @@ public class Finestra extends JFrame implements Comunicar {
             Idioma b = Idioma.valueOf(idiomaDest);
             if(a==Idioma.TOTS && b==Idioma.TOTS) {
                 comunicar.calcularTot();
-            }else{
+            }else if(a==b){
+                JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
+            }
+            else{
                 comunicar.calcular(a,b);
             }
         });
