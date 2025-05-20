@@ -14,6 +14,7 @@ public class Dades {
         return distancies;
     }
 
+    private int idCount = 0;
 
     private double[][] distancies;
     private boolean parellaOTot = true; //true si es calcula la distancia entre un idioma i tota la resta o entre tots i tots
@@ -74,7 +75,9 @@ public class Dades {
         return diccionaris.keySet();
     }
 
-
+    public int getIdCount(){
+        return idCount++;
+    }
 
     public List<String> getParaules(Idioma idioma) {
         return diccionaris.getOrDefault(idioma, Collections.emptyList());

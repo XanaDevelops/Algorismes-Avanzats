@@ -11,7 +11,10 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.Callable;
 
 public class Finestra extends JFrame implements Comunicar {
     private enum Grafiques{
@@ -31,9 +34,9 @@ public class Finestra extends JFrame implements Comunicar {
     private final Dades dades;
     private final Set<Idioma> idiomes;
 
-
+    private Map<Integer, BarraCarrega> barresMap = new TreeMap<>();
+    private JPanel barresCarrega;
     private DefaultTableModel modelDistancies;
-
 
     public Finestra() {
         super();
@@ -44,7 +47,8 @@ public class Finestra extends JFrame implements Comunicar {
         setTitle("Diferenciador d'idiomes");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //setResizable(false);
-        setSize(1000, 700);
+        setSize(1280, 720);
+        setPreferredSize(new Dimension(1280, 720));
         setLocationRelativeTo(null);
 
         JSplitPane splitSuperior = crearSplitSuperior();
@@ -56,10 +60,13 @@ public class Finestra extends JFrame implements Comunicar {
         }
 
         JSplitPane splitGeneral = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitSuperior, splitInferior);
-        splitGeneral.setResizeWeight(0.3);
+        splitGeneral.setResizeWeight(0.8);
+        SwingUtilities.invokeLater(() -> splitGeneral.setDividerLocation(0.4));
 
         this.getContentPane().add(splitGeneral);
         this.setVisible(true);
+
+        timer.start();
     }
 
     private JSplitPane crearSplitSuperior() {
@@ -99,20 +106,28 @@ public class Finestra extends JFrame implements Comunicar {
 
         JButton botoCalcular = new JButton("Calcular");
         botoCalcular.addActionListener(e -> {
-            String idiomaOrigen = (String) origen.getSelectedItem();
-            String idiomaDest = (String) desti.getSelectedItem();
-            Idioma a = Idioma.valueOf(idiomaOrigen);
-            Idioma b = Idioma.valueOf(idiomaDest);
-            if(a==Idioma.TOTS && b==Idioma.TOTS) {
-                comunicar.calcularTot();
-            }else if(a==b){
-                JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
-            }
-            else{
-                comunicar.calcular(a,b);
-            }
+            calcularMain(origen, desti);
         });
         panellCalcul.add(botoCalcular);
+
+        JButton botoAturar = new JButton("Aturar");
+        botoAturar.addActionListener(e -> {
+            final int[] ids = this.barresMap.keySet().stream().mapToInt(i -> i).toArray();
+            for(int id: ids){
+                this.barresMap.get(id).cancelar();
+            }
+        });
+        panellCalcul.add(botoAturar);
+
+        //part barres de carrega
+        barresCarrega = new JPanel();
+        barresCarrega.setLayout(new BoxLayout(barresCarrega, BoxLayout.Y_AXIS));
+        barresCarrega.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JScrollPane scrollPane = new JScrollPane(barresCarrega);
+
+        scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scrollPane.setPreferredSize(new Dimension(375, 150));
+        panellCalcul.add(scrollPane);
 
 
         modelDistancies = new DefaultTableModel(dades, columnes){
@@ -147,9 +162,12 @@ public class Finestra extends JFrame implements Comunicar {
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panellCalcul, panellMatriu);
         split.setResizeWeight(0.3);
         split.setDividerSize(6);
+        SwingUtilities.invokeLater(() -> split.setDividerLocation(0.4d));
 
         return split;
     }
+
+
 
     private JSplitPane crearSplitInferior() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         ArrayList<JPanel> panells = new ArrayList<>();
@@ -175,14 +193,36 @@ public class Finestra extends JFrame implements Comunicar {
         }
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panells.get(0), panells.get(1));
-        split.setResizeWeight(1.0 / panells.size());
+        //split.setResizeWeight(1.0 / panells.size());
+        final JSplitPane finalSplit = split;
 
         for (int i = 2; i < panells.size(); i++) {
             split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, split, panells.get(i));
-            split.setResizeWeight(1.0 / (i + 1));
+            //split.setResizeWeight(1.0 / (i + 1));
         }
+        JSplitPane finalSplit1 = split;
+        SwingUtilities.invokeLater(() -> {
+            finalSplit.setDividerLocation(2.0/3.0);
+            finalSplit1.setDividerLocation(2/3d);
+        });
+
 
         return split;
+    }
+
+    private void calcularMain(JComboBox<String> origen, JComboBox<String> desti) {
+        String idiomaOrigen = (String) origen.getSelectedItem();
+        String idiomaDest = (String) desti.getSelectedItem();
+        Idioma a = Idioma.valueOf(idiomaOrigen);
+        Idioma b = Idioma.valueOf(idiomaDest);
+        if(a==Idioma.TOTS && b==Idioma.TOTS) {
+            comunicar.calcularTot();
+        }else if(a==b){
+            JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
+        }
+        else{
+            comunicar.calcular(a,b);
+        }
     }
 
     @Override
@@ -198,8 +238,25 @@ public class Finestra extends JFrame implements Comunicar {
     }
 
     @Override
-    public void actualitzar() {
+    public synchronized void calcular(Idioma a, Idioma b, int id) {
+        if (barresMap.containsKey(id)) {
+            barresMap.get(id).iniciar();
+        }else {
+            BarraCarrega barra = new BarraCarrega("D("+a+","+b+") ", id);
+            this.barresMap.put(id, barra);
+            this.barresCarrega.add(barra);
+        }
+        this.revalidate();
+
+    }
+
+    @Override
+    public void actualitzar(int id) {
+        BarraCarrega b = this.barresMap.get(id);
+        if (b!= null)
+            b.end();
         actualitzarMatriu();
+        this.revalidate();
     }
 
     private void actualitzarMatriu() {
@@ -211,9 +268,25 @@ public class Finestra extends JFrame implements Comunicar {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if(matriu[i][j] != 0) {
-                    modelDistancies.setValueAt(String.format("%.4f", matriu[i][j]), i, j);
+                    modelDistancies.setValueAt(String.format("%.3f", matriu[i][j]), i, j+1);
                 }
             }
         }
     }
+
+    @Override
+    public void aturar(int id) {
+        BarraCarrega barra = this.barresMap.remove(id);
+        if (barra != null) {
+            this.barresCarrega.remove(barra);
+        }
+        this.revalidate();
+        this.repaint();
+    }
+
+    Timer timer = new Timer(1000/30, e -> {
+        for(Map.Entry<Integer, BarraCarrega> entry: barresMap.entrySet()){
+            entry.getValue().tick();
+        }
+    });
 }
