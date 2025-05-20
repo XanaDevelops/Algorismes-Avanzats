@@ -3,23 +3,25 @@ package Vista;
 
 import Model.Dades;
 import Model.Idioma;
+import controlador.Comunicar;
 import controlador.Main;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class DiagramaBarres extends JPanel {
+    public  class DiagramaBarres extends JPanel implements Comunicar {
     private final Dades dades;
     private final int height;
     private final int width;
-    private final Idioma idioma;
+    protected static Idioma idioma;
     private final int totalIds;
 
     public DiagramaBarres() {
         this.dades = Main.getInstance().getDades();
         this.height = 200;
         this.width = 300;
-        this.idioma = Idioma.ESP; //TODO: desplegable, PLACEHOLDER!!!
+        //ESP default value
+        idioma = Idioma.ESP; //TODO: desplegable, PLACEHOLDER!!!
         this.totalIds = Idioma.values().length-1;
         setPreferredSize(new Dimension(width, height));
     }
@@ -27,7 +29,6 @@ public class DiagramaBarres extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
 
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -66,7 +67,7 @@ public class DiagramaBarres extends JPanel {
         String titleText = idioma.name();
         int titleWidth = titleFM.stringWidth(titleText);
         int titleX = (panelWidth - titleWidth) / 2;
-        int titleY = titleFM.getAscent() + (int) (panelHeight * 0.01);
+        int titleY = titleFM.getAscent() + (int) (panelHeight * 0.001);
         g2.setColor(Color.BLACK);
         g2.drawString(titleText, titleX, titleY);
         g2.setFont(originalFont);
@@ -139,4 +140,30 @@ public class DiagramaBarres extends JPanel {
             currentBarIndex++;
         }
     }
+
+    @Override
+    public void comunicar(String s) {
+
+//        if (s.startsWith("actualitzar:")) {
+//            revalidate();
+//            repaint();
+//
+//        }else if (s.startsWith("idioma")){
+//
+//            s = s.replace("idioma:","");
+//            System.out.println("idioma: /"+s);
+//            for (int i = 0; i < Idioma.values().length - 1; i++) {
+//                Idioma id = Idioma.values()[i];
+//                if (s.equals(id.toString())) {
+//                    this.idioma = id;
+//                    break;
+//                }
+//            }
+//        }
+
+
+
+
+    }
+
 }

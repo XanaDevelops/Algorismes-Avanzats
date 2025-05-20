@@ -40,14 +40,14 @@ public class ArbreDistancies extends JPanel {
         this.dades = Main.getInstance().getDades();
 
         this.NODES = dades.getIdiomes().size();
-        this.height = 600;
-        this.width = 600;
+        this.height = 200;
+        this.width = 300;
         this.CENTRE_X = width / 2;
         this.CENTRE_Y = height / 2;
         shuffle(Arrays.asList(COLORS));
-        this.tamanyText =  Math.max(10, width/12);
+        this.tamanyText =  Math.max(10, width/30);
         ;
-        this.tamanyDist= Math.max(10, width/12);;
+        this.tamanyDist= Math.max(6, width/30);;
 
         this.RADI = Math.min(CENTRE_X, CENTRE_Y) - (int) (0.1 * Math.min(CENTRE_X, CENTRE_Y));
         this.setLayout(null);
@@ -88,8 +88,8 @@ public class ArbreDistancies extends JPanel {
         int j = 0;
         for (int i = 0; i < NODES; i++) {
             Idioma id = Idioma.values()[i];
-            if (!id.equals(idioma)) {
-                dibuixaLinea(g, new Point(CENTRE_X, CENTRE_Y), posicions[j], Double.toString(distancies[idioma.ordinal()][i]), color);
+            if (!id.equals(idioma) && distancies[idioma.ordinal()][i]!=0.0) {
+                dibuixaLinea(g, new Point(CENTRE_X, CENTRE_Y), posicions[j], String.format("%.2f",distancies[i][j] ), color);
                 dibuixaNode(g, posicions[j].x, posicions[j].y, 15, Idioma.values()[i].name());
                 j++;
             }
@@ -103,7 +103,9 @@ public class ArbreDistancies extends JPanel {
         double[][] distancies = dades.getDistancies();
         for (int i = 0; i < NODES; i++) {
             for (int j = i + 1; j < NODES; j++) {
-                dibuixaLinea(g, posicions[i], posicions[j], Double.toString(distancies[i][j]), COLORS[i]);
+                if (distancies[i][j]!=0.0) {
+                    dibuixaLinea(g, posicions[i], posicions[j], String.format("%.2f",distancies[i][j] ), COLORS[i]);
+                }
             }
         }
         for (int i = 0; i < NODES; i++) {

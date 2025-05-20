@@ -184,7 +184,8 @@ public class Finestra extends JFrame implements Comunicar {
 
             JButton boto = new JButton("Actualitzar");
             boto.addActionListener(e -> {
-               comunicar("actualitzar:" + g.titol);
+               comunicar.comunicar("actualitzar:" + g.titol);
+
             });
             panellGrafic.add(boto, BorderLayout.SOUTH);
 
@@ -224,6 +225,8 @@ public class Finestra extends JFrame implements Comunicar {
             JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
         }
         else{
+            comunicar.comunicar("idioma:"+a.name());
+            DiagramaBarres.idioma= b;
             comunicar.calcular(a,b);
         }
     }
@@ -231,11 +234,10 @@ public class Finestra extends JFrame implements Comunicar {
     @Override
     public void comunicar(String s) {
         switch (s) {
-            case "actualitzar":
-                // actualitzar gràfics
-                break;
+
             default:
-                System.err.println("Finestra missatge? :" + s);
+                System.err.println("Finestra missatge? " + s);
+                comunicar.comunicar(s);
                 break;
         }
     }
