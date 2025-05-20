@@ -10,7 +10,7 @@ import java.util.*;
 
 public class CalculIdiomes implements Comunicar, Runnable{
     ExecutorService filsDistanci;
-    private static final int N_THREADS = Runtime.getRuntime().availableProcessors()*2;
+    private static final int N_THREADS = Runtime.getRuntime().availableProcessors();
 
     private final ThreadPoolExecutor executorA = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2),
             executorB = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2);
@@ -19,24 +19,29 @@ public class CalculIdiomes implements Comunicar, Runnable{
     private final Idioma A;
     private final Idioma B;
 
+    private int id;
+
     private boolean aturar = false;
 
-    public CalculIdiomes( Idioma A, Idioma B) {
+    public CalculIdiomes(Idioma A, Idioma B, int id) {
         this.dades = Main.getInstance().getDades();
         this.A = A;
         this.B = B;
-
+        this.id = id;
         System.err.println(N_THREADS);
     }
 
     @Override
     public void run()  {
+        Main.getInstance().getFinestra().calcular(A, B, id);
+
         filsDistanci = Executors.newFixedThreadPool(2);
         double dist = calcularDistanciaIdiomes(A,B);
         //Al final "dist" es la distancia final A<->B, no A->B o B->A...
         dades.afegirDistancia(A, B, dist);
         dades.afegirDistancia(B, A, dist);
-        Main.getInstance().actualitzar();
+        if(!aturar)
+            Main.getInstance().actualitzar(id);
     }
 
     private double calcularDistanciaIdiomes(Idioma a, Idioma b) {
@@ -63,6 +68,10 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
         } catch (ExecutionException e) {
             System.err.println("Error al càlcular la distància" + e);
+            return Double.NaN;
+        }catch(RejectedExecutionException e){
+            if(!aturar)
+                System.err.println("Error amb l'executor");
             return Double.NaN;
         }finally {
             filsDistanci.shutdown();
@@ -101,6 +110,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
         for (double i : acumulator) {
             suma += i;
         }
+        executor.shutdown();
         return suma / paraulesA.size();
     }
 
@@ -157,6 +167,9 @@ public class CalculIdiomes implements Comunicar, Runnable{
                 }
             }
             if (capEsq && capDret) break;
+            if(minim==0){
+                break;
+            }
         }
         return minim;
     }
@@ -169,9 +182,11 @@ public class CalculIdiomes implements Comunicar, Runnable{
     }
 
     @Override
-    public void aturar(){
+    public void aturar(int id){
+        if(!aturar && filsDistanci != null)
+            filsDistanci.shutdown();
         aturar = true;
-        filsDistanci.shutdown();
+
     }
 
 
