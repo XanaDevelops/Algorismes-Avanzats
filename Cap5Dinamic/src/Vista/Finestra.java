@@ -117,6 +117,8 @@ public class Finestra extends JFrame implements Comunicar {
             for(int id: ids){
                 this.barresMap.get(id).cancelar();
             }
+            this.barresMap.clear();
+            this.barresCarrega.removeAll();
         });
         panellCalcul.add(botoAturar);
 
