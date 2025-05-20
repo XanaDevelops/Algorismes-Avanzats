@@ -37,7 +37,8 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
         filsDistanci = Executors.newFixedThreadPool(2);
         dades.afegirDistancia(A, B, calcularDistanciaIdiomes(A,B));
-        Main.getInstance().actualitzar(id);
+        if(!aturar)
+            Main.getInstance().actualitzar(id);
     }
 
     private double calcularDistanciaIdiomes(Idioma a, Idioma b) {
@@ -64,6 +65,10 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
         } catch (ExecutionException e) {
             System.err.println("Error al càlcular la distància" + e);
+            return Double.NaN;
+        }catch(RejectedExecutionException e){
+            if(!aturar)
+                System.err.println("Error amb l'executor");
             return Double.NaN;
         }finally {
             filsDistanci.shutdown();
@@ -159,6 +164,9 @@ public class CalculIdiomes implements Comunicar, Runnable{
                 }
             }
             if (capEsq && capDret) break;
+            if(minim==0){
+                break;
+            }
         }
         return minim;
     }
@@ -172,7 +180,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
 
     @Override
     public void aturar(int id){
-        if(!aturar)
+        if(!aturar && filsDistanci != null)
             filsDistanci.shutdown();
         aturar = true;
 

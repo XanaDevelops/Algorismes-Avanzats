@@ -110,6 +110,15 @@ public class Finestra extends JFrame implements Comunicar {
         });
         panellCalcul.add(botoCalcular);
 
+        JButton botoAturar = new JButton("Aturar");
+        botoAturar.addActionListener(e -> {
+            final int[] ids = this.barresMap.keySet().stream().mapToInt(i -> i).toArray();
+            for(int id: ids){
+                this.barresMap.get(id).cancelar();
+            }
+        });
+        panellCalcul.add(botoAturar);
+
         //part barres de carrega
         barresCarrega = new JPanel();
         barresCarrega.setLayout(new BoxLayout(barresCarrega, BoxLayout.Y_AXIS));
@@ -247,6 +256,7 @@ public class Finestra extends JFrame implements Comunicar {
         if (b!= null)
             b.end();
         actualitzarMatriu();
+        this.revalidate();
     }
 
     private void actualitzarMatriu() {

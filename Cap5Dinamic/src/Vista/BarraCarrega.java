@@ -14,6 +14,8 @@ public class BarraCarrega extends JPanel {
     private JProgressBar progressBar;
     private JButton cancel;
     private int id;
+    private long timeStart;
+    private long timeEnd;
 
     private boolean hasEnd = false;
     private boolean actiu = false;
@@ -41,6 +43,7 @@ public class BarraCarrega extends JPanel {
 
         this.setLayout(new BorderLayout(10, 15));
         JLabel label = new JLabel(titol);
+        label.setFont(new Font("Consolas", Font.PLAIN, 14));
         this.add(label, BorderLayout.WEST);
 
 
@@ -51,7 +54,7 @@ public class BarraCarrega extends JPanel {
         this.add(progressBar, BorderLayout.CENTER);
 
 
-        cancel = new JButton("Cancelar");
+        cancel = new JButton("Atura");
         cancel.addActionListener(e -> {
             System.err.println("Cancel" + id);
             Main.getInstance().aturar(id);
@@ -62,6 +65,7 @@ public class BarraCarrega extends JPanel {
 
     public void iniciar(){
         actiu = true;
+        timeStart = System.nanoTime();
     }
 
     public void tick(){
@@ -70,7 +74,7 @@ public class BarraCarrega extends JPanel {
             progressBar.setValue(progressBar.getMaximum());
             return;
         }
-        int n = progressBar.getValue() + 3;
+        int n = progressBar.getValue() + 4;
         if(n>progressBar.getMaximum()){
             n = progressBar.getMinimum();
         }
@@ -79,18 +83,33 @@ public class BarraCarrega extends JPanel {
 
     public void end(){
         hasEnd = true;
+        timeEnd = System.nanoTime();
         progressBar.setValue(progressBar.getMaximum());
+        progressBar.setStringPainted(true);
+        progressBar.setForeground(Color.BLACK);
+        progressBar.setString(String.format("Temps: %.2fs", getTime()/1_000_000_000.0));
         cancel.setEnabled(false);
         Thread.startVirtualThread(this::esperarEliminar);
     }
 
+    public void cancelar(){
+        cancel.doClick();
+    }
+
     private void esperarEliminar(){
         try {
-            Thread.sleep(3000);
+            Thread.sleep(7000);
             Main.getInstance().getFinestra().aturar(id);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public long getTime(){
+        if (!hasEnd){
+            return Long.MAX_VALUE;
+        }
+        return timeEnd - timeStart;
     }
 
 }
