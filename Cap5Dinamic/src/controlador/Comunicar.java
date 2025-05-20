@@ -16,7 +16,8 @@ public interface Comunicar {
 
     public default void calcularTot() {
         for(Idioma a : Idioma.values()){
-            for(Idioma b : Idioma.values()){
+            for(int i = a.ordinal()+1; i<Idioma.values().length; i++){
+                Idioma b = Idioma.values()[i];
                 if(a != b && a != Idioma.TOTS && b != Idioma.TOTS){
                     try {
                         this.calcular(a,b);

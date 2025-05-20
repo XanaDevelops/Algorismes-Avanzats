@@ -38,6 +38,7 @@ public class Finestra extends JFrame implements Comunicar {
     private JPanel barresCarrega;
     private DefaultTableModel modelDistancies;
 
+
     public Finestra() {
         super();
         this.comunicar = Main.getInstance();
@@ -270,7 +271,7 @@ public class Finestra extends JFrame implements Comunicar {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if(matriu[i][j] != 0) {
-                    modelDistancies.setValueAt(String.format("%.3f", matriu[i][j]), i, j+1);
+                    modelDistancies.setValueAt(String.format("%.4f", matriu[i][j]), i, j + 1);
                 }
             }
         }
