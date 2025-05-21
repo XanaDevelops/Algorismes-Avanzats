@@ -1,9 +1,8 @@
 package Model;
 
+import Model.Calcul.CalculIdiomes;
 import controlador.Main;
 import org.junit.jupiter.api.BeforeAll;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CalculIdiomesTest {
 
