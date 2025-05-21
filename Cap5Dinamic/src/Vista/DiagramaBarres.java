@@ -8,23 +8,31 @@ import controlador.Main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-    public  class DiagramaBarres extends JPanel implements Comunicar {
+public  class DiagramaBarres extends JPanel  implements Comunicar{
     private final Dades dades;
     private final int height;
     private final int width;
-    protected static Idioma idioma;
+    private  Idioma idioma;
     private final int totalIds;
+    private final Comunicar comunicar;
 
-    public DiagramaBarres() {
-        this.dades = Main.getInstance().getDades();
-        this.height = 200;
-        this.width = 300;
-        //ESP default value
-        idioma = Idioma.ESP; //TODO: desplegable, PLACEHOLDER!!!
-        this.totalIds = Idioma.values().length-1;
-        setPreferredSize(new Dimension(width, height));
-    }
+    private JComboBox<Idioma> idiomaBox;
+        public DiagramaBarres() {
+            this.dades = Main.getInstance().getDades();
+            this.width = 300;
+            this.height = 200;
+
+            idioma = Idioma.ESP; // Valor inicial por defecto
+            this.totalIds = Idioma.values().length - 1;
+            this.comunicar = Main.getInstance().getFinestra();
+            setPreferredSize(new Dimension(width, height));
+            setLayout(null); // Permite posiciones absolutas
+
+
+        }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -38,7 +46,7 @@ import java.awt.*;
         int marginLeft   = (int) (width * 0.12);
         int marginRight  = (int) (width * 0.05);
         int marginTop    = (int) (height * 0.10);
-        int marginBottom = (int) (height * 0.12);
+        int marginBottom = (int) (height * 0.10);
         int graphWidth  = width - marginLeft - marginRight;
         int graphHeight = height - marginTop - marginBottom;
 
@@ -67,7 +75,8 @@ import java.awt.*;
         String titleText = idioma.name();
         int titleWidth = titleFM.stringWidth(titleText);
         int titleX = (panelWidth - titleWidth) / 2;
-        int titleY = titleFM.getAscent() + (int) (panelHeight * 0.001);
+        int titleY = titleFM.getAscent() -1;
+
         g2.setColor(Color.BLACK);
         g2.drawString(titleText, titleX, titleY);
         g2.setFont(originalFont);
@@ -141,29 +150,18 @@ import java.awt.*;
         }
     }
 
+
     @Override
     public void comunicar(String s) {
 
-//        if (s.startsWith("actualitzar:")) {
-//            revalidate();
-//            repaint();
-//
-//        }else if (s.startsWith("idioma")){
-//
-//            s = s.replace("idioma:","");
-//            System.out.println("idioma: /"+s);
-//            for (int i = 0; i < Idioma.values().length - 1; i++) {
-//                Idioma id = Idioma.values()[i];
-//                if (s.equals(id.toString())) {
-//                    this.idioma = id;
-//                    break;
-//                }
-//            }
-//        }
-
-
-
-
     }
+
+    @Override
+    public void actualitzarDiagBarres(Idioma id){
+            this.idioma = id;
+            this.revalidate();
+            this.repaint();
+    }
+
 
 }

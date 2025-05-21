@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ArbreFiloLexic extends JPanel {
@@ -243,6 +245,7 @@ public class ArbreFiloLexic extends JPanel {
             int count = leaves1.size() * leaves2.size();
             return count > 0 ? sum / count : Double.MAX_VALUE;
         }
+
 
 
     }

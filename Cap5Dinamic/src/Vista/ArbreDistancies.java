@@ -27,8 +27,8 @@ public class ArbreDistancies extends JPanel {
 
     private final Dades dades;
     private final int NODES;
-    private final int height;
-    private final int width;
+    private  int height;
+    private  int width;
     private final int CENTRE_X;
     private final int CENTRE_Y;
     private int RADI;
@@ -40,8 +40,9 @@ public class ArbreDistancies extends JPanel {
         this.dades = Main.getInstance().getDades();
 
         this.NODES = dades.getIdiomes().size();
-        this.height = 200;
-        this.width = 300;
+//        this.height = 200;
+//        this.width = 300;
+
         this.CENTRE_X = width / 2;
         this.CENTRE_Y = height / 2;
         shuffle(Arrays.asList(COLORS));
@@ -71,6 +72,7 @@ public class ArbreDistancies extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.black);
+
         getPosicions();
         Graphics2D g2d = (Graphics2D) g;
 
@@ -102,7 +104,7 @@ public class ArbreDistancies extends JPanel {
     private void pintarTot(Graphics2D g) {
         double[][] distancies = dades.getDistancies();
         for (int i = 0; i < NODES; i++) {
-            for (int j = i + 1; j < NODES; j++) {
+            for (int j = 0; j < i; j++) {
                 if (distancies[i][j]!=0.0) {
                     dibuixaLinea(g, posicions[i], posicions[j], String.format("%.2f",distancies[i][j] ), COLORS[i]);
                 }
