@@ -27,7 +27,7 @@ class MainTest {
     }
     @Test
     void calcularTOTS_TOTS(){
-        Main.getInstance().calcularTot();
+        Main.getInstance().calcularTot(false, -1);
     }
     @Test
     void calcularNomesTOTS_L(){

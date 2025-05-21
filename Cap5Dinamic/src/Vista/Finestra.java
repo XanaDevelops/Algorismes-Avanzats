@@ -72,8 +72,13 @@ public class Finestra extends JFrame implements Comunicar {
 
     private JSplitPane crearSplitSuperior() {
         JPanel panellCalcul = new JPanel();
-        panellCalcul.setLayout(new FlowLayout());
+        panellCalcul.setLayout(new FlowLayout(FlowLayout.CENTER));
         panellCalcul.setBorder(BorderFactory.createTitledBorder("Opcions"));
+
+
+        //Part opcions
+        JPanel panelOpcions = new JPanel();
+        panelOpcions.setLayout(new FlowLayout());
 
         JComboBox<String> origen = new JComboBox<>();
         JComboBox<String> desti = new JComboBox<>();
@@ -100,16 +105,20 @@ public class Finestra extends JFrame implements Comunicar {
         origen.addItem("TOTS");
         desti.addItem("TOTS");
 
-        panellCalcul.add(new JLabel("Idioma origen:"));
-        panellCalcul.add(origen);
-        panellCalcul.add(new JLabel("Idioma destí:"));
-        panellCalcul.add(desti);
+        panelOpcions.add(new JLabel("Idioma origen:"));
+        panelOpcions.add(origen);
+        panelOpcions.add(new JLabel("Idioma destí:"));
+        panelOpcions.add(desti);
+
+        //necesaris ara
+        JCheckBox checkBox = new JCheckBox();
+        JSlider slider = new JSlider();
 
         JButton botoCalcular = new JButton("Calcular");
         botoCalcular.addActionListener(e -> {
-            calcularMain(origen, desti);
+            calcularMain(origen, desti, checkBox.isSelected(), slider.getValue());
         });
-        panellCalcul.add(botoCalcular);
+        panelOpcions.add(botoCalcular);
 
         JButton botoAturar = new JButton("Aturar");
         botoAturar.addActionListener(e -> {
@@ -120,10 +129,37 @@ public class Finestra extends JFrame implements Comunicar {
             this.barresMap.clear();
             this.barresCarrega.removeAll();
         });
-        panellCalcul.add(botoAturar);
+        panelOpcions.add(botoAturar);
+
+        panellCalcul.add(panelOpcions);
+
+        //part probabilistic
+        JPanel panellProb = new JPanel();
+        panellProb.setLayout(new FlowLayout());
+
+        JLabel laberProb = new JLabel("% Probabilistic:");
+        panellProb.add(laberProb);
+
+        JLabel probText = new JLabel("");
+
+        panellProb.add(checkBox);
+
+        slider.addChangeListener(e -> {
+            probText.setText(slider.getValue()+"%");
+        });
+        slider.setMinimum(1);
+        slider.setMaximum(99);
+        slider.setMinorTickSpacing(1);
+        slider.setMajorTickSpacing(5);
+        slider.setPaintTicks(true);
+
+        panellProb.add(slider);
+        panellProb.add(probText);
+        panellCalcul.add(panellProb);
 
         //part barres de carrega
         barresCarrega = new JPanel();
+        barresCarrega.setBorder(BorderFactory.createTitledBorder("Tasques pendents"));
         barresCarrega.setLayout(new BoxLayout(barresCarrega, BoxLayout.Y_AXIS));
         barresCarrega.setAlignmentX(Component.CENTER_ALIGNMENT);
         JScrollPane scrollPane = new JScrollPane(barresCarrega);
@@ -184,8 +220,7 @@ public class Finestra extends JFrame implements Comunicar {
 
             JButton boto = new JButton("Actualitzar");
             boto.addActionListener(e -> {
-               comunicar.comunicar("actualitzar:" + g.titol);
-
+               comunicar("actualitzar:" + g.titol);
             });
             panellGrafic.add(boto, BorderLayout.SOUTH);
 
@@ -214,30 +249,29 @@ public class Finestra extends JFrame implements Comunicar {
         return split;
     }
 
-    private void calcularMain(JComboBox<String> origen, JComboBox<String> desti) {
+    private void calcularMain(JComboBox<String> origen, JComboBox<String> desti, boolean prob, int percent) {
         String idiomaOrigen = (String) origen.getSelectedItem();
         String idiomaDest = (String) desti.getSelectedItem();
         Idioma a = Idioma.valueOf(idiomaOrigen);
         Idioma b = Idioma.valueOf(idiomaDest);
         if(a==Idioma.TOTS && b==Idioma.TOTS) {
-            comunicar.calcularTot();
+            comunicar.calcularTot(prob, percent);
         }else if(a==b){
             JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
         }
         else{
-            comunicar.comunicar("idioma:"+a.name());
-            DiagramaBarres.idioma= b;
-            comunicar.calcular(a,b);
+            comunicar.calcular(a,b, prob, percent);
         }
     }
 
     @Override
     public void comunicar(String s) {
         switch (s) {
-
+            case "actualitzar":
+                // actualitzar gràfics
+                break;
             default:
-                System.err.println("Finestra missatge? " + s);
-                comunicar.comunicar(s);
+                System.err.println("Finestra missatge? :" + s);
                 break;
         }
     }

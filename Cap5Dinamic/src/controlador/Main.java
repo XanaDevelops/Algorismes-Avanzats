@@ -1,17 +1,17 @@
 package controlador;
 
-import Model.CalculIdiomes;
+import Model.Calcul.CalculIdiomes;
+import Model.Calcul.ProbabilisticWrapper;
 import Model.Dades;
 import Model.Idioma;
 import Vista.Finestra;
 
 import javax.swing.*;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class Main implements Comunicar{
+public class Main implements Comunicar {
     private static Main instance = null;
     private Comunicar finestra;
     private Dades dades;
@@ -26,16 +26,16 @@ public class Main implements Comunicar{
             new Main();
     }
 
-    public Main(){
-        if (instance == null){
+    public Main() {
+        if (instance == null) {
             instance = this;
-        }else{
+        } else {
             return;
         }
         dades = new Dades();
     }
 
-    private void init(){
+    private void init() {
 
         SwingUtilities.invokeLater(() -> finestra = new Finestra());
 
@@ -50,46 +50,55 @@ public class Main implements Comunicar{
     }
 
     @Override
-    public void calcular(Idioma a, Idioma b){
-        //es suposa que TOTS-TOTS es crida des de calcularTots()
-        //també es suposa que TOTS es gestiona a Finestra, però per si de cas...
-        if (a == Idioma.TOTS){
-            for(Idioma idioma : Idioma.values()){
-                if(idioma == Idioma.TOTS || idioma == b){
-                    continue;
-                }
-                addAndExec(idioma, b, dades.getIdCount()); //per favor, que tots es fasi des de la Finestra...
-            }
-        }else if(b == Idioma.TOTS){
-            for(Idioma idioma : Idioma.values()){
-                if(idioma == Idioma.TOTS || idioma == a){
-                    continue;
-                }
-                addAndExec(idioma, a, dades.getIdCount());
-            }
-        }else{
-            addAndExec(a, b, dades.getIdCount());
-        }
-
-    }
-
-    private void addAndExec(Idioma a, Idioma b, int id){
-        if(a==b){
-            System.err.println("S'ha intentat calcular la distancia entre iguals "+a+"=="+b);
-        }
-        System.err.println("Calculant D("+a+"-"+b+") "+id);
-
-        CalculIdiomes c = new CalculIdiomes(a,b, id);
-
-        executor.execute(c);
-        runnables.put(id, c);
-        finestra.calcular(a,b, id);
+    public void calcular(Idioma a, Idioma b, boolean prob, int percent) {
+        this.calcular(a, b, -1, prob, percent);
     }
 
     @Override
-    public void aturar(int id){
+    public void calcular(Idioma a, Idioma b, int id, boolean prob, int percent) {
+        //es suposa que TOTS-TOTS es crida des de calcularTots()
+        //també es suposa que TOTS es gestiona a Finestra, però per si de cas...
+        if (a == Idioma.TOTS) {
+            for (Idioma idioma : Idioma.values()) {
+                if (idioma == Idioma.TOTS || idioma == b) {
+                    continue;
+                }
+                addAndExec(idioma, b, dades.getIdCount(), prob, percent); //per favor, que tots es fasi des de la Finestra...
+            }
+        } else if (b == Idioma.TOTS) {
+            for (Idioma idioma : Idioma.values()) {
+                if (idioma == Idioma.TOTS || idioma == a) {
+                    continue;
+                }
+                addAndExec(idioma, a, dades.getIdCount(), prob, percent);
+            }
+        } else {
+            addAndExec(a, b, dades.getIdCount(), prob, percent);
+        }
+    }
+
+
+    private void addAndExec(Idioma a, Idioma b, int id, boolean prob, int percent) {
+        if (a == b) {
+            System.err.println("S'ha intentat calcular la distancia entre iguals " + a + "==" + b);
+        }
+        System.err.println("Calculant D(" + a + "-" + b + ") " + id + (prob ? "%" + percent : ""));
+
+        CalculIdiomes c;
+        if(prob)
+            c = new ProbabilisticWrapper(a, b, id, percent/100d);
+        else
+            c= new CalculIdiomes(a, b, id);
+
+        executor.execute(c);
+        runnables.put(id, c);
+        finestra.calcular(a, b, id);
+    }
+
+    @Override
+    public void aturar(int id) {
         Comunicar c = runnables.remove(id);
-        if(c != null){
+        if (c != null) {
             c.aturar(id);
             finestra.aturar(id);
         }
@@ -98,7 +107,7 @@ public class Main implements Comunicar{
     }
 
     @Override
-    public void actualitzar(int id){
+    public void actualitzar(int id) {
         finestra.actualitzar(id);
     }
 
@@ -109,6 +118,7 @@ public class Main implements Comunicar{
     public Comunicar getFinestra() {
         return finestra;
     }
+
     public Dades getDades() {
         return dades;
     }
