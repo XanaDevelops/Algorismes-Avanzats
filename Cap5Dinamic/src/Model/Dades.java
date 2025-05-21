@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Dades {
 
-    private Map<Idioma, List<String>> diccionaris = new TreeMap<>();
+    private final Map<Idioma, List<String>> diccionaris = new TreeMap<>();
 
     private static final String dictPath = "res/Diccionaris/";
     public double[][] getDistancies() {
@@ -67,6 +67,9 @@ public class Dades {
             System.err.println("Error carregant " + idioma + ": " + e.getMessage());
         }
 
+        //ordenar per tamany, despres alfabetic (sort es estable)
+        paraulesIdioma.sort(Comparator.comparingInt(String::length));
+
         diccionaris.put(idioma, paraulesIdioma);
     }
 
@@ -79,7 +82,7 @@ public class Dades {
         return idCount++;
     }
 
-    public List<String> getParaules(Idioma idioma) {
+    public final List<String> getParaules(Idioma idioma) {
         return diccionaris.getOrDefault(idioma, Collections.emptyList());
     }
 

@@ -1,5 +1,7 @@
-package Model;
+package Model.Calcul;
 
+import Model.Dades;
+import Model.Idioma;
 import controlador.Comunicar;
 import controlador.Main;
 
@@ -9,19 +11,19 @@ import java.util.concurrent.*;
 import java.util.*;
 
 public class CalculIdiomes implements Comunicar, Runnable{
-    ExecutorService filsDistanci;
+    protected ExecutorService filsDistanci;
     private static final int N_THREADS = Runtime.getRuntime().availableProcessors();
 
-    private final ThreadPoolExecutor executorA = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2),
+    protected final ThreadPoolExecutor executorA = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2),
             executorB = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS/2);
 
     private final Dades dades;
-    private final Idioma A;
-    private final Idioma B;
+    protected final Idioma A;
+    protected final Idioma B;
 
-    private int id;
+    protected int id;
 
-    private boolean aturar = false;
+    protected boolean aturar = false;
 
     public CalculIdiomes(Idioma A, Idioma B, int id) {
         this.dades = Main.getInstance().getDades();
@@ -42,12 +44,17 @@ public class CalculIdiomes implements Comunicar, Runnable{
         dades.afegirDistancia(B, A, dist);
         if(!aturar)
             Main.getInstance().actualitzar(id);
+        filsDistanci.shutdown();
+        executorA.shutdown();
+        executorB.shutdown();
     }
 
-    private double calcularDistanciaIdiomes(Idioma a, Idioma b) {
+    protected double calcularDistanciaIdiomes(Idioma a, Idioma b) {
+        List<String> parA = getParaules(a);
+        List<String> parB = getParaules(b);
 
-        Callable<Double> taskAB = () -> calcularDistanciaOrdenat(a, b, true);
-        Callable<Double> taskBA = () -> calcularDistanciaOrdenat(b, a, false);
+        Callable<Double> taskAB = () -> calcularDistanciaOrdenat(parA, parB, executorA);
+        Callable<Double> taskBA = () -> calcularDistanciaOrdenat(parB, parA, executorB);
 
         try {
             // llança fil per sentit
@@ -74,16 +81,17 @@ public class CalculIdiomes implements Comunicar, Runnable{
                 System.err.println("Error amb l'executor");
             return Double.NaN;
         }finally {
-            filsDistanci.shutdown();
+            //filsDistanci.shutdown();
         }
     }
 
-    private double calcularDistanciaOrdenat(Idioma origen, Idioma desti, boolean isA) throws ExecutionException, InterruptedException {
-        List<String> paraulesA = dades.getParaules(origen);
-        List<String> paraulesB = dades.getParaules(desti);
+    protected List<String> getParaules(Idioma x){
+        return dades.getParaules(x);
+    }
 
+    private double calcularDistanciaOrdenat(List<String> paraulesA, List<String> paraulesB, ThreadPoolExecutor executor) throws ExecutionException, InterruptedException {
         double[] acumulator = new double[N_THREADS/2];
-        ThreadPoolExecutor executor = isA ? executorA : executorB;
+
         List<Future<?>> tasks = new ArrayList<>();
 
         int size = paraulesA.size()/ (N_THREADS/2);
@@ -110,7 +118,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
         for (double i : acumulator) {
             suma += i;
         }
-        executor.shutdown();
+
         return suma / paraulesA.size();
     }
 

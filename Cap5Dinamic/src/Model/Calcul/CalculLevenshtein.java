@@ -1,4 +1,4 @@
-package Model;
+package Model.Calcul;
 
 public class CalculLevenshtein {
     public static int calcularDistanciaLevenshtein(String s1, String s2) {
