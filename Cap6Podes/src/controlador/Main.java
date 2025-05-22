@@ -7,7 +7,6 @@ import vista.Finestra;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main implements Comunicar {
 
