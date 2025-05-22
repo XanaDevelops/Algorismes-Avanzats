@@ -110,10 +110,18 @@ public class Finestra extends JFrame implements Comunicar {
         origen.addItem("TOTS");
         desti.addItem("TOTS");
 
-        panelOpcions.add(new JLabel("Idioma origen:"));
+        Font font = new Font(panelOpcions.getFont().getFontName(), Font.BOLD, 14);
+        JLabel origenLabel = new JLabel("Distància(");
+        origenLabel.setFont(font);
+        panelOpcions.add(origenLabel);
         panelOpcions.add(origen);
-        panelOpcions.add(new JLabel("Idioma destí:"));
+        JLabel sepLabel = new JLabel("<-->");
+        sepLabel.setFont(font);
+        panelOpcions.add(sepLabel);
         panelOpcions.add(desti);
+        JLabel endLabel = new JLabel(")");
+        endLabel.setFont(font);
+        panelOpcions.add(endLabel);
 
         //necesaris ara
         JCheckBox checkBox = new JCheckBox();
@@ -135,6 +143,14 @@ public class Finestra extends JFrame implements Comunicar {
             this.barresCarrega.removeAll();
         });
         panelOpcions.add(botoAturar);
+
+        JLabel exportLabel = new JLabel("Exportar:");
+        panelOpcions.add(exportLabel);
+        JCheckBox exportCheckBox = new JCheckBox();
+        exportCheckBox.addActionListener(e -> {
+            this.dades.setExportar(true);
+        });
+        panelOpcions.add(exportCheckBox);
 
         panellCalcul.add(panelOpcions);
 
@@ -340,6 +356,13 @@ public class Finestra extends JFrame implements Comunicar {
     }
 
 
+    public void pasarTemps(int id, long nanos){
+        BarraCarrega b = this.barresMap.get(id);
+        if(b!=null){
+            b.setTemps(nanos);
+        }
+    }
+
     private void actualitzarMatriu() {
         double[][] matriu = dades.getDistancies();
         if (matriu == null) return;
@@ -360,6 +383,11 @@ public class Finestra extends JFrame implements Comunicar {
         BarraCarrega barra = this.barresMap.remove(id);
         if (barra != null) {
             this.barresCarrega.remove(barra);
+            if(this.barresMap.isEmpty()) {
+                if(this.dades.isExportar()){
+                    this.dades.exportarDades();
+                }
+            }
         }
         this.revalidate();
         this.repaint();

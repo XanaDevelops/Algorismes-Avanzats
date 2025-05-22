@@ -46,7 +46,10 @@ public interface Comunicar {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public default void pintarArbreFiloLexic(){
+      public default void pintarArbreFiloLexic(){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    public default void pasarTemps(int id, long nanos){
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

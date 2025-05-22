@@ -5,12 +5,35 @@ import Model.Idioma;
 import controlador.Comunicar;
 import controlador.Main;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class CalculIdiomes implements Comunicar, Runnable{
+    private final static Logger logger = Logger.getLogger(CalculIdiomes.class.getName());
+
+    static{
+        try {
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String logFileName = "execution_" + timestamp + ".log";
+            FileHandler fh = new FileHandler(logFileName, true);
+            fh.setFormatter(new SimpleFormatter());
+            logger.addHandler(fh);
+            logger.setUseParentHandlers(false);
+        } catch (IOException e) {
+            throw new RuntimeException("Error configuring logger", e);
+        }
+    }
+
+    private void log(double dist, long time){
+        logger.info(new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()) + "D("+A+"<->"+B+ "): "+ dist + "T: " + time);
+    }
     protected ExecutorService filsDistanci;
     private static final int N_THREADS = Runtime.getRuntime().availableProcessors();
 
@@ -33,12 +56,24 @@ public class CalculIdiomes implements Comunicar, Runnable{
         System.err.println(N_THREADS);
     }
 
+    protected double innerRun(){
+        return calcularDistanciaIdiomes(A,B);
+    }
+
     @Override
     public void run()  {
         Main.getInstance().getFinestra().calcular(A, B, id);
 
         filsDistanci = Executors.newFixedThreadPool(2);
-        double dist = calcularDistanciaIdiomes(A,B);
+        long startTime = System.nanoTime();
+        double dist = innerRun();
+        long endTime = System.nanoTime();
+        long time = endTime - startTime;
+
+        log(dist, time);
+
+        Main.getInstance().pasarTemps(id, time);
+
         //Al final "dist" es la distancia final A<->B, no A->B o B->A...
         dades.afegirDistancia(A, B, dist);
         dades.afegirDistancia(B, A, dist);
@@ -169,7 +204,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
                         else capEsq = true;
                     } else {
                         int dist = CalculLevenshtein.calcularDistanciaLevenshtein(w, x);
-                        double distNorm = (double) dist / Math.max(lenW, lenX);
+                        double distNorm = ((double) dist) / Math.max(lenW, lenX);
                         minim = Math.min(minim, distNorm);
                     }
                 }

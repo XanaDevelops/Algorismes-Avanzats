@@ -1,11 +1,10 @@
 package Model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Dades {
+    public static final String csvFile = "Dades.csv";
 
     private final Map<Idioma, List<String>> diccionaris = new TreeMap<>();
 
@@ -15,6 +14,10 @@ public class Dades {
     }
 
     private int idCount = 0;
+
+
+
+    private boolean exportar = false;
 
     private double[][] distancies;
     public Dades() {
@@ -72,12 +75,47 @@ public class Dades {
         return diccionaris.keySet();
     }
 
+    public void exportarDades(){
+        System.err.println("exportant");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
+            writer.write(" ,");
+            for (int i = 0; i < distancies.length; i++) {
+                writer.write(Idioma.values()[i].name());
+                if (i < distancies.length - 1) {
+                    writer.write(",");
+                }
+            }
+            writer.write(System.lineSeparator());
+            for (int i = 0; i < distancies.length; i++) {
+                writer.write(Idioma.values()[i].name()+", ");
+                double[] row = distancies[i];
+                for (int j = 0; j < row.length; j++) {
+                    writer.write(Double.toString(row[j]));
+                    if (j < row.length - 1) {
+                        writer.write(",");
+                    }
+                }
+                writer.write(System.lineSeparator());
+            }
+            writer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public int getIdCount(){
         return idCount++;
     }
 
     public final List<String> getParaules(Idioma idioma) {
         return diccionaris.getOrDefault(idioma, Collections.emptyList());
+    }
+
+    public boolean isExportar() {
+        return exportar;
+    }
+
+    public void setExportar(boolean exportar) {
+        this.exportar = exportar;
     }
 
 }
