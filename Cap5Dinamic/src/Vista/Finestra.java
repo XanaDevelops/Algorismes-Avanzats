@@ -299,13 +299,12 @@ public class Finestra extends JFrame implements Comunicar {
             comunicar.calcularTot(prob, percent);
             this.pintarArbreFiloLexic();
 
-            this.actualitzarDiagBarres(Idioma.ESP); //per defecte
         }else if(a==b){
             JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
         }
         else{
             comunicar.calcular(a,b, prob, percent);
-            this.actualitzarDiagBarres(a);
+           // this.actualitzarDiagBarres(a);
         }
     }
 
@@ -346,14 +345,6 @@ public class Finestra extends JFrame implements Comunicar {
         this.revalidate();
     }
 
-    @Override
-    public void actualitzarDiagBarres(Idioma idioma) {
-        if (diagramaBarres != null) {
-            diagramaBarres.actualitzarDiagBarres(idioma);
-        } else {
-            System.err.println("La instancia de DiagramaBarres no está inicializada.");
-        }
-    }
 
 
     public void pasarTemps(int id, long nanos){

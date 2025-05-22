@@ -38,9 +38,6 @@ public interface Comunicar {
     public default void aturar(int id){
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    public default void actualitzarDiagBarres(Idioma idioma){
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     public default void actualitzar(int id){
         throw new UnsupportedOperationException("Not supported yet.");

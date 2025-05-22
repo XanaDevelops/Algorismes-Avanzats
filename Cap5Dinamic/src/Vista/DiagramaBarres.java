@@ -8,15 +8,15 @@ import controlador.Main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 
-public  class DiagramaBarres extends JPanel  implements Comunicar{
+public  class DiagramaBarres extends JPanel  {
     private final Dades dades;
     private  int height;
     private  int width;
     private  Idioma idioma;
     private final int totalIds;
-
     private JComboBox<Idioma> idiomaBox;
         public DiagramaBarres() {
             this.dades = Main.getInstance().getDades();
@@ -24,10 +24,21 @@ public  class DiagramaBarres extends JPanel  implements Comunicar{
             this.height = Finestra.HEIGHT_PANELL;
 
             idioma = Idioma.ESP; // Valor inicial por defecto
+            Idioma[] idiomesValids = java.util.Arrays.stream(Idioma.values())
+                    .limit(Idioma.values().length - 1) //descartar la opció de tots
+                    .toArray(Idioma[]::new);
+            idiomaBox = new JComboBox<>(idiomesValids);
+            idiomaBox.setSelectedItem(idioma);
             this.totalIds = Idioma.values().length - 1;
             setPreferredSize(new Dimension(width, height));
             setLayout(null); // Permite posiciones absolutas
+            idiomaBox.setBounds(width - 1, 1, 75, 25);
+            idiomaBox.addActionListener(e -> {
+                Idioma seleccionat = (Idioma) idiomaBox.getSelectedItem();
+                actualitzarDiagBarres(seleccionat);
+            });
 
+            add(idiomaBox);
 
         }
 
@@ -149,16 +160,12 @@ public  class DiagramaBarres extends JPanel  implements Comunicar{
     }
 
 
-    @Override
-    public void comunicar(String s) {
 
-    }
 
-    @Override
     public void actualitzarDiagBarres(Idioma id){
             this.idioma = id;
-            this.revalidate();
-            this.repaint();
+            revalidate();
+            repaint();
     }
 
 
