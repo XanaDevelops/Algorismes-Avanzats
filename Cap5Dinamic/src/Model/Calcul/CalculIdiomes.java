@@ -204,7 +204,7 @@ public class CalculIdiomes implements Comunicar, Runnable{
                         else capEsq = true;
                     } else {
                         int dist = CalculLevenshtein.calcularDistanciaLevenshtein(w, x);
-                        double distNorm = (double) dist / Math.max(lenW, lenX);
+                        double distNorm = ((double) dist) / Math.max(lenW, lenX);
                         minim = Math.min(minim, distNorm);
                     }
                 }

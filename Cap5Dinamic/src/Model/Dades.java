@@ -82,8 +82,18 @@ public class Dades {
     }
 
     public void exportarDades(){
+        System.err.println("exportant");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
+            writer.write(" ,");
             for (int i = 0; i < distancies.length; i++) {
+                writer.write(Idioma.values()[i].name());
+                if (i < distancies.length - 1) {
+                    writer.write(",");
+                }
+            }
+            writer.write(System.lineSeparator());
+            for (int i = 0; i < distancies.length; i++) {
+                writer.write(Idioma.values()[i].name()+", ");
                 double[] row = distancies[i];
                 for (int j = 0; j < row.length; j++) {
                     writer.write(Double.toString(row[j]));
