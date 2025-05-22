@@ -20,8 +20,8 @@ public class ArbreFiloLexic extends JPanel {
     public ArbreFiloLexic() {
         this.dades = Main.getInstance().getDades();
         //s'han de passar per parametre o es poden obtenir de la classe Dades
-        this.width = 300;
-        this.height = 200;
+        this.width = Finestra.WIDTH_PANELL;
+        this.height = Finestra.HEIGHT_PANELL;
         setPreferredSize(new Dimension(width, height));
         this.root = construirArbre();
         asignarPosFulles(root);

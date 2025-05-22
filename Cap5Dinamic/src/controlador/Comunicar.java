@@ -45,4 +45,5 @@ public interface Comunicar {
     public default void actualitzar(int id){
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
 }

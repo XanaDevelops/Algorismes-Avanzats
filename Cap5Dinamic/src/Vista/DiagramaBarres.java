@@ -8,8 +8,7 @@ import controlador.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 public  class DiagramaBarres extends JPanel  implements Comunicar{
     private final Dades dades;
@@ -17,17 +16,15 @@ public  class DiagramaBarres extends JPanel  implements Comunicar{
     private final int width;
     private  Idioma idioma;
     private final int totalIds;
-    private final Comunicar comunicar;
 
     private JComboBox<Idioma> idiomaBox;
         public DiagramaBarres() {
             this.dades = Main.getInstance().getDades();
-            this.width = 300;
-            this.height = 200;
+            this.width = Finestra.WIDTH_PANELL;
+            this.height = Finestra.HEIGHT_PANELL;
 
             idioma = Idioma.ESP; // Valor inicial por defecto
             this.totalIds = Idioma.values().length - 1;
-            this.comunicar = Main.getInstance().getFinestra();
             setPreferredSize(new Dimension(width, height));
             setLayout(null); // Permite posiciones absolutas
 

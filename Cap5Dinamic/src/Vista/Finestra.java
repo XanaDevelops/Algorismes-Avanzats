@@ -40,7 +40,8 @@ public class Finestra extends JFrame implements Comunicar {
     private Map<Integer, BarraCarrega> barresMap = new TreeMap<>();
     private JPanel barresCarrega;
     private DefaultTableModel modelDistancies;
-
+    protected final static int HEIGHT_PANELL = 200;
+    protected final static int WIDTH_PANELL = 300;
 
     public Finestra() {
         super();
@@ -213,7 +214,7 @@ public class Finestra extends JFrame implements Comunicar {
     private JPanel addDiagrama(Grafiques grafica) {
         JPanel panellGrafic = new JPanel(new BorderLayout());
         panellGrafic.setBorder(BorderFactory.createTitledBorder(grafica.titol));
-        panellGrafic.setPreferredSize(new Dimension(300, 200));
+        panellGrafic.setPreferredSize(new Dimension(WIDTH_PANELL, HEIGHT_PANELL));
 
         try {
             JPanel panelInterno = grafica.c.getConstructor().newInstance();
@@ -280,6 +281,7 @@ public class Finestra extends JFrame implements Comunicar {
         Idioma b = Idioma.valueOf(idiomaDest);
         if(a==Idioma.TOTS && b==Idioma.TOTS) {
             comunicar.calcularTot(prob, percent);
+
             this.actualitzarDiagBarres(Idioma.ESP); //per defecte
         }else if(a==b){
             JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
@@ -335,6 +337,7 @@ public class Finestra extends JFrame implements Comunicar {
             System.err.println("La instancia de DiagramaBarres no está inicializada.");
         }
     }
+
 
     private void actualitzarMatriu() {
         double[][] matriu = dades.getDistancies();
