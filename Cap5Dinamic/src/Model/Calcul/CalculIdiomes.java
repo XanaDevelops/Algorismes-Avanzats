@@ -5,12 +5,35 @@ import Model.Idioma;
 import controlador.Comunicar;
 import controlador.Main;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class CalculIdiomes implements Comunicar, Runnable{
+    private final static Logger logger = Logger.getLogger(CalculIdiomes.class.getName());
+
+    static{
+        try {
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String logFileName = "execution_" + timestamp + ".log";
+            FileHandler fh = new FileHandler(logFileName, true);
+            fh.setFormatter(new SimpleFormatter());
+            logger.addHandler(fh);
+            logger.setUseParentHandlers(false);
+        } catch (IOException e) {
+            throw new RuntimeException("Error configuring logger", e);
+        }
+    }
+
+    private static void log(){
+
+    }
     protected ExecutorService filsDistanci;
     private static final int N_THREADS = Runtime.getRuntime().availableProcessors();
 
@@ -33,12 +56,16 @@ public class CalculIdiomes implements Comunicar, Runnable{
         System.err.println(N_THREADS);
     }
 
+    protected double innerRun(){
+        return calcularDistanciaIdiomes(A,B);
+    }
+
     @Override
     public void run()  {
         Main.getInstance().getFinestra().calcular(A, B, id);
 
         filsDistanci = Executors.newFixedThreadPool(2);
-        double dist = calcularDistanciaIdiomes(A,B);
+        double dist = innerRun();
         //Al final "dist" es la distancia final A<->B, no A->B o B->A...
         dades.afegirDistancia(A, B, dist);
         dades.afegirDistancia(B, A, dist);
