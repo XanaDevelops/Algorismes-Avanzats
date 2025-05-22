@@ -42,4 +42,9 @@ public interface Comunicar {
     public default void actualitzar(int id){
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public default void pasarTemps(int id, long nanos){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

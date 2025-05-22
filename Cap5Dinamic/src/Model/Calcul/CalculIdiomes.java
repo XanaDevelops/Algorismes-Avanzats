@@ -31,8 +31,8 @@ public class CalculIdiomes implements Comunicar, Runnable{
         }
     }
 
-    private static void log(){
-
+    private void log(double dist, long time){
+        logger.info(new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()) + "D("+A+"<->"+B+ "): "+ dist + "T: " + time);
     }
     protected ExecutorService filsDistanci;
     private static final int N_THREADS = Runtime.getRuntime().availableProcessors();
@@ -65,7 +65,15 @@ public class CalculIdiomes implements Comunicar, Runnable{
         Main.getInstance().getFinestra().calcular(A, B, id);
 
         filsDistanci = Executors.newFixedThreadPool(2);
+        long startTime = System.nanoTime();
         double dist = innerRun();
+        long endTime = System.nanoTime();
+        long time = endTime - startTime;
+
+        log(dist, time);
+
+        Main.getInstance().pasarTemps(id, time);
+
         //Al final "dist" es la distancia final A<->B, no A->B o B->A...
         dades.afegirDistancia(A, B, dist);
         dades.afegirDistancia(B, A, dist);

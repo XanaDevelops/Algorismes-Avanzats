@@ -314,6 +314,14 @@ public class Finestra extends JFrame implements Comunicar {
         this.revalidate();
     }
 
+    @Override
+    public void pasarTemps(int id, long nanos){
+        BarraCarrega b = this.barresMap.get(id);
+        if(b!=null){
+            b.setTemps(nanos);
+        }
+    }
+
     private void actualitzarMatriu() {
         double[][] matriu = dades.getDistancies();
         if (matriu == null) return;
