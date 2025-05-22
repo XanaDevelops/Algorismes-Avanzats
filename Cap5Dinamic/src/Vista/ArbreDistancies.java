@@ -26,10 +26,10 @@ public class ArbreDistancies extends JPanel {
 
     private final Dades dades;
     private final int NODES;
-    private final int CENTRE_X;
-    private final int CENTRE_Y;
-    private final int tamanyText;
-    private final int tamanyDist;
+    private  int CENTRE_X;
+    private int CENTRE_Y;
+    private  int tamanyText;
+    private  int tamanyDist;
     private int height;
     private int width;
     private int RADI;
@@ -42,15 +42,7 @@ public class ArbreDistancies extends JPanel {
         this.width = Finestra.WIDTH_PANELL;
         this.height = Finestra.HEIGHT_PANELL;
 
-        this.CENTRE_X = width / 2;
-        this.CENTRE_Y = height / 2;
-        shuffle(Arrays.asList(COLORS));
-        this.tamanyText = Math.max(10, width / 40);
 
-        this.tamanyDist = Math.max(8, width / 40);
-
-
-        this.RADI = Math.min(CENTRE_X, CENTRE_Y) - (int) (0.1 * Math.min(CENTRE_X, CENTRE_Y));
         this.setLayout(null);
 
         this.setPreferredSize(new Dimension(width, height));
@@ -70,7 +62,17 @@ public class ArbreDistancies extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.black);
+        this.width = getWidth();
+        this.height = getHeight();
+        this.CENTRE_X = width / 2;
+        this.CENTRE_Y = height / 2;
+        shuffle(Arrays.asList(COLORS));
+        this.tamanyText = Math.max(10, width / 40);
 
+        this.tamanyDist = Math.max(8, width / 40);
+
+
+        this.RADI = Math.min(CENTRE_X, CENTRE_Y) - (int) (0.1 * Math.min(CENTRE_X, CENTRE_Y));
         getPosicions();
         Graphics2D g2d = (Graphics2D) g;
 

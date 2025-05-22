@@ -46,4 +46,8 @@ public interface Comunicar {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public default void pintarArbreFiloLexic(){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

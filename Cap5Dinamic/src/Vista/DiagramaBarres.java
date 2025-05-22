@@ -12,8 +12,8 @@ import java.awt.*;
 
 public  class DiagramaBarres extends JPanel  implements Comunicar{
     private final Dades dades;
-    private final int height;
-    private final int width;
+    private  int height;
+    private  int width;
     private  Idioma idioma;
     private final int totalIds;
 
@@ -37,7 +37,8 @@ public  class DiagramaBarres extends JPanel  implements Comunicar{
 
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
+        this.width = getWidth();
+        this.height = getHeight();
         drawTitle(g2, width, height);
 
         int marginLeft   = (int) (width * 0.12);

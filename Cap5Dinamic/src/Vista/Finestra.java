@@ -235,7 +235,7 @@ public class Finestra extends JFrame implements Comunicar {
                 comunicar("actualitzar:" + grafica.titol);
             });
             panellGrafic.add(boto, BorderLayout.SOUTH);
-            panellGrafic.add(panelInterno, BorderLayout.NORTH);
+            panellGrafic.add(panelInterno, BorderLayout.CENTER);
             return panellGrafic;
 
         } catch (Exception ex) {
@@ -281,6 +281,7 @@ public class Finestra extends JFrame implements Comunicar {
         Idioma b = Idioma.valueOf(idiomaDest);
         if(a==Idioma.TOTS && b==Idioma.TOTS) {
             comunicar.calcularTot(prob, percent);
+            this.pintarArbreFiloLexic();
 
             this.actualitzarDiagBarres(Idioma.ESP); //per defecte
         }else if(a==b){
@@ -369,4 +370,9 @@ public class Finestra extends JFrame implements Comunicar {
             entry.getValue().tick();
         }
     });
+
+    @Override
+    public void pintarArbreFiloLexic(){
+        arbreFiloLexic.pintarArbreFiloLexic();
+    }
 }
