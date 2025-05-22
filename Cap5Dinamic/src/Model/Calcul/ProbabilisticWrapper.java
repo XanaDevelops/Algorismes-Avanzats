@@ -34,22 +34,12 @@ public class ProbabilisticWrapper extends CalculIdiomes{
     }
 
     @Override
-    public void run(){
-        Main.getInstance().getFinestra().calcular(A, B, id);
-
-        filsDistanci = Executors.newFixedThreadPool(2);
+    protected double innerRun() {
         double dist = 0;
         for (int i = 0; i < MONTECARLO_ITER; i++) {
             dist += calcularDistanciaIdiomes(A, B);
         }
         dist /= MONTECARLO_ITER;
-        //Al final "dist" es la distancia final A<->B, no A->B o B->A...
-        Main.getInstance().getDades().afegirDistancia(A, B, dist);
-        Main.getInstance().getDades().afegirDistancia(B, A, dist);
-        if(!aturar)
-            Main.getInstance().actualitzar(id);
-        filsDistanci.shutdown();
-        executorA.shutdown();
-        executorB.shutdown();
+        return dist;
     }
 }

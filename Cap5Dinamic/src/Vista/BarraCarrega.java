@@ -14,8 +14,7 @@ public class BarraCarrega extends JPanel {
     private JProgressBar progressBar;
     private JButton cancel;
     private int id;
-    private long timeStart;
-    private long timeEnd;
+    private long time;
 
     private boolean hasEnd = false;
     private boolean actiu = false;
@@ -65,7 +64,6 @@ public class BarraCarrega extends JPanel {
 
     public void iniciar(){
         actiu = true;
-        timeStart = System.nanoTime();
     }
 
     public void tick(){
@@ -83,13 +81,16 @@ public class BarraCarrega extends JPanel {
 
     public void end(){
         hasEnd = true;
-        timeEnd = System.nanoTime();
         progressBar.setValue(progressBar.getMaximum());
         progressBar.setStringPainted(true);
         progressBar.setForeground(Color.BLACK);
         progressBar.setString(String.format("Temps: %.2fs", getTime()/1_000_000_000.0));
         cancel.setEnabled(false);
         Thread.startVirtualThread(this::esperarEliminar);
+    }
+
+    public void setTemps(long nanos){
+        time = nanos;
     }
 
     public void cancelar(){
@@ -109,7 +110,7 @@ public class BarraCarrega extends JPanel {
         if (!hasEnd){
             return Long.MAX_VALUE;
         }
-        return timeEnd - timeStart;
+        return time;
     }
 
 }

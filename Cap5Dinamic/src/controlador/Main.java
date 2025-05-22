@@ -111,6 +111,11 @@ public class Main implements Comunicar {
         finestra.actualitzar(id);
     }
 
+    @Override
+    public void pasarTemps(int id, long nanos){
+        finestra.pasarTemps(id, nanos);
+    }
+
     public static Main getInstance() {
         return instance;
     }
