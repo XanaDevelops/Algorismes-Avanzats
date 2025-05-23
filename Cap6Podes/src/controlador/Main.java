@@ -50,23 +50,39 @@ public class Main implements Comunicar {
 
     @Override
     public synchronized void calcular(int N) {
-        if (N != -1) {
-            // N seleccionada TODO
-        } else {
-            // N random TODO
-        }
-
         int id = dades.getIdCount();
-        Solver s = new Solver(id, dades);
+        Solver s = new Solver(id, N);
+
         executor.execute(() -> {
             try {
                 Dades.Solucio sol = s.call();
-                SwingUtilities.invokeLater(() -> finestra.actualitzar(id));
+                System.out.println("[Solver " + id + "] Sol:  " + sol.toString());
             } catch (Exception e) {
+                System.out.println("[Solver " + id + "] Error: " + e.getMessage());
+            } finally {
+                // Notifiquem a la UI l'estat final
                 SwingUtilities.invokeLater(() -> finestra.actualitzar(id));
             }
         });
         runnables.put(id, s);
+    }
+
+    @Override
+    public void calcular(int[][] adj) {
+        int id = dades.getIdCount();
+        Solver solver = new Solver(id, adj);
+        runnables.put(id, solver);
+
+        executor.submit(() -> {
+            try {
+                Dades.Solucio sol = solver.call();
+                comunicar("[Solver " + id + "] Solució obtinguda: " + sol);
+            } catch (Exception e) {
+                comunicar("[Solver " + id + "] Error: " + e.getMessage());
+            } finally {
+                SwingUtilities.invokeLater(() -> finestra.actualitzar(id));
+            }
+        });
     }
 
     @Override
@@ -91,9 +107,9 @@ public class Main implements Comunicar {
 
     @Override
     public void aturar(int id) {
-        Solver s = runnables.remove(id); // aquí sí eliminem perquè és definitiu
+        Solver s = runnables.remove(id);
         if (s != null) {
-            s.interrompre(); // assumeix que hi ha un mètode que marca el Solver com interromput
+            s.interrompre();
             System.err.println("Tasca " + id + " aturada definitivament.");
             finestra.aturar(id);
         }

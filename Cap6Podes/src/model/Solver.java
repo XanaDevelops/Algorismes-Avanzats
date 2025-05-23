@@ -1,11 +1,17 @@
 package model;
 
 import controlador.Comunicar;
+import controlador.Main;
 
 import java.util.concurrent.Callable;
 
 public class Solver implements Callable<Dades.Solucio>, Comunicar {
-    public Solver(int id, Dades dades) {
+
+
+    public Solver(int id, int[][] adj) {
+    }
+
+    public Solver(int id, int n) {
     }
 
     @Override
