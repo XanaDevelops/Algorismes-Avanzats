@@ -1,8 +1,10 @@
 package model;
 
+import controlador.Comunicar;
+
 import java.util.concurrent.Callable;
 
-public class Solver implements Callable<Dades.Solucio> {
+public class Solver implements Callable<Dades.Solucio>, Comunicar {
     public Solver(int id, Dades dades) {
     }
 
@@ -18,5 +20,10 @@ public class Solver implements Callable<Dades.Solucio> {
     }
 
     public void pause() {
+    }
+
+    @Override
+    public void comunicar(String msg) {
+
     }
 }

@@ -61,7 +61,6 @@ public class Main implements Comunicar {
         executor.execute(() -> {
             try {
                 Dades.Solucio sol = s.call();
-                // FICAR SOLUCIO A DADES TODO
                 SwingUtilities.invokeLater(() -> finestra.actualitzar(id));
             } catch (Exception e) {
                 SwingUtilities.invokeLater(() -> finestra.actualitzar(id));
