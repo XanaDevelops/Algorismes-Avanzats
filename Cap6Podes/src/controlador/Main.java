@@ -11,6 +11,11 @@ import java.util.concurrent.*;
 public class Main implements Comunicar {
 
     private static Main instance;
+
+    public static Main getInstance() {
+        return instance;
+    }
+
     private Dades dades;
     private Comunicar finestra;
 
