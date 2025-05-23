@@ -9,6 +9,10 @@ public interface Comunicar {
         throw new UnsupportedOperationException();
     }
 
+    default void calcular(int[][] matrix) {
+        throw new UnsupportedOperationException();
+    }
+
     default void aturar(int id) {
         throw new UnsupportedOperationException();
     }

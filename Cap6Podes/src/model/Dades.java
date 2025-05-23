@@ -7,4 +7,8 @@ public class Dades {
 
     public class Solucio {
     }
+
+    public int guardarSolucio(Solucio sol) {
+        return 0;
+    }
 }
