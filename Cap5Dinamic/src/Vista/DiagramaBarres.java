@@ -3,59 +3,41 @@ package Vista;
 
 import Model.Dades;
 import Model.Idioma;
-import controlador.Comunicar;
 import controlador.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
-
-public  class DiagramaBarres extends JPanel  {
+public class DiagramaBarres extends JPanel {
     private final Dades dades;
-    private  int height;
-    private  int width;
-    private  Idioma idioma;
+    private final int height;
+    private final int width;
+    private final Idioma idioma;
     private final int totalIds;
-    private JComboBox<Idioma> idiomaBox;
-        public DiagramaBarres() {
-            this.dades = Main.getInstance().getDades();
-            this.width = Finestra.WIDTH_PANELL;
-            this.height = Finestra.HEIGHT_PANELL;
 
-            idioma = Idioma.ESP; // Valor inicial por defecto
-            Idioma[] idiomesValids = java.util.Arrays.stream(Idioma.values())
-                    .limit(Idioma.values().length - 1) //descartar la opció de tots
-                    .toArray(Idioma[]::new);
-            idiomaBox = new JComboBox<>(idiomesValids);
-            idiomaBox.setSelectedItem(idioma);
-            this.totalIds = Idioma.values().length - 1;
-            setPreferredSize(new Dimension(width, height));
-            setLayout(null); // Permite posiciones absolutas
-            idiomaBox.setBounds(width - 1, 1, 75, 25);
-            idiomaBox.addActionListener(e -> {
-                Idioma seleccionat = (Idioma) idiomaBox.getSelectedItem();
-                actualitzarDiagBarres(seleccionat);
-            });
-
-            add(idiomaBox);
-
-        }
+    public DiagramaBarres() {
+        this.dades = Main.getInstance().getDades();
+        this.height = 200;
+        this.width = 300;
+        this.idioma = Idioma.ESP; //TODO: desplegable, PLACEHOLDER!!!
+        this.totalIds = Idioma.values().length-1;
+        setPreferredSize(new Dimension(width, height));
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        this.width = getWidth();
-        this.height = getHeight();
+
         drawTitle(g2, width, height);
 
         int marginLeft   = (int) (width * 0.12);
         int marginRight  = (int) (width * 0.05);
         int marginTop    = (int) (height * 0.10);
-        int marginBottom = (int) (height * 0.10);
+        int marginBottom = (int) (height * 0.12);
         int graphWidth  = width - marginLeft - marginRight;
         int graphHeight = height - marginTop - marginBottom;
 
@@ -84,8 +66,7 @@ public  class DiagramaBarres extends JPanel  {
         String titleText = idioma.name();
         int titleWidth = titleFM.stringWidth(titleText);
         int titleX = (panelWidth - titleWidth) / 2;
-        int titleY = titleFM.getAscent() -1;
-
+        int titleY = titleFM.getAscent() + (int) (panelHeight * 0.01);
         g2.setColor(Color.BLACK);
         g2.drawString(titleText, titleX, titleY);
         g2.setFont(originalFont);
@@ -158,15 +139,4 @@ public  class DiagramaBarres extends JPanel  {
             currentBarIndex++;
         }
     }
-
-
-
-
-    public void actualitzarDiagBarres(Idioma id){
-            this.idioma = id;
-            revalidate();
-            repaint();
-    }
-
-
 }
