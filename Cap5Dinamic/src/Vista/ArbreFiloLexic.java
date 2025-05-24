@@ -2,28 +2,27 @@ package Vista;
 
 import Model.Dades;
 import Model.Idioma;
-import controlador.Comunicar;
 import controlador.Main;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-
 import java.util.List;
 
-public class ArbreFiloLexic extends JPanel  implements Comunicar {
+public class ArbreFiloLexic extends JPanel {
     private final Dades dades;
-    private  int width;
-    private  int height;
+    private final int width;
+    private final int height;
     private Node root;
-    Graphics2D g2d;
     public ArbreFiloLexic() {
         this.dades = Main.getInstance().getDades();
-        this.width = Finestra.WIDTH_PANELL;
-        this.height = Finestra.HEIGHT_PANELL;
+        //s'han de passar per parametre o es poden obtenir de la classe Dades
+        this.width = 300;
+        this.height = 300;
         setPreferredSize(new Dimension(width, height));
-
+        this.root = construirArbre();
+        asignarPosFulles(root);
     }
 
     private void asignarPosFulles(Node raiz) {
@@ -123,15 +122,12 @@ public class ArbreFiloLexic extends JPanel  implements Comunicar {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g2d = (Graphics2D) g;
-        this.width = getWidth();
-        this.height = getHeight();
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        if (root!=null) {
-            drawTreeRec(g2d, root);
-        }
+    protected void paintComponent(Graphics g0) {
+        super.paintComponent(g0);
+        Graphics2D g = (Graphics2D) g0;
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        drawTreeRec(g, root);
 
     }
 
@@ -162,21 +158,6 @@ public class ArbreFiloLexic extends JPanel  implements Comunicar {
             int ty = node.pos.y + 15;
             g.drawString(txt, tx, ty);
         }
-    }
-
-    @Override
-    public void comunicar(String s) {
-
-    }
-
-    @Override
-    public void pintarArbreFiloLexic(){
-
-
-        this.root = construirArbre();
-        asignarPosFulles(root);
-        drawTreeRec(g2d, root);
-        repaint();
     }
 
 
@@ -264,7 +245,5 @@ public class ArbreFiloLexic extends JPanel  implements Comunicar {
         }
 
 
-
     }
-
 }
