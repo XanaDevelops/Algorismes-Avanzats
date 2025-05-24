@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
 public class Finestra extends JFrame implements Comunicar {
-    private enum Grafiques{
+    protected enum Grafiques{
         ARBRE_DIST("Arbre distàncies", ArbreDistancies.class),
         ARBRE_FLEXIC("Arbre FiloLexic", ArbreFiloLexic.class),
         DIA_BARRES("Diagrama Barres", DiagramaBarres.class);
@@ -30,6 +30,9 @@ public class Finestra extends JFrame implements Comunicar {
             this.c = clazz;
         }
     }
+    private ArbreDistancies arbreDistancies;
+    private DiagramaBarres diagramaBarres;
+    private ArbreFiloLexic arbreFiloLexic;
     private final Comunicar comunicar;
     private final Dades dades;
     private final Set<Idioma> idiomes;
@@ -37,11 +40,13 @@ public class Finestra extends JFrame implements Comunicar {
     private Map<Integer, BarraCarrega> barresMap = new TreeMap<>();
     private JPanel barresCarrega;
     private DefaultTableModel modelDistancies;
-
+    protected final static int HEIGHT_PANELL = 200;
+    protected final static int WIDTH_PANELL = 300;
 
     public Finestra() {
         super();
-        this.comunicar = Main.getInstance();
+        this.comunicar =  Main.getInstance();
+
         this.dades = Main.getInstance().getDades();
         this.idiomes = dades.getIdiomes();
 
@@ -222,25 +227,45 @@ public class Finestra extends JFrame implements Comunicar {
         return split;
     }
 
+    private JPanel addDiagrama(Grafiques grafica) {
+        JPanel panellGrafic = new JPanel(new BorderLayout());
+        panellGrafic.setBorder(BorderFactory.createTitledBorder(grafica.titol));
+        panellGrafic.setPreferredSize(new Dimension(WIDTH_PANELL, HEIGHT_PANELL));
 
+        try {
+            JPanel panelInterno = grafica.c.getConstructor().newInstance();
 
-    private JSplitPane crearSplitInferior() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        ArrayList<JPanel> panells = new ArrayList<>();
-
-        for(Grafiques g : Grafiques.values()) {
-            JPanel panellGrafic = new JPanel(new BorderLayout());
-            panellGrafic.setBorder(BorderFactory.createTitledBorder(g.titol));
-            panellGrafic.setPreferredSize(new Dimension(300, 200));
-
-            panellGrafic.add(g.c.getConstructor().newInstance(), BorderLayout.NORTH);
-
+            switch (grafica) {
+                case ARBRE_DIST:
+                    this.arbreDistancies = (ArbreDistancies) panelInterno;
+                    break;
+                case ARBRE_FLEXIC:
+                    this.arbreFiloLexic = (ArbreFiloLexic) panelInterno;
+                    break;
+                case DIA_BARRES:
+                    this.diagramaBarres = (DiagramaBarres) panelInterno;
+                    break;
+            }
             JButton boto = new JButton("Actualitzar");
             boto.addActionListener(e -> {
-               comunicar("actualitzar:" + g.titol);
+                comunicar("actualitzar:" + grafica.titol);
             });
             panellGrafic.add(boto, BorderLayout.SOUTH);
+            panellGrafic.add(panelInterno, BorderLayout.CENTER);
+            return panellGrafic;
 
-            panells.add(panellGrafic);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new JPanel();
+        }
+    }
+
+    private JSplitPane crearSplitInferior() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+
+
+        ArrayList<JPanel> panells = new ArrayList<>();
+        for (int i = 0; i < Grafiques.values().length; i++) {
+            panells.add(addDiagrama(Grafiques.values()[i]));
         }
 
         if (panells.isEmpty()) {
@@ -272,11 +297,14 @@ public class Finestra extends JFrame implements Comunicar {
         Idioma b = Idioma.valueOf(idiomaDest);
         if(a==Idioma.TOTS && b==Idioma.TOTS) {
             comunicar.calcularTot(prob, percent);
+            this.pintarArbreFiloLexic();
+
         }else if(a==b){
             JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
         }
         else{
             comunicar.calcular(a,b, prob, percent);
+           // this.actualitzarDiagBarres(a);
         }
     }
 
@@ -297,11 +325,14 @@ public class Finestra extends JFrame implements Comunicar {
         if (barresMap.containsKey(id)) {
             barresMap.get(id).iniciar();
         }else {
+
             BarraCarrega barra = new BarraCarrega("D("+a+","+b+") ", id);
             this.barresMap.put(id, barra);
             this.barresCarrega.add(barra);
+
         }
         this.revalidate();
+
 
     }
 
@@ -314,7 +345,8 @@ public class Finestra extends JFrame implements Comunicar {
         this.revalidate();
     }
 
-    @Override
+
+
     public void pasarTemps(int id, long nanos){
         BarraCarrega b = this.barresMap.get(id);
         if(b!=null){
@@ -357,4 +389,9 @@ public class Finestra extends JFrame implements Comunicar {
             entry.getValue().tick();
         }
     });
+
+    @Override
+    public void pintarArbreFiloLexic(){
+        arbreFiloLexic.pintarArbreFiloLexic();
+    }
 }

@@ -20,7 +20,6 @@ public class Dades {
     private boolean exportar = false;
 
     private double[][] distancies;
-    private boolean parellaOTot = true; //true si es calcula la distancia entre un idioma i tota la resta o entre tots i tots
     public Dades() {
         for (Idioma idi : Idioma.values()) {
             if (idi != Idioma.TOTS) { // TOTS idioma especial
@@ -33,12 +32,7 @@ public class Dades {
 
     }
 
-    public void setParellaOTot(boolean v) {
-        this.parellaOTot = v;
-    }
-    public boolean isParellaOTot() {
-        return parellaOTot;
-    }
+
 
     public void afegirDistancia (Idioma origen, Idioma desti, double distancia){
         distancies[origen.ordinal()][desti.ordinal()] = distancia;

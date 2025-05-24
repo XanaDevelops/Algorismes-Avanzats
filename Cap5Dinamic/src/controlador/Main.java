@@ -46,7 +46,7 @@ public class Main implements Comunicar {
     public void comunicar(String s) {
         String[] args = s.split(":");
 
-        System.err.println("MAIN: missatge? " + s);
+//        System.err.println("MAIN: missatge? " + s);
     }
 
     @Override
