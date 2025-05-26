@@ -107,7 +107,7 @@ public class Dades {
         System.err.println("important");
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
             String line = reader.readLine(); // cabecera
-            int n = Idioma.values().length;
+            int n = Idioma.values().length-1;
             distancies = new double[n][n];
             int i = 0;
             while ((line = reader.readLine()) != null && i < n) {
