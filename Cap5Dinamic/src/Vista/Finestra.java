@@ -260,11 +260,7 @@ public class Finestra extends JFrame implements Comunicar {
                     this.diagramaBarres = (DiagramaBarres) panelInterno;
                     break;
             }
-            JButton boto = new JButton("Actualitzar");
-            boto.addActionListener(e -> {
-                comunicar("actualitzar:" + grafica.titol);
-            });
-            panellGrafic.add(boto, BorderLayout.SOUTH);
+
             panellGrafic.add(panelInterno, BorderLayout.CENTER);
             return panellGrafic;
 
