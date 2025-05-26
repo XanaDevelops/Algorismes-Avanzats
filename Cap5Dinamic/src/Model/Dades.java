@@ -102,6 +102,25 @@ public class Dades {
             throw new RuntimeException(e);
         }
     }
+
+    public void importarDades() {
+        System.err.println("important");
+        try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
+            String line = reader.readLine(); // cabecera
+            int n = Idioma.values().length;
+            distancies = new double[n][n];
+            int i = 0;
+            while ((line = reader.readLine()) != null && i < n) {
+                String[] parts = line.split(",");
+                for (int j = 1; j < parts.length && j <= n; j++) {
+                    distancies[i][j-1] = Double.parseDouble(parts[j].trim());
+                }
+                i++;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public int getIdCount(){
         return idCount++;
     }

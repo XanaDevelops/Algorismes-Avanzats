@@ -9,6 +9,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -71,6 +73,18 @@ public class Finestra extends JFrame implements Comunicar {
 
         this.getContentPane().add(splitGeneral);
         this.setVisible(true);
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addKeyEventDispatcher(e -> {
+                    if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyChar() == 'i') {
+                        dades.importarDades();
+                        actualitzarMatriu();
+                        revalidate();
+                        repaint();
+                        return true;
+                    }
+                    return false;
+                });
 
         timer.start();
     }
