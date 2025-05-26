@@ -79,7 +79,7 @@ public class Finestra extends JFrame implements Comunicar {
                     if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyChar() == 'i') {
                         dades.importarDades();
                         actualitzarMatriu();
-                        pintarArbreFiloLexic(); // mirar si esta bé aqui!
+                        this.pintarArbreFiloLexic(); // mirar si esta bé aqui!
                         revalidate();
                         repaint();
                         return true;
@@ -314,11 +314,27 @@ public class Finestra extends JFrame implements Comunicar {
             JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
         }
         else{
+            if (matriuCompleta()){
+                this.pintarArbreFiloLexic();
+            }
             comunicar.calcular(a,b, prob, percent);
            // this.actualitzarDiagBarres(a);
         }
     }
 
+    private boolean matriuCompleta() {
+        double [][] distancies = dades.getDistancies();
+        for (int i = 0; i < distancies.length; i++) {
+            for (int j = 0; j < distancies[i].length; j++) {
+                if (i == j) continue;
+                double dist = distancies[i][j];
+                if (dist==0.0){
+                    return  false;
+                }
+            }
+        }
+        return true;
+    }
     @Override
     public void comunicar(String s) {
         switch (s) {

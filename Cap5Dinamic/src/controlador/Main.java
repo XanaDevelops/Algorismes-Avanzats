@@ -33,6 +33,7 @@ public class Main implements Comunicar {
             return;
         }
         dades = new Dades();
+
     }
 
     private void init() {

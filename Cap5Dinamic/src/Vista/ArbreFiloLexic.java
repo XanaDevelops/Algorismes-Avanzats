@@ -129,11 +129,14 @@ public class ArbreFiloLexic extends JPanel  implements Comunicar {
         this.width = getWidth();
         this.height = getHeight();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         if (root!=null) {
             drawTreeRec(g2d, root);
         }
 
     }
+
+
 
 
     private void drawTreeRec(Graphics g, Node node) {
@@ -171,8 +174,6 @@ public class ArbreFiloLexic extends JPanel  implements Comunicar {
 
     @Override
     public void pintarArbreFiloLexic(){
-
-
         this.root = construirArbre();
         asignarPosFulles(root);
         drawTreeRec(g2d, root);
