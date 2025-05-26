@@ -52,11 +52,17 @@ public class Main implements Comunicar {
     @Override
     public synchronized void calcular(int N) {
         int id = dades.getIdCount();
-        Solver s = new Solver(id, N);
+        Solver s = null;
+        try {
+            s = new Solver(id, N);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
+        Solver finalS = s;
         executor.execute(() -> {
             try {
-                Dades.Solucio sol = s.call();
+                Solver.Node sol = finalS.call();
                 System.out.println("[Solver " + id + "] Sol:  " + sol.toString());
             } catch (Exception e) {
                 System.out.println("[Solver " + id + "] Error: " + e.getMessage());
@@ -71,12 +77,18 @@ public class Main implements Comunicar {
     @Override
     public void calcular(int[][] adj) {
         int id = dades.getIdCount();
-        Solver solver = new Solver(id, adj);
+        Solver solver = null;
+        try {
+            solver = new Solver(id, adj);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         runnables.put(id, solver);
 
+        Solver finalSolver = solver;
         executor.submit(() -> {
             try {
-                Dades.Solucio sol = solver.call();
+                Solver.Node sol = finalSolver.call();
                 comunicar("[Solver " + id + "] Solució obtinguda: " + sol);
             } catch (Exception e) {
                 comunicar("[Solver " + id + "] Error: " + e.getMessage());

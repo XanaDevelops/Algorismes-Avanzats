@@ -4,7 +4,7 @@ public class Dades {
     public int getIdCount() {
         return 0;
     }
-    private Integer [][] graf;
+    private int [][] graf;
 
     public class Solucio {
     }

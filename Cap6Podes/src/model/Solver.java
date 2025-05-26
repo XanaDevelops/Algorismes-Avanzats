@@ -1,27 +1,51 @@
 package model;
 
 import controlador.Comunicar;
-import controlador.Main;
 
 import java.util.*;
 import java.util.concurrent.Callable;
 
-public class Solver implements Callable<Dades.Solucio>, Comunicar {
+public class Solver implements Callable<Solver.Node>, Comunicar {
     private static int totalNodes;
     private static final int INFINITY = Integer.MAX_VALUE;
     private Node root;
-    public Solver(int id, int n) {
+    private volatile static  boolean running = true;
+    private volatile static boolean paused = false;
 
+    public Solver(int id, int n) throws InterruptedException {
+        Random r = new Random();
+        int [][] matriu = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                 if (i == j) {
+                     matriu[i][j] = INFINITY;
+                 }else{
+                     matriu[i][j] = r.nextInt(100);
+                 }
+                ;
+            }
+        }
+        root = solve(matriu);
         //primer s'ha de generar la matriu d'adjaçencia
 
     }
-    public Solver (int id, int[][] matrix) {
+    public Solver (int id, int[][] matrix) throws InterruptedException {
          root = solve(matrix);
+    }
+
+    public Node getRoot() {
+        return root;
     }
 
 
 
-    static class Node implements Comparable<Node> {
+    @Override
+    public Node call() throws Exception {
+        return root;
+    }
+
+
+    public static class Node implements Comparable<Node> {
         int[][] reducedMatrix;
         int current;            //vertex del node actual
         int cost;               //cost acumulat fins el node actual
@@ -44,9 +68,7 @@ public class Solver implements Callable<Dades.Solucio>, Comunicar {
         }
     }
 
-
-
-    static Node solve(int[][] costMatrix) {
+    Node solve(int[][] costMatrix) throws InterruptedException {
         PriorityQueue<Node> pq = new PriorityQueue<>();
 
         int[][] rootMat = deepCopy(costMatrix);
@@ -56,7 +78,12 @@ public class Solver implements Callable<Dades.Solucio>, Comunicar {
         pq.add(root);
 
         //BB basat en triar el node més prometedor
-        while (!pq.isEmpty()) {
+        while (!pq.isEmpty() && running) {
+            synchronized (this) {
+                while (paused) {
+                    wait();  // esperar fins que es crida a resume()
+                }
+            }
             Node node = pq.poll();
             //hem visitat tots els nodes?
             if (node.depth == totalNodes - 1) {
@@ -99,8 +126,8 @@ public class Solver implements Callable<Dades.Solucio>, Comunicar {
             path.addFirst(leaf.current);
             leaf = leaf.parent;
         }
-        for (int i = 0; i < path.size(); i++) {
-            System.out.println(path.get(i));
+        for (Integer integer : path) {
+            System.out.println(integer);
         }
 
     }
@@ -133,6 +160,7 @@ public class Solver implements Callable<Dades.Solucio>, Comunicar {
 
         }
 
+        //reduir columnes
         for (int i = 0; i < mat.length; i++) {
             int minColumna = trobatMinColumna(mat, i);
             if (minColumna != INFINITY) {
@@ -152,8 +180,8 @@ public class Solver implements Callable<Dades.Solucio>, Comunicar {
     private static int trobatMinColumna(int[][] mat, int i) {
         int min = INFINITY;
 
-        for (int j = 0; j < mat.length; j++) {
-            if (mat[j][i] <min)  min = mat[j][i];
+        for (int[] ints : mat) {
+            if (ints[i] < min) min = ints[i];
 
         }
         return min;
@@ -167,18 +195,22 @@ public class Solver implements Callable<Dades.Solucio>, Comunicar {
         return min;
     }
 
-    @Override
-    public Dades.Solucio call() throws Exception {
-        return null;
-    }
+
 
     public void interrompre() {
+        running = false;
     }
 
     public void resume() {
+        paused= false;
+        synchronized (this) {
+            notify();
+        }
     }
 
     public void pause() {
+        paused = true;
+
     }
 
     @Override
