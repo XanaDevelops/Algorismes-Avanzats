@@ -16,7 +16,7 @@ public class Main implements Comunicar {
     private Comunicar finestra;
     private Dades dades;
 
-    private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(3);
+    private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
     private final Map<Integer, Comunicar> runnables = new TreeMap<>();
 
     public static void main(String[] args) {
