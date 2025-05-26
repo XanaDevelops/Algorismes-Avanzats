@@ -79,6 +79,7 @@ public class Finestra extends JFrame implements Comunicar {
                     if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyChar() == 'i') {
                         dades.importarDades();
                         actualitzarMatriu();
+                        pintarArbreFiloLexic(); // mirar si esta bé aqui!
                         revalidate();
                         repaint();
                         return true;
