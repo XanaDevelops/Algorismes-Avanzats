@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Finestra extends JFrame implements Comunicar {
     protected enum Grafiques{
@@ -39,7 +40,7 @@ public class Finestra extends JFrame implements Comunicar {
     private final Dades dades;
     private final Set<Idioma> idiomes;
 
-    private Map<Integer, BarraCarrega> barresMap = new TreeMap<>();
+    private Map<Integer, BarraCarrega> barresMap = new ConcurrentHashMap<>(new TreeMap<>());
     private JPanel barresCarrega;
     private DefaultTableModel modelDistancies;
     protected final static int HEIGHT_PANELL = 200;
@@ -406,6 +407,7 @@ public class Finestra extends JFrame implements Comunicar {
                     this.dades.exportarDades();
                 }
             }
+            pintarArbreFiloLexic();
         }
         this.revalidate();
         this.repaint();
