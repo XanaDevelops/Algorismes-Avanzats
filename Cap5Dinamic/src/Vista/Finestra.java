@@ -150,7 +150,8 @@ public class Finestra extends JFrame implements Comunicar {
         botoAturar.addActionListener(e -> {
             final int[] ids = this.barresMap.keySet().stream().mapToInt(i -> i).toArray();
             for(int id: ids){
-                this.barresMap.get(id).cancelar();
+                BarraCarrega b= this.barresMap.get(id);
+                if(b!=null) b.cancelar();
             }
             this.barresMap.clear();
             this.barresCarrega.removeAll();
@@ -388,7 +389,6 @@ public class Finestra extends JFrame implements Comunicar {
                     this.dades.exportarDades();
                 }
             }
-            pintarArbreFiloLexic();
         }
         this.revalidate();
         this.repaint();
