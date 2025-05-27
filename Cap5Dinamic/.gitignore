@@ -31,4 +31,4 @@ bin/
 *.log
 *.log.*
 
-Dades.csv
+*.csv
