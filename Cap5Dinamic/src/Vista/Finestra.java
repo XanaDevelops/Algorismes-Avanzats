@@ -53,7 +53,6 @@ public class Finestra extends JFrame implements Comunicar {
 
         setTitle("Diferenciador d'idiomes");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //setResizable(false);
         setSize(1280, 720);
         setPreferredSize(new Dimension(1280, 720));
         setLocationRelativeTo(null);
@@ -283,12 +282,10 @@ public class Finestra extends JFrame implements Comunicar {
         }
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panells.get(0), panells.get(1));
-        //split.setResizeWeight(1.0 / panells.size());
         final JSplitPane finalSplit = split;
 
         for (int i = 2; i < panells.size(); i++) {
             split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, split, panells.get(i));
-            //split.setResizeWeight(1.0 / (i + 1));
         }
         JSplitPane finalSplit1 = split;
         SwingUtilities.invokeLater(() -> {

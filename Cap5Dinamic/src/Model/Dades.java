@@ -26,7 +26,6 @@ public class Dades {
                 carregarDiccionari(idi);
             }
         }
-        System.out.println("carregats idiomes");
         distancies = new double[Idioma.values().length-1][Idioma.values().length-1];
 
 
@@ -104,7 +103,7 @@ public class Dades {
     }
 
     public void importarDades() {
-        System.err.println("important");
+        System.err.println("important dades");
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
             String line = reader.readLine(); // cabecera
             int n = Idioma.values().length-1;

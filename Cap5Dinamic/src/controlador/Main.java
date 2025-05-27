@@ -45,9 +45,7 @@ public class Main implements Comunicar {
 
     @Override
     public void comunicar(String s) {
-        String[] args = s.split(":");
 
-//        System.err.println("MAIN: missatge? " + s);
     }
 
     @Override
@@ -57,14 +55,13 @@ public class Main implements Comunicar {
 
     @Override
     public void calcular(Idioma a, Idioma b, int id, boolean prob, int percent) {
-        //es suposa que TOTS-TOTS es crida des de calcularTots()
-        //també es suposa que TOTS es gestiona a Finestra, però per si de cas...
+
         if (a == Idioma.TOTS) {
             for (Idioma idioma : Idioma.values()) {
                 if (idioma == Idioma.TOTS || idioma == b) {
                     continue;
                 }
-                addAndExec(idioma, b, dades.getIdCount(), prob, percent); //per favor, que tots es fasi des de la Finestra...
+                addAndExec(idioma, b, dades.getIdCount(), prob, percent);
             }
         } else if (b == Idioma.TOTS) {
             for (Idioma idioma : Idioma.values()) {
