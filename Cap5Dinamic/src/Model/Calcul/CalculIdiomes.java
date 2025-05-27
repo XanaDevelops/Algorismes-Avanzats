@@ -67,6 +67,9 @@ public class CalculIdiomes implements Comunicar, Runnable{
         filsDistanci = Executors.newFixedThreadPool(2);
         long startTime = System.nanoTime();
         double dist = innerRun();
+        if (dist==Double.POSITIVE_INFINITY || Double.isNaN(dist)){
+            dist = 0.0;
+        }
         long endTime = System.nanoTime();
         long time = endTime - startTime;
 

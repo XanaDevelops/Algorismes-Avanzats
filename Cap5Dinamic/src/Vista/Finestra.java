@@ -305,15 +305,13 @@ public class Finestra extends JFrame implements Comunicar {
         Idioma b = Idioma.valueOf(idiomaDest);
         if(a==Idioma.TOTS && b==Idioma.TOTS) {
             comunicar.calcularTot(prob, percent);
-            this.pintarArbreFiloLexic();
-
         }else if(a==b){
             JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
         }
         else{
 
             comunicar.calcular(a,b, prob, percent);
-           // this.actualitzarDiagBarres(a);
+
         }
     }
 
@@ -400,8 +398,5 @@ public class Finestra extends JFrame implements Comunicar {
         }
     });
 
-    @Override
-    public void pintarArbreFiloLexic(){
-        arbreFiloLexic.pintarArbreFiloLexic();
-    }
+
 }

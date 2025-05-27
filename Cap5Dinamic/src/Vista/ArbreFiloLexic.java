@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ArbreFiloLexic extends JPanel  implements Comunicar {
+public class ArbreFiloLexic extends JPanel {
     private final Dades dades;
     private  int width;
     private  int height;
@@ -131,9 +131,7 @@ public class ArbreFiloLexic extends JPanel  implements Comunicar {
         this.height = getHeight();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (root!=null ) {
-            drawTreeRec(g2d, root);
-        }else if(matriuCompleta()){
+       if(matriuCompleta()){
             pintarArbreFiloLexic();
         }
 
@@ -146,7 +144,7 @@ public class ArbreFiloLexic extends JPanel  implements Comunicar {
             for (int j = 0; j < distancies[i].length; j++) {
                 if (i == j) continue;
                 double dist = distancies[i][j];
-                if (dist==0.0){
+                if (dist==0.0 ) {
                     return  false;
                 }
             }
@@ -184,12 +182,7 @@ public class ArbreFiloLexic extends JPanel  implements Comunicar {
         }
     }
 
-    @Override
-    public void comunicar(String s) {
 
-    }
-
-    @Override
     public void pintarArbreFiloLexic(){
         this.root = construirArbre();
         asignarPosFulles(root);
