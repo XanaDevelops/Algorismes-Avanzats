@@ -75,15 +75,17 @@ public class ArbreDistancies extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         pintarDistancias(g2d);
+
     }
 
 
     private void pintarDistancias(Graphics2D g) {
         double[][] distancies = dades.getDistancies();
+
         // Recorremos solo la mitad inferior de la matriz.
         for (int i = 0; i < NODES; i++) {
             for (int j = 0; j < NODES; j++) {
-                if (distancies[i][j] != 0.0 && distancies[j][i] !=distancies[i][j]) {
+                if (distancies[i][j] != 0.0 ) {
 
                     Color color = COLORS[i % COLORS.length];
                     dibuixaLinea(g, posicions[i], posicions[j],

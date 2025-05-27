@@ -131,15 +131,17 @@ public class ArbreFiloLexic extends JPanel  implements Comunicar {
         this.height = getHeight();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (root!=null || matriuCompleta()) {
+        if (root!=null ) {
             drawTreeRec(g2d, root);
+        }else if(matriuCompleta()){
+            pintarArbreFiloLexic();
         }
 
     }
 
     private boolean matriuCompleta() {
         double [][] distancies = dades.getDistancies();
-        System.out.println(Arrays.deepToString(distancies));
+
         for (int i = 0; i < distancies.length; i++) {
             for (int j = 0; j < distancies[i].length; j++) {
                 if (i == j) continue;

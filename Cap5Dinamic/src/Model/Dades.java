@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class Dades {
-    public static final String csvFile = "Dades2.csv";
+    public static final String csvFile = "Dades.csv";
 
     private final Map<Idioma, List<String>> diccionaris = new TreeMap<>();
 
