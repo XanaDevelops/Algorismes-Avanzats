@@ -42,7 +42,6 @@ public class ArbreDistancies extends JPanel {
         this.width = Finestra.WIDTH_PANELL;
         this.height = Finestra.HEIGHT_PANELL;
 
-
         this.setLayout(null);
 
         this.setPreferredSize(new Dimension(width, height));
@@ -71,7 +70,6 @@ public class ArbreDistancies extends JPanel {
 
         this.tamanyDist = Math.max(8, width / 40);
 
-
         this.RADI = Math.min(CENTRE_X, CENTRE_Y) - (int) (0.1 * Math.min(CENTRE_X, CENTRE_Y));
         getPosicions();
         Graphics2D g2d = (Graphics2D) g;
@@ -84,8 +82,8 @@ public class ArbreDistancies extends JPanel {
         double[][] distancies = dades.getDistancies();
         // Recorremos solo la mitad inferior de la matriz.
         for (int i = 0; i < NODES; i++) {
-            for (int j = 0; j < i; j++) {
-                if (distancies[i][j] != 0.0) {
+            for (int j = 0; j < NODES; j++) {
+                if (distancies[i][j] != 0.0 && distancies[j][i] !=distancies[i][j]) {
 
                     Color color = COLORS[i % COLORS.length];
                     dibuixaLinea(g, posicions[i], posicions[j],

@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ArbreFiloLexic extends JPanel  implements Comunicar {
@@ -130,12 +131,26 @@ public class ArbreFiloLexic extends JPanel  implements Comunicar {
         this.height = getHeight();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (root!=null) {
+        if (root!=null || matriuCompleta()) {
             drawTreeRec(g2d, root);
         }
 
     }
 
+    private boolean matriuCompleta() {
+        double [][] distancies = dades.getDistancies();
+        System.out.println(Arrays.deepToString(distancies));
+        for (int i = 0; i < distancies.length; i++) {
+            for (int j = 0; j < distancies[i].length; j++) {
+                if (i == j) continue;
+                double dist = distancies[i][j];
+                if (dist==0.0){
+                    return  false;
+                }
+            }
+        }
+        return true;
+    }
 
 
 

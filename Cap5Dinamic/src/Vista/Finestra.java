@@ -6,16 +6,14 @@ import controlador.Comunicar;
 import controlador.Main;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 public class Finestra extends JFrame implements Comunicar {
@@ -314,27 +312,13 @@ public class Finestra extends JFrame implements Comunicar {
             JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
         }
         else{
-            if (matriuCompleta()){
-                this.pintarArbreFiloLexic();
-            }
+
             comunicar.calcular(a,b, prob, percent);
            // this.actualitzarDiagBarres(a);
         }
     }
 
-    private boolean matriuCompleta() {
-        double [][] distancies = dades.getDistancies();
-        for (int i = 0; i < distancies.length; i++) {
-            for (int j = 0; j < distancies[i].length; j++) {
-                if (i == j) continue;
-                double dist = distancies[i][j];
-                if (dist==0.0){
-                    return  false;
-                }
-            }
-        }
-        return true;
-    }
+
     @Override
     public void comunicar(String s) {
         switch (s) {

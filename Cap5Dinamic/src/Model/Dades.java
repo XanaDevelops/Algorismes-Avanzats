@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class Dades {
-    public static final String csvFile = "Dades.csv";
+    public static final String csvFile = "Dades2.csv";
 
     private final Map<Idioma, List<String>> diccionaris = new TreeMap<>();
 
@@ -107,7 +107,7 @@ public class Dades {
         System.err.println("important");
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
             String line = reader.readLine(); // cabecera
-            int n = Idioma.values().length;
+            int n = Idioma.values().length-1;
             distancies = new double[n][n];
             int i = 0;
             while ((line = reader.readLine()) != null && i < n) {
@@ -117,6 +117,7 @@ public class Dades {
                 }
                 i++;
             }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
