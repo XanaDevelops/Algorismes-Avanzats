@@ -117,6 +117,7 @@ public class Dades {
                 }
                 i++;
             }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

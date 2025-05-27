@@ -50,7 +50,7 @@ public  class DiagramaBarres extends JPanel  {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         this.width = getWidth();
         this.height = getHeight();
-        drawTitle(g2, width, height);
+        drawTitle(g2, width);
 
         int marginLeft   = (int) (width * 0.12);
         int marginRight  = (int) (width * 0.05);
@@ -76,7 +76,7 @@ public  class DiagramaBarres extends JPanel  {
         g2.dispose();
     }
 
-    private void drawTitle(Graphics2D g2, int panelWidth, int panelHeight) {
+    private void drawTitle(Graphics2D g2, int panelWidth) {
         Font originalFont = g2.getFont();
         Font titleFont = new Font("Monospaced", Font.BOLD, (int) (panelWidth * 0.04));
         g2.setFont(titleFont);
@@ -134,6 +134,10 @@ public  class DiagramaBarres extends JPanel  {
         for (int i = 0; i < totalIdiomas; i++) {
             if (i == refIndex) continue;
             double distancia = distancies[refIndex][i];
+
+            if (distancies[refIndex][i] ==0.0) {
+                continue;
+            }
             int barHeight = (int) ((distancia / maxValor) * graphHeight);
             int x = marginLeft + currentBarIndex * spacePerCategory + (spacePerCategory - barWidth) / 2;
             int y = panelHeight - marginBottom - barHeight;

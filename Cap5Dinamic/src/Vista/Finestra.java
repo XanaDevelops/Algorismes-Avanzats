@@ -6,16 +6,14 @@ import controlador.Comunicar;
 import controlador.Main;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -80,7 +78,6 @@ public class Finestra extends JFrame implements Comunicar {
                     if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyChar() == 'i') {
                         dades.importarDades();
                         actualitzarMatriu();
-                        this.pintarArbreFiloLexic(); // mirar si esta bé aqui!
                         revalidate();
                         repaint();
                         return true;
@@ -309,33 +306,17 @@ public class Finestra extends JFrame implements Comunicar {
         Idioma b = Idioma.valueOf(idiomaDest);
         if(a==Idioma.TOTS && b==Idioma.TOTS) {
             comunicar.calcularTot(prob, percent);
-            this.pintarArbreFiloLexic();
-
         }else if(a==b){
             JOptionPane.showMessageDialog(this, "Has intentat calcular la distància entre el mateix idioma.\nAquesta es 0.", "Avís", JOptionPane.WARNING_MESSAGE);
         }
         else{
-            if (matriuCompleta()){
-                this.pintarArbreFiloLexic();
-            }
+
             comunicar.calcular(a,b, prob, percent);
-           // this.actualitzarDiagBarres(a);
+
         }
     }
 
-    private boolean matriuCompleta() {
-        double [][] distancies = dades.getDistancies();
-        for (int i = 0; i < distancies.length; i++) {
-            for (int j = 0; j < distancies[i].length; j++) {
-                if (i == j) continue;
-                double dist = distancies[i][j];
-                if (dist==0.0){
-                    return  false;
-                }
-            }
-        }
-        return true;
-    }
+
     @Override
     public void comunicar(String s) {
         switch (s) {
@@ -419,8 +400,5 @@ public class Finestra extends JFrame implements Comunicar {
         }
     });
 
-    @Override
-    public void pintarArbreFiloLexic(){
-        arbreFiloLexic.pintarArbreFiloLexic();
-    }
+
 }
