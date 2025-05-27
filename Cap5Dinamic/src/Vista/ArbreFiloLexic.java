@@ -131,24 +131,24 @@ public class ArbreFiloLexic extends JPanel {
         this.height = getHeight();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        pintarArbreFiloLexic();
+        if (matriuNoBuida()) pintarArbreFiloLexic();
 
 
     }
 
-    private boolean matriuCompleta() {
+    private boolean matriuNoBuida() {
         double [][] distancies = dades.getDistancies();
 
         for (int i = 0; i < distancies.length; i++) {
             for (int j = 0; j < distancies[i].length; j++) {
                 if (i == j) continue;
                 double dist = distancies[i][j];
-                if (dist==0.0 ) {
-                    return  false;
+                if (dist!=0.0 && (!Double.isNaN(dist) && !Double.isInfinite(dist) ) ) {
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
 
