@@ -119,7 +119,6 @@ public class CalculIdiomes implements Comunicar, Runnable{
                 System.err.println("Error amb l'executor");
             return Double.NaN;
         }finally {
-            //filsDistanci.shutdown();
         }
     }
 

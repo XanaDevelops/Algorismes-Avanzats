@@ -3,12 +3,10 @@ package Vista;
 
 import Model.Dades;
 import Model.Idioma;
-import controlador.Comunicar;
 import controlador.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 
 public  class DiagramaBarres extends JPanel  {
@@ -23,9 +21,9 @@ public  class DiagramaBarres extends JPanel  {
             this.width = Finestra.WIDTH_PANELL;
             this.height = Finestra.HEIGHT_PANELL;
 
-            idioma = Idioma.ESP; // Valor inicial por defecto
+            idioma = Idioma.ESP; // Valor inicial por defect
             Idioma[] idiomesValids = java.util.Arrays.stream(Idioma.values())
-                    .limit(Idioma.values().length - 1) //descartar la opció de tots
+                    .limit(Idioma.values().length - 1) //descartar l'opció de tots
                     .toArray(Idioma[]::new);
             idiomaBox = new JComboBox<>(idiomesValids);
             idiomaBox.setSelectedItem(idioma);

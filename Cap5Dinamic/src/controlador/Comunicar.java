@@ -7,9 +7,7 @@ import java.util.concurrent.Callable;
 public interface Comunicar {
     public void comunicar(String s);
 
-    public default void calcular(Idioma a, Idioma b) {
-        calcular(a, b, -1, false, -1);
-    }
+
     public default void calcular(Idioma a, Idioma b, int id){
         calcular(a, b, id, false, -1);
     }
