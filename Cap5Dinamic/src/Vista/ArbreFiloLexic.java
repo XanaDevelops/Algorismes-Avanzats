@@ -131,9 +131,8 @@ public class ArbreFiloLexic extends JPanel {
         this.height = getHeight();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-       if(matriuCompleta()){
-            pintarArbreFiloLexic();
-        }
+        pintarArbreFiloLexic();
+
 
     }
 
@@ -267,6 +266,9 @@ public class ArbreFiloLexic extends JPanel {
                     int idxA = a.ordinal();
                     int idxB = b.ordinal();
                     double d = (idxA > idxB) ? distancies[idxA][idxB] : distancies[idxB][idxA];
+                    if(Double.isNaN(d) || Double.isInfinite(d)) {
+                        d = Double.MAX_VALUE;
+                    }
                     sum += d;
                 }
             }
