@@ -33,7 +33,7 @@ public class Main implements Comunicar {
     private final static int LIMIT_PUNTS = 100000;
 
 
-    private boolean modeConcurrentOn = false;
+    private boolean modeConcurrentOn = true;
     private ArrayList<Comunicar> processos = null;
 
     public ThreadPoolExecutor getExecutor() {
