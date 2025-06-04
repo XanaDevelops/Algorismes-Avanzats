@@ -2,15 +2,12 @@ package Vista;
 
 import Model.Dades;
 import Model.Idioma;
-import controlador.Comunicar;
 import controlador.Main;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-
-import java.util.Arrays;
 import java.util.List;
 
 public class ArbreFiloLexic extends JPanel {
@@ -168,7 +165,7 @@ public class ArbreFiloLexic extends JPanel {
             g.drawLine(rightX, rightY, rightX, parentY);
             //linea horizontal
             g.drawLine(leftX, parentY, rightX, parentY);
-            //petit node al mig de la linea horizontal
+            //petit node al mig de la linia horizontal
             g.fillOval(node.pos.x - 4, node.pos.y - 4, 8, 8);
 
             drawTreeRec(g, node.left);
