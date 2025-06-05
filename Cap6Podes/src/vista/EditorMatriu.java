@@ -85,19 +85,21 @@ public class EditorMatriu extends JDialog implements ActionListener {
             JOptionPane.showMessageDialog(this, "No hi dades del graf, generat aleatòriament", "Avís", JOptionPane.WARNING_MESSAGE);
             graf = dades.getGraf();
         }
-
+        System.err.println(graf.length + ", " + graf[0].length);
         if(model.getColumnCount() != graf.length || model.getRowCount() != graf[0].length){
-            taula.remove(matriu);
+            this.remove(taula);
+            System.err.println(5);
             model = new DefaultTableModel(graf.length, graf[0].length);
             matriu = new JTable(model);
             matriu.setDragEnabled(false);
             //matriu.setTableHeader(null);
             matriu.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            taula.add(matriu);
+            taula = new JScrollPane(matriu);
+            this.add(taula, BorderLayout.CENTER);
         }
 
         for (int i = 0; i < graf.length; i++) {
-            matriu.getColumnModel().getColumn(i).setPreferredWidth(50);
+            //matriu.getColumnModel().getColumn(i).setPreferredWidth(50);
             for (int j = 0; j < graf[0].length; j++) {
                 matriu.setValueAt(graf[i][j], i, j);
             }
