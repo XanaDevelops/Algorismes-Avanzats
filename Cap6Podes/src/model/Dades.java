@@ -27,4 +27,8 @@ public class Dades {
             }
         }
     }
+
+    public int[][] getGraf(){
+        return this.graf;
+    }
 }
