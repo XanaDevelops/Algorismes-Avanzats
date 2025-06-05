@@ -16,13 +16,14 @@ public class Dades {
     }
 
     public void generarRandom(){
-        if (graf == null) {
-            graf = new int[DEFAULT_GRAPH_SIZE][DEFAULT_GRAPH_SIZE];
-        }
-        generarRandom(graf[0].length, graf.length);
+
+        generarRandom(DEFAULT_GRAPH_SIZE, DEFAULT_GRAPH_SIZE);
     }
 
     public void generarRandom(int w, int h){
+
+        graf = new int[h][w];
+
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
                 graf[i][j] = 1 + (int) (Math.random() * 100);
