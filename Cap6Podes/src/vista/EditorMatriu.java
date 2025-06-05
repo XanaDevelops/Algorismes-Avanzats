@@ -86,18 +86,9 @@ public class EditorMatriu extends JDialog implements ActionListener {
             graf = dades.getGraf();
         }
         System.err.println(graf.length + ", " + graf[0].length);
-        if(model.getColumnCount() != graf.length || model.getRowCount() != graf[0].length){
-            this.remove(taula);
-            System.err.println(5);
-            model = new DefaultTableModel(graf.length, graf[0].length);
-            matriu = new JTable(model);
-            matriu.setDragEnabled(false);
-            //matriu.setTableHeader(null);
-            matriu.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            taula = new JScrollPane(matriu);
-            this.add(taula, BorderLayout.CENTER);
-        }
-
+        model.setColumnCount(graf[0].length);
+        model.setRowCount(graf.length);
+        model.fireTableDataChanged();
         for (int i = 0; i < graf.length; i++) {
             //matriu.getColumnModel().getColumn(i).setPreferredWidth(50);
             for (int j = 0; j < graf[0].length; j++) {
@@ -109,6 +100,20 @@ public class EditorMatriu extends JDialog implements ActionListener {
 
 
     private void guardarDades(){
+        for (int i = 0; i < matriu.getRowCount(); i++) {
+            for (int j = 0; j < matriu.getColumnCount(); j++) {
+                Object value = matriu.getValueAt(i,j);
+                int val = Integer.MAX_VALUE;
+                if (value instanceof Integer) {
+                    val = (Integer) value;
+                } else if (value instanceof String) {
+                    val = Integer.parseInt((String) value);
+                }else{
+                    System.err.println("ERROR tipus");
+                }
+                dades.setVal(j, i, val);
+            }
+        }
         this.dispose();
     }
 

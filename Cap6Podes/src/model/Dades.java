@@ -31,6 +31,10 @@ public class Dades {
         }
     }
 
+    public void setVal(int x, int y, int val){
+        graf[y][x] = val;
+    }
+
     public int[][] getGraf(){
         return graf;
     }
