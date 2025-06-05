@@ -6,6 +6,8 @@ public class Dades {
     }
     private int [][] graf;
 
+    public static final int DEFAULT_GRAPH_SIZE = 10;
+
     public class Solucio {
     }
 
@@ -15,9 +17,9 @@ public class Dades {
 
     public void generarRandom(){
         if (graf == null) {
-            graf = new int[10][10];
+            graf = new int[DEFAULT_GRAPH_SIZE][DEFAULT_GRAPH_SIZE];
         }
-        generarRandom(graf.length, graf[0].length);
+        generarRandom(graf[0].length, graf.length);
     }
 
     public void generarRandom(int w, int h){
@@ -26,5 +28,13 @@ public class Dades {
                 graf[i][j] = 1 + (int) (Math.random() * 100);
             }
         }
+    }
+
+    public int[][] getGraf(){
+        return graf;
+    }
+
+    public void setGraf(int[][] graf){
+        this.graf = graf;
     }
 }

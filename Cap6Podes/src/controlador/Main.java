@@ -132,4 +132,11 @@ public class Main implements Comunicar {
     public void actualitzar(int id) {
         finestra.actualitzar(id);
     }
+
+    public final Dades getDades() {
+        return dades;
+    }
 }
+
+
+
