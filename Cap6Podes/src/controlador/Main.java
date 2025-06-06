@@ -16,7 +16,7 @@ public class Main implements Comunicar {
         return instance;
     }
 
-    private Dades dades;
+    private static Dades dades;
     private Comunicar finestra;
 
     private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
@@ -40,6 +40,7 @@ public class Main implements Comunicar {
         SwingUtilities.invokeLater(() -> {
             finestra = new Finestra();
         });
+
     }
 
     @Override
@@ -62,8 +63,8 @@ public class Main implements Comunicar {
         Solver finalS = s;
         executor.execute(() -> {
             try {
-                Solver.Node sol = finalS.call();
-                System.out.println("[Solver " + id + "] Sol:  " + sol.toString());
+                finalS.run();
+                System.out.println("[Solver " + id + "] Sol:  " + dades.getSolucio().toString());
             } catch (Exception e) {
                 System.out.println("[Solver " + id + "] Error: " + e.getMessage());
             } finally {
@@ -88,8 +89,8 @@ public class Main implements Comunicar {
         Solver finalSolver = solver;
         executor.submit(() -> {
             try {
-                Solver.Node sol = finalSolver.call();
-                comunicar("[Solver " + id + "] Solució obtinguda: " + sol);
+                finalSolver.run();
+                comunicar("[Solver " + id + "] Solució obtinguda: " + dades.getSolucio().toString());
             } catch (Exception e) {
                 comunicar("[Solver " + id + "] Error: " + e.getMessage());
             } finally {
@@ -131,5 +132,8 @@ public class Main implements Comunicar {
     @Override
     public void actualitzar(int id) {
         finestra.actualitzar(id);
+    }
+    public final Dades getDades() {
+        return dades;
     }
 }
