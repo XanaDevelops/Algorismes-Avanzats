@@ -8,12 +8,12 @@ import java.awt.*;
 public class PanellGraf extends JPanel {
     private static final int AMPLADA_PANELL = 600;
     private static final int ALTURA_PANELL = 600;
-    private static final int RADI = 200;
-    private static final int RADI_NODES = 6;
-    private static final int MIDA_PUNTA_FLETXA = 10;
-    private static final int DIST_TEXT = 12;
-    private static final int DIST_LABEL_NODE = 10;
-    private static final Font FONT_LABEL = new Font("SansSerif", Font.PLAIN, 12);
+    private int RADI = 200;
+    private int RADI_NODES = 6;
+    private int MIDA_PUNTA_FLETXA = 10;
+    private int DIST_TEXT = 12;
+    private int DIST_LABEL_NODE = 10;
+    private Font FONT_LABEL = new Font("SansSerif", Font.PLAIN, 12);
 
     private Dades dades;
     private int[][] graf;
@@ -22,6 +22,21 @@ public class PanellGraf extends JPanel {
         this.dades = dades;
         this.setPreferredSize(new Dimension(AMPLADA_PANELL, ALTURA_PANELL));
     }
+
+    private void ajustarParametresVisuals(int n) {
+        int radiMax = Math.min(AMPLADA_PANELL, ALTURA_PANELL) / 2 - 40;
+
+        double factor = Math.min(1.0, (radiMax * 2.0) / (n * 25.0));
+
+        this.RADI = (int) (radiMax * factor);
+
+        this.RADI_NODES = Math.max(3, (int) (8 * factor));
+        this.MIDA_PUNTA_FLETXA = Math.max(5, (int) (12 * factor));
+        this.DIST_TEXT = Math.max(6, (int) (15 * factor));
+        this.DIST_LABEL_NODE = Math.max(5, (int) (12 * factor));
+        this.FONT_LABEL = new Font("SansSerif", Font.PLAIN, Math.max(8, (int) (14 * factor)));
+    }
+
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -33,6 +48,7 @@ public class PanellGraf extends JPanel {
 
         if (graf == null) return;
         int n = graf.length;
+        ajustarParametresVisuals(n);
         if (n == 0) return;
 
         Graphics2D g2 = (Graphics2D) g;
@@ -51,23 +67,39 @@ public class PanellGraf extends JPanel {
         }
 
         g2.setColor(Color.LIGHT_GRAY);
+        g2.setColor(Color.LIGHT_GRAY);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (i != j && graf[i][j] != Integer.MAX_VALUE) {
                     Point pi = coords[i];
                     Point pj = coords[j];
-                    dibuixFletxa(g2, pi.x, pi.y, pj.x, pj.y);
 
-                    int mx = (pi.x + pj.x) / 2;
-                    int my = (pi.y + pj.y) / 2;
+                    boolean esBidireccional = (graf[j][i] != Integer.MAX_VALUE);
 
-                    int dx = pj.y - pi.y;
-                    int dy = pi.x - pj.x;
-                    double length = Math.sqrt(dx * dx + dy * dy);
-                    if (length != 0) {
-                        mx += (int) (DIST_TEXT * dx / length);
-                        my += (int) (DIST_TEXT * dy / length);
-                    }
+                    // Vector entre nodes
+                    int dx = pj.x - pi.x;
+                    int dy = pj.y - pi.y;
+                    double dist = Math.hypot(dx, dy);
+
+                    // Vector perpendicular normalitzat
+                    double px = -dy / dist;
+                    double py = dx / dist;
+
+                    // Desplaçament perpendicular
+                    int offset = esBidireccional ? 10 : 0;
+
+                    // Punt d'inici i final desplaçats
+                    int x1 = pi.x + (int) (px * offset);
+                    int y1 = pi.y + (int) (py * offset);
+                    int x2 = pj.x + (int) (px * offset);
+                    int y2 = pj.y + (int) (py * offset);
+
+                    // Dibuixa la fletxa
+                    dibuixFletxa(g2, x1, y1, x2, y2);
+
+                    // Punt mig per al text (amb un lleuger desplaçament extra)
+                    int mx = (x1 + x2) / 2 + (int) (DIST_TEXT * px);
+                    int my = (y1 + y2) / 2 + (int) (DIST_TEXT * py);
 
                     g2.setColor(Color.BLACK);
                     g2.drawString(String.valueOf(graf[i][j]), mx, my);
@@ -76,13 +108,25 @@ public class PanellGraf extends JPanel {
             }
         }
 
+
         for (int i = 0; i < n; i++) {
             Point p = coords[i];
             g2.setColor(Color.BLUE);
             g2.fillOval(p.x - RADI_NODES, p.y - RADI_NODES, RADI_NODES * 2, RADI_NODES * 2);
             g2.setColor(Color.BLACK);
-            g2.drawString("C" + i, p.x + DIST_LABEL_NODE, p.y);
+            g2.drawString(convertirIndexALletres(i), p.x + DIST_LABEL_NODE, p.y);
         }
+    }
+
+    private String convertirIndexALletres(int index) {
+        StringBuilder nom = new StringBuilder();
+        index++;
+        while (index > 0) {
+            index--;
+            nom.insert(0, (char) ('A' + (index % 26)));
+            index /= 26;
+        }
+        return nom.toString();
     }
 
     private void dibuixFletxa(Graphics2D g2, int x1, int y1, int x2, int y2) {
@@ -114,36 +158,5 @@ public class PanellGraf extends JPanel {
         capFletxa.addPoint(xFletxa2, yFletxa2);
 
         g2.fill(capFletxa);
-    }
-
-
-    // prova temporal
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Prova PanellGraf");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            Dades dades = new DadesFake();
-            PanellGraf panell = new PanellGraf(dades);
-            frame.add(panell);
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
-    }
-
-}
-
-// temporal per fer proves
-class DadesFake extends Dades {
-    @Override
-    public int[][] getGraf() {
-        final int INF = Integer.MAX_VALUE;
-        return new int[][]{
-                {0,   2,   4, INF, INF},
-                {2,   0,   1,   7, INF},
-                {INF,   1,   0,   INF,   6},
-                {INF, INF,   3,   0,   2},
-                {INF, INF, INF, INF,   0}
-        };
     }
 }

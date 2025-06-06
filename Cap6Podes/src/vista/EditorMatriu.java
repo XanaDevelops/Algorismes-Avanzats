@@ -1,5 +1,6 @@
 package vista;
 
+import controlador.Comunicar;
 import controlador.Main;
 import model.Dades;
 
@@ -16,10 +17,11 @@ public class EditorMatriu extends JDialog implements ActionListener {
     private JTable matriu;
     private JTextField txtWidth, txtHeight;
     private JScrollPane taula;
-
+    private Comunicar finestra;
 
     public EditorMatriu(JFrame parent) {
         super(parent, "Editar Matriu", ModalityType.APPLICATION_MODAL);
+        this.finestra = (Comunicar) parent;
         this.setLocationRelativeTo(parent);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -114,6 +116,9 @@ public class EditorMatriu extends JDialog implements ActionListener {
                 dades.setVal(j, i, val);
             }
         }
+
+        finestra.comunicar("actualitzarGraf");
+
         this.dispose();
     }
 

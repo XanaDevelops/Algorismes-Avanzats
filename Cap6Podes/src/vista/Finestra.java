@@ -9,6 +9,7 @@ import java.awt.*;
 
 public class Finestra extends JFrame implements Comunicar {
     private Dades dades;
+    private PanellGraf graf;
 
     public Finestra() {
         super();
@@ -17,7 +18,7 @@ public class Finestra extends JFrame implements Comunicar {
         this.setSize(new Dimension(800, 600));
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
-        // dades = Main.getInstance().getDades();
+        dades = Main.getInstance().getDades();
         JPanel panellBotons = new JPanel();
 
         panellBotons.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -35,8 +36,12 @@ public class Finestra extends JFrame implements Comunicar {
 
         this.add(panellBotons, BorderLayout.NORTH);
 
-        PanellGraf panell = new PanellGraf(dades);
-        this.add(panell, BorderLayout.CENTER);
+        graf = new PanellGraf(dades);
+        this.add(graf, BorderLayout.CENTER);
+
+        PanellInformacio panellInfo = new PanellInformacio();
+        panellInfo.setPreferredSize(new Dimension(250, 0));
+        this.add(panellInfo, BorderLayout.WEST);
 
         this.setVisible(true);
 
@@ -45,6 +50,12 @@ public class Finestra extends JFrame implements Comunicar {
 
     @Override
     public void comunicar(String msg) {
-
+        switch(msg) {
+            case "actualitzarGraf":
+                graf.repaint();
+                break;
+            default:
+                break;
+        }
     }
 }
