@@ -76,28 +76,22 @@ public class PanellGraf extends JPanel {
 
                     boolean esBidireccional = (graf[j][i] != Integer.MAX_VALUE);
 
-                    // Vector entre nodes
                     int dx = pj.x - pi.x;
                     int dy = pj.y - pi.y;
                     double dist = Math.hypot(dx, dy);
 
-                    // Vector perpendicular normalitzat
                     double px = -dy / dist;
                     double py = dx / dist;
 
-                    // Desplaçament perpendicular
                     int offset = esBidireccional ? 10 : 0;
 
-                    // Punt d'inici i final desplaçats
                     int x1 = pi.x + (int) (px * offset);
                     int y1 = pi.y + (int) (py * offset);
                     int x2 = pj.x + (int) (px * offset);
                     int y2 = pj.y + (int) (py * offset);
 
-                    // Dibuixa la fletxa
                     dibuixFletxa(g2, x1, y1, x2, y2);
 
-                    // Punt mig per al text (amb un lleuger desplaçament extra)
                     int mx = (x1 + x2) / 2 + (int) (DIST_TEXT * px);
                     int my = (y1 + y2) / 2 + (int) (DIST_TEXT * py);
 
