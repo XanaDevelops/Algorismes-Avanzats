@@ -1,17 +1,17 @@
 package model;
 
 import controlador.Comunicar;
+import controlador.Main;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 
-public class Solver implements Callable<Solver.Node>, Comunicar {
+public class Solver implements Runnable, Comunicar {
     private static int totalNodes;
     private static final int INFINITY = Integer.MAX_VALUE;
     private Node root;
     private volatile static  boolean running = true;
     private volatile static boolean paused = false;
-
+    private int[][] graf;
     public Solver(int id, int n) throws InterruptedException {
         Random r = new Random();
         int [][] matriu = new int[n][n];
@@ -22,15 +22,16 @@ public class Solver implements Callable<Solver.Node>, Comunicar {
                  }else{
                      matriu[i][j] = r.nextInt(100);
                  }
-                ;
+
             }
         }
-        root = solve(matriu);
-        //primer s'ha de generar la matriu d'adjaçencia
+        this.graf = matriu;
+        totalNodes = graf.length;
 
     }
     public Solver (int id, int[][] matrix) throws InterruptedException {
-         root = solve(matrix);
+        this.graf = matrix;
+        totalNodes = graf.length;
     }
 
     public Node getRoot() {
@@ -40,8 +41,14 @@ public class Solver implements Callable<Solver.Node>, Comunicar {
 
 
     @Override
-    public Node call() throws Exception {
-        return root;
+    public void run() {
+        try {
+            root = solve(graf);
+            obtenirSolucio(root);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 
@@ -94,14 +101,14 @@ public class Solver implements Callable<Solver.Node>, Comunicar {
 
         //BB basat en triar el node més prometedor
         while (!pq.isEmpty() && running) {
-            synchronized (this) {
-                while (paused) {
-                    wait();  // esperar fins que es crida a resume()
-                }
-            }
+//            synchronized (this) {
+//                while (paused) {
+//                    wait();  // esperar fins que es crida a resume()
+//                }
+//            }
             Node node = pq.poll();
             //hem visitat tots els nodes?
-            if (node.depth == totalNodes - 1) {
+            if (Objects.requireNonNull(node).depth == totalNodes - 1) {
                 int returnCost = node.reducedMatrix[node.current][0];
                 node.cost +=  returnCost == INFINITY ? 0: INFINITY;
                 return node;
@@ -127,7 +134,6 @@ public class Solver implements Callable<Solver.Node>, Comunicar {
             matriu[current][k] = INFINITY;
             matriu[k][nextVertex] = INFINITY;
         }
-        // Impedir retorno al inicio prematuro
         matriu[nextVertex][0] = INFINITY;
 
         int addedCost = parent.reducedMatrix[current][nextVertex];
@@ -135,15 +141,16 @@ public class Solver implements Callable<Solver.Node>, Comunicar {
         return new Node(matriu, nextVertex, parent.cost + addedCost + reductionCost, parent, parent.depth + 1);
     }
 
-    static void imprimirCami(Node leaf) {
+    private void obtenirSolucio(Node leaf) {
         LinkedList<Integer> path = new LinkedList<>();
         while (leaf != null) {
             path.addFirst(leaf.current);
             leaf = leaf.parent;
         }
-        for (Integer integer : path) {
-            System.out.println(integer);
-        }
+//        for (Integer integer : path) {
+//            System.out.println(integer);
+//        }
+        Main.getInstance().getDades().guardarSolucio(path);
 
     }
 

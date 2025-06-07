@@ -1,5 +1,7 @@
 package model;
 
+import java.util.LinkedList;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -8,13 +10,27 @@ public class Dades {
         return 0;
     }
     private int [][] graf;
+    private LinkedList<Integer> solucio; //conté les ciutats representades pel seu índex en la matriu
+
+    public Dades() {
+        solucio = new LinkedList<>();
+
+    }
+    public Dades(int [][] graf) {
+        this.graf = graf;
+    }
 
     public static final int DEFAULT_GRAPH_SIZE = 10;
 
     public class Solucio {
     }
 
-    public int guardarSolucio(Solucio sol) {
+    public LinkedList<Integer> getSolucio() {
+        return solucio;
+    }
+
+    public int guardarSolucio(LinkedList<Integer> solucio) {
+        this.solucio = solucio;
         return 0;
     }
 
