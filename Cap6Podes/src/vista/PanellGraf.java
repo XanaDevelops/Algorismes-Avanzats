@@ -69,7 +69,7 @@ public class PanellGraf extends JPanel {
         int n = graf.length;
         Point[] coords = calcularCoordenadesNode(n);
 
-        // Extreure el camí (del final a l'inici)
+        // extreure el camí (del final a l'inici)
         LinkedList<Integer> path = new LinkedList<>();
         Solver.Node actual = solucio;
         while (actual != null) {
@@ -77,7 +77,6 @@ public class PanellGraf extends JPanel {
             actual = actual.getParent();
         }
 
-        // Dibuixar les arestes del camí amb fletxes vermelles
         g2.setStroke(new BasicStroke(3));
         g2.setColor(Color.RED);
 
@@ -129,7 +128,6 @@ public class PanellGraf extends JPanel {
         }
         return coords;
     }
-
 
     private void dibuixarGrafComplet(Graphics2D g2) {
         int n = graf.length;
