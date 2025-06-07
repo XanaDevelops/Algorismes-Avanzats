@@ -1,5 +1,8 @@
 package model;
 
+import java.io.*;
+import java.util.ArrayList;
+
 public class Dades {
     public int getIdCount() {
         return 0;
@@ -33,6 +36,40 @@ public class Dades {
 
     public void setVal(int x, int y, int val){
         graf[y][x] = val;
+    }
+
+    public void importarDades(String file) throws RuntimeException, IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            ArrayList<int[]> aux = new ArrayList<>();
+            while ((line = reader.readLine()) != null ) {
+                String[] parts = line.split(",");
+                int[] auxLine = new int[parts.length];
+                for (int j = 0; j < parts.length; j++) {
+                    auxLine[j] = Integer.parseInt(parts[j].trim());
+                }
+                aux.add(auxLine);
+            }
+            graf = new int[aux.size()][aux.getFirst().length];
+            for (int i = 0; i < aux.size(); i++) {
+                graf[i] = aux.get(i);
+            }
+        }
+    }
+
+    public void exportarDades(String file) throws RuntimeException, IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (int[] row : graf) {
+                for (int j = 0; j < row.length; j++) {
+                    writer.write(Integer.toString(row[j]));
+                    if (j < row.length - 1) {
+                        writer.write(",");
+                    }
+                }
+                writer.write(System.lineSeparator());
+            }
+            writer.flush();
+        }
     }
 
     public int[][] getGraf(){

@@ -5,10 +5,13 @@ import controlador.Main;
 import model.Dades;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileView;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 public class EditorMatriu extends JDialog implements ActionListener {
 
@@ -58,6 +61,72 @@ public class EditorMatriu extends JDialog implements ActionListener {
         botons.add(lHeight);
         botons.add(txtHeight);
 
+        JButton btnImportar = new JButton("Importar");
+        btnImportar.addActionListener((e -> {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fc.setFileFilter((new javax.swing.filechooser.FileFilter() {
+                public boolean accept(File f) {
+                    return f.getName().toLowerCase().endsWith(".csv") || f.getName().toLowerCase().endsWith(".txt");
+                }
+
+                /**
+                 * The description of this filter. For example: "JPG and GIF Images"
+                 *
+                 * @return the description of this filter
+                 * @see FileView#getName
+                 */
+                @Override
+                public String getDescription() {
+                    return "CSV o TXT";
+                }
+            }));
+            int res = fc.showOpenDialog(this);
+            if (res == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                try {
+                    dades.importarDades(file.getAbsolutePath());
+                } catch (RuntimeException | IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Error al importar", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            repaint();
+        }));
+        botons.add(btnImportar);
+
+        JButton btnExportar = new JButton("Exportar");
+        btnExportar.addActionListener((e -> {
+            JFileChooser fc = new JFileChooser();
+            fc.setDialogType(JFileChooser.SAVE_DIALOG);
+            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fc.setFileFilter((new javax.swing.filechooser.FileFilter() {
+                public boolean accept(File f) {
+                    return f.getName().toLowerCase().endsWith(".csv") || f.getName().toLowerCase().endsWith(".txt");
+                }
+
+                /**
+                 * The description of this filter. For example: "JPG and GIF Images"
+                 *
+                 * @return the description of this filter
+                 * @see FileView#getName
+                 */
+                @Override
+                public String getDescription() {
+                    return "CSV o TXT";
+                }
+            }));
+            int res = fc.showSaveDialog(this);
+            if (res == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                try {
+                    dades.exportarDades(file.getAbsolutePath());
+                } catch (RuntimeException | IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Error al exportar", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            repaint();
+        }));
+        botons.add(btnExportar);
         this.add(botons, BorderLayout.NORTH);
 
         model = new DefaultTableModel(Dades.DEFAULT_GRAPH_SIZE,Dades.DEFAULT_GRAPH_SIZE);
