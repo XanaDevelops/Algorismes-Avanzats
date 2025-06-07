@@ -16,7 +16,7 @@ public class Main implements Comunicar {
         return instance;
     }
 
-    private static Dades dades;
+    private Dades dades;
     private Comunicar finestra;
 
     private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
@@ -40,7 +40,6 @@ public class Main implements Comunicar {
         SwingUtilities.invokeLater(() -> {
             finestra = new Finestra();
         });
-
     }
 
     @Override

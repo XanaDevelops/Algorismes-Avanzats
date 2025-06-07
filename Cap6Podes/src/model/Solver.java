@@ -68,6 +68,21 @@ public class Solver implements Runnable, Comunicar {
 
         }
 
+        public int getCurrent() {
+            return current;
+        }
+
+        public void setCurrent(int current) {
+            this.current = current;
+        }
+
+        public Node getParent() {
+            return parent;
+        }
+
+        public void setParent(Node parent) {
+            this.parent = parent;
+        }
 
         @Override
         public int compareTo(Node o) {
