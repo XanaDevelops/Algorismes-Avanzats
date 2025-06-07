@@ -1,9 +1,11 @@
 package vista;
 
 import model.Dades;
+import model.Solver;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
 
 public class PanellGraf extends JPanel {
     private static final int AMPLADA_PANELL = 600;
@@ -17,6 +19,8 @@ public class PanellGraf extends JPanel {
 
     private Dades dades;
     private int[][] graf;
+    private Solver.Node solucio;
+    private boolean mostrarSolucio = false;
 
     public PanellGraf(Dades dades) {
         this.dades = dades;
@@ -45,17 +49,75 @@ public class PanellGraf extends JPanel {
         if (dades != null) {
             graf = dades.getGraf();
         }
+        if (graf == null || graf.length == 0) return;
 
-        if (graf == null) return;
-        int n = graf.length;
-        ajustarParametresVisuals(n);
-        if (n == 0) return;
+        ajustarParametresVisuals(graf.length);
 
         Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setStroke(new BasicStroke(2));
         g2.setFont(FONT_LABEL);
-        Point[] coords = new Point[n];
 
+        if (mostrarSolucio && solucio != null) {
+            dibuixarSolucio(g2);
+        } else {
+            dibuixarGrafComplet(g2);
+        }
+    }
+
+    private void dibuixarSolucio(Graphics2D g2) {
+        int n = graf.length;
+        Point[] coords = calcularCoordenadesNode(n);
+
+        // Extreure el camí (del final a l'inici)
+        LinkedList<Integer> path = new LinkedList<>();
+        Solver.Node actual = solucio;
+        while (actual != null) {
+            path.addFirst(actual.getCurrent());
+            actual = actual.getParent();
+        }
+
+        // Dibuixar les arestes del camí amb fletxes vermelles
+        g2.setStroke(new BasicStroke(3));
+        g2.setColor(Color.RED);
+
+        for (int i = 0; i < path.size() - 1; i++) {
+            int from = path.get(i);
+            int to = path.get(i + 1);
+
+            Point p1 = coords[from];
+            Point p2 = coords[to];
+
+            dibuixFletxa(g2, p1.x, p1.y, p2.x, p2.y);
+
+            int pes = graf[from][to];
+            int mx = (p1.x + p2.x) / 2;
+            int my = (p1.y + p2.y) / 2;
+            g2.setColor(Color.BLACK);
+            g2.drawString(String.valueOf(pes), mx, my);
+            g2.setColor(Color.RED);
+        }
+
+        for (int i = 0; i < n; i++) {
+            Point p = coords[i];
+            if (i == path.getFirst()) {
+                g2.setColor(Color.GREEN); // inici
+            } else if (i == path.getLast()) {
+                g2.setColor(Color.RED);   // final
+            } else if (path.contains(i)) {
+                g2.setColor(Color.ORANGE); // nodes del camí però no extrem
+            } else {
+                g2.setColor(Color.LIGHT_GRAY); // nodes fora del camí
+            }
+            g2.fillOval(p.x - RADI_NODES, p.y - RADI_NODES, RADI_NODES * 2, RADI_NODES * 2);
+            g2.setColor(Color.BLACK);
+            g2.drawOval(p.x - RADI_NODES, p.y - RADI_NODES, RADI_NODES * 2, RADI_NODES * 2);
+            g2.drawString(convertirIndexALletres(i), p.x + DIST_LABEL_NODE, p.y);
+        }
+    }
+
+    private Point[] calcularCoordenadesNode(int n) {
+        Point[] coords = new Point[n];
         int cx = getWidth() / 2;
         int cy = getHeight() / 2;
         for (int i = 0; i < n; i++) {
@@ -65,6 +127,13 @@ public class PanellGraf extends JPanel {
                     cy + (int) (RADI * Math.sin(angle))
             );
         }
+        return coords;
+    }
+
+
+    private void dibuixarGrafComplet(Graphics2D g2) {
+        int n = graf.length;
+        Point[] coords = calcularCoordenadesNode(n);
 
         g2.setColor(Color.LIGHT_GRAY);
         g2.setColor(Color.LIGHT_GRAY);
@@ -101,7 +170,6 @@ public class PanellGraf extends JPanel {
                 }
             }
         }
-
 
         for (int i = 0; i < n; i++) {
             Point p = coords[i];
@@ -153,4 +221,17 @@ public class PanellGraf extends JPanel {
 
         g2.fill(capFletxa);
     }
+
+    public void mostrarSolucio(Solver.Node sol) {
+        this.solucio = sol;
+        this.mostrarSolucio = true;
+        this.repaint();
+    }
+
+    public void esborrarSolucio() {
+        this.solucio = null;
+        this.mostrarSolucio = false;
+        this.repaint();
+    }
+
 }

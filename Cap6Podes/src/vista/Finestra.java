@@ -15,7 +15,7 @@ public class Finestra extends JFrame implements Comunicar {
         super();
         this.setTitle("Branch&Bound");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(new Dimension(800, 600));
+        this.setSize(new Dimension(900, 700));
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
         dades = Main.getInstance().getDades();
@@ -54,6 +54,8 @@ public class Finestra extends JFrame implements Comunicar {
             case "actualitzarGraf":
                 graf.repaint();
                 break;
+            // case solució trobada
+            // graf.mostrarSolucio(node solucio)
             default:
                 break;
         }
