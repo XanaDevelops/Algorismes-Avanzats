@@ -1,9 +1,10 @@
 package model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Result {
-    public List<Integer> resultat;
+    public LinkedList<Integer> resultat;
     public int costTotal = 0;
     public int branquesExplorades = 0;
     public int nodesDescartats = 0;

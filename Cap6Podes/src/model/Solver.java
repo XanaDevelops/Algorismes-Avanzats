@@ -14,10 +14,16 @@ public class Solver implements Runnable, Comunicar {
     private volatile static boolean stepMode = false;
     private int[][] graf;
 
+    private Result resultat;
 
     public Solver (int id, int[][] matrix, boolean stepMode) throws InterruptedException {
         this.graf = matrix;
+        this.resultat = new Result();
         Solver.stepMode = stepMode;
+
+        if(stepMode) {
+            resultat.costTotal = -1;
+        }
 
         totalNodes = graf.length;
     }
@@ -148,8 +154,8 @@ public class Solver implements Runnable, Comunicar {
             path.addFirst(leaf.current);
             leaf = leaf.parent;
         }
-
-        Main.getInstance().getDades().guardarSolucio(path);
+        this.resultat.resultat = path;
+        Main.getInstance().getDades().setResultat(resultat);
 
     }
 

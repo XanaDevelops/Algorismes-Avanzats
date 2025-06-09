@@ -49,7 +49,7 @@ public class Finestra extends JFrame implements Comunicar {
                         }
 
                     }
-                }, 0L, 1000L);
+                }, 0L, 500L);
             }
         });
         panellBotons.add(btnCalcular);
@@ -67,6 +67,13 @@ public class Finestra extends JFrame implements Comunicar {
             repaint();
         }));
         panellBotons.add(btnEdit);
+
+        JButton btnAturar = new JButton("Aturar");
+        btnAturar.addActionListener((e -> {
+            Main.getInstance().aturar(0);
+            repaint();
+        }));
+        panellBotons.add(btnAturar);
 
         this.add(panellBotons, BorderLayout.NORTH);
 
@@ -103,6 +110,13 @@ public class Finestra extends JFrame implements Comunicar {
     public void actualitzar(int id){
         stop = true;
         graf.mostrarSolucio(dades.getSolucio());
+        repaint();
+    }
+
+    @Override
+    public void aturar(int id) {
+        graf.esborrarSolucio();
+        timer.cancel();
         repaint();
     }
 }

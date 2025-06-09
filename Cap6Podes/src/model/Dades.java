@@ -10,10 +10,10 @@ public class Dades {
         return 0; //realment executam només una
     }
     private int [][] graf;
-    private LinkedList<Integer> solucio; //conté les ciutats representades pel seu índex en la matriu
+
+    private Result resultat = new Result(); //conté les ciutats representades pel seu índex en la matriu
 
     public Dades() {
-        solucio = new LinkedList<>();
 
     }
     public Dades(int [][] graf) {
@@ -22,16 +22,19 @@ public class Dades {
 
     public static final int DEFAULT_GRAPH_SIZE = 10;
 
-    public class Solucio {
+    public Result getResultat() {
+        return resultat;
+    }
+    public void setResultat(Result resultat) {
+        this.resultat = resultat;
     }
 
     public LinkedList<Integer> getSolucio() {
-        return solucio;
+        return resultat.resultat;
     }
 
-    public int guardarSolucio(LinkedList<Integer> solucio) {
-        this.solucio = solucio;
-        return 0;
+    public void guardarSolucio(LinkedList<Integer> solucio) {
+        this.resultat.resultat = solucio;
     }
 
     public void generarRandom(){
