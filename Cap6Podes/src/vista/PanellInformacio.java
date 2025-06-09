@@ -48,12 +48,13 @@ public class PanellInformacio extends JPanel {
     }
 
     public void mostrarResultat(Result resultat){
+
         labels[0].setText(""+resultat.costTotal);
         labels[1].setText(""+resultat.branquesExplorades);
         labels[2].setText(""+resultat.nodesDescartats);
         labels[3].setText(String.format("%.2f %%", resultat.nodesTotals == 0 ?
                 0 :
-                (resultat.branquesExplorades / resultat.nodesTotals)*100f));
+                (resultat.nodesDescartats / (double) resultat.nodesTotals)*100f));
     }
 
     public void log(String missatge) {

@@ -28,6 +28,7 @@ public class Solver implements Runnable, Comunicar {
         }
 
         totalNodes = graf.length;
+
     }
 
     public Node getRoot() {
@@ -94,7 +95,7 @@ public class Solver implements Runnable, Comunicar {
         //començar la ruta
         Node root = new Node(rootMat, 0, rootCost, null, 0);
         pq.add(root);
-
+        resultat.nodesTotals++;
         //BB basat en triar el node més prometedor
         while (!pq.isEmpty() && running) {
 
@@ -130,6 +131,9 @@ public class Solver implements Runnable, Comunicar {
         for (int j = 0; j < totalNodes; j++) {
             if (node.reducedMatrix[node.current][j] != INFINITY) {
                 pq.add(createChild(node, j));
+                resultat.nodesTotals++;
+            }else{
+                resultat.nodesDescartats++;
             }
         }
         return null;
