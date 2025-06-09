@@ -114,6 +114,8 @@ public class Solver implements Runnable, Comunicar {
             matriu[k][nextVertex] = INFINITY;
         }
 
+        //matriu[nextVertex][0] = INFINITY;
+
         int costAfegit = parent.matriuReduida[current][nextVertex];
         int costReduccio = calcularCostReduccio(matriu);
         return new Node(matriu, nextVertex, parent.cost + costAfegit + costReduccio, parent, parent.profund + 1);
