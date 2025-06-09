@@ -201,6 +201,15 @@ public class Solver implements Runnable, Comunicar {
             this.profund = profund;
         }
 
+
+        public int getActual() {
+            return actual;
+        }
+
+        public Node getPare() {
+            return pare;
+        }
+
         @Override
         public int compareTo(Node o) {
             return Integer.compare(this.cost, o.cost);

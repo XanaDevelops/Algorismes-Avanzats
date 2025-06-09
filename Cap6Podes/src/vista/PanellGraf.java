@@ -73,8 +73,8 @@ public class PanellGraf extends JPanel {
         LinkedList<Integer> path = new LinkedList<>();
         Solver.Node actual = solucio;
         while (actual != null) {
-            path.addFirst(actual.getCurrent());
-            actual = actual.getParent();
+            path.addFirst(actual.getActual());
+            actual = actual.getPare();
         }
 
         g2.setStroke(new BasicStroke(3));
