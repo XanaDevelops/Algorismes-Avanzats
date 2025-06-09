@@ -14,6 +14,8 @@ public class Solver implements Runnable, Comunicar {
     private volatile static boolean stepMode = false;
     private int[][] graf;
 
+    private int visitats = 0;
+
     private Result resultat;
 
     public Solver (int id, int[][] matrix, boolean stepMode) throws InterruptedException {
@@ -123,6 +125,7 @@ public class Solver implements Runnable, Comunicar {
             return node;
         }
 
+        visitats++;
 
         for (int j = 0; j < totalNodes; j++) {
             if (node.reducedMatrix[node.current][j] != INFINITY) {
@@ -166,6 +169,7 @@ public class Solver implements Runnable, Comunicar {
             lastC = c;
         }
         resultat.costTotal = totalCost;
+        resultat.branquesExplorades = visitats;
         Main.getInstance().getDades().setResultat(resultat);
 
     }
