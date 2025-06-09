@@ -19,7 +19,7 @@ public class PanellGraf extends JPanel {
 
     private Dades dades;
     private int[][] graf;
-    private Solver.Node solucio;
+    private LinkedList<Integer> solucio;
     private boolean mostrarSolucio = false;
 
     public PanellGraf(Dades dades) {
@@ -70,12 +70,7 @@ public class PanellGraf extends JPanel {
         Point[] coords = calcularCoordenadesNode(n);
 
         // extreure el camí (del final a l'inici)
-        LinkedList<Integer> path = new LinkedList<>();
-        Solver.Node actual = solucio;
-        while (actual != null) {
-            path.addFirst(actual.getActual());
-            actual = actual.getPare();
-        }
+        LinkedList<Integer> path = solucio;
 
         g2.setStroke(new BasicStroke(3));
         g2.setColor(Color.RED);
@@ -220,7 +215,7 @@ public class PanellGraf extends JPanel {
         g2.fill(capFletxa);
     }
 
-    public void mostrarSolucio(Solver.Node sol) {
+    public void mostrarSolucio(LinkedList<Integer> sol) {
         this.solucio = sol;
         this.mostrarSolucio = true;
         this.repaint();

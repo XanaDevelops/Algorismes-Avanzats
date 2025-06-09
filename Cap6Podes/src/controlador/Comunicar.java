@@ -5,11 +5,7 @@ public interface Comunicar {
     void comunicar(String msg);
 
 
-    default void calcular(int id) {
-        throw new UnsupportedOperationException();
-    }
-
-    default void calcular(int[][] matrix) {
+    default void calcular(int[][] matrix, boolean stepMode) {
         throw new UnsupportedOperationException();
     }
 
@@ -17,13 +13,7 @@ public interface Comunicar {
         throw new UnsupportedOperationException();
     }
 
-    default void pausar(int id) {
-        throw new UnsupportedOperationException();
-    }
-
-    default void reanudar(int id) {
-        throw new UnsupportedOperationException();
-    }
+    default void step(int id){throw new UnsupportedOperationException();}
 
     default void actualitzar(int id) {
         throw new UnsupportedOperationException();

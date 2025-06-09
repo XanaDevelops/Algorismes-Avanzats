@@ -1,5 +1,7 @@
 package vista;
 
+import model.Result;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,19 +12,30 @@ public class PanellInformacio extends JPanel {
     private JLabel lblEfectePoda;
     private JTextArea areaLog;
 
+    JLabel[] labels;
+
     public PanellInformacio() {
         setLayout(new BorderLayout());
 
-        JPanel panellDades = new JPanel(new GridLayout(4, 1));
+        JPanel panellDades = new JPanel(new GridLayout(4, 2));
         lblCostTotal = new JLabel("Cost total: ");
-        lblBranquesExplorades = new JLabel("Branques explorades: ");
+        lblBranquesExplorades = new JLabel("Explorades: ");
         lblNodesDescartats = new JLabel("Nodes descartats: ");
         lblEfectePoda = new JLabel("Efecte de la poda: ");
 
+        labels = new JLabel[4];
+        for (int i = 0; i < labels.length; i++) {
+            labels[i] = new JLabel("---");
+        }
+
         panellDades.add(lblCostTotal);
+        panellDades.add(labels[0]);
         panellDades.add(lblBranquesExplorades);
+        panellDades.add(labels[1]);
         panellDades.add(lblNodesDescartats);
+        panellDades.add(labels[2]);
         panellDades.add(lblEfectePoda);
+        panellDades.add(labels[3]);
 
         areaLog = new JTextArea(4, 30);
         areaLog.setEditable(false);
@@ -34,20 +47,14 @@ public class PanellInformacio extends JPanel {
         setBorder(BorderFactory.createTitledBorder("Informació del procés"));
     }
 
-    public void setCost(int cost) {
-        lblCostTotal.setText("Cost total: " + cost);
-    }
+    public void mostrarResultat(Result resultat){
 
-    public void setBranques(int n) {
-        lblBranquesExplorades.setText("Branques explorades: " + n);
-    }
-
-    public void setDescartats(int n) {
-        lblNodesDescartats.setText("Nodes descartats: " + n);
-    }
-
-    public void setEfectePoda(String text) {
-        lblEfectePoda.setText("Efecte de la poda: " + text);
+        labels[0].setText(""+resultat.costTotal);
+        labels[1].setText(""+resultat.branquesExplorades);
+        labels[2].setText(""+resultat.nodesDescartats);
+        labels[3].setText(String.format("%.2f %%", resultat.nodesTotals == 0 ?
+                0 :
+                (resultat.nodesDescartats / (double) resultat.nodesTotals)*100f));
     }
 
     public void log(String missatge) {

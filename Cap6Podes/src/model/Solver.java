@@ -9,30 +9,26 @@ public class Solver implements Runnable, Comunicar {
     private static final int INFINITY = Integer.MAX_VALUE;
     private volatile static boolean running = true;
     private volatile static boolean paused = false;
+    private volatile static boolean stepMode = false;
     private int totalNodes;
     private Node root;
     private int[][] graf;
-    private boolean modeAll = true;
-    public Solver(int id, int n) throws InterruptedException {
-        Random r = new Random();
-        int[][] matriu = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i == j) {
-                    matriu[i][j] = INFINITY;
-                } else {
-                    matriu[i][j] = r.nextInt(100);
-                }
 
-            }
-        }
-        this.graf = matriu;
-        totalNodes = graf.length;
-    }
+    private int visitats = 0;
 
-    public Solver(int id, int[][] matrix) throws InterruptedException {
+    private Result resultat;
+
+    public Solver (int id, int[][] matrix, boolean stepMode) throws InterruptedException {
         this.graf = matrix;
+        this.resultat = new Result();
+        Solver.stepMode = stepMode;
+
+        if(stepMode) {
+            resultat.costTotal = -1;
+        }
+
         totalNodes = graf.length;
+
     }
 
     private static int trobarMinFila(int[][] mat, int i) {
@@ -47,9 +43,8 @@ public class Solver implements Runnable, Comunicar {
     public void run() {
         try {
             root = solve(graf);
-
             obtenirSolucio(root);
-            System.out.println(root.cost);
+
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -64,27 +59,46 @@ public class Solver implements Runnable, Comunicar {
         //començar la ruta
         Node root = new Node(rootMat, 0, rootCost, null, 0);
         pq.add(root);
-
+        resultat.nodesTotals++;
         //BB basat en triar el node més prometedor
         while (!pq.isEmpty() && running) {
-            synchronized (this) {
-                while (paused) {
-                    wait();  // esperar fins que es crida a resume()
+            Node node = step(pq);
+
+            if (node != null) return node;
+
+            if(stepMode){
+                synchronized (this) {
+                    while (paused) {
+                        wait();  // esperar fins que es crida a resume()
+                    }
+                    obtenirSolucio(pq.peek());
+                    Main.getInstance().getFinestra().step(0);
+                    paused = true;
                 }
             }
-            Node node = pq.poll();
-            //hem visitat tots els nodes?
 
-            if (Objects.requireNonNull(node).profund == totalNodes - 1) {
-                int returnCost = node.matriuReduida[node.actual][0];
-                node.cost += returnCost != INFINITY ? returnCost : 0;
-                return node;
-            }
+        }
+        return null;
+    }
 
-            for (int j = 0; j < totalNodes; j++) {
-                if (node.matriuReduida[node.actual][j] != INFINITY) {
-                    pq.add(crearNodeFill(node, j));
-                }
+    private Node step(PriorityQueue<Node> pq) {
+        Node node = pq.poll();
+        //hem visitat tots els nodes?
+
+        if (Objects.requireNonNull(node).profund == totalNodes - 1) {
+            int returnCost = node.matriuReduida[node.actual][0];
+            node.cost += returnCost != INFINITY ? returnCost : 0;
+            return node;
+        }
+        visitats++;
+
+        for (int j = 0; j < totalNodes; j++) {
+            if (node.matriuReduida[node.actual][j] != INFINITY) {
+                pq.add(crearNodeFill(node, j));
+                resultat.nodesTotals++;
+            }else{
+                resultat.nodesDescartats++;
+
             }
         }
         return null;
@@ -111,8 +125,20 @@ public class Solver implements Runnable, Comunicar {
             cami.addFirst(leaf.actual);
             leaf = leaf.pare;
         }
+        this.resultat.resultat = cami;
 
-        Main.getInstance().getDades().guardarSolucio(cami);
+        //calcular cost
+        int lastC = cami.getFirst();
+        int totalCost = 0;
+        for (int i = 1; i < cami.size(); i++) {
+            int c = cami.get(i);
+            totalCost += graf[lastC][c];
+            lastC = c;
+        }
+        resultat.costTotal = totalCost;
+        resultat.branquesExplorades = visitats;
+
+        Main.getInstance().getDades().setResultat(resultat);
     }
 
     private int[][] deepCopy(int[][] m) {
@@ -165,25 +191,25 @@ public class Solver implements Runnable, Comunicar {
         return min;
     }
 
-    public void interrompre() {
+
+    @Override
+    public void aturar(int id) {
         running = false;
     }
 
-    public void resume() {
-        paused = false;
+    @Override
+    public void step(int id) {
+        paused= false;
         synchronized (this) {
             notify();
         }
     }
 
-    public void pause() {
-        paused = true;
 
-    }
 
     @Override
     public void comunicar(String msg) {
-
+        System.err.println("msg: " + msg);
     }
 
     public static class Node implements Comparable<Node> {

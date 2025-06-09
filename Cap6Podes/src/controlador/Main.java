@@ -49,37 +49,18 @@ public class Main implements Comunicar {
         System.err.println("MAIN: missatge? " + s);
     }
 
-    @Override
-    public synchronized void calcular(int N) {
-        int id = dades.getIdCount();
-        Solver s = null;
-        try {
-            s = new Solver(id, N);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
-        Solver finalS = s;
-        executor.execute(() -> {
-            try {
-                finalS.run();
-                System.out.println("[Solver " + id + "] Sol:  " + dades.getSolucio().toString());
-            } catch (Exception e) {
-                System.out.println("[Solver " + id + "] Error: " + e.getMessage());
-            } finally {
-                // Notifiquem a la UI l'estat final
-                SwingUtilities.invokeLater(() -> finestra.actualitzar(id));
-            }
-        });
-        runnables.put(id, s);
-    }
 
     @Override
-    public void calcular(int[][] adj) {
+    public void calcular(int[][] adj, boolean stepMode) {
         int id = dades.getIdCount();
         Solver solver = null;
+        if (adj == null) {
+            dades.generarRandom();
+            adj = dades.getGraf();
+        }
         try {
-            solver = new Solver(id, adj);
+            solver = new Solver(id, adj, stepMode);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -89,9 +70,8 @@ public class Main implements Comunicar {
         executor.submit(() -> {
             try {
                 finalSolver.run();
-                comunicar("[Solver " + id + "] Solució obtinguda: " + dades.getSolucio().toString());
             } catch (Exception e) {
-                comunicar("[Solver " + id + "] Error: " + e.getMessage());
+                System.err.println(e.getMessage());
             } finally {
                 SwingUtilities.invokeLater(() -> finestra.actualitzar(id));
             }
@@ -99,30 +79,20 @@ public class Main implements Comunicar {
     }
 
     @Override
-    public void pausar(int id) {
+    public void step(int id) {
         Solver s = runnables.get(id);
         if (s != null) {
-            s.pause();
-            System.err.println("Tasca " + id + " pausada.");
-            finestra.actualitzar(id);
+            s.step(id);
         }
     }
 
-    @Override
-    public void reanudar(int id) {
-        Solver s = runnables.get(id);
-        if (s != null) {
-            s.resume();
-            System.err.println("Tasca " + id + " reanudada.");
-            finestra.actualitzar(id);
-        }
-    }
+
 
     @Override
     public void aturar(int id) {
         Solver s = runnables.remove(id);
         if (s != null) {
-            s.interrompre();
+            s.aturar(id);
             System.err.println("Tasca " + id + " aturada definitivament.");
             finestra.aturar(id);
         }
@@ -135,4 +105,5 @@ public class Main implements Comunicar {
     public final Dades getDades() {
         return dades;
     }
+    public final Comunicar getFinestra() {return finestra;}
 }

@@ -18,7 +18,7 @@ public class EditorMatriu extends JDialog implements ActionListener {
     private Dades dades;
     private DefaultTableModel model;
     private JTable matriu;
-    private JTextField txtWidth, txtHeight;
+    private JTextField txtTam;
     private JScrollPane taula;
     private Comunicar finestra;
 
@@ -40,26 +40,19 @@ public class EditorMatriu extends JDialog implements ActionListener {
         botons.add(btnGuardar);
         JButton btnGenerar = new JButton("Generar");
         btnGenerar.addActionListener((e -> {
-            int width = Integer.parseInt(txtWidth.getText());
-            int height = Integer.parseInt(txtHeight.getText());
-            dades.generarRandom(width, height);
+            int n = Integer.parseInt(txtTam.getText());
+            dades.generarRandom(n);
             this.repaint();
         }));
         botons.add(btnGenerar);
-        JLabel lWidth = new JLabel("W:");
-        JLabel lHeight = new JLabel("H:");
-        txtWidth = new JTextField(5);
-        txtHeight = new JTextField(5);
+        JLabel lTam = new JLabel("N:");
+        txtTam = new JTextField(5);
 
-        txtWidth.setText(Integer.toString(dades.getGraf() != null ? dades.getGraf()[0].length : Dades.DEFAULT_GRAPH_SIZE));
-        txtHeight.setText(Integer.toString(dades.getGraf() != null ? dades.getGraf().length : Dades.DEFAULT_GRAPH_SIZE));
+        txtTam.setText(Integer.toString(dades.getGraf() != null ? dades.getGraf()[0].length : Dades.DEFAULT_GRAPH_SIZE));
 
-        lWidth.setLabelFor(txtWidth);
-        botons.add(lWidth);
-        botons.add(txtWidth);
-        lHeight.setLabelFor(txtHeight);
-        botons.add(lHeight);
-        botons.add(txtHeight);
+        lTam.setLabelFor(txtTam);
+        botons.add(lTam);
+        botons.add(txtTam);
 
         JButton btnImportar = new JButton("Importar");
         btnImportar.addActionListener((e -> {
@@ -156,7 +149,7 @@ public class EditorMatriu extends JDialog implements ActionListener {
             JOptionPane.showMessageDialog(this, "No hi dades del graf, generat aleatòriament", "Avís", JOptionPane.WARNING_MESSAGE);
             graf = dades.getGraf();
         }
-        System.err.println(graf.length + ", " + graf[0].length);
+
         model.setColumnCount(graf[0].length);
         model.setRowCount(graf.length);
         model.fireTableDataChanged();
@@ -185,9 +178,6 @@ public class EditorMatriu extends JDialog implements ActionListener {
                 dades.setVal(j, i, val);
             }
         }
-
-        finestra.comunicar("actualitzarGraf");
-
         this.dispose();
     }
 
