@@ -8,6 +8,7 @@ public class Result {
     public int costTotal = 0;
     public int branquesExplorades = 0;
     public int nodesDescartats = 0;
+    public int nodesTotals = 0;
 
     public Result(){
 

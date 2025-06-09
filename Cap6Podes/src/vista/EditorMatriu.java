@@ -149,7 +149,7 @@ public class EditorMatriu extends JDialog implements ActionListener {
             JOptionPane.showMessageDialog(this, "No hi dades del graf, generat aleatòriament", "Avís", JOptionPane.WARNING_MESSAGE);
             graf = dades.getGraf();
         }
-        System.err.println(graf.length + ", " + graf[0].length);
+
         model.setColumnCount(graf[0].length);
         model.setRowCount(graf.length);
         model.fireTableDataChanged();

@@ -152,9 +152,20 @@ public class Solver implements Runnable, Comunicar {
         LinkedList<Integer> path = new LinkedList<>();
         while (leaf != null) {
             path.addFirst(leaf.current);
+
             leaf = leaf.parent;
         }
         this.resultat.resultat = path;
+
+        //calcular cost
+        int lastC = path.getFirst();
+        int totalCost = 0;
+        for (int i = 1; i < path.size(); i++) {
+            int c = path.get(i);
+            totalCost += graf[lastC][c];
+            lastC = c;
+        }
+        resultat.costTotal = totalCost;
         Main.getInstance().getDades().setResultat(resultat);
 
     }

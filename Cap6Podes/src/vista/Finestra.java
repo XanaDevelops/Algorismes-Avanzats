@@ -12,6 +12,7 @@ import java.util.TimerTask;
 public class Finestra extends JFrame implements Comunicar {
     private Dades dades;
     private PanellGraf graf;
+    private PanellInformacio panellInfo;
 
     private Timer timer = new Timer();
     private boolean stop;
@@ -80,11 +81,9 @@ public class Finestra extends JFrame implements Comunicar {
         graf = new PanellGraf(dades);
         this.add(graf, BorderLayout.CENTER);
 
-        PanellInformacio panellInfo = new PanellInformacio();
+        panellInfo = new PanellInformacio();
         panellInfo.setPreferredSize(new Dimension(250, 0));
         this.add(panellInfo, BorderLayout.WEST);
-
-        this.setVisible(true);
 
         this.setVisible(true);
     }
@@ -93,6 +92,8 @@ public class Finestra extends JFrame implements Comunicar {
     public void paint(Graphics g) {
         super.paint(g);
         graf.repaint();
+        panellInfo.mostrarResultat(dades.getResultat());
+
     }
 
     @Override
