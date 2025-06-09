@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Dades {
     public int getIdCount() {
-        return 0;
+        return 0; //realment executam només una
     }
     private int [][] graf;
     private LinkedList<Integer> solucio; //conté les ciutats representades pel seu índex en la matriu
@@ -36,16 +36,19 @@ public class Dades {
 
     public void generarRandom(){
 
-        generarRandom(DEFAULT_GRAPH_SIZE, DEFAULT_GRAPH_SIZE);
+        generarRandom(DEFAULT_GRAPH_SIZE);
     }
 
-    public void generarRandom(int w, int h){
+    public void generarRandom(int n){
 
-        graf = new int[h][w];
+        graf = new int[n][n];
 
-        for (int i = 0; i < h; i++) {
-            for (int j = 0; j < w; j++) {
-                graf[i][j] = 1 + (int) (Math.random() * 100);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if(i==j){ //per calcul distancies
+                    graf[i][j] = Integer.MAX_VALUE;
+                }else
+                    graf[i][j] = 1 + (int) (Math.random() * 100);
             }
         }
     }

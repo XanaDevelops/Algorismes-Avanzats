@@ -12,6 +12,7 @@ public class Solver implements Runnable, Comunicar {
     private volatile static  boolean running = true;
     private volatile static boolean paused = false;
     private int[][] graf;
+
     public Solver(int id, int n) throws InterruptedException {
         Random r = new Random();
         int [][] matriu = new int[n][n];
@@ -218,25 +219,27 @@ public class Solver implements Runnable, Comunicar {
     }
 
 
-
-    public void interrompre() {
+    @Override
+    public void aturar(int id) {
         running = false;
     }
 
-    public void resume() {
+    @Override
+    public void reanudar(int id) {
         paused= false;
         synchronized (this) {
             notify();
         }
     }
 
-    public void pause() {
+    @Override
+    public void pausar(int id) {
         paused = true;
 
     }
 
     @Override
     public void comunicar(String msg) {
-
+        System.err.println("msg: " + msg);
     }
 }

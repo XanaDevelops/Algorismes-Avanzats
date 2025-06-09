@@ -22,15 +22,23 @@ public class Finestra extends JFrame implements Comunicar {
         JPanel panellBotons = new JPanel();
 
         panellBotons.setLayout(new FlowLayout(FlowLayout.CENTER));
+
         JButton btnCalcular = new JButton("Calcular");
+        btnCalcular.addActionListener(e -> {
+            Main.getInstance().calcular(dades.getGraf());
+        });
         panellBotons.add(btnCalcular);
+
         JLabel stepLabel = new JLabel("Step: ");
         panellBotons.add(stepLabel);
+
         JCheckBox checkBox = new JCheckBox();
         panellBotons.add(checkBox);
+
         JButton btnEdit = new JButton("Editar Matriu");
         btnEdit.addActionListener((e -> {
             new EditorMatriu(this);
+            repaint();
         }));
         panellBotons.add(btnEdit);
 
@@ -49,15 +57,18 @@ public class Finestra extends JFrame implements Comunicar {
     }
 
     @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        graf.repaint();
+    }
+
+    @Override
     public void comunicar(String msg) {
-        switch(msg) {
-            case "actualitzarGraf":
-                graf.repaint();
-                break;
-            // case solució trobada
-            // graf.mostrarSolucio(node solucio)
-            default:
-                break;
-        }
+        System.err.println("Finestra: msg: " + msg);
+    }
+
+    @Override
+    public void actualitzar(int id){
+        repaint();
     }
 }
