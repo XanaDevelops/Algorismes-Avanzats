@@ -1,7 +1,9 @@
 package model;
 
+import java.util.List;
+
 public class Result {
-    public Solver.Node root = null;
+    public List<Integer> resultat;
     public int costTotal = 0;
     public int branquesExplorades = 0;
     public int nodesDescartats = 0;
@@ -13,7 +15,7 @@ public class Result {
     @Override
     public String toString() {
         return "Result{" +
-                "root=" + root +
+                "root=" + resultat +
                 ", costTotal=" + costTotal +
                 ", branquesExplorades=" + branquesExplorades +
                 ", nodesDescartats=" + nodesDescartats +

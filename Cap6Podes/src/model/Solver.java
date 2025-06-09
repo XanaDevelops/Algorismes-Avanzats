@@ -11,27 +11,14 @@ public class Solver implements Runnable, Comunicar {
     private Node root;
     private volatile static  boolean running = true;
     private volatile static boolean paused = false;
+    private volatile static boolean stepMode = false;
     private int[][] graf;
 
-    public Solver(int id, int n) throws InterruptedException {
-        Random r = new Random();
-        int [][] matriu = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                 if (i == j) {
-                     matriu[i][j] = INFINITY;
-                 }else{
-                     matriu[i][j] = r.nextInt(100);
-                 }
 
-            }
-        }
-        this.graf = matriu;
-        totalNodes = graf.length;
-
-    }
-    public Solver (int id, int[][] matrix) throws InterruptedException {
+    public Solver (int id, int[][] matrix, boolean stepMode) throws InterruptedException {
         this.graf = matrix;
+        Solver.stepMode = stepMode;
+
         totalNodes = graf.length;
     }
 
@@ -40,12 +27,12 @@ public class Solver implements Runnable, Comunicar {
     }
 
 
-
     @Override
     public void run() {
         try {
             root = solve(graf);
             obtenirSolucio(root);
+
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -102,29 +89,42 @@ public class Solver implements Runnable, Comunicar {
 
         //BB basat en triar el node més prometedor
         while (!pq.isEmpty() && running) {
-//            synchronized (this) {
-//                while (paused) {
-//                    wait();  // esperar fins que es crida a resume()
-//                }
-//            }
-            Node node = pq.poll();
-            //hem visitat tots els nodes?
-            if (Objects.requireNonNull(node).depth == totalNodes - 1) {
-                int returnCost = node.reducedMatrix[node.current][0];
-                node.cost +=  returnCost == INFINITY ? 0: INFINITY;
-                return node;
-            }
 
+            Node node = step(pq);
 
-            for (int j = 0; j < totalNodes; j++) {
-                if (node.reducedMatrix[node.current][j] != INFINITY) {
-                    pq.add(createChild(node, j));
+            if (node != null) return node;
+
+            if(stepMode){
+                synchronized (this) {
+                    while (paused) {
+                        wait();  // esperar fins que es crida a resume()
+                    }
+                    obtenirSolucio(pq.peek());
+                    Main.getInstance().getFinestra().step(0);
+                    paused = true;
                 }
             }
         }
         return null;
     }
 
+    private Node step(PriorityQueue<Node> pq) {
+        Node node = pq.poll();
+        //hem visitat tots els nodes?
+        if (Objects.requireNonNull(node).depth == totalNodes - 1) {
+            int returnCost = node.reducedMatrix[node.current][0];
+            node.cost +=  returnCost == INFINITY ? 0: INFINITY;
+            return node;
+        }
+
+
+        for (int j = 0; j < totalNodes; j++) {
+            if (node.reducedMatrix[node.current][j] != INFINITY) {
+                pq.add(createChild(node, j));
+            }
+        }
+        return null;
+    }
 
 
     static Node createChild(Node parent, int nextVertex) {
@@ -148,9 +148,7 @@ public class Solver implements Runnable, Comunicar {
             path.addFirst(leaf.current);
             leaf = leaf.parent;
         }
-//        for (Integer integer : path) {
-//            System.out.println(integer);
-//        }
+
         Main.getInstance().getDades().guardarSolucio(path);
 
     }
@@ -225,18 +223,14 @@ public class Solver implements Runnable, Comunicar {
     }
 
     @Override
-    public void reanudar(int id) {
+    public void step(int id) {
         paused= false;
         synchronized (this) {
             notify();
         }
     }
 
-    @Override
-    public void pausar(int id) {
-        paused = true;
 
-    }
 
     @Override
     public void comunicar(String msg) {

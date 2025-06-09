@@ -6,10 +6,15 @@ import model.Dades;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Finestra extends JFrame implements Comunicar {
     private Dades dades;
     private PanellGraf graf;
+
+    private Timer timer = new Timer();
+    private boolean stop;
 
     public Finestra() {
         super();
@@ -23,21 +28,42 @@ public class Finestra extends JFrame implements Comunicar {
 
         panellBotons.setLayout(new FlowLayout(FlowLayout.CENTER));
 
+        JCheckBox checkBox = new JCheckBox();
+
         JButton btnCalcular = new JButton("Calcular");
+
         btnCalcular.addActionListener(e -> {
-            Main.getInstance().calcular(dades.getGraf());
+            boolean stepMode = checkBox.isSelected();
+            Main.getInstance().calcular(dades.getGraf(), stepMode);
+            stop = false;
+            if(stepMode) {
+                timer = new Timer();
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (!stop) {
+                            Main.getInstance().step(0);
+                            repaint();
+                        } else {
+                            timer.cancel();
+                        }
+
+                    }
+                }, 0L, 1000L);
+            }
         });
         panellBotons.add(btnCalcular);
 
         JLabel stepLabel = new JLabel("Step: ");
         panellBotons.add(stepLabel);
 
-        JCheckBox checkBox = new JCheckBox();
+
         panellBotons.add(checkBox);
 
         JButton btnEdit = new JButton("Editar Matriu");
         btnEdit.addActionListener((e -> {
             new EditorMatriu(this);
+            graf.esborrarSolucio();
             repaint();
         }));
         panellBotons.add(btnEdit);
@@ -63,12 +89,20 @@ public class Finestra extends JFrame implements Comunicar {
     }
 
     @Override
+    public void step(int id){
+        graf.mostrarSolucio(dades.getSolucio());
+        repaint();
+    }
+
+    @Override
     public void comunicar(String msg) {
         System.err.println("Finestra: msg: " + msg);
     }
 
     @Override
     public void actualitzar(int id){
+        stop = true;
+        graf.mostrarSolucio(dades.getSolucio());
         repaint();
     }
 }
