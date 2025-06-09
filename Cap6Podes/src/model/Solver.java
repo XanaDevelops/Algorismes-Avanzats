@@ -138,7 +138,7 @@ public class Solver implements Runnable, Comunicar {
         resultat.costTotal = totalCost;
         resultat.branquesExplorades = visitats;
 
-        Main.getInstance().getDades().guardarSolucio(cami);
+        Main.getInstance().getDades().setResultat(resultat);
     }
 
     private int[][] deepCopy(int[][] m) {
