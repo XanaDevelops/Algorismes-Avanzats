@@ -33,6 +33,7 @@ public class Main implements Comunicar {
 
     public static void main(String[] args) {
         new Main().init();
+
     }
 
     private void init() {
@@ -48,37 +49,29 @@ public class Main implements Comunicar {
         System.err.println("MAIN: missatge? " + s);
     }
 
-    @Override
-    public synchronized void calcular(int N) {
-        int id = dades.getIdCount();
-        Solver s = new Solver(id, N);
 
-        executor.execute(() -> {
-            try {
-                Dades.Solucio sol = s.call();
-                System.out.println("[Solver " + id + "] Sol:  " + sol.toString());
-            } catch (Exception e) {
-                System.out.println("[Solver " + id + "] Error: " + e.getMessage());
-            } finally {
-                // Notifiquem a la UI l'estat final
-                SwingUtilities.invokeLater(() -> finestra.actualitzar(id));
-            }
-        });
-        runnables.put(id, s);
-    }
 
     @Override
-    public void calcular(int[][] adj) {
+    public void calcular(int[][] adj, boolean stepMode) {
         int id = dades.getIdCount();
-        Solver solver = new Solver(id, adj);
+        Solver solver = null;
+        if (adj == null) {
+            dades.generarRandom();
+            adj = dades.getGraf();
+        }
+        try {
+            solver = new Solver(id, adj, stepMode);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         runnables.put(id, solver);
 
+        Solver finalSolver = solver;
         executor.submit(() -> {
             try {
-                Dades.Solucio sol = solver.call();
-                comunicar("[Solver " + id + "] Solució obtinguda: " + sol);
+                finalSolver.run();
             } catch (Exception e) {
-                comunicar("[Solver " + id + "] Error: " + e.getMessage());
+                System.err.println(e.getMessage());
             } finally {
                 SwingUtilities.invokeLater(() -> finestra.actualitzar(id));
             }
@@ -86,30 +79,20 @@ public class Main implements Comunicar {
     }
 
     @Override
-    public void pausar(int id) {
+    public void step(int id) {
         Solver s = runnables.get(id);
         if (s != null) {
-            s.pause();
-            System.err.println("Tasca " + id + " pausada.");
-            finestra.actualitzar(id);
+            s.step(id);
         }
     }
 
-    @Override
-    public void reanudar(int id) {
-        Solver s = runnables.get(id);
-        if (s != null) {
-            s.resume();
-            System.err.println("Tasca " + id + " reanudada.");
-            finestra.actualitzar(id);
-        }
-    }
+
 
     @Override
     public void aturar(int id) {
         Solver s = runnables.remove(id);
         if (s != null) {
-            s.interrompre();
+            s.aturar(id);
             System.err.println("Tasca " + id + " aturada definitivament.");
             finestra.aturar(id);
         }
@@ -119,4 +102,8 @@ public class Main implements Comunicar {
     public void actualitzar(int id) {
         finestra.actualitzar(id);
     }
+    public final Dades getDades() {
+        return dades;
+    }
+    public final Comunicar getFinestra() {return finestra;}
 }
