@@ -1,21 +1,19 @@
 package controlador;
 
+import java.nio.file.Path;
+
 public interface Comunicar {
 
     void comunicar(String msg);
 
+    default void carregarImatge(Path ruta) {}
 
-    default void calcular(int[][] matrix, boolean stepMode) {
-        throw new UnsupportedOperationException();
-    }
+    default void classificar(int id) {}
 
-    default void aturar(int id) {
-        throw new UnsupportedOperationException();
-    }
+    default void aturar(int id) {}
 
-    default void step(int id){throw new UnsupportedOperationException();}
+    default void progressar(int id, double percent) {}
 
-    default void actualitzar(int id) {
-        throw new UnsupportedOperationException();
-    }
+    default void resultat(int id) {}
+
 }
