@@ -1,10 +1,17 @@
 package model;
 
 import controlador.Comunicar;
-import controlador.Main;
 
-import java.util.*;
+public abstract class Solver implements Runnable, Comunicar {
 
-public class Solver implements Runnable, Comunicar {
+    Dades dades;
+    public Solver(Dades dades) {
+        this.dades = dades;
+    }
+
+    @Override
+    public void classificarImatge() {
+        run();
+    }
 
 }
