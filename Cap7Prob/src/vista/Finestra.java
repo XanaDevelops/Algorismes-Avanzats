@@ -11,4 +11,8 @@ import java.util.TimerTask;
 
 public class Finestra extends JFrame implements Comunicar {
 
+    @Override
+    public void comunicar(String msg) {
+        System.err.println(msg);
+    }
 }

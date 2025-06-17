@@ -1,12 +1,13 @@
 package model;
 
 import controlador.Comunicar;
+import controlador.Main;
 
 public abstract class Solver implements Runnable, Comunicar {
 
-    Dades dades;
-    public Solver(Dades dades) {
-        this.dades = dades;
+    protected final Dades dades;
+    public Solver() {
+        this.dades = Main.getInstance().getDades();
     }
 
     @Override

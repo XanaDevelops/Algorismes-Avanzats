@@ -9,13 +9,13 @@ public class ClassHSV extends Solver{
     private final int samples;
     private final double zScore =  1.96;
 
-    public ClassHSV(Dades dades, double epsilon) {
-        super(dades);
+    public ClassHSV(double epsilon) {
+        super();
         this.samples = (int)Math.ceil((zScore*zScore * 0.25)/(epsilon*epsilon));
     }
 
-    public ClassHSV(Dades dades) {
-        this(dades,0.05);
+    public ClassHSV() {
+        this(0.05);
     }
 
     @Override
