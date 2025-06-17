@@ -10,4 +10,8 @@ import java.util.concurrent.*;
 
 public class Main implements Comunicar {
 
+    @Override
+    public void comunicar(String msg) {
+
+    }
 }
