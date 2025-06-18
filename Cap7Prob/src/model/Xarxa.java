@@ -1,7 +1,11 @@
 package model;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Random;
 
 public class Xarxa extends Solver implements Serializable {
 
@@ -22,18 +26,33 @@ public class Xarxa extends Solver implements Serializable {
         this.nSortides = nSortides;
         this.deltaEntrenament = deltaEntrenament;
 
+        Random r = new Random();
+
         capesOcultes = new double[config.length][];
         for (int i = 0; i < capesOcultes.length; i++) {
             capesOcultes[i] = new double[config[i]];
         }
         pesosOcultes = new double[config.length][][];
         pesosOcultes[0] = new double[config[0]][nEntrades];
+        for (int i = 0; i < pesosOcultes[0].length; i++) {
+            for (int j = 0; j < pesosOcultes[0][i].length; j++) {
+                pesosOcultes[0][i][j] = r.nextDouble() * 2 -1;
+            }
+        }
         for (int i = 1; i < pesosOcultes.length; i++) {
             pesosOcultes[i] = new double[config[i - 1]][config[i]];
+            for (int j = 0; j < pesosOcultes[i].length; j++) {
+                for (int k = 0; k < pesosOcultes[i][j].length; k++) {
+                    pesosOcultes[i][j][k] = r.nextDouble() * 2 -1;
+                }
+            }
         }
         pesosSortida = new double[nSortides][config[config.length - 1]];
-
-        //TODO: RANDOM!!!
+        for (int i = 0; i < pesosSortida.length; i++) {
+            for (int j = 0; j < pesosSortida[i].length; j++) {
+                pesosSortida[i][j] = r.nextDouble() * 2 -1;
+            }
+        }
     }
 
     public Xarxa(int nEntrades, int[] config, int nSortides) {
@@ -151,7 +170,16 @@ public class Xarxa extends Solver implements Serializable {
                 }
             }
             // Puedes imprimir errorTotal si quieres monitorizar el entrenamiento
-            // System.out.println("Época " + _i + " error: " + errorTotal);
+            if (_i % 50000 == 0) {
+                System.out.println("Época " + _i + " - Error: " + errorTotal);
+            }
+        }
+
+        //guardar
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("res/xarxa.bin"))){
+            oos.writeObject(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
