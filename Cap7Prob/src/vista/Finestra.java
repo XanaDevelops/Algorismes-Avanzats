@@ -120,4 +120,8 @@ public class Finestra extends JFrame implements Comunicar {
     private void mostrarImatge(ImageIcon icon) {
         this.imatgeLabel.setIcon(icon);
     }
+    @Override
+    public void comunicar(String msg) {
+        System.err.println(msg);
+    }
 }
