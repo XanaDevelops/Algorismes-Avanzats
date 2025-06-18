@@ -80,58 +80,78 @@ public class Xarxa extends Solver implements Serializable {
         for (int _i = 0; _i < epoc; _i++) {
             double errorTotal = 0;
             for (int nEntrada = 0; nEntrada < entrades.length; nEntrada++) {
-                double[] sortida = predecir(entrades[nEntrada]);
-                double[] error = new double[nSortides];
-                for (int sort = 0; sort < error.length; sort++) {
-                    error[sort] = sortides[nEntrada][sort] - sortida[sort];
+                double[] entrada = entrades[nEntrada];
+                double[] sortidaEsperada = sortides[nEntrada];
+
+                // FORWARD PASS
+                double[] sortida = predecir(entrada);
+
+                // CALCULAR ERROR DE SALIDA
+                double[] errorSortida = new double[nSortides];
+                for (int i = 0; i < nSortides; i++) {
+                    errorSortida[i] = sortidaEsperada[i] - sortida[i];
                 }
+
+                // CALCULAR DELTA DE SALIDA
                 double[] deltaSortida = new double[nSortides];
-                for (int sort = 0; sort < deltaSortida.length; sort++) {
-                    deltaSortida[sort] = error[sort] * derivadaSigmoide(sortida[sort]);
+                for (int i = 0; i < nSortides; i++) {
+                    deltaSortida[i] = errorSortida[i] * derivadaSigmoide(sortida[i]);
                 }
 
+                // BACKPROPAGATION: DELTAS OCULTAS
                 double[][] deltasOcultes = new double[capesOcultes.length][];
-                deltasOcultes[capesOcultes.length - 1] = deltaSortida;
-                double[][] lastPesos = pesosSortida;
-
-                for (int capa = capesOcultes.length - 1 - 1; 0 <= capa; capa--) {
-                    double[] deltaOculta = new double[capesOcultes[capa].length];
-                    for (int neurona = 0; neurona < deltaOculta.length; neurona++) {
-                        for (int pes = 0; pes < lastPesos.length; pes++) {
-                            deltaOculta[neurona] += deltasOcultes[capa + 1][pes] * lastPesos[neurona][pes] * derivadaSigmoide(capesOcultes[capa][pes]);
+                // Última capa oculta
+                int lastCapa = capesOcultes.length - 1;
+                deltasOcultes[lastCapa] = new double[capesOcultes[lastCapa].length];
+                for (int j = 0; j < capesOcultes[lastCapa].length; j++) {
+                    double suma = 0;
+                    for (int k = 0; k < nSortides; k++) {
+                        suma += deltaSortida[k] * pesosSortida[k][j];
+                    }
+                    deltasOcultes[lastCapa][j] = suma * derivadaSigmoide(capesOcultes[lastCapa][j]);
+                }
+                // Capas ocultas intermedias (si hay más de una)
+                for (int capa = lastCapa - 1; capa >= 0; capa--) {
+                    deltasOcultes[capa] = new double[capesOcultes[capa].length];
+                    for (int j = 0; j < capesOcultes[capa].length; j++) {
+                        double suma = 0;
+                        for (int k = 0; k < capesOcultes[capa + 1].length; k++) {
+                            suma += deltasOcultes[capa + 1][k] * pesosOcultes[capa + 1][k][j];
                         }
-
-                    }
-                    deltasOcultes[capa] = deltaOculta;
-                }
-
-                //pesos oculta -> sortides
-                for (int sort = 0; sort < pesosSortida.length; sort++) {
-                    for (int pes = 0; pes < pesosSortida[sort].length; pes++) {
-                        pesosSortida[sort][pes] = deltaEntrenament * deltaSortida[sort] * capesOcultes[capesOcultes.length - 1][pes];
+                        deltasOcultes[capa][j] = suma * derivadaSigmoide(capesOcultes[capa][j]);
                     }
                 }
 
-                //pesos
-                for (int capa = 1; capa < capesOcultes.length; capa++) {
-                    for (int neurona = 0; neurona < capesOcultes[capa].length; neurona++) {
-                        for (int pes = 0; pes < pesosOcultes[capa][neurona].length; pes++) {
-                            pesosOcultes[capa][neurona][pes] += deltaEntrenament * deltasOcultes[capa][neurona] * capesOcultes[capa][neurona];
+                // ACTUALIZAR PESOS SALIDA
+                for (int i = 0; i < nSortides; i++) {
+                    for (int j = 0; j < pesosSortida[i].length; j++) {
+                        pesosSortida[i][j] += deltaEntrenament * deltaSortida[i] * capesOcultes[lastCapa][j];
+                    }
+                }
+
+                // ACTUALIZAR PESOS OCULTOS
+                // Desde la última capa oculta hacia la primera
+                for (int capa = capesOcultes.length - 1; capa > 0; capa--) {
+                    for (int i = 0; i < capesOcultes[capa].length; i++) {
+                        for (int j = 0; j < pesosOcultes[capa][i].length; j++) {
+                            pesosOcultes[capa][i][j] += deltaEntrenament * deltasOcultes[capa][i] * capesOcultes[capa - 1][j];
                         }
                     }
-
                 }
-
-                for (int neurona = 0; neurona < capesOcultes[0].length; neurona++) {
-                    for (int pes = 0; pes < pesosOcultes[0][neurona].length; pes++) {
-                        pesosOcultes[0][neurona][pes] += deltaEntrenament * deltasOcultes[0][neurona] * entrades[nEntrada][pes];
+                // Primera capa oculta (entrada)
+                for (int i = 0; i < capesOcultes[0].length; i++) {
+                    for (int j = 0; j < pesosOcultes[0][i].length; j++) {
+                        pesosOcultes[0][i][j] += deltaEntrenament * deltasOcultes[0][i] * entrada[j];
                     }
                 }
 
-                for (double e : error) {
+                // Acumular error total (opcional)
+                for (double e : errorSortida) {
                     errorTotal += Math.abs(e);
                 }
             }
+            // Puedes imprimir errorTotal si quieres monitorizar el entrenamiento
+            // System.out.println("Época " + _i + " error: " + errorTotal);
         }
     }
 
