@@ -10,7 +10,7 @@ public abstract class Solver implements Runnable, Comunicar {
         this.dades = Main.getInstance().getDades();
     }
 
-    @Override
+
     public void classificarImatge() {
         run();
     }

@@ -14,6 +14,9 @@ public class Main implements Comunicar {
     private Dades dades;
     private Finestra finestra;
 
+    public static void main(String[] args) {
+        new Main();
+    }
 
     public Main(){
         if(instance == null){
