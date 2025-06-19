@@ -1,5 +1,7 @@
 package model;
 
+import vista.FinestraColors;
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -43,7 +45,7 @@ public class ClassHSV extends Solver{
             int x = rnd.nextInt(w), y = rnd.nextInt(h);
             int rgb = img.getRGB(x, y);
             float[] hvs = rgbAhsv(rgb);
-            colors.add(hvs);
+            colors.add(new float[]{});
             float H = hvs[0], S = hvs[1], V = hvs[2];
 
             // Tants com paissatges hagi
@@ -77,7 +79,7 @@ public class ClassHSV extends Solver{
             }
         }
         dades.setEtiqueta(resultat);
-        kMeans(colors, 4);
+        dades.setColors(colors);
     }
 
 
@@ -107,81 +109,5 @@ public class ClassHSV extends Solver{
         return new float[]{H, max, S};
     }
 
-    private void kMeans(List<float[]> colors, int numGrups){
-        int maxIteracions = 20;
-        Random rnd = new Random();
-        List<float[]> centroides = new ArrayList<>();
-        for (int i = 0; i < numGrups; i++) {
-            centroides.add(colors.get(rnd.nextInt(colors.size())));
-        }
-        int[] assignments = new int[colors.size()];
 
-        for (int i = 0; i < maxIteracions; i++) {
-                
-            boolean changed = false;
-            for (int j = 0; j < colors.size(); j++) {
-                float[] color = colors.get(j);
-                int mesCerca = -1;
-                double minDist = Double.MAX_VALUE;
-                for (int k = 0; k < centroides.size(); k++) {
-                    float[] centroid = centroides.get(k);
-                    double dist = distanceHSV(color, centroid);
-                    if (dist<minDist){
-                        minDist = dist;
-                        mesCerca = k;
-                    }
-                }
-                if(assignments[j] !=mesCerca){
-                    assignments[j] = mesCerca;
-                    changed = true;
-                }
-            }
-            if (!changed){
-                break;
-            }
-
-            //recalcular esl centeroids
-            float[][] newCentroides = new float[centroides.size()][3];
-            int [] counts = new int[numGrups];
-            for (int j = 0; j < colors.size(); j++) {
-                int cluster = assignments[j];
-                float[] color = colors.get(j);
-                for (int k = 0; k < 3; k++) {
-                    newCentroides[cluster][k]+=color[k];
-                }
-                counts[cluster]++;
-            }
-            for (int j = 0; j < numGrups; j++) {
-                if (counts[j]>0){
-                    for (int k = 0; k < 3; k++) {
-                        newCentroides[j][k]/=counts[j];
-                    }
-                    centroides.add(j, newCentroides[j]);
-                }
-            }
-        }
-
-        // Mostrar resultados: centroides y proporciones
-        int[] clusterCounts = new int[numGrups];
-        for (int cluster : assignments) {
-            clusterCounts[cluster]++;
-        }
-
-        System.out.println("=== Clusters HSV ===");
-        for (int j = 0; j < numGrups; j++) {
-            float[] c = centroides.get(j);
-            float h = c[0], s = c[1], v = c[2];
-            double porcentaje = 100.0 * clusterCounts[j] / colors.size();
-            System.out.printf("Cluster %d: H=%.1f S=%.2f V=%.2f -> %.2f%%\n", j, h, s, v, porcentaje);
-        }
-
-
-    }
-
-    private double distanceHSV(float[] c1, float[] c2) {
-        double dh = Math.min(Math.abs(c1[0] - c2[0]), 360 - Math.abs(c1[0] - c2[0])) / 180.0;
-        double ds = c1[1] - c2[1];
-        double dv = c1[2] - c2[2];
-        return Math.sqrt(dh * dh + ds * ds + dv * dv);
-    }
 }

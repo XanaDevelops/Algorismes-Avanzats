@@ -4,6 +4,9 @@ public interface Comunicar {
 
     void comunicar(String msg);
 
+    default void executarKMeans(int maxIt, int k){
+        throw new UnsupportedOperationException();
+    }
 
     default void calcular(int[][] matrix, boolean stepMode) {
         throw new UnsupportedOperationException();

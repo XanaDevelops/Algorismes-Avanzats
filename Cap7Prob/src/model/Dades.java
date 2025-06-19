@@ -2,6 +2,7 @@ package model;
 
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
+import java.util.List;
 
 
 public class Dades {
@@ -9,9 +10,35 @@ public class Dades {
     private EnumMap<Paisatge, Double> percentatges;
     private EnumMap<Paisatge, Double> margesDeError;
     private Paisatge etiqueta;
-
+    private List<float[]> colors;
     public BufferedImage getImatge() {
         return imatge;
+    }
+    private List<float[]> centroids;
+
+    public int[] getClusterCounts() {
+        return clusterCounts;
+    }
+
+    public void setClusterCounts(int[] clusterCounts) {
+        this.clusterCounts = clusterCounts;
+    }
+
+    public List<float[]> getCentroids() {
+        return centroids;
+    }
+
+    public void setCentroids(List<float[]> centroids) {
+        this.centroids = centroids;
+    }
+
+    private int[] clusterCounts;
+    public List<float[]> getColors() {
+        return colors;
+    }
+
+    public void setColors(List<float[]> colors) {
+        this.colors = colors;
     }
 
     public void setImatge(BufferedImage imatge) {
