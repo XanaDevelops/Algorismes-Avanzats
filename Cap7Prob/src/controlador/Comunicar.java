@@ -8,12 +8,12 @@ public interface Comunicar {
 
     default void carregarImatge(Path ruta) {}
 
-    default void classificar(int id) {}
+    default void classificar() {}
 
-    default void aturar(int id) {}
+    default void aturar() {}
 
-    default void progressar(int id, double percent) {}
+    default void progressar(double percent) {}
 
-    default void resultat(int id) {}
+    default void resultat() {}
 
 }
