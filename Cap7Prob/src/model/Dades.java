@@ -6,6 +6,9 @@ import java.util.List;
 
 
 public class Dades {
+
+    public static final String PATH_IMATGES = "res/img/";
+
     private BufferedImage imatge;
     private EnumMap<Paisatge, Double> percentatges;
     private EnumMap<Paisatge, Double> margesDeError;
