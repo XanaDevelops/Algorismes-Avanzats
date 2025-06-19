@@ -28,29 +28,36 @@ public class Xarxa extends Solver implements Serializable {
 
         Random r = new Random();
 
+        // Inicialización de las capas ocultas
         capesOcultes = new double[config.length][];
         for (int i = 0; i < capesOcultes.length; i++) {
             capesOcultes[i] = new double[config[i]];
         }
+
+        // Inicialización de los pesos entre capas
         pesosOcultes = new double[config.length][][];
+        // Pesos entre entrada y primera capa oculta
         pesosOcultes[0] = new double[config[0]][nEntrades];
-        for (int i = 0; i < pesosOcultes[0].length; i++) {
-            for (int j = 0; j < pesosOcultes[0][i].length; j++) {
-                pesosOcultes[0][i][j] = r.nextDouble() * 2 -1;
+        for (int i = 0; i < config[0]; i++) {
+            for (int j = 0; j < nEntrades; j++) {
+                pesosOcultes[0][i][j] = r.nextDouble() * 2 - 1;
             }
         }
-        for (int i = 1; i < pesosOcultes.length; i++) {
-            pesosOcultes[i] = new double[config[i - 1]][config[i]];
-            for (int j = 0; j < pesosOcultes[i].length; j++) {
-                for (int k = 0; k < pesosOcultes[i][j].length; k++) {
-                    pesosOcultes[i][j][k] = r.nextDouble() * 2 -1;
+        // Pesos entre capas ocultas sucesivas
+        for (int i = 1; i < config.length; i++) {
+            pesosOcultes[i] = new double[config[i]][config[i - 1]];
+            for (int j = 0; j < config[i]; j++) {
+                for (int k = 0; k < config[i - 1]; k++) {
+                    pesosOcultes[i][j][k] = r.nextDouble() * 2 - 1;
                 }
             }
         }
+
+        // Pesos de la última capa oculta a la salida
         pesosSortida = new double[nSortides][config[config.length - 1]];
-        for (int i = 0; i < pesosSortida.length; i++) {
-            for (int j = 0; j < pesosSortida[i].length; j++) {
-                pesosSortida[i][j] = r.nextDouble() * 2 -1;
+        for (int i = 0; i < nSortides; i++) {
+            for (int j = 0; j < config[config.length - 1]; j++) {
+                pesosSortida[i][j] = r.nextDouble() * 2 - 1;
             }
         }
     }
@@ -62,7 +69,7 @@ public class Xarxa extends Solver implements Serializable {
     public double[] predecir(double[] entrada) {
         assert entrada.length == nEntrades;
 
-        //entrada a capa oculta
+        // Entrada a primera capa oculta
         for (int neurona = 0; neurona < capesOcultes[0].length; neurona++) {
             double suma = 0;
             for (int pes = 0; pes < nEntrades; pes++) {
@@ -71,21 +78,22 @@ public class Xarxa extends Solver implements Serializable {
             capesOcultes[0][neurona] = sigmoide(suma);
         }
 
-        //capes ocultes
-        for (int capa = 1; capa < pesosOcultes.length; capa++) {
+        // Capas ocultas sucesivas
+        for (int capa = 1; capa < capesOcultes.length; capa++) {
             for (int neurona = 0; neurona < capesOcultes[capa].length; neurona++) {
                 double suma = 0;
-                for (int pes = 0; pes < capesOcultes[capa].length; pes++) {
-                    suma += pesosOcultes[capa][neurona][pes] * capesOcultes[capa][pes];
+                for (int pes = 0; pes < capesOcultes[capa - 1].length; pes++) {
+                    suma += pesosOcultes[capa][neurona][pes] * capesOcultes[capa - 1][pes];
                 }
                 capesOcultes[capa][neurona] = sigmoide(suma);
             }
         }
 
+        // Salida
         double[] sumesSortida = new double[nSortides];
-        for (int nSortida = 0; nSortida < sumesSortida.length; nSortida++) {
+        for (int nSortida = 0; nSortida < nSortides; nSortida++) {
             double suma = 0;
-            for (int pes = 0; pes < pesosSortida[nSortida].length; pes++) {
+            for (int pes = 0; pes < capesOcultes[capesOcultes.length - 1].length; pes++) {
                 suma += pesosSortida[nSortida][pes] * capesOcultes[capesOcultes.length - 1][pes];
             }
             sumesSortida[nSortida] = sigmoide(suma);
@@ -119,8 +127,8 @@ public class Xarxa extends Solver implements Serializable {
 
                 // BACKPROPAGATION: DELTAS OCULTAS
                 double[][] deltasOcultes = new double[capesOcultes.length][];
-                // Última capa oculta
                 int lastCapa = capesOcultes.length - 1;
+                // Última capa oculta
                 deltasOcultes[lastCapa] = new double[capesOcultes[lastCapa].length];
                 for (int j = 0; j < capesOcultes[lastCapa].length; j++) {
                     double suma = 0;

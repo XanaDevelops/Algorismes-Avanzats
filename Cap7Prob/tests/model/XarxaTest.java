@@ -40,7 +40,7 @@ class XarxaTest {
         System.out.println("******************************************************");
         System.out.println(" Vamos a probar de detectar el porcentaje  de color  *");
         System.out.println("******************************************************");
-        Xarxa po1 = new Xarxa(numEntradas, new int[]{9,7}, numSalidas);
+        Xarxa po1 = new Xarxa(numEntradas, new int[]{5,5}, numSalidas);
         // Suponiendo que ya tienes los vectores de las imágenes normalizados [0.0, 1.0]
         File carpeta = new File("testRes/banderes/flags/");
         File[] archivosPNG = carpeta.listFiles((dir, name) -> name.toLowerCase().endsWith(".png"));
@@ -62,10 +62,11 @@ class XarxaTest {
         prediccion = po1.predecir(ImgFile.cargar9Colores(carpeta + "/gb.png"))[0];
         System.out.println("Parecido antes de entrenar bandera GB: " + prediccion);
         // Entrenar con epocas iteraciones si no está ya calculado
-        File archivo = new File("imgs/oculta1.ltim");
+        File archivo = new File("res/xarxa.bin");
         if (!archivo.exists()) {
             po1.entrenar(entradas, salidasEsperadas, epocas);
         } else {
+            System.out.println("LEYENDO GUARDADO");
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
                 po1 = (Xarxa) (ois.readObject()); // Devuelve el objeto leído
             } catch (Exception e) {
