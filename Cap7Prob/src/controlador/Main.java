@@ -53,7 +53,5 @@ public class Main implements Comunicar {
         System.err.println(msg);
     }
 
-    public static void main(String[] args) {
-        new Main();
-    }
+
 }
