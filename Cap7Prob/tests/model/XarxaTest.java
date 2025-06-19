@@ -40,7 +40,7 @@ class XarxaTest {
         System.out.println("******************************************************");
         System.out.println(" Vamos a probar de detectar el porcentaje  de color  *");
         System.out.println("******************************************************");
-        Xarxa po1 = new Xarxa(numEntradas, new int[]{5,5}, numSalidas);
+        Xarxa po1 = new Xarxa(numEntradas, new int[]{4,4}, numSalidas);
         // Suponiendo que ya tienes los vectores de las imágenes normalizados [0.0, 1.0]
         File carpeta = new File("testRes/banderes/flags/");
         File[] archivosPNG = carpeta.listFiles((dir, name) -> name.toLowerCase().endsWith(".png"));

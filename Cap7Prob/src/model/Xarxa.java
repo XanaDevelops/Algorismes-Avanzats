@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Random;
 
-public class Xarxa extends Solver implements Serializable {
+public class Xarxa implements Serializable {
 
     private final int nEntrades;
     private final int[] config;
@@ -199,15 +199,5 @@ public class Xarxa extends Solver implements Serializable {
     // Derivada de Sigmoide
     private double derivadaSigmoide(double x) {
         return x * (1 - x);
-    }
-
-    @Override
-    public void run() {
-
-    }
-
-    @Override
-    public void comunicar(String msg) {
-
     }
 }
