@@ -6,7 +6,7 @@ public interface Comunicar {
 
     void comunicar(String msg);
 
-    default void carregarImatge(Path ruta) {}
+    default void carregarImatge(String ruta) {}
 
     default void classificar() {}
 
