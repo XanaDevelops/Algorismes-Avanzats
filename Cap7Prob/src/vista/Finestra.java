@@ -19,7 +19,7 @@ public class Finestra extends JFrame implements Comunicar {
 
     public Finestra() {
         super();
-//        Main.getInstance()
+        dades =  Main.getInstance().getDades();
         this.setTitle("Classificador d'imatges naturals");
         this.setSize(new Dimension(700, 600));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,7 +71,6 @@ public class Finestra extends JFrame implements Comunicar {
         this.add(panellBotons, BorderLayout.NORTH);
 
 
-
         JPanel classficacionsPanel = new JPanel(new GridLayout(1, 3));
         classficacionsPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
 
@@ -103,8 +102,8 @@ public class Finestra extends JFrame implements Comunicar {
             panel.setBackground(Color.LIGHT_GRAY);
         }
 
-        public void actualitzar(float percentatge) {
-            label.setText(String.format("%s: %.2f%%", getNom(), percentatge));
+        public void actualitzar(Double percentatge, Double margeError) {
+            label.setText(String.format("%s: %.2f%% +-%.2f%%", getNom(), percentatge ,margeError));
         }
 
         public String getNom() {
@@ -120,8 +119,5 @@ public class Finestra extends JFrame implements Comunicar {
     private void mostrarImatge(ImageIcon icon) {
         this.imatgeLabel.setIcon(icon);
     }
-    @Override
-    public void comunicar(String msg) {
-        System.err.println(msg);
-    }
+
 }
