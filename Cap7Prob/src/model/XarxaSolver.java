@@ -3,27 +3,124 @@ package model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class XarxaSolver extends Solver{
+
+    private double[][] entradas;
+    private double[][] sortides;
+
+    public enum Colors{
+        BLANC, NEGRE, BLAU_CLAR, BLAU_OBSCUR, VERD_CLAR, VERD_OBSCUR, MARRO, ARENA, GROC, TARONJA, VERMELL;
+    }
 
     Xarxa xarxa;
 
     public XarxaSolver(){
-        xarxa = new Xarxa(8, new int[]{4,4}, Paisatge.values().length);
+        xarxa = new Xarxa(Colors.values().length, new int[]{10,10}, Paisatge.values().length);
         File carpeta = new File(Dades.PATH_IMATGES);
-        File[] fotos = carpeta.listFiles();
+        File[] fotos = carpeta.listFiles((dir, name) -> name.contains("test"));
 
-        ArrayList<BufferedImage> images = new ArrayList<>();
-        for(File f : fotos){
+        entradas = new double[fotos.length][Colors.values().length];
+        sortides = new double[fotos.length][Paisatge.values().length];
+        for (int j = 0; j < fotos.length; j++) {
+            File f = fotos[j];
+            double[] entrada = new double[Colors.values().length];
+            double[] sortida = new double[Paisatge.values().length];
             try {
-                images.add(ImageIO.read(f));
+                entrada = generarEntrada(f);
+                if (f.getName().contains("bosc")){
+                    sortida[Paisatge.BOSC_NORDIC.ordinal()] = 1;
+                }
+                if (f.getName().contains("selva")){
+                    sortida[Paisatge.SELVA_TROPICAL.ordinal()] = 1;
+                }
+                if(f.getName().contains("costa")){
+                    sortida[Paisatge.PAISATGE_COSTANER.ordinal()] = 1;
+                }
+
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+            entradas[j] = entrada;
+            sortides[j] = sortida;
         }
+
+
+
+    }
+
+    public double[] generarEntrada(File f) throws IOException {
+        BufferedImage img = ImageIO.read(f);
+        assert img != null;
+
+        int pixels = img.getWidth() * img.getHeight();
+
+        double[] entrada = new double[Colors.values().length];
+        int[] colorIndex = new int[Colors.values().length];
+
+        for (int i = 0; i < img.getHeight(); i++) {
+            for (int k = 0; k < img.getWidth(); k++) {
+                colorIndex[getColorIndex(img.getRGB(k, i))]++;
+            }
+        }
+        for (int i = 0; i < colorIndex.length; i++) {
+            entrada[i] = colorIndex[i] / (double) pixels;
+        }
+
+        return entrada;
+    }
+
+    public int getColorIndex(int color){
+        Color c = new Color(color, false);
+        float[] HSB = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+        float H = HSB[0] * 360;
+        float S = HSB[1] * 100;
+        float B = HSB[2] * 100;
+        float A = c.getAlpha();
+
+        if(A < 150){
+            return Colors.BLANC.ordinal();
+        }
+        if(S < 15){
+            return Colors.BLANC.ordinal();
+        }
+        if(B < 20){
+            return Colors.NEGRE.ordinal();
+        }
+        if(H >= 75 && H < 155){
+            if(B < 60){
+                return Colors.VERD_OBSCUR.ordinal();
+            }
+            return Colors.VERD_CLAR.ordinal();
+        }
+        if(H >= 155 && H < 200){
+            return Colors.BLAU_CLAR.ordinal();
+        }
+        if(H >= 200 && H < 260){
+            return Colors.BLAU_OBSCUR.ordinal();
+        }
+        if(H >= 45 && H < 75){
+            return Colors.GROC.ordinal();
+        }
+        if(H >= 20 && H < 45){
+            if(B < 70){
+                return Colors.MARRO.ordinal();
+            }
+            if(S > 50){
+                return Colors.TARONJA.ordinal();
+            }
+            return Colors.ARENA.ordinal();
+        }
+
+
+        return Colors.VERMELL.ordinal();
     }
 
 
@@ -34,6 +131,13 @@ public class XarxaSolver extends Solver{
 
     @Override
     public void run() {
+        xarxa.entrenar(entradas, sortides, 1000000);
+    }
 
+    public double[][] getEntradas() {
+        return entradas;
+    }
+    public double[][] getSortides(){
+        return sortides;
     }
 }
