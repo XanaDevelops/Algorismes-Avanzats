@@ -8,6 +8,16 @@ public interface Comunicar {
         throw new UnsupportedOperationException();
     }
 
+    default void classificarHSV() {
+        throw new UnsupportedOperationException();
+    }
+    default void classificarXarxa() {
+        throw new UnsupportedOperationException();
+    }
+
+    default void actualitzarFinestra(){
+        throw new UnsupportedOperationException();
+    }
     default void calcular(int[][] matrix, boolean stepMode) {
         throw new UnsupportedOperationException();
     }
