@@ -3,11 +3,8 @@ package model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class XarxaSolver extends Solver{
 
@@ -15,13 +12,13 @@ public class XarxaSolver extends Solver{
     private double[][] sortides;
 
     public enum Colors{
-        BLANC, NEGRE, BLAU_CLAR, BLAU_OBSCUR, VERD_CLAR, VERD_OBSCUR, MARRO, ARENA, GROC, TARONJA, VERMELL;
+        BLANC, NEGRE, BLAU, VERD_CLAR, VERD_OBSCUR, MARRO, ARENA, GROC, TARONJA, VERMELL;
     }
 
     Xarxa xarxa;
 
     public XarxaSolver(){
-        xarxa = new Xarxa(Colors.values().length, new int[]{10,10}, Paisatge.values().length);
+        xarxa = new Xarxa(Colors.values().length, new int[]{6,6}, Paisatge.values().length);
         File carpeta = new File(Dades.PATH_IMATGES);
         File[] fotos = carpeta.listFiles((dir, name) -> name.contains("test"));
 
@@ -100,11 +97,8 @@ public class XarxaSolver extends Solver{
             }
             return Colors.VERD_CLAR.ordinal();
         }
-        if(H >= 155 && H < 200){
-            return Colors.BLAU_CLAR.ordinal();
-        }
-        if(H >= 200 && H < 260){
-            return Colors.BLAU_OBSCUR.ordinal();
+        if(H >= 155 && H < 260){
+            return Colors.BLAU.ordinal();
         }
         if(H >= 45 && H < 75){
             return Colors.GROC.ordinal();
@@ -131,7 +125,7 @@ public class XarxaSolver extends Solver{
 
     @Override
     public void run() {
-        xarxa.entrenar(entradas, sortides, 1000000);
+        xarxa.entrenar(entradas, sortides, -1);
     }
 
     public double[][] getEntradas() {

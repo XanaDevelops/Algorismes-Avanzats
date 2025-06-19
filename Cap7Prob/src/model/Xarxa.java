@@ -4,7 +4,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Random;
 
 public class Xarxa implements Serializable {
@@ -28,22 +27,19 @@ public class Xarxa implements Serializable {
 
         Random r = new Random();
 
-        // Inicialización de las capas ocultas
         capesOcultes = new double[config.length][];
         for (int i = 0; i < capesOcultes.length; i++) {
             capesOcultes[i] = new double[config[i]];
         }
 
-        // Inicialización de los pesos entre capas
         pesosOcultes = new double[config.length][][];
-        // Pesos entre entrada y primera capa oculta
         pesosOcultes[0] = new double[config[0]][nEntrades];
         for (int i = 0; i < config[0]; i++) {
             for (int j = 0; j < nEntrades; j++) {
                 pesosOcultes[0][i][j] = r.nextDouble() * 2 - 1;
             }
         }
-        // Pesos entre capas ocultas sucesivas
+
         for (int i = 1; i < config.length; i++) {
             pesosOcultes[i] = new double[config[i]][config[i - 1]];
             for (int j = 0; j < config[i]; j++) {
@@ -69,7 +65,6 @@ public class Xarxa implements Serializable {
     public double[] predecir(double[] entrada) {
         assert entrada.length == nEntrades;
 
-        // Entrada a primera capa oculta
         for (int neurona = 0; neurona < capesOcultes[0].length; neurona++) {
             double suma = 0;
             for (int pes = 0; pes < nEntrades; pes++) {
@@ -78,7 +73,6 @@ public class Xarxa implements Serializable {
             capesOcultes[0][neurona] = sigmoide(suma);
         }
 
-        // Capas ocultas sucesivas
         for (int capa = 1; capa < capesOcultes.length; capa++) {
             for (int neurona = 0; neurona < capesOcultes[capa].length; neurona++) {
                 double suma = 0;
@@ -89,7 +83,6 @@ public class Xarxa implements Serializable {
             }
         }
 
-        // Salida
         double[] sumesSortida = new double[nSortides];
         for (int nSortida = 0; nSortida < nSortides; nSortida++) {
             double suma = 0;
@@ -102,33 +95,44 @@ public class Xarxa implements Serializable {
         return sumesSortida;
     }
 
+    /**
+     * Entrena la xarxa
+     * @param entrades
+     * @param sortides
+     * @param epoc -1 activa el modo auto
+     */
     public void entrenar(double[][] entrades, double[][] sortides, int epoc) {
         assert entrades[0].length == nEntrades;
+        boolean auto = false;
+        if(epoc == -1){
+            System.out.println("MODO AUTO");
+            epoc = Integer.MAX_VALUE;
+            auto = true;
+        }
+        double lastError = Double.MAX_VALUE;
         for (int _i = 0; _i < epoc; _i++) {
             double errorTotal = 0;
             for (int nEntrada = 0; nEntrada < entrades.length; nEntrada++) {
                 double[] entrada = entrades[nEntrada];
                 double[] sortidaEsperada = sortides[nEntrada];
 
-                // FORWARD PASS
                 double[] sortida = predecir(entrada);
 
-                // CALCULAR ERROR DE SALIDA
                 double[] errorSortida = new double[nSortides];
                 for (int i = 0; i < nSortides; i++) {
                     errorSortida[i] = sortidaEsperada[i] - sortida[i];
                 }
 
-                // CALCULAR DELTA DE SALIDA
                 double[] deltaSortida = new double[nSortides];
                 for (int i = 0; i < nSortides; i++) {
                     deltaSortida[i] = errorSortida[i] * derivadaSigmoide(sortida[i]);
                 }
 
-                // BACKPROPAGATION: DELTAS OCULTAS
+                // deltes
                 double[][] deltasOcultes = new double[capesOcultes.length][];
                 int lastCapa = capesOcultes.length - 1;
-                // Última capa oculta
+
+                //oculta --> sortida
                 deltasOcultes[lastCapa] = new double[capesOcultes[lastCapa].length];
                 for (int j = 0; j < capesOcultes[lastCapa].length; j++) {
                     double suma = 0;
@@ -137,7 +141,8 @@ public class Xarxa implements Serializable {
                     }
                     deltasOcultes[lastCapa][j] = suma * derivadaSigmoide(capesOcultes[lastCapa][j]);
                 }
-                // Capas ocultas intermedias (si hay más de una)
+
+                // delta ocultes
                 for (int capa = lastCapa - 1; capa >= 0; capa--) {
                     deltasOcultes[capa] = new double[capesOcultes[capa].length];
                     for (int j = 0; j < capesOcultes[capa].length; j++) {
@@ -149,15 +154,14 @@ public class Xarxa implements Serializable {
                     }
                 }
 
-                // ACTUALIZAR PESOS SALIDA
+                //pesos sortida
                 for (int i = 0; i < nSortides; i++) {
                     for (int j = 0; j < pesosSortida[i].length; j++) {
                         pesosSortida[i][j] += deltaEntrenament * deltaSortida[i] * capesOcultes[lastCapa][j];
                     }
                 }
 
-                // ACTUALIZAR PESOS OCULTOS
-                // Desde la última capa oculta hacia la primera
+                // backprop capes ocultes
                 for (int capa = capesOcultes.length - 1; capa > 0; capa--) {
                     for (int i = 0; i < capesOcultes[capa].length; i++) {
                         for (int j = 0; j < pesosOcultes[capa][i].length; j++) {
@@ -165,21 +169,26 @@ public class Xarxa implements Serializable {
                         }
                     }
                 }
-                // Primera capa oculta (entrada)
+                // entrada -> oculta[0]
                 for (int i = 0; i < capesOcultes[0].length; i++) {
                     for (int j = 0; j < pesosOcultes[0][i].length; j++) {
                         pesosOcultes[0][i][j] += deltaEntrenament * deltasOcultes[0][i] * entrada[j];
                     }
                 }
 
-                // Acumular error total (opcional)
                 for (double e : errorSortida) {
                     errorTotal += Math.abs(e);
                 }
             }
-            // Puedes imprimir errorTotal si quieres monitorizar el entrenamiento
             if (_i % 50000 == 0) {
-                System.out.println("Época " + _i + " - Error: " + errorTotal);
+                System.out.println("Època " + _i + " - Error: " + errorTotal);
+            }
+            if(auto){
+                if((lastError-errorTotal) < 0.00000002){
+                    System.out.println(lastError-errorTotal);
+                    break;
+                }
+                lastError = errorTotal;
             }
         }
 

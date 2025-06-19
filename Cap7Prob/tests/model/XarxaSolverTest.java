@@ -53,7 +53,7 @@ class XarxaSolverTest {
                 double[] sortida = xarxa.predecir(entrada);
 
                 System.out.println("Entrada: " + f);
-                System.out.println(Arrays.toString(entrada));
+                //System.out.println(Arrays.toString(entrada));
                 System.out.println("Sortida: " + Arrays.toString(sortida));
             } catch (IOException e) {
                 throw new RuntimeException(e);
