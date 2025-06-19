@@ -1,10 +1,16 @@
 package controlador;
 
+import model.ClassHSV;
 import model.Dades;
 import model.Solver;
 import vista.Finestra;
+import vista.FinestraColors;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -26,7 +32,7 @@ public class Main implements Comunicar {
         }
 
         dades = new Dades();
-        finestra = new Finestra();
+        SwingUtilities.invokeLater(() -> finestra = new Finestra());
 
     }
 
@@ -46,4 +52,6 @@ public class Main implements Comunicar {
     public void comunicar(String msg) {
         System.err.println(msg);
     }
+
+
 }
