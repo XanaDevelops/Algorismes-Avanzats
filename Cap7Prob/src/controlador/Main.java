@@ -5,8 +5,15 @@ import model.Dades;
 import model.Solver;
 import model.XarxaSolver;
 import vista.Finestra;
+import vista.FinestraColors;
 
-
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class Main implements Comunicar {
     private static Main instance;
@@ -26,8 +33,7 @@ public class Main implements Comunicar {
         }
 
         dades = new Dades();
-        finestra = new Finestra();
-        finestra.setVisible(true);
+        SwingUtilities.invokeLater(() -> finestra = new Finestra());
 
     }
 
