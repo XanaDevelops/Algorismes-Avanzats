@@ -45,7 +45,7 @@ public class ClassHSV extends Solver{
             int x = rnd.nextInt(w), y = rnd.nextInt(h);
             int rgb = img.getRGB(x, y);
             float[] hvs = rgbAhsv(rgb);
-            colors.add(new float[]{});
+            colors.add(hvs);
             float H = hvs[0], S = hvs[1], V = hvs[2];
 
             // Tants com paissatges hagi

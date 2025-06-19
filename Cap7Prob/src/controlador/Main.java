@@ -29,21 +29,6 @@ public class Main implements Comunicar {
         }
 
         dades = new Dades();
-        File file = new File("cp1.png");
-
-        // Cargar imagen como BufferedImage
-        try {
-            BufferedImage image = ImageIO.read(file);
-            dades.setImatge(image);
-            ClassHSV c = new ClassHSV();
-            c.run();
-            FinestraColors fc = new FinestraColors();
-            fc.setVisible(true);
-
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         finestra = new Finestra();
 
     }
