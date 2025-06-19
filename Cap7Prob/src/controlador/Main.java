@@ -32,7 +32,7 @@ public class Main implements Comunicar {
         }
 
         dades = new Dades();
-        finestra = new Finestra();
+        SwingUtilities.invokeLater(() -> finestra = new Finestra());
 
     }
 

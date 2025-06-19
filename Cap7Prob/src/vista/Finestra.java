@@ -83,6 +83,7 @@ public class Finestra extends JFrame implements Comunicar {
 
         this.add(classficacionsPanel, BorderLayout.SOUTH);
 
+        this.setVisible(true);
     }
 
     @Override
