@@ -125,6 +125,7 @@ public class Finestra extends JFrame implements Comunicar {
         JPanel panel;
         JLabel label;
 
+
         public Categoria(String nom) {
             label = new JLabel(nom + ": 0%", SwingConstants.CENTER);
             panel = new JPanel(new BorderLayout());
@@ -135,6 +136,15 @@ public class Finestra extends JFrame implements Comunicar {
 
         public void actualitzar(Double percentatge, Double margeError) {
             label.setText(String.format("%s: %.2f%% +-%.2f%%", getNom(), percentatge ,margeError));
+            float b = (float) Math.min(1f, (percentatge/100d * 0.7F) + 0.3f);
+
+            Color newColor = Color.getHSBColor((float) ((percentatge/360.0)), (float) (percentatge/100f), b);
+            panel.setBackground(newColor);
+            if(b<0.35){
+                label.setForeground(Color.WHITE);
+            }else{
+                label.setForeground(Color.BLACK);
+            }
         }
 
         public String getNom() {
