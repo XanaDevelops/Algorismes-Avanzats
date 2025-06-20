@@ -1,9 +1,10 @@
 package model;
 
 public enum Paisatge {
-    BOSC_NORDIC      (60f, 150f, 0.2f, 0.5f, 0.2f, 0.8f),
-    SELVA_TROPICAL   (60f, 150f, 0.5f, 1.0f, 0.5f, 1.0f),
-    PAISATGE_COSTANER(0f,  360f, 0.0f, 1.0f, 0.0f, 1.0f);
+    BOSC_NORDIC       (60f, 150f, 0.10f, 0.55f, 0.15f, 0.85f),
+    SELVA_TROPICAL    (65f, 160f, 0.55f, 1.00f, 0.30f, 1.00f),
+    PAISATGE_COSTANER (170f,260f, 0.35f, 1.00f, 0.35f, 1.00f);
+
 
     private final float hMin, hMax, sMin, sMax, vMin, vMax;
 
