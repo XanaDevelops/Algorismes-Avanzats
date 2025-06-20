@@ -52,10 +52,12 @@ public class Finestra extends JFrame implements Comunicar {
                 Image scaledImage = originalImage.getScaledInstance((int) (imgWidth * scale), (int)(imgHeight * scale), Image.SCALE_SMOOTH);
                 ImageIcon scaledIcon = new ImageIcon(scaledImage);
                 mostrarImatge(scaledIcon);
+                Main.getInstance().carregarImatge(f.getAbsolutePath());
             }
         });
         JButton classificar = new JButton("Classificar");
         classificar.addActionListener(e -> {
+            Main.getInstance().classificar();
         });
         panellBotons.setLayout(new FlowLayout());
         JButton aturar = new JButton("Aturar");
