@@ -8,9 +8,13 @@ import model.Paisatge;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.EnumMap;
+import java.util.List;
 
 public class Finestra extends JFrame implements Comunicar {
 
@@ -37,6 +41,30 @@ public class Finestra extends JFrame implements Comunicar {
         JButton botoCarregar = new JButton("Carregar");
         JPanel panellImatge = new JPanel();
         imatgeLabel = new JLabel();
+        panellImatge.setTransferHandler(new TransferHandler(){
+            @Override
+            public boolean canImport(TransferHandler.TransferSupport support) {
+                return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
+            }
+
+            @Override
+            public boolean importData(TransferHandler.TransferSupport support) {
+                if(!canImport(support)) {return false;}
+
+                try{
+                    List<File> files = (List<File>) support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                    if(!files.isEmpty()){
+                        File file = files.get(0);
+                        carregarImatgeIntern(file, panellImatge);
+                        return true;
+                    }
+                } catch (IOException | UnsupportedFlavorException e) {
+                    throw new RuntimeException(e);
+                }
+                return false;
+            }
+        });
+
         panellImatge.add(imatgeLabel);
         this.add(panellImatge, BorderLayout.CENTER);
         botoCarregar.addActionListener(e -> {
@@ -46,19 +74,7 @@ public class Finestra extends JFrame implements Comunicar {
             fc.setAcceptAllFileFilterUsed(false);
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File f = fc.getSelectedFile();
-                ImageIcon icon = new ImageIcon(f.getAbsolutePath());
-                Image originalImage = icon.getImage();
-                int imgWidth = originalImage.getWidth(null);
-                int imgHeight = originalImage.getHeight(null);
-
-                double widthRatio = (double) panellImatge.getWidth() / imgWidth;
-                double heightRatio = (double) panellImatge.getHeight() / imgHeight;
-                double scale = Math.min(widthRatio, heightRatio);
-
-                Image scaledImage = originalImage.getScaledInstance((int) (imgWidth * scale), (int)(imgHeight * scale), Image.SCALE_SMOOTH);
-                ImageIcon scaledIcon = new ImageIcon(scaledImage);
-                mostrarImatge(scaledIcon);
-                Main.getInstance().carregarImatge(f.getAbsolutePath());
+                carregarImatgeIntern(f, panellImatge);
             }
         });
         JComboBox comboBox = new JComboBox();
@@ -110,6 +126,22 @@ public class Finestra extends JFrame implements Comunicar {
         this.add(classficacionsPanel, BorderLayout.SOUTH);
 
         this.setVisible(true);
+    }
+
+    private void carregarImatgeIntern(File f, JPanel panellImatge) {
+        ImageIcon icon = new ImageIcon(f.getAbsolutePath());
+        Image originalImage = icon.getImage();
+        int imgWidth = originalImage.getWidth(null);
+        int imgHeight = originalImage.getHeight(null);
+
+        double widthRatio = (double) panellImatge.getWidth() / imgWidth;
+        double heightRatio = (double) panellImatge.getHeight() / imgHeight;
+        double scale = Math.min(widthRatio, heightRatio);
+
+        Image scaledImage = originalImage.getScaledInstance((int) (imgWidth * scale), (int)(imgHeight * scale), Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        mostrarImatge(scaledIcon);
+        Main.getInstance().carregarImatge(f.getAbsolutePath());
     }
 
     @Override
