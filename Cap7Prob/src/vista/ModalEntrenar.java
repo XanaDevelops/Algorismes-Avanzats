@@ -23,11 +23,14 @@ public class ModalEntrenar extends JDialog implements Comunicar {
         JButton aturar = new JButton("Aturar");
 
         entrenar.addActionListener(e -> {
-            Integer i = Integer.getInteger(epocs.getText());
-            text.setText("");
-            if(i == null){
+            int i;
+            try{
+                i = Integer.parseInt(epocs.getText());
+            }catch (NumberFormatException ex){
                 i = -1;
             }
+            text.setText("");
+
             Main.getInstance().entrenarXarxa(i);
         });
         opcions.add(entrenar);

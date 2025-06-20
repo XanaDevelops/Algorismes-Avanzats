@@ -21,6 +21,7 @@ public class XarxaSolver extends Solver{
     }
 
     Xarxa xarxa;
+    private final int[] config = {8, 6};
 
     public XarxaSolver(){
         File xarxaFile = new File("res/xarxa.bin");
@@ -29,12 +30,12 @@ public class XarxaSolver extends Solver{
                 xarxa = (Xarxa) ois.readObject();
             }catch (InvalidClassException e){
                 System.err.println("Xarxa ha canviat, creant una nova");
-                xarxa = new Xarxa(Colors.values().length, new int[]{6, 6}, Paisatge.values().length);
+                xarxa = new Xarxa(Colors.values().length, config, Paisatge.values().length);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }else {
-            xarxa = new Xarxa(Colors.values().length, new int[]{8, 6}, Paisatge.values().length);
+            xarxa = new Xarxa(Colors.values().length, config, Paisatge.values().length);
         }
         File carpeta = new File(Dades.PATH_IMATGES);
         File[] fotos = carpeta.listFiles((dir, name) -> name.contains("test"));
@@ -165,7 +166,8 @@ public class XarxaSolver extends Solver{
 
     @Override
     public void entrenarXarxa(int epocs) {
-        xarxa = new Xarxa(Colors.values().length, new int[]{6, 6}, Paisatge.values().length);
+
+        xarxa = new Xarxa(Colors.values().length, config, Paisatge.values().length);
         xarxa.entrenar(entradas, sortides, epocs);
 
     }
