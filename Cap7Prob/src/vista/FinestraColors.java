@@ -17,7 +17,7 @@ public class FinestraColors extends JFrame implements Comunicar {
     private int maxIterations;
     JPanel panelBarres;
     private final static int MAX_GRUPS = 20;
-    private final static int MAX_ITERATIONS = 500;
+    private final static int MAX_ITERATIONS = 10000;
     private Dades dades;
 
 
