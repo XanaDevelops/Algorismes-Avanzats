@@ -49,15 +49,6 @@ public class Finestra extends JFrame implements Comunicar {
                 int imgWidth = originalImage.getWidth(null);
                 int imgHeight = originalImage.getHeight(null);
 
-                BufferedImage buffered = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2d = buffered.createGraphics();
-                g2d.drawImage(originalImage, 0, 0, null);
-                g2d.dispose();
-
-
-                dades.setImatge(buffered);
-
-
                 double widthRatio = (double) panellImatge.getWidth() / imgWidth;
                 double heightRatio = (double) panellImatge.getHeight() / imgHeight;
                 double scale = Math.min(widthRatio, heightRatio);
@@ -65,23 +56,24 @@ public class Finestra extends JFrame implements Comunicar {
                 Image scaledImage = originalImage.getScaledInstance((int) (imgWidth * scale), (int)(imgHeight * scale), Image.SCALE_SMOOTH);
                 ImageIcon scaledIcon = new ImageIcon(scaledImage);
                 mostrarImatge(scaledIcon);
+                Main.getInstance().carregarImatge(f.getAbsolutePath());
             }
         });
         JComboBox comboBox = new JComboBox();
         comboBox.addItem("HSV");
         comboBox.addItem("Xarxa neuronal");
         comboBox.addActionListener(e -> {
-                    int selected = comboBox.getSelectedIndex();
-                    if (selected == 0) {
-                        this.classificarHSV();
-                    }else{
-                        classificarXarxa();
-                    }
+//                    int selected = comboBox.getSelectedIndex();
+//                    if (selected == 0) {
+//                        this.classificarHSV();
+//                    }else{
+//                        classificarXarxa();
+//                    }
                 }
         );
         JButton classificar = new JButton("Classificar");
         classificar.addActionListener(e -> {
-            this.classificarHSV();
+            Main.getInstance().classificar();
         });
         panellBotons.setLayout(new FlowLayout());
         JButton aturar = new JButton("Aturar");
@@ -160,7 +152,6 @@ public class Finestra extends JFrame implements Comunicar {
 
         Paisatge[] values = Paisatge.values();
         for (int i = 0; i < 3; i++) {
-            System.out.println("categoria "+ values[i]+ "perc "+ percentatges.get(values[i])+ "error "+ margesDeError.get(values[i]));
             categories[i].actualitzar(percentatges.get(values[i]),margesDeError.get(values[i]) );
         }
     }

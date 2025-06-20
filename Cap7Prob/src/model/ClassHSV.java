@@ -1,5 +1,7 @@
 package model;
 
+import controlador.Main;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -42,7 +44,6 @@ public class ClassHSV extends Solver{
 
             float[] hvs = rgbAhsv(rgb);
             colors.add(hvs);
-            System.out.println("hvs " + Arrays.toString(hvs));
             float H = hvs[0], S = hvs[1], V = hvs[2];
 
             // Tants com paissatges hagi
@@ -77,6 +78,8 @@ public class ClassHSV extends Solver{
         }
         dades.setEtiqueta(resultat);
         dades.setColors(colors);
+        //avisa a finestra
+        Main.getInstance().actualitzarFinestra();
     }
 
 
