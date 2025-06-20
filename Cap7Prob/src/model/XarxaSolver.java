@@ -1,9 +1,13 @@
 package model;
 
+import controlador.Main;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Arrays;
+import java.util.EnumMap;
 
 public class XarxaSolver extends Solver{
 
@@ -21,6 +25,9 @@ public class XarxaSolver extends Solver{
         if(xarxaFile.exists()){
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(xarxaFile))) {
                 xarxa = (Xarxa) ois.readObject();
+            }catch (InvalidClassException e){
+                System.err.println("Xarxa ha canviat, creant una nova");
+                xarxa = new Xarxa(Colors.values().length, new int[]{6, 6}, Paisatge.values().length);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -61,8 +68,7 @@ public class XarxaSolver extends Solver{
 
     }
 
-    public double[] generarEntrada(File f) throws IOException {
-        BufferedImage img = ImageIO.read(f);
+    public double[] generarEntrada(BufferedImage img){
         assert img != null;
 
         int pixels = img.getWidth() * img.getHeight();
@@ -80,6 +86,10 @@ public class XarxaSolver extends Solver{
         }
 
         return entrada;
+    }
+    public double[] generarEntrada(File f) throws IOException {
+        BufferedImage img = ImageIO.read(f);
+        return generarEntrada(img);
     }
 
     public int getColorIndex(int color){
@@ -134,7 +144,19 @@ public class XarxaSolver extends Solver{
 
     @Override
     public void run() {
+        double[] entrada = generarEntrada(dades.getImatge());
+        double[] sortida = xarxa.predecir(entrada);
 
+        EnumMap<Paisatge, Double> resultats = dades.getPercentatges();
+        for(Paisatge paisatge : Paisatge.values()){
+            resultats.put(paisatge, sortida[paisatge.ordinal()]*100);
+        }
+        EnumMap<Paisatge, Double> errors = dades.getMargesDeError();
+        for(Paisatge paisatge : Paisatge.values()){
+            errors.put(paisatge, xarxa.getErrorTotal());
+        }
+
+        Main.getInstance().getFinestra().actualitzarFinestra();
     }
 
     @Override

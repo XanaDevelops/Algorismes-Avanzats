@@ -93,7 +93,7 @@ public class Main implements Comunicar {
     @Override
     public void classificarXarxa() {
         XarxaSolver xarxaSolver = new XarxaSolver();
-        executor.submit(xarxaSolver);
+        executor.execute(xarxaSolver);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class Main implements Comunicar {
 
     @Override
     public void logText(String text) {
-        System.out.println(text);
+        //System.out.println(text);
         SwingUtilities.invokeLater(() -> finestra.logText(text));
     }
 

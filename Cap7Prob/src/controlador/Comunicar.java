@@ -24,7 +24,7 @@ public interface Comunicar {
     }
         default void carregarImatge(String ruta) {}
 
-        default void classificar() {}
+        default void classificar() {throw new UnsupportedOperationException();}
 
         default void progressar(double percent) {}
 

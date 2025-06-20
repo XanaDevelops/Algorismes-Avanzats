@@ -18,6 +18,7 @@ public class Xarxa implements Serializable {
     private double[][][] pesosOcultes;
     private double[][] pesosSortida;
 
+    private double errorTotal = 0;
 
     private final double deltaEntrenament;
 
@@ -113,7 +114,7 @@ public class Xarxa implements Serializable {
         }
         double lastError = Double.MAX_VALUE;
         for (int _i = 0; _i < epoc; _i++) {
-            double errorTotal = 0;
+            errorTotal = 0;
             for (int nEntrada = 0; nEntrada < entrades.length; nEntrada++) {
                 double[] entrada = entrades[nEntrada];
                 double[] sortidaEsperada = sortides[nEntrada];
@@ -187,6 +188,7 @@ public class Xarxa implements Serializable {
             }
             if(auto){
                 if(Math.abs(lastError-errorTotal) < 0.00000001){
+                    Main.getInstance().logText("Època " + _i + " - Error: " + errorTotal);
                     Main.getInstance().logText("Delta Error: " + (lastError-errorTotal));
                     break;
                 }
@@ -210,5 +212,9 @@ public class Xarxa implements Serializable {
     // Derivada de Sigmoide
     private double derivadaSigmoide(double x) {
         return x * (1 - x);
+    }
+
+    public double getErrorTotal(){
+        return errorTotal;
     }
 }

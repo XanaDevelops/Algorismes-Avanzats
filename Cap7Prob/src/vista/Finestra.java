@@ -68,12 +68,12 @@ public class Finestra extends JFrame implements Comunicar {
         JButton classificar = new JButton("Classificar");
         classificar.addActionListener(e -> {
             int selected = comboBox.getSelectedIndex();
-                    if (selected == 0) {
-                        Main.getInstance().classificarHSV();
-                    }else{
-                        Main.getInstance().classificarXarxa();
-                    }
-            Main.getInstance().classificar();
+            if (selected == 0) {
+                Main.getInstance().classificarHSV();
+            }else{
+                Main.getInstance().classificarXarxa();
+            }
+
         });
         panellBotons.setLayout(new FlowLayout());
         JButton aturar = new JButton("Aturar");
@@ -162,7 +162,7 @@ public class Finestra extends JFrame implements Comunicar {
     public void actualitzarFinestra(){
         EnumMap<Paisatge, Double> percentatges = dades.getPercentatges();
         EnumMap<Paisatge, Double> margesDeError = dades.getMargesDeError();
-
+        System.err.println(percentatges);
         Paisatge[] values = Paisatge.values();
         for (int i = 0; i < 3; i++) {
             categories[i].actualitzar(percentatges.get(values[i]),margesDeError.get(values[i]) );
