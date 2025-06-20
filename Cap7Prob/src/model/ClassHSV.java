@@ -39,9 +39,7 @@ public class ClassHSV extends Solver{
 
             float[] hvs = rgbAhsv(rgb);
             colors.add(hvs);
-            System.out.println("colors: " + Arrays.toString(hvs));
             float H = hvs[0], S = hvs[1], V = hvs[2];
-
             // Tants com paissatges hagi
             for (Paisatge p : Paisatge.values()) {
                 if (p.matches(H, S, V)) {
@@ -59,7 +57,7 @@ public class ClassHSV extends Solver{
             double probabilitat = c / (double) n;
             double error = zScore * Math.sqrt(probabilitat * (1 - probabilitat) / n);
 
-            prob.put(p, probabilitat);
+            prob.put(p, probabilitat*100);
             marge.put(p, error);
         }
 
@@ -102,6 +100,6 @@ public class ClassHSV extends Solver{
 
         float S = (max == 0) ? 0 : (delta / max);
 
-        return new float[]{H, max, S};
+        return new float[]{H, S, max};
     }
 }

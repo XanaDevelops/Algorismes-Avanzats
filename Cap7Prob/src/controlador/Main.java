@@ -52,6 +52,7 @@ public class Main implements Comunicar {
             finestraColors = new FinestraColors();
 
         });
+
     }
 
     @Override
