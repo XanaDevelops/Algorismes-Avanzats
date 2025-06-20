@@ -8,17 +8,11 @@ public interface Comunicar {
         throw new UnsupportedOperationException();
     }
 
-    default void calcular(int[][] matrix, boolean stepMode) {
-        throw new UnsupportedOperationException();
-    }
+    default void carregarImatge(String ruta) {}
 
-    default void aturar(int id) {
-        throw new UnsupportedOperationException();
-    }
+    default void classificar() {}
 
-    default void step(int id){throw new UnsupportedOperationException();}
+    default void progressar(double percent) {}
 
-    default void actualitzar(int id) {
-        throw new UnsupportedOperationException();
-    }
+    default void aturar() {}
 }
