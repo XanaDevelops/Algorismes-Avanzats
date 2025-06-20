@@ -11,11 +11,6 @@ public abstract class Solver implements Runnable, Comunicar {
     }
 
 
-
-    public void classificarImatge() {
-        run();
-    }
-
     @Override
     public void comunicar(String msg) {
 
