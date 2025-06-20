@@ -151,6 +151,10 @@ public class Finestra extends JFrame implements Comunicar {
 
     @Override
     public void logText(String text) {
+        if(modalEntrenar == null){
+            System.out.println(text);
+            return;
+        }
         modalEntrenar.logText(text);
     }
 
@@ -205,7 +209,7 @@ public class Finestra extends JFrame implements Comunicar {
     public void actualitzarFinestra(){
         EnumMap<Paisatge, Double> percentatges = dades.getPercentatges();
         EnumMap<Paisatge, Double> margesDeError = dades.getMargesDeError();
-        System.err.println(percentatges);
+        //System.err.println(percentatges);
         Paisatge[] values = Paisatge.values();
         for (int i = 0; i < 3; i++) {
             categories[i].actualitzar(percentatges.get(values[i]),margesDeError.get(values[i]) );

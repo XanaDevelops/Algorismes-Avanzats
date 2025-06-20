@@ -34,7 +34,7 @@ public class XarxaSolver extends Solver{
                 throw new RuntimeException(e);
             }
         }else {
-            xarxa = new Xarxa(Colors.values().length, new int[]{6, 6}, Paisatge.values().length);
+            xarxa = new Xarxa(Colors.values().length, new int[]{8, 6}, Paisatge.values().length);
         }
         File carpeta = new File(Dades.PATH_IMATGES);
         File[] fotos = carpeta.listFiles((dir, name) -> name.contains("test"));

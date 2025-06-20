@@ -53,7 +53,7 @@ public class Xarxa implements Serializable {
             }
         }
 
-        // Pesos de la última capa oculta a la salida
+        // Pesos de l'última capa oculta a la sortida
         pesosSortida = new double[nSortides][config[config.length - 1]];
         for (int i = 0; i < nSortides; i++) {
             for (int j = 0; j < config[config.length - 1]; j++) {
@@ -189,7 +189,7 @@ public class Xarxa implements Serializable {
                 Main.getInstance().logText("Època " + _i + " - Error: " + errorTotal);
             }
             if(auto){
-                if(Math.abs(lastError-errorTotal) < 0.00000001){
+                if(Math.abs(lastError-errorTotal) < 0.000000005){
                     Main.getInstance().logText("Època " + _i + " - Error: " + errorTotal);
                     Main.getInstance().logText("Delta Error: " + (lastError-errorTotal));
                     break;

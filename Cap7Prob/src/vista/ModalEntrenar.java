@@ -14,7 +14,7 @@ public class ModalEntrenar extends JDialog implements Comunicar {
         super(parent, "Entrenar Xarxa", ModalityType.APPLICATION_MODAL);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
-        setSize(300, 500);
+        setSize(350, 500);
         setLocationRelativeTo(parent);
         JPanel opcions = new JPanel(new FlowLayout(FlowLayout.CENTER));
         opcions.setBorder(BorderFactory.createTitledBorder("Opcions"));

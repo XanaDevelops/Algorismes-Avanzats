@@ -22,12 +22,20 @@ class XarxaSolverTest {
     }
 
     @Test
+    public void retrain(){
+        File xFile = new File("res/xarxa.bin");
+        if(xFile.exists()){
+            xFile.delete();
+        }
+        train();
+    }
+    @Test
     public void train(){
         XarxaSolver solver = new XarxaSolver();
         File xFile = new File("res/xarxa.bin");
         Xarxa xarxa;
-        if(!xFile.exists() || true){
-            solver.run();
+        if(!xFile.exists()){
+            solver.entrenarXarxa(-1);
         }
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(xFile))){
             xarxa = (Xarxa) ois.readObject();
