@@ -30,6 +30,8 @@ public class Main implements Comunicar {
     private Comunicar finestra;
     private FinestraColors finestraColors;
 
+    private Solver currentSolver;
+
     public Main() {
         if (instance == null) {
             instance = this;
@@ -88,18 +90,30 @@ public class Main implements Comunicar {
     public void classificarHSV() {
         Solver solver = new ClassHSV();
         executor.submit(solver);
+        currentSolver = solver;
     }
 
     @Override
     public void classificarXarxa() {
         XarxaSolver xarxaSolver = new XarxaSolver();
         executor.execute(xarxaSolver);
+        currentSolver = xarxaSolver;
     }
 
     @Override
     public void entrenarXarxa(int epocs){
         XarxaSolver xarxaSolver = new XarxaSolver();
         executor.submit(() -> xarxaSolver.entrenarXarxa(epocs));
+        currentSolver = xarxaSolver;
+    }
+
+    @Override
+    public void aturar(){
+        if(currentSolver == null){
+            return;
+        }
+        currentSolver.aturar();
+        currentSolver = null;
     }
 
     @Override

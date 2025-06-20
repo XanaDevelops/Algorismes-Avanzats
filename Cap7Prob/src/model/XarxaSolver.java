@@ -166,6 +166,11 @@ public class XarxaSolver extends Solver{
 
     }
 
+    @Override
+    public void aturar(){
+        xarxa.aturar();
+    }
+
 
 
     public double[][] getEntradas() {

@@ -24,6 +24,7 @@ public class ModalEntrenar extends JDialog implements Comunicar {
 
         entrenar.addActionListener(e -> {
             Integer i = Integer.getInteger(epocs.getText());
+            text.setText("");
             if(i == null){
                 i = -1;
             }
@@ -33,7 +34,7 @@ public class ModalEntrenar extends JDialog implements Comunicar {
 
         opcions.add(epocs);
 
-        aturar.addActionListener(e -> {});
+        aturar.addActionListener(e -> {Main.getInstance().aturar();});
         opcions.add(aturar);
 
         this.add(opcions, BorderLayout.NORTH);

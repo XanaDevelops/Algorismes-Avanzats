@@ -79,6 +79,7 @@ public class Finestra extends JFrame implements Comunicar {
         JButton aturar = new JButton("Aturar");
         aturar.addActionListener(e -> {
             stop = true;
+            Main.getInstance().aturar();
         });
 
         JButton entrenar = new JButton("Entrenar");

@@ -21,6 +21,7 @@ public class Xarxa implements Serializable {
     private double errorTotal = 0;
 
     private final double deltaEntrenament;
+    private boolean stop = false;
 
     public Xarxa(int nEntrades, int[] config, int nSortides, double deltaEntrenament) {
         this.nEntrades = nEntrades;
@@ -113,7 +114,8 @@ public class Xarxa implements Serializable {
             auto = true;
         }
         double lastError = Double.MAX_VALUE;
-        for (int _i = 0; _i < epoc; _i++) {
+        stop = false;
+        for (int _i = 0; _i < epoc && !stop; _i++) {
             errorTotal = 0;
             for (int nEntrada = 0; nEntrada < entrades.length; nEntrada++) {
                 double[] entrada = entrades[nEntrada];
@@ -195,6 +197,9 @@ public class Xarxa implements Serializable {
                 lastError = errorTotal;
             }
         }
+        if(stop){
+            Main.getInstance().logText("ATURAT");
+        }
 
         //guardar
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("res/xarxa.bin"))){
@@ -216,5 +221,9 @@ public class Xarxa implements Serializable {
 
     public double getErrorTotal(){
         return errorTotal;
+    }
+
+    public void aturar(){
+        stop = true;
     }
 }
