@@ -22,11 +22,6 @@ public class ClassHSV extends Solver{
     }
 
     @Override
-    public void comunicar(String msg) {
-
-    }
-
-    @Override
     public void run() {
         BufferedImage img = dades.getImatge();
         int w = img.getWidth(), h = img.getHeight();

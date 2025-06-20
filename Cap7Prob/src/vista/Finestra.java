@@ -71,6 +71,7 @@ public class Finestra extends JFrame implements Comunicar {
                     }else{
                         Main.getInstance().classificarXarxa();
                     }
+            Main.getInstance().classificar();
         });
         panellBotons.setLayout(new FlowLayout());
         JButton aturar = new JButton("Aturar");

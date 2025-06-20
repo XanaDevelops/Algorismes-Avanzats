@@ -27,4 +27,5 @@ public interface Comunicar {
 
         default void aturar() {}
 
+
 }

@@ -5,7 +5,6 @@ import model.Dades;
 import model.Solver;
 import model.XarxaSolver;
 import vista.Finestra;
-import vista.FinestraColors;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -29,6 +28,7 @@ public class Main implements Comunicar {
     private Dades dades;
     private Comunicar finestra;
     private FinestraColors finestraColors;
+
     public Main(){
         if (instance == null) {
             instance = this;
@@ -47,6 +47,7 @@ public class Main implements Comunicar {
         SwingUtilities.invokeLater(() -> {
             finestra = new Finestra();
             finestraColors = new FinestraColors();
+
         });
     }
 
@@ -68,6 +69,7 @@ public class Main implements Comunicar {
         SwingUtilities.invokeLater(() -> finestra.progressar(percent));
     }
 
+   
 
     @Override
     public void actualitzarFinestra(){
@@ -91,9 +93,10 @@ public class Main implements Comunicar {
     public void classificarXarxa() {
         XarxaSolver xarxaSolver = new XarxaSolver();
         executor.submit(xarxaSolver);
+
     }
 
     public Dades getDades() { return this.dades; }
 
     public Comunicar getFinestra() { return this.finestra; }
-}
+
