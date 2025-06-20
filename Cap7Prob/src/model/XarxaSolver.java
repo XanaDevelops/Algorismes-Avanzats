@@ -6,8 +6,10 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 
 public class XarxaSolver extends Solver{
 
@@ -75,16 +77,18 @@ public class XarxaSolver extends Solver{
 
         double[] entrada = new double[Colors.values().length];
         int[] colorIndex = new int[Colors.values().length];
-
+        List<float[]> colors = new ArrayList<>();
         for (int i = 0; i < img.getHeight(); i++) {
             for (int k = 0; k < img.getWidth(); k++) {
                 colorIndex[getColorIndex(img.getRGB(k, i))]++;
+                float[] hsv = ClassHSV.rgbAhsv(img.getRGB(k, i));
+                colors.add(hsv);
             }
         }
         for (int i = 0; i < colorIndex.length; i++) {
             entrada[i] = colorIndex[i] / (double) pixels;
         }
-
+        dades.setColors(colors);
         return entrada;
     }
     public double[] generarEntrada(File f) throws IOException {

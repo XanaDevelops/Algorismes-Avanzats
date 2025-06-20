@@ -10,7 +10,7 @@ import java.util.Random;
 public class Kmeans  implements Runnable, Comunicar {
 
     private List<float[]> colors;
-    private int     K;
+    private int  K;
     private int maxIterations;
     List<float[]> centroids;
     int[] clusterCounts;
@@ -32,7 +32,6 @@ public class Kmeans  implements Runnable, Comunicar {
                 Math.abs(h1 - h2),
                 1.0 - Math.abs(h1 - h2)
         );
-
         //  distancies lineals en S I V
         double ds = Math.abs(c1[1] - c2[1]);
         double dv = Math.abs(c1[2] - c2[2]);
@@ -43,7 +42,6 @@ public class Kmeans  implements Runnable, Comunicar {
 
 
     private void kMeans() {
-
         Random rnd = new Random();
         colors = dades.getColors();
        //triar els centeroides de forma aleatoria
@@ -81,7 +79,7 @@ public class Kmeans  implements Runnable, Comunicar {
             //convergencia
             if (!changed) break;
 
-            //promig dels centeroides
+            //promig dels centroïds
             float[][] newCentroids = new float[K][3];
             int[] counts = new int[K];
 
