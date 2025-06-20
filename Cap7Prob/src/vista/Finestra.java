@@ -14,14 +14,12 @@ import java.util.TimerTask;
 public class Finestra extends JFrame implements Comunicar {
 
     private Dades dades;
-    private Comunicar main;
     private boolean stop;
     private JLabel imatgeLabel;
 
     public Finestra() {
         super();
         dades =  Main.getInstance().getDades();
-        main = Main.getInstance();
         this.setTitle("Classificador d'imatges naturals");
         this.setSize(new Dimension(700, 600));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,9 +40,6 @@ public class Finestra extends JFrame implements Comunicar {
             fc.setAcceptAllFileFilterUsed(false);
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File f = fc.getSelectedFile();
-
-                main.carregarImatge(f.getAbsolutePath());
-
                 ImageIcon icon = new ImageIcon(f.getAbsolutePath());
                 Image originalImage = icon.getImage();
                 int imgWidth = originalImage.getWidth(null);
@@ -61,12 +56,10 @@ public class Finestra extends JFrame implements Comunicar {
         });
         JButton classificar = new JButton("Classificar");
         classificar.addActionListener(e -> {
-            main.classificar();
         });
         panellBotons.setLayout(new FlowLayout());
         JButton aturar = new JButton("Aturar");
         aturar.addActionListener(e -> {
-            main.aturar();
             stop = true;
         });
 
@@ -91,7 +84,6 @@ public class Finestra extends JFrame implements Comunicar {
         this.add(classficacionsPanel, BorderLayout.SOUTH);
 
         this.setVisible(true);
-
     }
 
     @Override

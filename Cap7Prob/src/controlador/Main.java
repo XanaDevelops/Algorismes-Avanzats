@@ -60,7 +60,6 @@ public class Main implements Comunicar {
         }
     }
 
-
     @Override
     public void progressar(double percent) {
         SwingUtilities.invokeLater(() -> finestra.progressar(percent));
