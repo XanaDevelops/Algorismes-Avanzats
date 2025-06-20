@@ -3,7 +3,9 @@ package controlador;
 import model.ClassHSV;
 import model.Dades;
 import model.Solver;
+import model.XarxaSolver;
 import vista.Finestra;
+import vista.FinestraColors;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -26,7 +28,7 @@ public class Main implements Comunicar {
 
     private Dades dades;
     private Comunicar finestra;
-
+    private FinestraColors finestraColors;
     public Main(){
         if (instance == null) {
             instance = this;
@@ -44,6 +46,7 @@ public class Main implements Comunicar {
     private void init() {
         SwingUtilities.invokeLater(() -> {
             finestra = new Finestra();
+            finestraColors = new FinestraColors();
         });
     }
 
@@ -65,12 +68,12 @@ public class Main implements Comunicar {
         SwingUtilities.invokeLater(() -> finestra.progressar(percent));
     }
 
-    @Override
-    public void classificar() {
-        Solver solver = new ClassHSV();
-        executor.submit(solver);
-
-    }
+//    @Override
+//    public void classificar() {
+//        Solver solver = new ClassHSV();
+//        executor.submit(solver);
+//
+//    }
 
     @Override
     public void actualitzarFinestra(){
@@ -82,6 +85,18 @@ public class Main implements Comunicar {
         String[] args = msg.split(":");
 
         System.err.println("MAIN: missatge? " + msg);
+    }
+
+    @Override
+    public void classificarHSV() {
+        Solver solver = new ClassHSV();
+        executor.submit(solver);
+    }
+
+    @Override
+    public void classificarXarxa() {
+        XarxaSolver xarxaSolver = new XarxaSolver();
+        executor.submit(xarxaSolver);
     }
 
     public Dades getDades() { return this.dades; }

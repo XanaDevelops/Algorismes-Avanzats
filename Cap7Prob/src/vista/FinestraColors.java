@@ -90,6 +90,7 @@ public class FinestraColors extends JFrame implements Comunicar {
         this.add(panellBotons, BorderLayout.NORTH);
 
         add(panelBarres, BorderLayout.CENTER);
+        setVisible(true);
     }
     private JPanel barres() {
         return new JPanel() {

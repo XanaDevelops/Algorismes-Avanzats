@@ -62,18 +62,15 @@ public class Finestra extends JFrame implements Comunicar {
         JComboBox comboBox = new JComboBox();
         comboBox.addItem("HSV");
         comboBox.addItem("Xarxa neuronal");
-        comboBox.addActionListener(e -> {
-//                    int selected = comboBox.getSelectedIndex();
-//                    if (selected == 0) {
-//                        this.classificarHSV();
-//                    }else{
-//                        classificarXarxa();
-//                    }
-                }
-        );
+
         JButton classificar = new JButton("Classificar");
         classificar.addActionListener(e -> {
-            Main.getInstance().classificar();
+            int selected = comboBox.getSelectedIndex();
+                    if (selected == 0) {
+                        Main.getInstance().classificarHSV();
+                    }else{
+                        Main.getInstance().classificarXarxa();
+                    }
         });
         panellBotons.setLayout(new FlowLayout());
         JButton aturar = new JButton("Aturar");
