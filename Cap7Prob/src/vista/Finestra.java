@@ -19,6 +19,8 @@ public class Finestra extends JFrame implements Comunicar {
     private JLabel imatgeLabel;
     private JPanel classficacionsPanel;
     private Categoria[] categories;
+
+    private ModalEntrenar modalEntrenar;
     public Finestra() {
         super();
         dades =  Main.getInstance().getDades();
@@ -66,24 +68,33 @@ public class Finestra extends JFrame implements Comunicar {
         JButton classificar = new JButton("Classificar");
         classificar.addActionListener(e -> {
             int selected = comboBox.getSelectedIndex();
-                    if (selected == 0) {
-                        Main.getInstance().classificarHSV();
-                    }else{
-                        Main.getInstance().classificarXarxa();
-                    }
-            Main.getInstance().classificar();
+            if (selected == 0) {
+                Main.getInstance().classificarHSV();
+            }else{
+                Main.getInstance().classificarXarxa();
+            }
+
         });
         panellBotons.setLayout(new FlowLayout());
         JButton aturar = new JButton("Aturar");
         aturar.addActionListener(e -> {
             stop = true;
+            Main.getInstance().aturar();
         });
+
+        JButton entrenar = new JButton("Entrenar");
+        entrenar.addActionListener(e -> {
+            modalEntrenar = new ModalEntrenar(this);
+            modalEntrenar.setVisible(true);
+        });
+
 
 
         panellBotons.add(botoCarregar);
         panellBotons.add(comboBox);
         panellBotons.add(classificar);
         panellBotons.add(aturar);
+        panellBotons.add(entrenar);
 
         this.add(panellBotons, BorderLayout.NORTH);
 
@@ -106,9 +117,15 @@ public class Finestra extends JFrame implements Comunicar {
 
     }
 
+    @Override
+    public void logText(String text) {
+        modalEntrenar.logText(text);
+    }
+
     private class Categoria {
         JPanel panel;
         JLabel label;
+
 
         public Categoria(String nom) {
             label = new JLabel(nom + ": 0%", SwingConstants.CENTER);
@@ -120,6 +137,15 @@ public class Finestra extends JFrame implements Comunicar {
 
         public void actualitzar(Double percentatge, Double margeError) {
             label.setText(String.format("%s: %.2f%% +-%.2f%%", getNom(), percentatge ,margeError));
+            float b = (float) Math.min(1f, (percentatge/100d * 0.7F) + 0.3f);
+
+            Color newColor = Color.getHSBColor((float) ((percentatge/360.0)), (float) (percentatge/100f), b);
+            panel.setBackground(newColor);
+            if(b<0.35){
+                label.setForeground(Color.WHITE);
+            }else{
+                label.setForeground(Color.BLACK);
+            }
         }
 
         public String getNom() {
@@ -147,7 +173,7 @@ public class Finestra extends JFrame implements Comunicar {
     public void actualitzarFinestra(){
         EnumMap<Paisatge, Double> percentatges = dades.getPercentatges();
         EnumMap<Paisatge, Double> margesDeError = dades.getMargesDeError();
-
+        System.err.println(percentatges);
         Paisatge[] values = Paisatge.values();
         for (int i = 0; i < 3; i++) {
             categories[i].actualitzar(percentatges.get(values[i]),margesDeError.get(values[i]) );

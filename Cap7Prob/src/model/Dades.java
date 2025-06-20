@@ -71,4 +71,15 @@ public class Dades {
     public void setEtiqueta(Paisatge etiqueta) {
         this.etiqueta = etiqueta;
     }
+
+    public Dades() {
+        this.percentatges = new EnumMap<>(Paisatge.class);
+        for(Paisatge paisatge : Paisatge.values()) {
+            percentatges.put(paisatge, 0.0);
+        }
+        this.margesDeError = new EnumMap<>(Paisatge.class);
+        for(Paisatge paisatge : Paisatge.values()) {
+            margesDeError.put(paisatge, 0.0);
+        }
+    }
 }

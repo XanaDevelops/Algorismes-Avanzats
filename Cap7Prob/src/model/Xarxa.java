@@ -1,5 +1,7 @@
 package model;
 
+import controlador.Main;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -16,8 +18,10 @@ public class Xarxa implements Serializable {
     private double[][][] pesosOcultes;
     private double[][] pesosSortida;
 
+    private double errorTotal = 0;
 
     private final double deltaEntrenament;
+    private boolean stop = false;
 
     public Xarxa(int nEntrades, int[] config, int nSortides, double deltaEntrenament) {
         this.nEntrades = nEntrades;
@@ -104,14 +108,15 @@ public class Xarxa implements Serializable {
     public void entrenar(double[][] entrades, double[][] sortides, int epoc) {
         assert entrades[0].length == nEntrades;
         boolean auto = false;
-        if(epoc == -1){
-            System.out.println("MODO AUTO");
+        if(epoc <=0){
+            Main.getInstance().logText("MODO AUTO");
             epoc = Integer.MAX_VALUE;
             auto = true;
         }
         double lastError = Double.MAX_VALUE;
-        for (int _i = 0; _i < epoc; _i++) {
-            double errorTotal = 0;
+        stop = false;
+        for (int _i = 0; _i < epoc && !stop; _i++) {
+            errorTotal = 0;
             for (int nEntrada = 0; nEntrada < entrades.length; nEntrada++) {
                 double[] entrada = entrades[nEntrada];
                 double[] sortidaEsperada = sortides[nEntrada];
@@ -181,15 +186,19 @@ public class Xarxa implements Serializable {
                 }
             }
             if (_i % 50000 == 0) {
-                System.out.println("Època " + _i + " - Error: " + errorTotal);
+                Main.getInstance().logText("Època " + _i + " - Error: " + errorTotal);
             }
             if(auto){
-                if((lastError-errorTotal) < 0.00000002){
-                    System.out.println(lastError-errorTotal);
+                if(Math.abs(lastError-errorTotal) < 0.00000001){
+                    Main.getInstance().logText("Època " + _i + " - Error: " + errorTotal);
+                    Main.getInstance().logText("Delta Error: " + (lastError-errorTotal));
                     break;
                 }
                 lastError = errorTotal;
             }
+        }
+        if(stop){
+            Main.getInstance().logText("ATURAT");
         }
 
         //guardar
@@ -208,5 +217,13 @@ public class Xarxa implements Serializable {
     // Derivada de Sigmoide
     private double derivadaSigmoide(double x) {
         return x * (1 - x);
+    }
+
+    public double getErrorTotal(){
+        return errorTotal;
+    }
+
+    public void aturar(){
+        stop = true;
     }
 }

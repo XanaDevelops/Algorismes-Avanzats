@@ -1,10 +1,13 @@
 package model;
 
+import controlador.Main;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.Arrays;
+import java.util.EnumMap;
 
 public class XarxaSolver extends Solver{
 
@@ -18,7 +21,19 @@ public class XarxaSolver extends Solver{
     Xarxa xarxa;
 
     public XarxaSolver(){
-        xarxa = new Xarxa(Colors.values().length, new int[]{6,6}, Paisatge.values().length);
+        File xarxaFile = new File("res/xarxa.bin");
+        if(xarxaFile.exists()){
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(xarxaFile))) {
+                xarxa = (Xarxa) ois.readObject();
+            }catch (InvalidClassException e){
+                System.err.println("Xarxa ha canviat, creant una nova");
+                xarxa = new Xarxa(Colors.values().length, new int[]{6, 6}, Paisatge.values().length);
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }else {
+            xarxa = new Xarxa(Colors.values().length, new int[]{6, 6}, Paisatge.values().length);
+        }
         File carpeta = new File(Dades.PATH_IMATGES);
         File[] fotos = carpeta.listFiles((dir, name) -> name.contains("test"));
 
@@ -53,8 +68,7 @@ public class XarxaSolver extends Solver{
 
     }
 
-    public double[] generarEntrada(File f) throws IOException {
-        BufferedImage img = ImageIO.read(f);
+    public double[] generarEntrada(BufferedImage img){
         assert img != null;
 
         int pixels = img.getWidth() * img.getHeight();
@@ -73,6 +87,10 @@ public class XarxaSolver extends Solver{
 
         return entrada;
     }
+    public double[] generarEntrada(File f) throws IOException {
+        BufferedImage img = ImageIO.read(f);
+        return generarEntrada(img);
+    }
 
     public int getColorIndex(int color){
         Color c = new Color(color, false);
@@ -85,12 +103,13 @@ public class XarxaSolver extends Solver{
         if(A < 150){
             return Colors.BLANC.ordinal();
         }
-        if(S < 15){
-            return Colors.BLANC.ordinal();
-        }
-        if(B < 20){
+        if(B < 15){
             return Colors.NEGRE.ordinal();
         }
+        if(S < 17){
+            return Colors.BLANC.ordinal();
+        }
+
         if(H >= 75 && H < 155){
             if(B < 60){
                 return Colors.VERD_OBSCUR.ordinal();
@@ -104,12 +123,13 @@ public class XarxaSolver extends Solver{
             return Colors.GROC.ordinal();
         }
         if(H >= 20 && H < 45){
-            if(B < 70){
-                return Colors.MARRO.ordinal();
-            }
             if(S > 50){
                 return Colors.TARONJA.ordinal();
             }
+            if(B < 70){
+                return Colors.MARRO.ordinal();
+            }
+
             return Colors.ARENA.ordinal();
         }
 
@@ -124,8 +144,34 @@ public class XarxaSolver extends Solver{
 
     @Override
     public void run() {
-        xarxa.entrenar(entradas, sortides, -1);
+        double[] entrada = generarEntrada(dades.getImatge());
+        double[] sortida = xarxa.predecir(entrada);
+
+        EnumMap<Paisatge, Double> resultats = dades.getPercentatges();
+        for(Paisatge paisatge : Paisatge.values()){
+            resultats.put(paisatge, sortida[paisatge.ordinal()]*100);
+        }
+        EnumMap<Paisatge, Double> errors = dades.getMargesDeError();
+        for(Paisatge paisatge : Paisatge.values()){
+            errors.put(paisatge, xarxa.getErrorTotal());
+        }
+
+        Main.getInstance().getFinestra().actualitzarFinestra();
     }
+
+    @Override
+    public void entrenarXarxa(int epocs) {
+        xarxa = new Xarxa(Colors.values().length, new int[]{6, 6}, Paisatge.values().length);
+        xarxa.entrenar(entradas, sortides, epocs);
+
+    }
+
+    @Override
+    public void aturar(){
+        xarxa.aturar();
+    }
+
+
 
     public double[][] getEntradas() {
         return entradas;
