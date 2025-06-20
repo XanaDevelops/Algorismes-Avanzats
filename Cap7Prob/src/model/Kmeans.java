@@ -21,10 +21,24 @@ public class Kmeans  implements Runnable, Comunicar {
         this.maxIterations = maxIterations;
     }
     private double distanceHSV(float[] c1, float[] c2) {
-        double dh = Math.min(Math.abs(c1[0] - c2[0]), 360 - Math.abs(c1[0] - c2[0])) / 180.0;
+        // c1[0], c2[0] ∈ [0,360), c1[1],c2[1],c1[2],c2[2] ∈ [0,1]
+
+        //  Normalizar H a [0,1)
+        double h1 = c1[0] / 360.0;
+        double h2 = c2[0] / 360.0;
+
+        // Diferencia circular en H
+        double dh = Math.min(
+                Math.abs(h1 - h2),
+                1.0 - Math.abs(h1 - h2)
+        );
+
+        //  distancies lineals en S I V
         double ds = Math.abs(c1[1] - c2[1]);
-        double dv = (c1[2] - c2[2])/255.0;
-        return Math.sqrt(dh * dh + ds * ds + dv * dv);
+        double dv = Math.abs(c1[2] - c2[2]);
+
+        //  Distancia euclídea
+        return Math.sqrt(dh*dh + ds*ds + dv*dv);
     }
 
 
@@ -110,6 +124,7 @@ public class Kmeans  implements Runnable, Comunicar {
         dades.setCentroids(centroids);
         dades.setClusterCounts(clusterCounts);
     }
+
 
 
 }

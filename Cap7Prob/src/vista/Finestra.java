@@ -3,27 +3,31 @@ package vista;
 import controlador.Comunicar;
 import controlador.Main;
 import model.Dades;
+import model.Paisatge;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.EnumMap;
 
 public class Finestra extends JFrame implements Comunicar {
 
     private Dades dades;
     private boolean stop;
     private JLabel imatgeLabel;
-
+    private JPanel classficacionsPanel;
+    private Categoria[] categories;
     public Finestra() {
         super();
         dades =  Main.getInstance().getDades();
+        categories = new Categoria[Paisatge.values().length];
         this.setTitle("Classificador d'imatges naturals");
         this.setSize(new Dimension(700, 600));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
+//        this.setLocationRelativeTo(null);
+        setLocation(30,60);
         this.setLayout(new BorderLayout());
 
         JPanel panellBotons = new JPanel();
@@ -55,8 +59,18 @@ public class Finestra extends JFrame implements Comunicar {
                 Main.getInstance().carregarImatge(f.getAbsolutePath());
             }
         });
+        JComboBox comboBox = new JComboBox();
+        comboBox.addItem("HSV");
+        comboBox.addItem("Xarxa neuronal");
+
         JButton classificar = new JButton("Classificar");
         classificar.addActionListener(e -> {
+            int selected = comboBox.getSelectedIndex();
+                    if (selected == 0) {
+                        Main.getInstance().classificarHSV();
+                    }else{
+                        Main.getInstance().classificarXarxa();
+                    }
             Main.getInstance().classificar();
         });
         panellBotons.setLayout(new FlowLayout());
@@ -67,21 +81,20 @@ public class Finestra extends JFrame implements Comunicar {
 
 
         panellBotons.add(botoCarregar);
+        panellBotons.add(comboBox);
         panellBotons.add(classificar);
         panellBotons.add(aturar);
 
         this.add(panellBotons, BorderLayout.NORTH);
 
 
-        JPanel classficacionsPanel = new JPanel(new GridLayout(1, 3));
+         classficacionsPanel = new JPanel(new GridLayout(1, 3));
         classficacionsPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
 
-        Categoria bosc = new Categoria("Bosc nòrd");
-        Categoria selva = new Categoria("Selva tropical");
-        Categoria costa = new Categoria("Costaner");
-        classficacionsPanel.add(bosc.panel);
-        classficacionsPanel.add(selva.panel);
-        classficacionsPanel.add(costa.panel);
+        for (int i = 0; i < categories.length; i++) {
+            categories[i] = new Categoria(Paisatge.values()[i].toString());
+            classficacionsPanel.add(categories[i].panel);
+        }
 
         this.add(classficacionsPanel, BorderLayout.SOUTH);
 
@@ -119,8 +132,28 @@ public class Finestra extends JFrame implements Comunicar {
         }
     }
 
+    @Override
+    public void classificarHSV(){
+        Main.getInstance().classificarHSV();
+    }
     private void mostrarImatge(ImageIcon icon) {
         this.imatgeLabel.setIcon(icon);
     }
+    @Override
+    public void classificarXarxa(){
+        Main.getInstance().classificarXarxa();
+    }
+    @Override
+    public void actualitzarFinestra(){
+        EnumMap<Paisatge, Double> percentatges = dades.getPercentatges();
+        EnumMap<Paisatge, Double> margesDeError = dades.getMargesDeError();
+
+        Paisatge[] values = Paisatge.values();
+        for (int i = 0; i < 3; i++) {
+            categories[i].actualitzar(percentatges.get(values[i]),margesDeError.get(values[i]) );
+        }
+    }
+
+
 
 }

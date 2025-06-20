@@ -17,7 +17,7 @@ public class FinestraColors extends JFrame implements Comunicar {
     private int maxIterations;
     JPanel panelBarres;
     private final static int MAX_GRUPS = 20;
-    private final static int MAX_ITERATIONS = 500;
+    private final static int MAX_ITERATIONS = 10000;
     private Dades dades;
 
 
@@ -28,7 +28,11 @@ public class FinestraColors extends JFrame implements Comunicar {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 500);
-        setLocationRelativeTo(null);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        int x = screenSize.width - this.getWidth();
+
+        this.setLocation(x, 60);
         JPanel panellBotons = barres();
 
         JTextField kField = new JTextField(5);
@@ -86,6 +90,7 @@ public class FinestraColors extends JFrame implements Comunicar {
         this.add(panellBotons, BorderLayout.NORTH);
 
         add(panelBarres, BorderLayout.CENTER);
+        setVisible(true);
     }
     private JPanel barres() {
         return new JPanel() {
@@ -123,8 +128,7 @@ public class FinestraColors extends JFrame implements Comunicar {
                         int y = row * cellHeight + padding;
 
                         float[] hsv = centroides.get(i);
-                        System.out.println("hsv = " + hsv[0] + "," + hsv[1] + "," + hsv[2]);
-                        Color color = Color.getHSBColor(hsv[0] , hsv[1], hsv[2]);
+                        Color color = Color.getHSBColor(hsv[0]/ 360.0f , hsv[1], hsv[2]);
                         double percent = (double) clusterCounts[i] / total;
 
                         // Quadrat de color
@@ -139,7 +143,7 @@ public class FinestraColors extends JFrame implements Comunicar {
                         int textX = x;
                         int textY = y + squareSize + 12;
 
-                        String etiqueta = String.format("H:%.0f S:%.2f V:%.2f", hsv[0] , hsv[1]*100, hsv[2]*100);
+                        String etiqueta = String.format("H:%.2f S:%.2f V:%.2f", hsv[0]/360.0f , hsv[1] , hsv[2] );
                         String percentatge = String.format("%.1f%%", percent * 100);
 
                         g.drawString(etiqueta, textX, textY);
@@ -157,8 +161,8 @@ public class FinestraColors extends JFrame implements Comunicar {
     }
 
     @Override
-    public void executarKMeans(int maxIt, int k) {
-        Kmeans kmeans = new Kmeans(maxIt, k);
+    public void executarKMeans(int k, int maxIt) {
+        Kmeans kmeans = new Kmeans(k,maxIt);
         kmeans.run();
         this.centroides = dades.getCentroids();
         this.clusterCounts = dades.getClusterCounts();

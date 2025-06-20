@@ -5,7 +5,6 @@ public enum Paisatge {
     SELVA_TROPICAL    (65f, 160f, 0.55f, 1.00f, 0.30f, 1.00f),
     PAISATGE_COSTANER (170f,260f, 0.35f, 1.00f, 0.35f, 1.00f);
 
-
     private final float hMin, hMax, sMin, sMax, vMin, vMax;
 
     Paisatge(float hMin, float hMax,

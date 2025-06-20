@@ -113,7 +113,6 @@ public class XarxaSolver extends Solver{
             return Colors.ARENA.ordinal();
         }
 
-
         return Colors.VERMELL.ordinal();
     }
 
