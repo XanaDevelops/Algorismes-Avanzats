@@ -19,6 +19,8 @@ public class Finestra extends JFrame implements Comunicar {
     private JLabel imatgeLabel;
     private JPanel classficacionsPanel;
     private Categoria[] categories;
+
+    private ModalEntrenar modalEntrenar;
     public Finestra() {
         super();
         dades =  Main.getInstance().getDades();
@@ -79,11 +81,19 @@ public class Finestra extends JFrame implements Comunicar {
             stop = true;
         });
 
+        JButton entrenar = new JButton("Entrenar");
+        entrenar.addActionListener(e -> {
+            modalEntrenar = new ModalEntrenar(this);
+            modalEntrenar.setVisible(true);
+        });
+
+
 
         panellBotons.add(botoCarregar);
         panellBotons.add(comboBox);
         panellBotons.add(classificar);
         panellBotons.add(aturar);
+        panellBotons.add(entrenar);
 
         this.add(panellBotons, BorderLayout.NORTH);
 
@@ -104,6 +114,11 @@ public class Finestra extends JFrame implements Comunicar {
     @Override
     public void comunicar(String msg) {
 
+    }
+
+    @Override
+    public void logText(String text) {
+        modalEntrenar.logText(text);
     }
 
     private class Categoria {

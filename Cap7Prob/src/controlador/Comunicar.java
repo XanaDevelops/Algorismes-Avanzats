@@ -14,6 +14,9 @@ public interface Comunicar {
     default void classificarXarxa() {
         throw new UnsupportedOperationException();
     }
+    default void entrenarXarxa(int epocs){
+        throw new UnsupportedOperationException();
+    }
 
 
     default void actualitzarFinestra(){
@@ -27,5 +30,7 @@ public interface Comunicar {
 
         default void aturar() {}
 
-
+    default void logText(String text){
+        throw new UnsupportedOperationException();
+    }
 }

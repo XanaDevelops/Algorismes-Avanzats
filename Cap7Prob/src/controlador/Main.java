@@ -94,7 +94,18 @@ public class Main implements Comunicar {
     public void classificarXarxa() {
         XarxaSolver xarxaSolver = new XarxaSolver();
         executor.submit(xarxaSolver);
+    }
 
+    @Override
+    public void entrenarXarxa(int epocs){
+        XarxaSolver xarxaSolver = new XarxaSolver();
+        executor.submit(() -> xarxaSolver.entrenarXarxa(epocs));
+    }
+
+    @Override
+    public void logText(String text) {
+        System.out.println(text);
+        SwingUtilities.invokeLater(() -> finestra.logText(text));
     }
 
     public Dades getDades() {

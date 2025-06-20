@@ -3,8 +3,7 @@ package model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class XarxaSolver extends Solver{
 
@@ -18,7 +17,16 @@ public class XarxaSolver extends Solver{
     Xarxa xarxa;
 
     public XarxaSolver(){
-        xarxa = new Xarxa(Colors.values().length, new int[]{6,6}, Paisatge.values().length);
+        File xarxaFile = new File("res/xarxa.bin");
+        if(xarxaFile.exists()){
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(xarxaFile))) {
+                xarxa = (Xarxa) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }else {
+            xarxa = new Xarxa(Colors.values().length, new int[]{6, 6}, Paisatge.values().length);
+        }
         File carpeta = new File(Dades.PATH_IMATGES);
         File[] fotos = carpeta.listFiles((dir, name) -> name.contains("test"));
 
@@ -126,8 +134,17 @@ public class XarxaSolver extends Solver{
 
     @Override
     public void run() {
-        xarxa.entrenar(entradas, sortides, -1);
+
     }
+
+    @Override
+    public void entrenarXarxa(int epocs) {
+        xarxa = new Xarxa(Colors.values().length, new int[]{6, 6}, Paisatge.values().length);
+        xarxa.entrenar(entradas, sortides, epocs);
+
+    }
+
+
 
     public double[][] getEntradas() {
         return entradas;

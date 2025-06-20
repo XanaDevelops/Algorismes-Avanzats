@@ -1,5 +1,7 @@
 package model;
 
+import controlador.Main;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -104,8 +106,8 @@ public class Xarxa implements Serializable {
     public void entrenar(double[][] entrades, double[][] sortides, int epoc) {
         assert entrades[0].length == nEntrades;
         boolean auto = false;
-        if(epoc == -1){
-            System.out.println("MODO AUTO");
+        if(epoc <=0){
+            Main.getInstance().logText("MODO AUTO");
             epoc = Integer.MAX_VALUE;
             auto = true;
         }
@@ -181,11 +183,11 @@ public class Xarxa implements Serializable {
                 }
             }
             if (_i % 50000 == 0) {
-                System.out.println("Època " + _i + " - Error: " + errorTotal);
+                Main.getInstance().logText("Època " + _i + " - Error: " + errorTotal);
             }
             if(auto){
                 if(Math.abs(lastError-errorTotal) < 0.00000001){
-                    System.out.println(lastError-errorTotal);
+                    Main.getInstance().logText("Delta Error: " + (lastError-errorTotal));
                     break;
                 }
                 lastError = errorTotal;
