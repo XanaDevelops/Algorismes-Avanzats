@@ -44,6 +44,7 @@ public class ClassHSV extends Solver{
 
             float[] hvs = rgbAhsv(rgb);
             colors.add(hvs);
+            System.out.println("colors: " + Arrays.toString(hvs));
             float H = hvs[0], S = hvs[1], V = hvs[2];
 
             // Tants com paissatges hagi

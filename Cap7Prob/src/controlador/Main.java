@@ -68,12 +68,6 @@ public class Main implements Comunicar {
         SwingUtilities.invokeLater(() -> finestra.progressar(percent));
     }
 
-//    @Override
-//    public void classificar() {
-//        Solver solver = new ClassHSV();
-//        executor.submit(solver);
-//
-//    }
 
     @Override
     public void actualitzarFinestra(){

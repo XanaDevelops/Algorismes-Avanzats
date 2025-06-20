@@ -128,7 +128,7 @@ public class FinestraColors extends JFrame implements Comunicar {
                         int y = row * cellHeight + padding;
 
                         float[] hsv = centroides.get(i);
-                        Color color = Color.getHSBColor(hsv[0]*360 , hsv[1]*100, hsv[2]*100);
+                        Color color = Color.getHSBColor(hsv[0]/ 360.0f , hsv[1], hsv[2]);
                         double percent = (double) clusterCounts[i] / total;
 
                         // Quadrat de color
@@ -143,7 +143,7 @@ public class FinestraColors extends JFrame implements Comunicar {
                         int textX = x;
                         int textY = y + squareSize + 12;
 
-                        String etiqueta = String.format("H:%.0f S:%.2f V:%.2f", hsv[0]/360f , hsv[1] * 100, hsv[2] * 100);
+                        String etiqueta = String.format("H:%.2f S:%.2f V:%.2f", hsv[0]/360.0f , hsv[1] , hsv[2] );
                         String percentatge = String.format("%.1f%%", percent * 100);
 
                         g.drawString(etiqueta, textX, textY);
