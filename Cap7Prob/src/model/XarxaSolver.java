@@ -85,12 +85,13 @@ public class XarxaSolver extends Solver{
         if(A < 150){
             return Colors.BLANC.ordinal();
         }
-        if(S < 15){
-            return Colors.BLANC.ordinal();
-        }
-        if(B < 20){
+        if(B < 15){
             return Colors.NEGRE.ordinal();
         }
+        if(S < 17){
+            return Colors.BLANC.ordinal();
+        }
+
         if(H >= 75 && H < 155){
             if(B < 60){
                 return Colors.VERD_OBSCUR.ordinal();
@@ -104,12 +105,13 @@ public class XarxaSolver extends Solver{
             return Colors.GROC.ordinal();
         }
         if(H >= 20 && H < 45){
-            if(B < 70){
-                return Colors.MARRO.ordinal();
-            }
             if(S > 50){
                 return Colors.TARONJA.ordinal();
             }
+            if(B < 70){
+                return Colors.MARRO.ordinal();
+            }
+
             return Colors.ARENA.ordinal();
         }
 

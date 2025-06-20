@@ -184,7 +184,7 @@ public class Xarxa implements Serializable {
                 System.out.println("Època " + _i + " - Error: " + errorTotal);
             }
             if(auto){
-                if((lastError-errorTotal) < 0.00000002){
+                if(Math.abs(lastError-errorTotal) < 0.00000001){
                     System.out.println(lastError-errorTotal);
                     break;
                 }
