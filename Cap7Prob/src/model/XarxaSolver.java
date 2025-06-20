@@ -1,10 +1,16 @@
 package model;
 
+import controlador.Main;
+
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class XarxaSolver extends Solver{
 
@@ -50,12 +56,14 @@ public class XarxaSolver extends Solver{
         }
 
 
-
+        //avisa a actualitzar finestra
+         Main.getInstance().actualitzarFinestra();
     }
 
     public double[] generarEntrada(File f) throws IOException {
         BufferedImage img = ImageIO.read(f);
         assert img != null;
+        List<float[]> colors = new ArrayList<>();
 
         int pixels = img.getWidth() * img.getHeight();
 
@@ -65,14 +73,20 @@ public class XarxaSolver extends Solver{
         for (int i = 0; i < img.getHeight(); i++) {
             for (int k = 0; k < img.getWidth(); k++) {
                 colorIndex[getColorIndex(img.getRGB(k, i))]++;
+                float[] hsv = ClassHSV.rgbAhsv(img.getRGB(k, i));
+                colors.add(hsv);
             }
         }
         for (int i = 0; i < colorIndex.length; i++) {
             entrada[i] = colorIndex[i] / (double) pixels;
         }
-
+        dades.setColors(colors);
         return entrada;
+
+
     }
+
+
 
     public int getColorIndex(int color){
         Color c = new Color(color, false);
@@ -114,6 +128,20 @@ public class XarxaSolver extends Solver{
         }
 
         return Colors.VERMELL.ordinal();
+    }
+
+    public List<float[]> obtenirColorsHSV(File f) throws IOException {
+        BufferedImage img = ImageIO.read(f);
+        List<float[]> colorsHSV = new ArrayList<>();
+        for (int i = 0; i < img.getHeight(); i++) {
+            for (int j = 0; j < img.getWidth(); j++) {
+                int rgb = img.getRGB(j, i);
+                Color c = new Color(rgb);
+                float[] hsv = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+                colorsHSV.add(hsv);
+            }
+        }
+        return colorsHSV;
     }
 
 

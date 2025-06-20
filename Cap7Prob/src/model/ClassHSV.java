@@ -79,7 +79,7 @@ public class ClassHSV extends Solver{
     }
 
 
-    private float[] rgbAhsv(int rgb) {
+    public static float[] rgbAhsv(int rgb) {
         float r = ((rgb >> 16) & 0xFF) / 255f;
         float g = ((rgb >> 8)  & 0xFF) / 255f;
         float b = ( rgb        & 0xFF) / 255f;
