@@ -1,9 +1,6 @@
 package controlador;
 
-import model.ClassHSV;
-import model.Dades;
-import model.Solver;
-import model.XarxaSolver;
+import model.*;
 import vista.Finestra;
 import vista.FinestraColors;
 
@@ -34,8 +31,12 @@ public class Main implements Comunicar {
 
         dades = new Dades();
         SwingUtilities.invokeLater(() -> finestra = new Finestra());
+        FinestraColors finestraColors = new FinestraColors();
+        finestraColors.setVisible(true);
+
 
     }
+
 
     public Dades getDades(){
         return dades;

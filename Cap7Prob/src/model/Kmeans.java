@@ -23,10 +23,19 @@ public class Kmeans  implements Runnable, Comunicar {
     private double distanceHSV(float[] c1, float[] c2) {
         double dh = Math.min(Math.abs(c1[0] - c2[0]), 360 - Math.abs(c1[0] - c2[0])) / 180.0;
         double ds = Math.abs(c1[1] - c2[1]);
-        double dv = (c1[2] - c2[2])/255.0;
+//        double dv = (c1[2] - c2[2])/255.0;
+        double dv = (c1[2] - c2[2]);
+
         return Math.sqrt(dh * dh + ds * ds + dv * dv);
     }
 
+//    private double distanceHSV(float[] c1, float[] c2) {
+//        // Dado que c1[0] y c2[0] están en [0,1], calculamos la diferencia circular:
+//        double dh = Math.min(Math.abs(c1[0] - c2[0]), 1.0 - Math.abs(c1[0] - c2[0])) * 2;
+//        double ds = c1[1] - c2[1];
+//        double dv = c1[2] - c2[2];
+//        return Math.sqrt(dh * dh + ds * ds + dv * dv);
+//    }
 
     private void kMeans() {
 
@@ -110,6 +119,7 @@ public class Kmeans  implements Runnable, Comunicar {
         dades.setCentroids(centroids);
         dades.setClusterCounts(clusterCounts);
     }
+
 
 
 }

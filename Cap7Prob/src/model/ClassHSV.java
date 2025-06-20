@@ -1,12 +1,9 @@
 package model;
 
-import vista.FinestraColors;
-
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 public class ClassHSV extends Solver{
 
@@ -33,9 +30,7 @@ public class ClassHSV extends Solver{
         int w = img.getWidth(), h = img.getHeight();
         int n = Math.min(samples, w * h);
         Random rnd = new Random();
-
         List<float[]> colors = new ArrayList<>();
-
         EnumMap<Paisatge, Integer> contadors = new EnumMap<>(Paisatge.class);
         for (Paisatge p : Paisatge.values()) {
             contadors.put(p, 0);
@@ -44,8 +39,10 @@ public class ClassHSV extends Solver{
         for (int i = 0; i < n; i++) {
             int x = rnd.nextInt(w), y = rnd.nextInt(h);
             int rgb = img.getRGB(x, y);
+
             float[] hvs = rgbAhsv(rgb);
             colors.add(hvs);
+            System.out.println("hvs " + Arrays.toString(hvs));
             float H = hvs[0], S = hvs[1], V = hvs[2];
 
             // Tants com paissatges hagi
@@ -108,6 +105,4 @@ public class ClassHSV extends Solver{
 
         return new float[]{H, max, S};
     }
-
-
 }

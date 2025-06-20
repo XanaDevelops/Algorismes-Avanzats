@@ -4,7 +4,7 @@ public interface Comunicar {
 
     void comunicar(String msg);
 
-    default void executarKMeans(int maxIt, int k){
+    default void executarKMeans(int k, int maxIt){
         throw new UnsupportedOperationException();
     }
 

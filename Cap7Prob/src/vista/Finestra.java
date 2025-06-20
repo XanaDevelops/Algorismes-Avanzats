@@ -26,7 +26,8 @@ public class Finestra extends JFrame implements Comunicar {
         this.setTitle("Classificador d'imatges naturals");
         this.setSize(new Dimension(700, 600));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
+//        this.setLocationRelativeTo(null);
+        setLocation(30,60);
         this.setLayout(new BorderLayout());
 
         JPanel panellBotons = new JPanel();
@@ -48,7 +49,14 @@ public class Finestra extends JFrame implements Comunicar {
                 int imgWidth = originalImage.getWidth(null);
                 int imgHeight = originalImage.getHeight(null);
 
-                dades.setImatge(new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB));
+                BufferedImage buffered = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2d = buffered.createGraphics();
+                g2d.drawImage(originalImage, 0, 0, null);
+                g2d.dispose();
+
+
+                dades.setImatge(buffered);
+
 
                 double widthRatio = (double) panellImatge.getWidth() / imgWidth;
                 double heightRatio = (double) panellImatge.getHeight() / imgHeight;
@@ -152,6 +160,7 @@ public class Finestra extends JFrame implements Comunicar {
 
         Paisatge[] values = Paisatge.values();
         for (int i = 0; i < 3; i++) {
+            System.out.println("categoria "+ values[i]+ "perc "+ percentatges.get(values[i])+ "error "+ margesDeError.get(values[i]));
             categories[i].actualitzar(percentatges.get(values[i]),margesDeError.get(values[i]) );
         }
     }
