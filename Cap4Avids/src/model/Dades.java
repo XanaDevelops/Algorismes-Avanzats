@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Dades {
-    private final Main principal;
-
     private final Map<Integer, File> descomprimits = new HashMap<>();
     private final Map<Integer, File> comprimits = new HashMap<>();
     public static final String EXTENSIO = ".kib";
@@ -19,7 +17,7 @@ public class Dades {
     public static int taskId = 0;
 
     public Dades(){
-        principal = Main.instance;
+
     }
 
     public void addDescomprimit(int id, File f){

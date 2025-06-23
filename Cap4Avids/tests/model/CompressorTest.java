@@ -12,14 +12,14 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ComprimidorTest {
+class CompressorTest {
 
     @BeforeEach
     void setUp() {
     }
 
     @Test
-    void testComprimidor() throws IOException {
+    void testCompressor() throws IOException {
 
         Dades dades = new Dades();
         String fileName = "tests/res/testABC.txt";
@@ -27,7 +27,7 @@ class ComprimidorTest {
         h.run();
         Compressor c = new Compressor(h, dades,fileName, "tests/res/");
         c.compressFile();
-        Decompressor d = new Decompressor("tests/res/Compressed testABC.kib","tests/res/");
+        Decompressor d = new Decompressor(-1, "tests/res/Compressed testABC.kib","tests/res/");
         d.decompressFile();
         //comparar
         BufferedInputStream inA = new BufferedInputStream(new FileInputStream(fileName)),
@@ -47,7 +47,7 @@ class ComprimidorTest {
         h.run();
         Compressor c = new Compressor(h, dades,fileName, "tests/res/");
         c.compressFile();
-        Decompressor d = new Decompressor("tests/res/Compressed testA.kib","tests/res/");
+        Decompressor d = new Decompressor(-1, "tests/res/Compressed testA.kib","tests/res/");
         d.decompressFile();
         //comparar
         BufferedInputStream inA = new BufferedInputStream(new FileInputStream(fileName)),
@@ -66,7 +66,7 @@ class ComprimidorTest {
         h.run();
         Compressor c = new Compressor(h, dades,fileName, "tests/res/");
         c.compressFile();
-        Decompressor d = new Decompressor("tests/res/Compressed testA.kib","tests/res/");
+        Decompressor d = new Decompressor(-1, "tests/res/Compressed testA.kib","tests/res/");
         d.decompressFile();
         //comparar
         BufferedInputStream inA = new BufferedInputStream(new FileInputStream(fileName)),
@@ -86,7 +86,7 @@ class ComprimidorTest {
         h.run();
         Compressor c = new Compressor(h, dades,fileName, "tests/res/");
         c.compressFile();
-        Decompressor d = new Decompressor("tests/res/testA.kib","tests/res/check/");
+        Decompressor d = new Decompressor(-1, "tests/res/testA.kib","tests/res/check/");
         d.decompressFile();
         //comparar
         BufferedInputStream inA = new BufferedInputStream(new FileInputStream(fileName)),

@@ -104,6 +104,7 @@
 
 package model.Huffman;
 
+import control.Comunicar;
 import model.BitsManagement.BitInputStream;
 import model.Dades;
 
@@ -112,13 +113,28 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class Decompressor {
+public class Decompressor implements Runnable, Comunicar {
 
     private final String src;
     private final String outputFolder;
-    public Decompressor(String src, String outputFolder) {
+
+    private int id;
+    private boolean aturar;
+
+    public Decompressor(int id, String src, String outputFolder) {
+        this.id = id;
         this.src = src;
         this.outputFolder = outputFolder;
+    }
+
+    @Override
+    public void comunicar(String s) {
+
+    }
+
+    @Override
+    public void run() {
+
     }
 
     private static class DecodeNode {
@@ -216,5 +232,10 @@ public class Decompressor {
             node.symbol = entry.getKey();
         }
         return root;
+    }
+
+    @Override
+    public void aturar(int id){
+        aturar = true;
     }
 }

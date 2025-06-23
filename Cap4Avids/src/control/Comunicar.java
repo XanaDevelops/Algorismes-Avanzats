@@ -1,9 +1,36 @@
 package control;
 
+import model.Huffman.Huffman;
+
 public interface Comunicar {
     /**
      * Envia un missatge
      * @param s El missatge
      */
     public void comunicar(String s);
+
+    default void afegirEnEspera(String file, boolean aComprimir){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    default void comprimir(int id, String fileIn, String folderOut, Huffman.WordSize wordSize, Huffman.TipusCua tipusCua){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    default void descomprimir(int id, String fileIn, String folderOut){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    default void arrancar(int id){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    default void finalitzar(int id){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    default void aturar(int id){
+        throw new UnsupportedOperationException("Not supported yet.");
+
+    }
 }
