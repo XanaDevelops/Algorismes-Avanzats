@@ -2,6 +2,8 @@ package control;
 
 import model.Huffman.Huffman;
 
+import java.io.File;
+
 public interface Comunicar {
     /**
      * Envia un missatge
@@ -9,7 +11,7 @@ public interface Comunicar {
      */
     public void comunicar(String s);
 
-    default void afegirEnEspera(String file, boolean aComprimir){
+    default void afegirEnEspera(int id, File file, boolean aComprimir){
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -26,6 +28,14 @@ public interface Comunicar {
     }
 
     default void finalitzar(int id){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    default void actualitzar(){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    default void visualitzar(File fileCompress){
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

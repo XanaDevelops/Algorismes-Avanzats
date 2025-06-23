@@ -113,28 +113,26 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class Decompressor implements Runnable, Comunicar {
+public class Decompressor extends Proces {
 
     private final String src;
     private final String outputFolder;
 
-    private int id;
-    private boolean aturar;
-
     public Decompressor(int id, String src, String outputFolder) {
-        this.id = id;
+        super(id);
         this.src = src;
         this.outputFolder = outputFolder;
     }
 
-    @Override
-    public void comunicar(String s) {
 
-    }
 
     @Override
-    public void run() {
-
+    protected void exec() {
+        try {
+            decompressFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static class DecodeNode {

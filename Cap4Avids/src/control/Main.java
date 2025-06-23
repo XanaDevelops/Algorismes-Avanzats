@@ -52,7 +52,7 @@ public class Main implements Comunicar {
     }
 
     @Override
-    public void afegirEnEspera(String file, boolean aComprimir) {
+    public void afegirEnEspera(int id, File file, boolean aComprimir) {
         if(aComprimir){
             //dades.addComprimit(new File);
         }else{

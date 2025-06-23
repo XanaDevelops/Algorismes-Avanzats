@@ -14,7 +14,7 @@ public class Dades {
     public static final String EXTENSIO = ".kib";
     public static final byte[] magicNumbers = new byte[]{0x4B, 0x49,0x42};
 
-    public static int taskId = 0;
+    private static int taskId = 0;
 
     public Dades(){
 
@@ -56,5 +56,9 @@ public class Dades {
 
     public Map<Integer, File> getDescomprimits() {
         return descomprimits;
+    }
+
+    public static int getTaskId(){
+        return taskId++;
     }
 }

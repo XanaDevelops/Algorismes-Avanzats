@@ -123,25 +123,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class Compressor implements Comunicar, Runnable {
+public class Compressor extends Proces {
     private final Huffman huffman;
     private final String inputPath;
     private final String outputFolder;
-    private int id;
-    Dades data;
 
     public Compressor(int id, Huffman.WordSize wordSize, Huffman.TipusCua cua, String inputPath, String outputFolder) {
-        this(new Huffman(inputPath, wordSize, cua), Main.instance.getDades(), inputPath, outputFolder);
-        this.id = id;
-    }
-    public Compressor(Huffman huffman, Dades data, String inputPath, String outputFolder) {
-        this.huffman = huffman;
-        this.data = data;
+        super(id);
+        this.huffman = new Huffman(inputPath, wordSize, cua);
         this.inputPath = inputPath;
         this.outputFolder = outputFolder;
-
-        this.id = 0;
     }
+
 
     /**
      * Comprimeix el fitxer d'entrada.
@@ -239,25 +232,15 @@ public class Compressor implements Comunicar, Runnable {
     }
 
 
-    /**
-     * Envia un missatge
-     *
-     * @param s El missatge
-     */
-    @Override
-    public void comunicar(String s) {
 
-    }
 
-    /**
-     * Runs this operation.
-     */
     @Override
-    public void run() {
+    protected void exec() {
         try {
             this.compressFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 }

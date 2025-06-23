@@ -112,20 +112,8 @@ public class Finestra extends JFrame implements Comunicar {
             }
 
             case "Veure Arbre" -> {
-                File seleccionat = comprimits.getSelectedFile();
-                if (seleccionat != null && seleccionat.getName().endsWith(".huf")) {
-                    try {
-                        // get arbre
-                        // var arbre = Main.instance.getDades().getTree();
-                        // var v = new VistaArbreHuffman(arbre);
-                        // mostrarArbre(v);
-                    } catch (Exception e) {
-                        mostrarMissatge("Error en carregar l'arbre de Huffman.");
-                        e.printStackTrace();
-                    }
-                } else {
-                    mostrarMissatge("Selecciona exactament un fitxer .huf per visualitzar l'arbre.");
-                }
+                File sel = descomprimits.getSelectedFile();
+                this.visualitzar(sel);
             }
             default -> {
                 // Comprimir, Descomprimir, Guardar
@@ -147,6 +135,47 @@ public class Finestra extends JFrame implements Comunicar {
         JOptionPane.showMessageDialog(this, missatge, "Informació", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    @Override
+    public void visualitzar(File seleccionat) {
+        if (seleccionat != null && seleccionat.getName().endsWith(".huf")) {
+            try {
+                // get arbre
+                // var arbre = Main.instance.getDades().getTree();
+                // var v = new VistaArbreHuffman(arbre);
+                // mostrarArbre(v);
+            } catch (Exception e) {
+                mostrarMissatge("Error en carregar l'arbre de Huffman.");
+                e.printStackTrace();
+            }
+        } else {
+            mostrarMissatge("Selecciona exactament un fitxer .huf per visualitzar l'arbre.");
+        }
+    }
+
+    @Override
+    public void actualitzar(){
+        repaint();
+    }
+
+    @Override
+    public void arrancar(int id) {
+        Comunicar.super.arrancar(id);
+    }
+
+    @Override
+    public void finalitzar(int id) {
+        Comunicar.super.finalitzar(id);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+
+        //TODO: check
+        descomprimits.repaint(); //o .refresh()
+        comprimits.repaint();
+    }
+
     /**
      * Envia un missatge
      *
@@ -156,19 +185,11 @@ public class Finestra extends JFrame implements Comunicar {
     public void comunicar(String s) {
         String[] p = s.split(";");
         switch (p[0]){
-            case "actualitzar":
-                switch (p[1]) {
-                    case "descomprimit" -> descomprimits.refresh();
-                    case "comprimit" -> comprimits.refresh();
-                    default -> System.err.println(
-                            "Finestra: no sé refrescar -> " + s);
-                }
-                break;
             case "carregar":
                 DialegExecucio dlg = new DialegExecucio(this, p[2].equalsIgnoreCase("comprimir") ? DialegExecucio.Tipus.DECOMPRESS : DialegExecucio.Tipus.COMPRESS, new File(p[1]));
                 String msg = dlg.mostra();
                 if (msg != null){
-                    int id = Dades.taskId++;
+                    int id = Dades.getTaskId();
 
                     Main.instance.comunicar(s+";"+id); //carregar
                     Main.instance.comunicar(msg+";"+id); //comprimir/descomprimir
