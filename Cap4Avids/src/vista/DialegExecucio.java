@@ -1,5 +1,7 @@
 package vista;
 
+import model.Huffman.Huffman;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -7,12 +9,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DialegExecucio extends JDialog {
+    public static class DEResult{
+        public String carpetaDesti;
+        public Huffman.TipusCua tipusCua;
+        public Huffman.WordSize wordSize;
+    }
+
     public enum Tipus { COMPRESS, DECOMPRESS }
 
-    private String resultMessage = null;
     JTextField textDesti;
-    JComboBox<String> tipusCoa;
-    JComboBox<String> midaP;
+    JComboBox<Huffman.TipusCua> tipusCoa;
+    JComboBox<Huffman.WordSize> midaP;
+
+    private DEResult result = null;
 
     public DialegExecucio(Frame parent, Tipus tipus, File file) {
         super(parent,
@@ -46,8 +55,7 @@ public class DialegExecucio extends JDialog {
             add(new JLabel("Estructura de cua:"), c);
 
             c.gridx = 1;
-            tipusCoa = new JComboBox<>(
-                    new String[]{"Fibonacci Heap", "Rank-Pairing Heap", "Binary Heap"});
+            tipusCoa = new JComboBox<>(Huffman.TipusCua.values());
             add(tipusCoa, c);
 
 
@@ -57,8 +65,7 @@ public class DialegExecucio extends JDialog {
             add(new JLabel("Mida de paraula:"), c);
 
             c.gridx = 1;
-            midaP = new JComboBox<>(
-                    new String[]{"8 bits", "16 bits", "32 bits", "64 bits"});
+            midaP = new JComboBox<>(Huffman.WordSize.values());
             add(midaP, c);
         }
         // Destí
@@ -84,13 +91,6 @@ public class DialegExecucio extends JDialog {
         add(panellInferiror, c);
 
         ok.addActionListener(e -> {
-            String queue    = tipusCoa != null
-                    ? (String) tipusCoa.getSelectedItem()
-                    : "";
-
-            String wordSize = midaP != null
-                    ? (String) midaP.getSelectedItem()
-                    : "";
             String outDir   = textDesti.getText().trim();
 
             if (outDir.isEmpty()) {
@@ -99,16 +99,17 @@ public class DialegExecucio extends JDialog {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            result = new DEResult();
 
-            String fitxers = file.toString().replace("[", "").replace("]", ",");
-            String prefix  = (tipus == Tipus.COMPRESS ? "Comprimir" : "Descomprimir");
+            result.carpetaDesti = outDir;
+            result.tipusCua = (Huffman.TipusCua) tipusCoa.getSelectedItem();
+            result.wordSize = (Huffman.WordSize) midaP.getSelectedItem();
 
-            resultMessage  = String.join(";", prefix, fitxers, queue, wordSize, outDir);
             dispose();
         });
 
         cancel.addActionListener(e -> {
-            resultMessage = null;
+            result = null;
             dispose();
         });
 
@@ -139,8 +140,8 @@ public class DialegExecucio extends JDialog {
      * Mostra el dialeg i retorna el missatge per enviar a Main.instance.comunicar(),
      * o null si s'ha cancel·lat.
      */
-    public String mostra() {
+    public DEResult mostra() {
         setVisible(true);
-        return resultMessage;
+        return result;
     }
 }

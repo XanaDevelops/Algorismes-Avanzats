@@ -7,19 +7,17 @@ import model.Dades;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.List;
-import java.util.MissingFormatArgumentException;
 
 public class Finestra extends JFrame implements Comunicar {
 
     private final Dades dades;
     private final Comunicar principal;
 
-    private final PanellFitxers descomprimits;
-    private final PanellFitxers comprimits;
+    private final PanellFitxers aComprimir;
+    private final PanellFitxers aDescomprimir;
 
 
-    private final String[] nomsBtn = {"Carregar", "Comprimir", "Descomprimir", "Guardar", "Mostrar Arbre"};
+    private final String[] nomsBtn = {"Carregar", "Comprimir", "Descomprimir", "Mostrar Arbre"};
     private final JButton[] botons = new JButton[nomsBtn.length];
 
     private final JPanel panellVisualitzador;
@@ -51,11 +49,11 @@ public class Finestra extends JFrame implements Comunicar {
         add(barra, BorderLayout.NORTH);
 
         // Panells inferiors: dos llistats amb drag & drop i botons add/remove
-        descomprimits = new PanellFitxers(this, "Arxius a comprimir", true, dades);
-        comprimits = new PanellFitxers(this, "Arxius a descomprimir", false, dades);
+        aComprimir = new PanellFitxers(this, "Arxius a comprimir", true, dades);
+        aDescomprimir = new PanellFitxers(this, "Arxius a descomprimir", false, dades);
 
         // Panell de fitxers (esquerra)
-        JSplitPane splitFitxers = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, descomprimits, comprimits);
+        JSplitPane splitFitxers = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, aComprimir, aDescomprimir);
         splitFitxers.setResizeWeight(0.5);
 
         // Panell de visualització de l'arbre (dreta)
@@ -83,27 +81,25 @@ public class Finestra extends JFrame implements Comunicar {
                 }
             }
             case "Eliminar" -> {
-                File f = descomprimits.getSelectedFile();
+                File f = aComprimir.getSelectedFile();
                 principal.comunicar("Eliminar;" + f.getAbsolutePath());
 
-                f = comprimits.getSelectedFile();
+                f = aDescomprimir.getSelectedFile();
                 principal.comunicar("Eliminar;" + f.getAbsolutePath());
 
             }
             case "Comprimir" -> {
-                File sel = descomprimits.getSelectedFile();
+                File sel = aComprimir.getSelectedFile();
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.COMPRESS, sel);
-                String msg = dlg.mostra();
-                if (msg != null) Main.instance.comunicar(msg);
+                DialegExecucio.DEResult msg = dlg.mostra();
+                if (msg != null) Main.instance.comprimir(Dades.getTaskId(), sel.getAbsolutePath(), msg.carpetaDesti, msg.wordSize, msg.tipusCua);
             }
             case "Descomprimir" -> {
-                File sel = descomprimits.getSelectedFile();
+                File sel = aComprimir.getSelectedFile();
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.DECOMPRESS, sel);
-                String msg = dlg.mostra();
-                if (msg != null) Main.instance.comunicar(msg);
+                DialegExecucio.DEResult msg = dlg.mostra();
+                if (msg != null) Main.instance.descomprimir(Dades.getTaskId(),sel.getAbsolutePath(), msg.carpetaDesti);
             }
-
-            case "Guardar" -> Main.instance.comunicar("Guardar");
 
             case "Mostrar Arbre" -> {
                 // FinestraArbre dlg = new FinestraArbre();
@@ -112,7 +108,7 @@ public class Finestra extends JFrame implements Comunicar {
             }
 
             case "Veure Arbre" -> {
-                File sel = descomprimits.getSelectedFile();
+                File sel = aComprimir.getSelectedFile();
                 this.visualitzar(sel);
             }
             default -> {
@@ -152,6 +148,12 @@ public class Finestra extends JFrame implements Comunicar {
         }
     }
 
+
+    @Override
+    public void afegirEnEspera(int id, File file, boolean aComprimir) {
+        Main.instance.afegirEnEspera(id, file, aComprimir);
+    }
+
     @Override
     public void actualitzar(){
         repaint();
@@ -172,8 +174,8 @@ public class Finestra extends JFrame implements Comunicar {
         super.paint(g);
 
         //TODO: check
-        descomprimits.repaint(); //o .refresh()
-        comprimits.repaint();
+        aComprimir.refresh(); //o .refresh()
+        aDescomprimir.refresh();
     }
 
     /**
@@ -183,21 +185,7 @@ public class Finestra extends JFrame implements Comunicar {
      */
     @Override
     public void comunicar(String s) {
-        String[] p = s.split(";");
-        switch (p[0]){
-            case "carregar":
-                DialegExecucio dlg = new DialegExecucio(this, p[2].equalsIgnoreCase("comprimir") ? DialegExecucio.Tipus.DECOMPRESS : DialegExecucio.Tipus.COMPRESS, new File(p[1]));
-                String msg = dlg.mostra();
-                if (msg != null){
-                    int id = Dades.getTaskId();
-
-                    Main.instance.comunicar(s+";"+id); //carregar
-                    Main.instance.comunicar(msg+";"+id); //comprimir/descomprimir
-                }
-                break;
-            default:
-                System.err.println("Finestra: missatge desconegut -> " + s);
-        }
+        System.err.println("Finestra: " + s);
     }
 
     public JButton[] getBotons() {

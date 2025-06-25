@@ -4,17 +4,12 @@ import model.*;
 import model.Huffman.Compressor;
 import model.Huffman.Decompressor;
 import model.Huffman.Huffman;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import vista.Finestra;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class Main implements Comunicar {
@@ -54,11 +49,11 @@ public class Main implements Comunicar {
     @Override
     public void afegirEnEspera(int id, File file, boolean aComprimir) {
         if(aComprimir){
-            //dades.addComprimit(new File);
+            dades.addDescomprimit(id, file);
         }else{
-            //
+            dades.addComprimit(id, file);
         }
-
+        finestra.actualitzar();
     }
 
     @Override
@@ -112,12 +107,11 @@ public class Main implements Comunicar {
         assert arg != null;
         File f = new File(arg);
         if (!descomprimir) {
-            dades.removeDescomprimit(f);
-            finestra.comunicar("actualitzar;descomprimit");
+            dades.removeAComprimir(f);
         } else {
-            dades.removeComprimit(f);
-            finestra.comunicar("actualitzar;comprimit");
+            dades.removeADescomprimir(f);
         }
+        finestra.actualitzar();
     }
 
 

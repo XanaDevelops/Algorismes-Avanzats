@@ -1,16 +1,12 @@
 package model;
 
-import control.Main;
-
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Dades {
-    private final Map<Integer, File> descomprimits = new HashMap<>();
-    private final Map<Integer, File> comprimits = new HashMap<>();
+    private final Map<Integer, File> aComprimir = new HashMap<>();
+    private final Map<Integer, File> aDescomprimir = new HashMap<>();
     public static final String EXTENSIO = ".kib";
     public static final byte[] magicNumbers = new byte[]{0x4B, 0x49,0x42};
 
@@ -21,41 +17,41 @@ public class Dades {
     }
 
     public void addDescomprimit(int id, File f){
-        if(!descomprimits.containsValue(f))descomprimits.put(id, f);
+        if(!aComprimir.containsValue(f)) aComprimir.put(id, f);
     }
     public void addComprimit(int id, File f){
-        if(!comprimits.containsValue(f))comprimits.put(id, f);
+        if(!aDescomprimir.containsValue(f)) aDescomprimir.put(id, f);
     }
 
-    public void removeDescomprimit(File f){
-        for(Map.Entry<Integer, File> e : descomprimits.entrySet()){
+    public void removeAComprimir(File f){
+        for(Map.Entry<Integer, File> e : aComprimir.entrySet()){
             if(e.getValue().equals(f)){
-                descomprimits.remove(e.getKey());
+                aComprimir.remove(e.getKey());
                 break;
             }
         }
     }
 
-    public void removeComprimit(File f){
-        for(Map.Entry<Integer, File> e : comprimits.entrySet()){
+    public void removeADescomprimir(File f){
+        for(Map.Entry<Integer, File> e : aDescomprimir.entrySet()){
             if(e.getValue().equals(f)){
-                comprimits.remove(e.getKey());
+                aDescomprimir.remove(e.getKey());
                 break;
             }
         }
     }
 
     public void clear(){
-        descomprimits.clear();
-        comprimits.clear();
+        aComprimir.clear();
+        aDescomprimir.clear();
     }
 
-    public Map<Integer, File> getComprimits() {
-        return comprimits;
+    public Map<Integer, File> getADescomprimir() {
+        return aDescomprimir;
     }
 
-    public Map<Integer, File> getDescomprimits() {
-        return descomprimits;
+    public Map<Integer, File> getAComprimir() {
+        return aComprimir;
     }
 
     public static int getTaskId(){

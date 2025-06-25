@@ -1,5 +1,6 @@
 package model;
 
+import control.Main;
 import model.Huffman.Compressor;
 import model.Huffman.Decompressor;
 import model.Huffman.Huffman;
@@ -16,6 +17,7 @@ class CompressorTest {
 
     @BeforeEach
     void setUp() {
+        Main.main(null);
     }
 
     @Test
@@ -23,9 +25,9 @@ class CompressorTest {
 
         Dades dades = new Dades();
         String fileName = "tests/res/testABC.txt";
-        Huffman h = new Huffman(fileName );
-        h.run();
-        Compressor c = new Compressor(h, dades,fileName, "tests/res/");
+
+
+        Compressor c = new Compressor(-1, Huffman.WordSize.BIT8, Huffman.TipusCua.FIB_HEAP, fileName, "tests/res/");
         c.compressFile();
         Decompressor d = new Decompressor(-1, "tests/res/Compressed testABC.kib","tests/res/");
         d.decompressFile();
@@ -41,11 +43,10 @@ class CompressorTest {
     @Test
     void test16Bits() throws IOException {
 
-        Dades dades = new Dades();
+
         String fileName = "tests/res/testA.txt";
-        Huffman h = new Huffman(fileName, Huffman.WordSize.BIT16);
-        h.run();
-        Compressor c = new Compressor(h, dades,fileName, "tests/res/");
+
+        Compressor c = new Compressor(-1, Huffman.WordSize.BIT16, Huffman.TipusCua.FIB_HEAP, fileName, "tests/res/");
         c.compressFile();
         Decompressor d = new Decompressor(-1, "tests/res/Compressed testA.kib","tests/res/");
         d.decompressFile();
@@ -60,11 +61,8 @@ class CompressorTest {
     @Test
     void test32Bits() throws IOException {
 
-        Dades dades = new Dades();
         String fileName = "tests/res/testA.txt";
-        Huffman h = new Huffman(fileName, Huffman.WordSize.BIT32);
-        h.run();
-        Compressor c = new Compressor(h, dades,fileName, "tests/res/");
+        Compressor c = new Compressor(-1, Huffman.WordSize.BIT32, Huffman.TipusCua.FIB_HEAP, fileName, "tests/res/");
         c.compressFile();
         Decompressor d = new Decompressor(-1, "tests/res/Compressed testA.kib","tests/res/");
         d.decompressFile();
@@ -79,12 +77,8 @@ class CompressorTest {
 
     @Test
     void test64Bits() throws IOException {
-
-        Dades dades = new Dades();
         String fileName = "tests/res/testA.txt";
-        Huffman h = new Huffman(fileName, Huffman.WordSize.BIT64);
-        h.run();
-        Compressor c = new Compressor(h, dades,fileName, "tests/res/");
+        Compressor c = new Compressor(-1, Huffman.WordSize.BIT64, Huffman.TipusCua.FIB_HEAP, fileName, "tests/res/");
         c.compressFile();
         Decompressor d = new Decompressor(-1, "tests/res/testA.kib","tests/res/check/");
         d.decompressFile();

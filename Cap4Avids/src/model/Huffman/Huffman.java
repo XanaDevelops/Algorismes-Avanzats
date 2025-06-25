@@ -14,29 +14,38 @@ import java.util.stream.Stream;
 
 public class Huffman implements Runnable {
     public enum WordSize{
-        BIT8(1),
-        BIT16(2),
-        BIT32(4),
-        BIT64(8);
+        BIT8(1, "8 bits"),
+        BIT16(2, "16 bits"),
+        BIT32(4, "32 bits"),
+        BIT64(8, "64 bits");
         private int size;
-        WordSize(int x){
+        private String string;
+        WordSize(int x, String s){
             this.size = x;
+            this.string = s;
         }
         public int getBitSize() {return size;}
+        @Override
+        public String toString() {return string;}
     }
     public enum TipusCua {
-        BIN_HEAP(PriorityQueue.class),
-        FIB_HEAP(FibonacciHeap.class),
-        RANK_PAIRING_HEAP(RankPairingHeap.class);
+        BIN_HEAP(PriorityQueue.class, "Binary Heap"),
+        FIB_HEAP(FibonacciHeap.class, "Fibonacci Heap"),
+        RANK_PAIRING_HEAP(RankPairingHeap.class, "Rank Pairing Heap"),;
 
         private Class<? extends AbstractQueue> cua;
-
-        TipusCua(Class<? extends AbstractQueue> cua) {
+        private String name;
+        TipusCua(Class<? extends AbstractQueue> cua, String s) {
             this.cua = cua;
         }
 
         public Class<? extends AbstractQueue> getCua() {
             return this.cua;
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
 

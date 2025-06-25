@@ -13,7 +13,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class PanellFitxers extends JPanel {
 
@@ -95,16 +94,20 @@ public class PanellFitxers extends JPanel {
         actualitzaBotons();
     }
 
+
+
     public void refresh() {
         SwingUtilities.invokeLater(() -> {
             model.clear();
-            Map<Integer, File> src = esDescomprimit ? dades.getDescomprimits() : dades.getComprimits();
+            System.err.println(elementFitxers.size());
+            Map<Integer, File> src = esDescomprimit ? dades.getAComprimir() : dades.getADescomprimir();
             src.forEach((k, v) -> {
                 ElementFitxerLlista e = elementFitxers.get(k);
                 if (e == null) {
                     return;
                 }
                 model.addElement(e);
+                System.err.println(e);
                     });
             llistaFitxers.clearSelection();
             actualitzaBotons();
@@ -112,11 +115,11 @@ public class PanellFitxers extends JPanel {
     }
 
     private void carregarFitxer(File f) {
-        //Main.instance.comunicar("Carregar;" + f.getAbsolutePath()+ ";"+ (esDescomprimit ? "descomprimir" : "comprimir"));
         int newId = Dades.getTaskId();
         elementFitxers.put(newId, new ElementFitxerLlista(f, f.toPath(), newId));
-        //Main.instance.getFinestra().comunicar("carregar;" + f.getAbsolutePath()+ ";"+ (esDescomprimit ? "descomprimir" : "comprimir"));
-        Main.instance.getFinestra().afegirEnEspera(newId, f, !esDescomprimit);
+        System.out.println(f);
+        Main.instance.getFinestra().afegirEnEspera(newId, f, esDescomprimit);
+
     }
 
     private void obrirSelector() {
