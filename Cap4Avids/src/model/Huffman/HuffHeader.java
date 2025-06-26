@@ -1,6 +1,8 @@
 package model.Huffman;
 
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.NotNull;
+
+import model.Dades;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,10 +14,11 @@ import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
-public class HuffHeader {
-    public static final byte[] magicNumbers = new byte[]{0x4B, 0x49,0x42};
+import static model.Dades.magicNumbers;
 
-    private final byte[] magicN = new byte[HuffHeader.magicNumbers.length];
+public class HuffHeader {
+
+    public  final byte[] magicN = new byte[magicNumbers.length];
     public short byteSize;
     public short extensionLength;
     public byte[] originalExtension;
@@ -24,7 +27,7 @@ public class HuffHeader {
     public Class<? extends Number> mapClass;
     public long originalBytes;
 
-    public HuffHeader(){
+    protected HuffHeader(){
         System.arraycopy(magicNumbers, 0, magicN, 0, magicNumbers.length);
 
     }
@@ -54,14 +57,13 @@ public class HuffHeader {
     @SuppressWarnings("unchecked")
     public static HuffHeader read(DataInputStream dis) throws IOException {
         HuffHeader h = new HuffHeader();
-
         dis.readFully(h.magicN);
-        if (Arrays.equals(h.magicN, magicNumbers)) {
+        if (!Arrays.equals(h.magicN, magicNumbers)) {
             return null;
         }
         h.byteSize = dis.readShort();
         h.extensionLength = dis.readShort();
-        h.originalExtension = new byte[h.byteSize];
+        h.originalExtension = new byte[h.extensionLength];
         dis.readFully(h.originalExtension);
         h.uniqueSymbols = dis.readInt();
         Callable<? extends Number> call = getReadCallable(dis, h);
@@ -70,7 +72,7 @@ public class HuffHeader {
             try {
                 Number sym =  call.call();
                 Integer len = dis.readInt();
-                h.codeLengths.put((Long) sym, len);
+                h.codeLengths.put(sym.longValue(), len);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -81,7 +83,7 @@ public class HuffHeader {
         return h;
     }
 
-    private static @NotNull Consumer<Long> getWriteConsumer(DataOutputStream dos, HuffHeader h) {
+    private static  Consumer<Long> getWriteConsumer(DataOutputStream dos, HuffHeader h) {
         Consumer<Long> call;
         switch (h.byteSize) {
             case 2 -> {
@@ -128,7 +130,7 @@ public class HuffHeader {
         return call;
     }
 
-    private static @NotNull Callable<? extends Number> getReadCallable(DataInputStream dis, HuffHeader h) {
+    private static  Callable<? extends Number> getReadCallable(DataInputStream dis, HuffHeader h) {
         return switch (h.byteSize) {
             case 2 -> {
                 h.mapClass = Short.class;

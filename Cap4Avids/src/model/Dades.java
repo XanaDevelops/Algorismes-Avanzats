@@ -7,7 +7,7 @@ import java.util.Map;
 public class Dades {
     private final Map<Integer, File> aComprimir = new HashMap<>();
     private final Map<Integer, File> aDescomprimir = new HashMap<>();
-    public static final String EXTENSIO = ".kib";
+    public static final String EXTENSIO = ".huf";
     public static final byte[] magicNumbers = new byte[]{0x4B, 0x49,0x42};
 
     private static int taskId = 0;
