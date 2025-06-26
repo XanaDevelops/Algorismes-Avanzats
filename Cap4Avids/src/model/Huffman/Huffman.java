@@ -24,6 +24,7 @@ public class Huffman implements Runnable {
             this.size = x;
             this.string = s;
         }
+
         public int getBitSize() {return size;}
         @Override
         public String toString() {return string;}
