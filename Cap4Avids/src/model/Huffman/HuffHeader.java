@@ -20,16 +20,21 @@ public class HuffHeader {
     public short extensionLength;
     public byte[] originalExtension;
     public int uniqueSymbols;
-    public Map<Number, Integer> codeLengths;
+    public Map<Long, Integer> codeLengths;
     public Class<? extends Number> mapClass;
     public long originalBytes;
 
-    private HuffHeader(){
+    public HuffHeader(){
         System.arraycopy(magicNumbers, 0, magicN, 0, magicNumbers.length);
 
     }
 
+    public void loadCodeLengths(Map<Long, String> table){
+        this.codeLengths = new TreeMap<>();
+        for (Map.Entry<Long, String> entry : table.entrySet()) {
 
+        }
+    }
 
     public static void write(HuffHeader h, DataOutputStream dos) throws IOException {
         dos.write(h.magicN);
@@ -37,8 +42,8 @@ public class HuffHeader {
         dos.writeShort(h.extensionLength);
         dos.write(h.originalExtension);
         dos.writeInt(h.uniqueSymbols);
-        Consumer<Number> call = getWriteConsumer(dos, h);
-        for(Map.Entry<Number, Integer> entry : h.codeLengths.entrySet()){
+        Consumer<Long> call = getWriteConsumer(dos, h);
+        for(Map.Entry<Long, Integer> entry : h.codeLengths.entrySet()){
             call.accept(entry.getKey());
             dos.writeInt(entry.getValue());
         }
@@ -60,12 +65,12 @@ public class HuffHeader {
         dis.readFully(h.originalExtension);
         h.uniqueSymbols = dis.readInt();
         Callable<? extends Number> call = getReadCallable(dis, h);
-        h.codeLengths = (Map<Number, Integer>) crearMapa((Class<? extends Number>) h.mapClass);
+        h.codeLengths = new TreeMap<>();
         for (int i = 0; i < h.uniqueSymbols; i++) {
             try {
                 Number sym =  call.call();
                 Integer len = dis.readInt();
-                h.codeLengths.put(sym, len);
+                h.codeLengths.put((Long) sym, len);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -76,8 +81,8 @@ public class HuffHeader {
         return h;
     }
 
-    private static @NotNull Consumer<Number> getWriteConsumer(DataOutputStream dos, HuffHeader h) {
-        Consumer<Number> call;
+    private static @NotNull Consumer<Long> getWriteConsumer(DataOutputStream dos, HuffHeader h) {
+        Consumer<Long> call;
         switch (h.byteSize) {
             case 2 -> {
                 h.mapClass = Short.class;
