@@ -103,7 +103,7 @@ public class Compressor extends Proces {
             try (InputStream fis = new BufferedInputStream(Files.newInputStream(inputPath))) {
                 byte[] bfis = fis.readAllBytes();
                 int split = ((bfis.length/huffH.byteSize) / N_THREADS)*huffH.byteSize;
-                System.err.println("C: split = " + split + ", bytes = " + bfis.length + ", " + (split*bfis.length));
+                System.err.println("C: split = " + split + ", bytes = " + bfis.length + ", " + (split*N_THREADS));
                 for (int i = 0; i < N_THREADS - 1; i++) {
                     int finalI = i;
                     executar(() -> {
@@ -133,7 +133,7 @@ public class Compressor extends Proces {
     private void comprimir(int id, byte[] arr, int ini, int fi, Map<Long, byte[]> canonCodes, int byteSize) {
         ArrayList<Boolean> fileChunk = new ArrayList<>();
         for (int i = ini; i < arr.length && i<fi; i+=byteSize) {
-            long b = arr[i];
+            long b = (long) arr[i] & (0xFFL);
             for (int j = 1; j < byteSize; j++) {
                 b <<= 8;
                 int aux;
@@ -142,7 +142,10 @@ public class Compressor extends Proces {
                 else{
                     aux = arr[i+j];
                 }
-                b |= aux;
+                b |= (long) aux & (0xFFL);
+            }
+            if(b<0){
+                b+= 1L <<(8*byteSize);
             }
             byte[] codeBits = canonCodes.get(b);
             assert codeBits != null;

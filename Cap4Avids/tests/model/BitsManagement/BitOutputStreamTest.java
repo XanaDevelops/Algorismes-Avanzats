@@ -8,7 +8,7 @@ class BitOutputStreamTest {
 
     @Test
     public void test(){
-        System.out.println(15 & (~3));
+        System.out.println((long) ((byte) 0xFF) +0L);
     }
 
 }

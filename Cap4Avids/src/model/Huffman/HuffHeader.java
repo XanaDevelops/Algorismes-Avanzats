@@ -8,6 +8,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
@@ -66,12 +67,13 @@ public class HuffHeader {
         h.originalExtension = new byte[h.extensionLength];
         dis.readFully(h.originalExtension);
         h.uniqueSymbols = dis.readInt();
-        Callable<? extends Number> call = getReadCallable(dis, h);
+        Callable<Long> call = getReadCallable(dis, h);
         h.codeLengths = new TreeMap<>();
         for (int i = 0; i < h.uniqueSymbols; i++) {
             try {
                 Number sym =  call.call();
                 Integer len = dis.readInt();
+
                 h.codeLengths.put(sym.longValue(), len);
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -130,25 +132,28 @@ public class HuffHeader {
         return call;
     }
 
-    private static  Callable<? extends Number> getReadCallable(DataInputStream dis, HuffHeader h) {
+    private static  Callable<Long> getReadCallable(DataInputStream dis, HuffHeader h) throws IOException {
+
         return switch (h.byteSize) {
             case 2 -> {
                 h.mapClass = Short.class;
-                yield dis::readShort;
+                yield () -> Short.toUnsignedLong(dis.readShort());
+
             }
             case 4 -> {
                 h.mapClass = Integer.class;
-                yield dis::readInt;
+                yield () -> Integer.toUnsignedLong(dis.readInt());
             }
             case 8 -> {
                 h.mapClass = Long.class;
-                yield dis::readLong;
+                yield dis::readLong; //TODO
             }
             default -> {
                 h.mapClass = Byte.class;
-                yield dis::readByte;
+                yield () -> Byte.toUnsignedLong(dis.readByte());
             }
         };
+
     }
 
 

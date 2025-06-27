@@ -284,9 +284,10 @@ public class Huffman implements Runnable {
         for (int i = l; i < r && i < fileBytes.length; i+=byteSize) {
             //bytes en C2, necessari index positiu
             long b = fileBytes[i];
+            b = b & (0xFFL);
             for (int j = 1; j < byteSize; j++){
                 b = b<<8;
-                b |= i+j < fileBytes.length ? fileBytes[i+j]: 0;
+                b |= i+j < fileBytes.length ? (long) (fileBytes[i+j]) & (0xFFL): 0;
             }
 
             if (b < 0){
