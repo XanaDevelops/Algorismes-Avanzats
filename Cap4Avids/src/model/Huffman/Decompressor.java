@@ -1,7 +1,6 @@
 
 package model.Huffman;
 
-import control.Comunicar;
 import model.BitsManagement.BitInputStream;
 import model.Dades;
 

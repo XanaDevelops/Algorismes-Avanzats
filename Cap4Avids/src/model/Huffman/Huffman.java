@@ -243,6 +243,7 @@ public class Huffman implements Runnable {
         int _split = fileBytes.length / (N_THREADS / byteSize);
         final int split = _split + byteSize - (_split % byteSize);
         //assegurar-se amb split > 0 que te sentit dividir en threads
+        System.err.println("split = " + split + " bytes = " + fileBytes.length + ", " + (split*N_THREADS));
         for (int i = 0; i < N_THREADS - 1 && split > 0; i++) {
             int j = i;
             addConcurrent(() -> {

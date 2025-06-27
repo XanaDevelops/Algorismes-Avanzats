@@ -1,7 +1,5 @@
 package model.Huffman;
 
-import control.Comunicar;
-import control.Main;
 import model.BitsManagement.BitOutputStream;
 import model.Dades;
 
@@ -16,11 +14,15 @@ public class Compressor extends Proces {
     private final String inputPath;
     private final String outputFolder;
 
+    private final ArrayList<Boolean>[] fileChunks = new ArrayList[N_THREADS];
+
+
     public Compressor(int id, Huffman.WordSize wordSize, Huffman.TipusCua cua, String inputPath, String outputFolder) {
         super(id);
         this.huffman = new Huffman(inputPath, wordSize, cua);
         this.inputPath = inputPath;
         this.outputFolder = outputFolder;
+
     }
 
 
@@ -99,20 +101,24 @@ public class Compressor extends Proces {
 
             //Escriure la codificació del contingut de l'arxiu d'entrada
             try (InputStream fis = new BufferedInputStream(Files.newInputStream(inputPath))) {
-                long b;
-                while ((b = fis.read()) != -1) {
-                    for (int j = 1; j < huffman.getByteSize(); j++) {
-                        b = b<<8;
-                        int aux = fis.read();
-                        b |= aux != -1 ? aux : 0;
-                    }
+                byte[] bfis = fis.readAllBytes();
+                int split = ((bfis.length/huffH.byteSize) / N_THREADS)*huffH.byteSize;
+                System.err.println("C: split = " + split + ", bytes = " + bfis.length + ", " + (split*bfis.length));
+                for (int i = 0; i < N_THREADS - 1; i++) {
+                    int finalI = i;
+                    executar(() -> {
+                        comprimir(finalI, bfis, finalI*split, (finalI+1)*split, canonCodes, huffH.byteSize);
+                    });
+                }
+                executar(()-> {
+                    comprimir(N_THREADS-1, bfis, (N_THREADS-1) * split, bfis.length, canonCodes, huffH.byteSize);
+                });
 
-                    byte[] codeBits = canonCodes.get(b);
-                    assert codeBits != null;
-                    for (byte codeBit : codeBits) {
-                        bitOut.writeBit(codeBit == 1);
+                waitAll();
+                for(ArrayList<Boolean> fileChunk : fileChunks) {
+                    for(Boolean b : fileChunk) {
+                        bitOut.writeBit(b);
                     }
-
                 }
             }
             bitOut.flush();
@@ -122,6 +128,29 @@ public class Compressor extends Proces {
         time = System.nanoTime() - time;
         System.err.println("end " + id);
 //        data.addTempsCompressio(time, fileName, huffman.getTipusCua);
+    }
+
+    private void comprimir(int id, byte[] arr, int ini, int fi, Map<Long, byte[]> canonCodes, int byteSize) {
+        ArrayList<Boolean> fileChunk = new ArrayList<>();
+        for (int i = ini; i < arr.length && i<fi; i+=byteSize) {
+            long b = arr[i];
+            for (int j = 1; j < byteSize; j++) {
+                b <<= 8;
+                int aux;
+                if((i+j)>=arr.length)
+                    aux = 0;
+                else{
+                    aux = arr[i+j];
+                }
+                b |= aux;
+            }
+            byte[] codeBits = canonCodes.get(b);
+            assert codeBits != null;
+            for (byte codeBit : codeBits) {
+                fileChunk.add(codeBit == 1);
+            }
+        }
+        fileChunks[id] = fileChunk;
     }
 
 
