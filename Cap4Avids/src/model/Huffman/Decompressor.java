@@ -46,10 +46,6 @@ public class Decompressor extends Proces {
              DataInputStream dis = new DataInputStream(fis)) {
 
             HuffHeader h = HuffHeader.read(dis);
-//            byte[] extensionBytesComprimit = new byte[Dades.magicNumbers.length];
-
-//            dis.readFully(extensionBytesComprimit);
-//            System.out.println(Arrays.toString(extensionBytesComprimit));
 
             if (!Arrays.equals(Objects.requireNonNull(h).magicN,Dades.magicNumbers)) {
                 System.err.println("Not a valid file");
@@ -57,27 +53,7 @@ public class Decompressor extends Proces {
                 return;
             }
 
-//            short tamWords = dis.readShort();
-//
-//            short length = dis.readShort();
-//            byte[] extensionBytes = new byte[length];
-//            dis.readFully(extensionBytes);
-//
-//
-//
-//            String extension = new String(extensionBytes);
-//            int totalUnicSymbols = dis.readInt();
-//            Map<Long, Integer> codeLengths = new TreeMap<>();
-//            List<Long> symbols = new ArrayList<>();
-//
-//            for (int i = 0; i < totalUnicSymbols; i++) {
-//                long sym = dis.readLong();
-//                int len = dis.readInt();
-//                codeLengths.put(sym, len);
-//                symbols.add(sym);
-//            }
 
-//            long originalBytes = dis.readLong();
             List<Long> symbolList = new ArrayList<>(h.codeLengths.keySet());
 
             Map<Long, byte[]> canonCodes = Huffman.generateCanonicalCodes(h.codeLengths, symbolList);
