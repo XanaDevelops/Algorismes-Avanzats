@@ -2,8 +2,6 @@ package model.Huffman;
 
 //import org.jetbrains.annotations.NotNull;
 
-import model.Dades;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,6 +16,8 @@ import static model.Dades.magicNumbers;
 
 public class HuffHeader {
 
+    public static final int N_CHUNKS = 16;
+
     public  final byte[] magicN = new byte[magicNumbers.length];
     public short byteSize;
     public short extensionLength;
@@ -26,6 +26,8 @@ public class HuffHeader {
     public Map<Long, Integer> codeLengths;
     public Class<? extends Number> mapClass;
     public long originalBytes;
+    public int[] bitTamChunks = new int[N_CHUNKS];
+
 
     protected HuffHeader(){
         System.arraycopy(magicNumbers, 0, magicN, 0, magicNumbers.length);
@@ -45,6 +47,11 @@ public class HuffHeader {
             dos.writeInt(entry.getValue());
         }
         dos.writeLong(h.originalBytes);
+
+        for(int o: h.bitTamChunks){
+            dos.writeInt(o);
+        }
+
         dos.flush();
     }
 
@@ -74,10 +81,13 @@ public class HuffHeader {
 
         h.originalBytes = dis.readLong();
 
+        for (int i = 0; i < h.bitTamChunks.length; i++) {
+            h.bitTamChunks[i] = dis.readInt();
+        }
         return h;
     }
 
-    private static  Consumer<Long> getWriteConsumer(DataOutputStream dos, HuffHeader h) {
+    private static Consumer<Long> getWriteConsumer(DataOutputStream dos, HuffHeader h) {
         Consumer<Long> call;
         switch (h.byteSize) {
             case 2 -> {

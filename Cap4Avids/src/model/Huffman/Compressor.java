@@ -14,8 +14,8 @@ public class Compressor extends Proces {
     private final String inputPath;
     private final String outputFolder;
 
-    private final ArrayList<Boolean>[] fileChunks = new ArrayList[N_THREADS];
-
+    private final ByteArrayOutputStream[] fileChunks = new ByteArrayOutputStream[N_THREADS];
+    private final int[] chunksSizes = new int[N_THREADS];
 
     public Compressor(int id, Huffman.WordSize wordSize, Huffman.TipusCua cua, String inputPath, String outputFolder) {
         super(id);
@@ -96,8 +96,7 @@ public class Compressor extends Proces {
                 case 4 -> Long.class;
                 default -> Byte.class;
             };
-            HuffHeader.write(huffH, dos);
-            dos.flush();
+
 
             //Escriure la codificació del contingut de l'arxiu d'entrada
             try (InputStream fis = new BufferedInputStream(Files.newInputStream(inputPath))) {
@@ -115,18 +114,23 @@ public class Compressor extends Proces {
                 });
 
                 waitAll();
-                for(ArrayList<Boolean> fileChunk : fileChunks) {
+
+                System.arraycopy(chunksSizes, 0, huffH.bitTamChunks, 0, chunksSizes.length);
+
+                HuffHeader.write(huffH, dos);
+                dos.flush();
+
+                for(ByteArrayOutputStream fileChunk : fileChunks) {
                     if(fileChunk == null) {
                         continue;
                     }
                     System.err.println("S: " + fileChunk.size());
-                    for(Boolean b : fileChunk) {
-                        bitOut.writeBit(b);
-                    }
+                    fileChunk.writeTo(bufOut);
                 }
             }
-            bitOut.flush();
+            bufOut.flush();
         }
+
 
 
         time = System.nanoTime() - time;
@@ -135,28 +139,34 @@ public class Compressor extends Proces {
     }
 
     private void comprimir(int id, byte[] arr, int ini, int fi, Map<Long, byte[]> canonCodes, int byteSize) {
-        ArrayList<Boolean> fileChunk = new ArrayList<>();
         System.err.println("CC: "+ id+", ini: "+ini+", fi: "+fi + " arr.length: "+arr.length);
-        for (int i = ini; i < arr.length && i<fi; i+=byteSize) {
-            long b = (long) arr[i] & (0xFFL);
-            for (int j = 1; j < byteSize; j++) {
-                b <<= 8;
-                int aux;
-                if((i+j)>=arr.length)
-                    aux = 0;
-                else{
-                    aux = arr[i+j];
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(Math.max(fi-ini, 0));
+             BitOutputStream bos2 = new BitOutputStream(bos)) {
+            for (int i = ini; i < arr.length && i<fi; i+=byteSize) {
+                long b = (long) arr[i] & (0xFFL);
+                for (int j = 1; j < byteSize; j++) {
+                    b <<= 8;
+                    int aux;
+                    if((i+j)>=arr.length)
+                        aux = 0;
+                    else{
+                        aux = arr[i+j];
+                    }
+                    b |= (long) aux & (0xFFL);
                 }
-                b |= (long) aux & (0xFFL);
-            }
 
-            byte[] codeBits = canonCodes.get(b);
-            assert codeBits != null;
-            for (byte codeBit : codeBits) {
-                fileChunk.add(codeBit == 1);
+                byte[] codeBits = canonCodes.get(b);
+                assert codeBits != null;
+                for (byte codeBit : codeBits) {
+                    bos2.writeBit(codeBit == 1);
+                }
             }
+            chunksSizes[id] = bos2.size();
+            bos2.flush();
+            fileChunks[id] = bos;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        fileChunks[id] = fileChunk;
     }
 
 
