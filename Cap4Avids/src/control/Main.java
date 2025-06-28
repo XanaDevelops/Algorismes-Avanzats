@@ -90,20 +90,21 @@ public class Main implements Comunicar {
      */
     @Override
     public void comunicar(String s) {
-        String[] parts = s.split(";");
-        String cmd  = parts[0];
-        String path  = parts.length > 1 ? parts[1] : null;
 
-        switch (cmd) {         //TODO: exportar esto
-            case "Carregar" -> carregarFitxers(path);
-            case "Eliminar"-> {
-                assert path != null;
-                removeFitxer(path, path.endsWith(".huf"));
-            }
-            case "Guardar"->System.out.println("Esperant per guardar");
+    }
 
-            default -> System.err.println("WARNING: Main reb missatge?: " + s);
+    @Override
+    public void eliminarFitxer(File file, boolean descomprimir) {
+        removeFitxer(file, descomprimir);
+    }
+
+    public void removeFitxer(File file, boolean descomprimir) {
+        if (!descomprimir) {
+            dades.removeAComprimir(file);
+        } else {
+            dades.removeADescomprimir(file);
         }
+        finestra.actualitzar();
     }
 
     /**

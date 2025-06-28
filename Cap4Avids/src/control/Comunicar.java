@@ -11,6 +11,11 @@ public interface Comunicar {
      */
     public void comunicar(String s);
 
+    default void eliminarFitxer(File file, boolean descomprimir) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
     default void afegirEnEspera(int id, File file, boolean aComprimir){
         throw new UnsupportedOperationException("Not supported yet.");
     }
