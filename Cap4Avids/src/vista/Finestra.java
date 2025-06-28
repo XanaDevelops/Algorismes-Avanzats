@@ -177,16 +177,6 @@ public class Finestra extends JFrame implements Comunicar {
         aDescomprimir.refresh();
     }
 
-    /**
-     * Envia un missatge
-     *
-     * @param s El missatge
-     */
-    @Override
-    public void comunicar(String s) {
-        System.err.println("Finestra: " + s);
-    }
-
     public JButton[] getBotons() {
         return botons;
     }
