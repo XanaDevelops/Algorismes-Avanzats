@@ -8,7 +8,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,12 +32,6 @@ public class HuffHeader {
 
     }
 
-    public void loadCodeLengths(Map<Long, String> table){
-        this.codeLengths = new TreeMap<>();
-        for (Map.Entry<Long, String> entry : table.entrySet()) {
-
-        }
-    }
 
     public static void write(HuffHeader h, DataOutputStream dos) throws IOException {
         dos.write(h.magicN);
@@ -55,7 +48,6 @@ public class HuffHeader {
         dos.flush();
     }
 
-    @SuppressWarnings("unchecked")
     public static HuffHeader read(DataInputStream dis) throws IOException {
         HuffHeader h = new HuffHeader();
         dis.readFully(h.magicN);
@@ -67,8 +59,8 @@ public class HuffHeader {
         h.originalExtension = new byte[h.extensionLength];
         dis.readFully(h.originalExtension);
         h.uniqueSymbols = dis.readInt();
-        Callable<Long> call = getReadCallable(dis, h);
-        h.codeLengths = new TreeMap<>();
+        Callable<? extends Number> call = getReadCallable(dis, h);
+        h.codeLengths = new TreeMap<>(Long::compareUnsigned);
         for (int i = 0; i < h.uniqueSymbols; i++) {
             try {
                 Number sym =  call.call();
@@ -132,28 +124,25 @@ public class HuffHeader {
         return call;
     }
 
-    private static  Callable<Long> getReadCallable(DataInputStream dis, HuffHeader h) throws IOException {
-
+    private static  Callable<? extends Number> getReadCallable(DataInputStream dis, HuffHeader h) {
         return switch (h.byteSize) {
             case 2 -> {
                 h.mapClass = Short.class;
-                yield () -> Short.toUnsignedLong(dis.readShort());
-
+                yield dis::readShort;
             }
             case 4 -> {
                 h.mapClass = Integer.class;
-                yield () -> Integer.toUnsignedLong(dis.readInt());
+                yield dis::readInt;
             }
             case 8 -> {
                 h.mapClass = Long.class;
-                yield dis::readLong; //TODO
+                yield dis::readLong;
             }
             default -> {
                 h.mapClass = Byte.class;
-                yield () -> Byte.toUnsignedLong(dis.readByte());
+                yield dis::readByte;
             }
         };
-
     }
 
 

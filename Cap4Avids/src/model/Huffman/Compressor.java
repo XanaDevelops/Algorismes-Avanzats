@@ -44,7 +44,7 @@ public class Compressor extends Proces {
         Map<Long, String> table = huffman.getTable();
         long time = System.nanoTime();
         //calcular la longitud de les codificaciones de cada byte
-        Map<Long, Integer> codeLengths = new TreeMap<>();
+        Map<Long, Integer> codeLengths = new TreeMap<>(Long::compareUnsigned);
         int totalUnicSymbols = 0;
         List<Long> symbols = new ArrayList<>();
         for (Map.Entry<Long, String> e : table.entrySet()) {
@@ -144,9 +144,7 @@ public class Compressor extends Proces {
                 }
                 b |= (long) aux & (0xFFL);
             }
-            if(b<0){
-                b+= 1L <<(8*byteSize);
-            }
+
             byte[] codeBits = canonCodes.get(b);
             assert codeBits != null;
             for (byte codeBit : codeBits) {

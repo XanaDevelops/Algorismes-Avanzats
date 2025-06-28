@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class Huffman implements Runnable {
@@ -161,7 +162,7 @@ public class Huffman implements Runnable {
             throw new RuntimeException(e);
         }
         this.freqs = new HashMap<>((1<< (8* this.byteSize)));
-        this.acumulators = Stream.generate(() -> new TreeMap<Long, Long>()).limit(N_THREADS).toArray(TreeMap[]::new);
+        this.acumulators = Stream.generate(() -> new TreeMap<Long, Long>(Long::compareUnsigned)).limit(N_THREADS).toArray(TreeMap[]::new);
 
     }
 
@@ -243,7 +244,6 @@ public class Huffman implements Runnable {
         int _split = fileBytes.length / (N_THREADS / byteSize);
         final int split = _split + byteSize - (_split % byteSize);
         //assegurar-se amb split > 0 que te sentit dividir en threads
-        System.err.println("split = " + split + " bytes = " + fileBytes.length + ", " + (split*N_THREADS));
         for (int i = 0; i < N_THREADS - 1 && split > 0; i++) {
             int j = i;
             addConcurrent(() -> {
@@ -283,16 +283,12 @@ public class Huffman implements Runnable {
     private void recursiveAccumulate(int id, int l, int r) {
         for (int i = l; i < r && i < fileBytes.length; i+=byteSize) {
             //bytes en C2, necessari index positiu
-            long b = fileBytes[i];
-            b = b & (0xFFL);
+            long b = (long) fileBytes[i] & (0xFFL);
             for (int j = 1; j < byteSize; j++){
                 b = b<<8;
-                b |= i+j < fileBytes.length ? (long) (fileBytes[i+j]) & (0xFFL): 0;
+                b |= i+j < fileBytes.length ? (long) fileBytes[i+j] & (0xFFL): 0;
             }
 
-            if (b < 0){
-                b = b + (1L << (8*byteSize));
-            }
             acumulators[id].put(b, acumulators[id].getOrDefault(b, 0L) + 1L);
         }
     }
@@ -322,7 +318,7 @@ public class Huffman implements Runnable {
         //primer ordenar segons la longitud del símbol, i després en ordre lexicografic
         symbolList.sort(Comparator
                 .comparingLong((Long a) -> lengths.get(a))
-                .thenComparingLong(a -> a));
+                .thenComparing(Function.identity(), Long::compareUnsigned));
 
         //byte[][] codes = new byte[Huffman.BITSIZE][];
         Map<Long, byte[]> codes = new HashMap<>();
