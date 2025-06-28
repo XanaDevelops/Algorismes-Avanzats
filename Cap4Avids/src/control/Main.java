@@ -5,18 +5,14 @@ import model.Huffman.Compressor;
 import model.Huffman.Decompressor;
 import model.Huffman.Huffman;
 import vista.Finestra;
-import vista.FinestraInfo;
-import vista.PanellInfo;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class Main implements Comunicar {
-    FinestraInfo finestraInfo;
     public static final Main instance = new Main();
 
     private Finestra finestra;
@@ -36,8 +32,10 @@ public class Main implements Comunicar {
     private void start(){
         dades = new Dades();
 
-
-        SwingUtilities.invokeLater(() -> finestra = new Finestra());
+//        SwingUtilities.invokeLater(() -> finestra = new Finestra());
+        finestra = new Finestra();
+        finestra.setVisible(true);
+        dades.setInfo(new Dades.informacio(12.2, 120, 100,32,9 ));
 
     }
 
@@ -121,10 +119,8 @@ public class Main implements Comunicar {
 
     @Override
     public void estadistiquesLLestes() {
-       if (finestraInfo==null){
-           finestraInfo = new FinestraInfo();
-       }
-       finestraInfo.estadistiquesLLestes();
+
+       this.finestra.estadistiquesLLestes();
     }
 
 
