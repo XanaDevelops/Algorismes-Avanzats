@@ -136,7 +136,7 @@ public class PanellFitxers extends JPanel {
 
     private void eliminarSeleccionats() {
         File f = getSelectedFile();
-        Main.instance.comunicar("Eliminar;" + f.getAbsolutePath());
+        Main.instance.eliminarFitxer(f, esDescomprimit);
 
         refresh();
     }

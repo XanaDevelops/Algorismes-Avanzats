@@ -89,6 +89,23 @@ public class Main implements Comunicar {
         removeFitxer(file, descomprimir);
     }
 
+    @Override
+    public void carregarFitxer(File f) {
+        if (f == null) return;
+        String nom = f.getName().toLowerCase();
+        if (nom.endsWith(".huf")) {
+            dades.addComprimit(Dades.getTaskId(), f);
+            finestra.actualitzar();
+        } else if (nom.endsWith(".txt") || nom.endsWith(".bin")) {
+            dades.addDescomprimit(Dades.getTaskId(), f);
+            finestra.actualitzar();
+        } else {
+            JOptionPane.showMessageDialog(finestra,
+                    "Extensió no vàlida: " + f.getName(),
+                    "Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
     public void removeFitxer(File file, boolean descomprimir) {
         if (!descomprimir) {
             dades.removeAComprimir(file);

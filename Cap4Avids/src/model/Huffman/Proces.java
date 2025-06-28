@@ -53,10 +53,6 @@ public abstract class Proces implements Runnable, Comunicar {
         Main.instance.finalitzar(id);
     }
 
-    @Override
-    public void comunicar(String s) {
-        System.err.println(s);
-    }
 
     @Override
     public void aturar(int id) {

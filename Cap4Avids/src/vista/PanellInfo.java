@@ -74,7 +74,4 @@ public class PanellInfo extends JPanel implements Comunicar {
         this.repaint();
     }
 
-    @Override
-    public void comunicar(String s) {
-    }
 }

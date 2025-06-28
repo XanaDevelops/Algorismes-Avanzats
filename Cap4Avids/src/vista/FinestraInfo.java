@@ -24,10 +24,6 @@ public class FinestraInfo extends JFrame implements Comunicar {
         this.setVisible(true);
     }
 
-    @Override
-    public void comunicar(String s) {
-
-    }
 
     @Override
     public void estadistiquesLLestes() {

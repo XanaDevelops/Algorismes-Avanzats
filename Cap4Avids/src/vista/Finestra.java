@@ -78,8 +78,7 @@ public class Finestra extends JFrame implements Comunicar {
                 fc.setMultiSelectionEnabled(true);
                 if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                     for (File f : fc.getSelectedFiles()) {
-                        boolean esDescomprimir = f.getName().endsWith(".huf");
-                        principal.afegirEnEspera(Dades.getTaskId(), f, esDescomprimir);
+                        principal.carregarFitxer(f);
                     }
                     actualitzar();
                 }
