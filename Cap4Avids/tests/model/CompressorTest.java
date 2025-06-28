@@ -20,41 +20,52 @@ class CompressorTest {
         Main.main(null);
     }
 
-    String fileName = "tests/res/testABC.txt";
 
-    private void actualTest(Compressor c) throws IOException {
+    String path = "tests/res/";
+    String[] names = {"testABC", "testAllSmall", "testAll"};
+
+    private void actualTest(Compressor c, String name) throws IOException {
         c.compressFile();
-        Decompressor d = new Decompressor(-1, "tests/res/testABC.huf","tests/res/check/");
+        Decompressor d = new Decompressor(-1, path+name+".huf","tests/res/check/");
         d.decompressFile();
         //comparar
-        BufferedInputStream inA = new BufferedInputStream(new FileInputStream(fileName)),
-                inB = new BufferedInputStream(new FileInputStream(  "tests/res/check/testABC.txt"));
+        BufferedInputStream inA = new BufferedInputStream(new FileInputStream(path+name+".txt")),
+                inB = new BufferedInputStream(new FileInputStream(  "tests/res/check/"+name+".txt"));
         byte[] a = inA.readAllBytes();
 
         byte[] b = inB.readAllBytes();
         assertArrayEquals(a, b);
+        System.out.println("OK " + name);
     }
 
     @Test
-    void testCompressor() throws IOException {
-        Compressor c = new Compressor(-1, Huffman.WordSize.BIT8, Huffman.TipusCua.FIB_HEAP, fileName, "tests/res/");
-        actualTest(c);
+    void test8Bits() throws IOException {
+        for(String name : names) {
+            Compressor c = new Compressor(-1, Huffman.WordSize.BIT8, Huffman.TipusCua.FIB_HEAP, path+name+".txt", "tests/res/");
+            actualTest(c, name);
+        }
     }
 
     @Test
     void test16Bits() throws IOException {
-        Compressor c = new Compressor(-1, Huffman.WordSize.BIT16, Huffman.TipusCua.FIB_HEAP, fileName, "tests/res/");
-        actualTest(c);
+        for(String name : names) {
+            Compressor c = new Compressor(-1, Huffman.WordSize.BIT16, Huffman.TipusCua.FIB_HEAP, path+name+".txt", "tests/res/");
+            actualTest(c, name);
+        }
     }
     @Test
     void test32Bits() throws IOException {
-        Compressor c = new Compressor(-1, Huffman.WordSize.BIT32, Huffman.TipusCua.FIB_HEAP, fileName, "tests/res/");
-        actualTest(c);
+        for(String name : names) {
+            Compressor c = new Compressor(-1, Huffman.WordSize.BIT32, Huffman.TipusCua.FIB_HEAP, path+name+".txt", "tests/res/");
+            actualTest(c, name);
+        }
     }
 
     @Test
     void test64Bits() throws IOException {
-        Compressor c = new Compressor(-1, Huffman.WordSize.BIT64, Huffman.TipusCua.FIB_HEAP, fileName, "tests/res/");
-        actualTest(c);
+        for(String name : names) {
+            Compressor c = new Compressor(-1, Huffman.WordSize.BIT64, Huffman.TipusCua.FIB_HEAP, path+name+".txt", "tests/res/");
+            actualTest(c, name);
+        }
     }
 }

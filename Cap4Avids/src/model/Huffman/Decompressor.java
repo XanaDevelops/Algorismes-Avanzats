@@ -1,7 +1,6 @@
 
 package model.Huffman;
 
-import control.Comunicar;
 import model.BitsManagement.BitInputStream;
 import model.Dades;
 
@@ -56,8 +55,9 @@ public class Decompressor extends Proces {
                 return;
             }
 
-            List<Long> symbolList = new ArrayList<>(h.codeLengths.keySet());
 
+            List<Long> symbolList = new ArrayList<>(h.codeLengths.keySet());
+            symbolList.sort(Long::compareUnsigned);
             Map<Long, byte[]> canonCodes = Huffman.generateCanonicalCodes(h.codeLengths, symbolList);
             DecodeNode root = buildDecodingTree(canonCodes);
             String fileName = src.split("/")[src.split("/").length - 1];
