@@ -82,6 +82,9 @@ public class Finestra extends JFrame implements Comunicar {
                     }
                     actualitzar();
                 }
+
+
+                System.out.println(dades.getADescomprimir().toString());
             }
             case "Eliminar" -> {
                 File f = aComprimir.getSelectedFile();
@@ -155,6 +158,9 @@ public class Finestra extends JFrame implements Comunicar {
     @Override
     public void actualitzar(){
         repaint();
+        //TODO: check
+        aComprimir.refresh(); //o .refresh()
+        aDescomprimir.refresh();
     }
 
     @Override

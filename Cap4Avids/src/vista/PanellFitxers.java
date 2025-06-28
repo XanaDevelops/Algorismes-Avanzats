@@ -99,16 +99,16 @@ public class PanellFitxers extends JPanel {
     public void refresh() {
         SwingUtilities.invokeLater(() -> {
             model.clear();
-            System.err.println(elementFitxers.size());
-            Map<Integer, File> src = esDescomprimit ? dades.getAComprimir() : dades.getADescomprimir();
+            elementFitxers.clear();
+
+            Map<Integer, File> src = esDescomprimit ? dades.getADescomprimir() : dades.getAComprimir();
+
             src.forEach((k, v) -> {
-                ElementFitxerLlista e = elementFitxers.get(k);
-                if (e == null) {
-                    return;
-                }
+                ElementFitxerLlista e = new ElementFitxerLlista(v, v.toPath(), k);
+                elementFitxers.put(k, e);
                 model.addElement(e);
-                System.err.println(e);
-                    });
+            });
+
             llistaFitxers.clearSelection();
             actualitzaBotons();
         });
