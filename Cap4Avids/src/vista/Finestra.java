@@ -82,9 +82,6 @@ public class Finestra extends JFrame implements Comunicar {
                     }
                     actualitzar();
                 }
-
-
-                System.out.println(dades.getADescomprimir().toString());
             }
             case "Eliminar" -> {
                 File f = aComprimir.getSelectedFile();
@@ -165,14 +162,20 @@ public class Finestra extends JFrame implements Comunicar {
 
     @Override
     public void arrancar(int id) {
-        Comunicar.super.arrancar(id);
+        JButton[] botons = getBotons();
+        for (JButton boto : botons) {
+            boto.setEnabled(false);
+        }
     }
 
     @Override
     public void finalitzar(int id) {
-        Comunicar.super.finalitzar(id);
+        JButton[] botons = getBotons();
+        for (JButton boto : botons) {
+            boto.setEnabled(true);
+        }
+        actualitzar();
     }
-
     @Override
     public void paint(Graphics g) {
         super.paint(g);

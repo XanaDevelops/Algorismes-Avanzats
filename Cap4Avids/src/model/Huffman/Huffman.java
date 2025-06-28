@@ -39,6 +39,7 @@ public class Huffman implements Runnable {
         private String name;
         TipusCua(Class<? extends AbstractQueue> cua, String s) {
             this.cua = cua;
+            this.name = s;
         }
 
         public Class<? extends AbstractQueue> getCua() {

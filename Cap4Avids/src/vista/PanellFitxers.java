@@ -101,7 +101,7 @@ public class PanellFitxers extends JPanel {
             model.clear();
             elementFitxers.clear();
 
-            Map<Integer, File> src = esDescomprimit ? dades.getADescomprimir() : dades.getAComprimir();
+            Map<Integer, File> src = esDescomprimit ? dades.getAComprimir() : dades.getADescomprimir();
 
             src.forEach((k, v) -> {
                 ElementFitxerLlista e = new ElementFitxerLlista(v, v.toPath(), k);

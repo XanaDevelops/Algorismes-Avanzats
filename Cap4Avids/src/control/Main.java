@@ -63,13 +63,17 @@ public class Main implements Comunicar {
 
     @Override
     public void arrancar(int id) {
-        finestra.arrancar(id);
+        SwingUtilities.invokeLater(() -> {
+            finestra.arrancar(id);
+        });
     }
 
     @Override
     public void finalitzar(int id) {
         processos.remove(id);
-        finestra.finalitzar(id);
+        SwingUtilities.invokeLater(() -> {
+            finestra.finalitzar(id);
+        });
     }
 
     @Override
