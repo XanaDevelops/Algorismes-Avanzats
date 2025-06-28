@@ -42,7 +42,7 @@ public class Compressor extends Proces {
         Map<Long, String> table = huffman.getTable();
         long time = System.nanoTime();
         //calcular la longitud de les codificaciones de cada byte
-        Map<Long, Integer> codeLengths = new TreeMap<>();
+        Map<Long, Integer> codeLengths = new TreeMap<>(Long::compareUnsigned);
         int totalUnicSymbols = 0;
         List<Long> symbols = new ArrayList<>();
         for (Map.Entry<Long, String> e : table.entrySet()) {
@@ -101,10 +101,11 @@ public class Compressor extends Proces {
             try (InputStream fis = new BufferedInputStream(Files.newInputStream(inputPath))) {
                 long b;
                 while ((b = fis.read()) != -1) {
+                    b = b & (0xFFL);
                     for (int j = 1; j < huffman.getByteSize(); j++) {
                         b = b<<8;
                         int aux = fis.read();
-                        b |= aux != -1 ? aux : 0;
+                        b |= aux != -1 ? (long) aux & (0xFFL) : 0;
                     }
 
                     byte[] codeBits = canonCodes.get(b);

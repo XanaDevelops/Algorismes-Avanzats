@@ -58,29 +58,8 @@ public class Decompressor extends Proces {
                 return;
             }
 
-//            short tamWords = dis.readShort();
-//
-//            short length = dis.readShort();
-//            byte[] extensionBytes = new byte[length];
-//            dis.readFully(extensionBytes);
-//
-//
-//
-//            String extension = new String(extensionBytes);
-//            int totalUnicSymbols = dis.readInt();
-//            Map<Long, Integer> codeLengths = new TreeMap<>();
-//            List<Long> symbols = new ArrayList<>();
-//
-//            for (int i = 0; i < totalUnicSymbols; i++) {
-//                long sym = dis.readLong();
-//                int len = dis.readInt();
-//                codeLengths.put(sym, len);
-//                symbols.add(sym);
-//            }
-
-//            long originalBytes = dis.readLong();
             List<Long> symbolList = new ArrayList<>(h.codeLengths.keySet());
-
+            symbolList.sort(Long::compareUnsigned);
             Map<Long, byte[]> canonCodes = Huffman.generateCanonicalCodes(h.codeLengths, symbolList);
             DecodeNode root = buildDecodingTree(canonCodes);
             String fileName = src.split("/")[src.split("/").length - 1];
