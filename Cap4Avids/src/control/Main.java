@@ -83,15 +83,6 @@ public class Main implements Comunicar {
         processos.put(id, comunicar);
     }
 
-    /**
-     * Envia un missatge
-     *
-     * @param s El missatge
-     */
-    @Override
-    public void comunicar(String s) {
-
-    }
 
     @Override
     public void eliminarFitxer(File file, boolean descomprimir) {
