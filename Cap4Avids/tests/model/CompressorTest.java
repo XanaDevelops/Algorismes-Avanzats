@@ -22,7 +22,7 @@ class CompressorTest {
 
 
     String path = "tests/res/";
-    String[] names = {"testABC", "testAllSmall", "testAll"};
+    String[] names = {"testABC", "testAllSmall", "testAll", "big"};
 
     private void actualTest(Compressor c, String name) throws IOException {
         c.compressFile();

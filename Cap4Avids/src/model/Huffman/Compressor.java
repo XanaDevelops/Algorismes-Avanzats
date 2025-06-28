@@ -102,9 +102,9 @@ public class Compressor extends Proces {
             //Escriure la codificació del contingut de l'arxiu d'entrada
             try (InputStream fis = new BufferedInputStream(Files.newInputStream(inputPath))) {
                 byte[] bfis = fis.readAllBytes();
-                int split = ((bfis.length/huffH.byteSize) / N_THREADS)*huffH.byteSize;
-                System.err.println("C: split = " + split + ", bytes = " + bfis.length + ", " + (split*N_THREADS));
-                for (int i = 0; i < N_THREADS - 1; i++) {
+                int split = Math.max(((bfis.length/huffH.byteSize) / N_THREADS)*huffH.byteSize, 256);
+                //System.err.println("C: split = " + split + ", bytes = " + bfis.length + ", " + (split*N_THREADS));
+                for (int i = 0; i < N_THREADS - 1 && i * split < bfis.length; i++) {
                     int finalI = i;
                     executar(() -> {
                         comprimir(finalI, bfis, finalI*split, (finalI+1)*split, canonCodes, huffH.byteSize);
@@ -116,6 +116,10 @@ public class Compressor extends Proces {
 
                 waitAll();
                 for(ArrayList<Boolean> fileChunk : fileChunks) {
+                    if(fileChunk == null) {
+                        continue;
+                    }
+                    System.err.println("S: " + fileChunk.size());
                     for(Boolean b : fileChunk) {
                         bitOut.writeBit(b);
                     }
@@ -132,6 +136,7 @@ public class Compressor extends Proces {
 
     private void comprimir(int id, byte[] arr, int ini, int fi, Map<Long, byte[]> canonCodes, int byteSize) {
         ArrayList<Boolean> fileChunk = new ArrayList<>();
+        System.err.println("CC: "+ id+", ini: "+ini+", fi: "+fi + " arr.length: "+arr.length);
         for (int i = ini; i < arr.length && i<fi; i+=byteSize) {
             long b = (long) arr[i] & (0xFFL);
             for (int j = 1; j < byteSize; j++) {

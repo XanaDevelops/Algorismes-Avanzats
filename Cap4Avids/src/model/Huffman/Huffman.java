@@ -241,8 +241,7 @@ public class Huffman implements Runnable {
     }
 
     private void calculateFreqs() {
-        int _split = fileBytes.length / (N_THREADS / byteSize);
-        final int split = _split + byteSize - (_split % byteSize);
+        final int split = Math.max(((fileBytes.length/byteSize)/N_THREADS)*byteSize, 256);
         //assegurar-se amb split > 0 que te sentit dividir en threads
         for (int i = 0; i < N_THREADS - 1 && split > 0; i++) {
             int j = i;
