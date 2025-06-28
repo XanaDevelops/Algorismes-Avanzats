@@ -32,12 +32,6 @@ public class HuffHeader {
 
     }
 
-    public void loadCodeLengths(Map<Long, String> table){
-        this.codeLengths = new TreeMap<>();
-        for (Map.Entry<Long, String> entry : table.entrySet()) {
-
-        }
-    }
 
     public static void write(HuffHeader h, DataOutputStream dos) throws IOException {
         dos.write(h.magicN);
@@ -54,7 +48,6 @@ public class HuffHeader {
         dos.flush();
     }
 
-    @SuppressWarnings("unchecked")
     public static HuffHeader read(DataInputStream dis) throws IOException {
         HuffHeader h = new HuffHeader();
         dis.readFully(h.magicN);
@@ -67,11 +60,12 @@ public class HuffHeader {
         dis.readFully(h.originalExtension);
         h.uniqueSymbols = dis.readInt();
         Callable<? extends Number> call = getReadCallable(dis, h);
-        h.codeLengths = new TreeMap<>();
+        h.codeLengths = new TreeMap<>(Long::compareUnsigned);
         for (int i = 0; i < h.uniqueSymbols; i++) {
             try {
                 Number sym =  call.call();
                 Integer len = dis.readInt();
+
                 h.codeLengths.put(sym.longValue(), len);
             } catch (Exception e) {
                 throw new RuntimeException(e);
