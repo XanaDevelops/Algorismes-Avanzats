@@ -86,6 +86,15 @@ public class Decompressor extends Proces {
         }
     }
 
+    private void decode(int id, byte[] arr, int ini, int fi, DecodeNode root, int bitCap) {
+        try(ByteArrayInputStream bais = new ByteArrayInputStream(arr);
+            BitInputStream bis = new BitInputStream(bais)){
+            bais.skip(ini);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private DecodeNode buildDecodingTree(Map<Long, byte[]> codes) {
         DecodeNode root = new DecodeNode();
