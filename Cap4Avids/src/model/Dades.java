@@ -36,6 +36,7 @@ public class Dades {
         public informacio(double entropia, long tamanyOriginal, long tamanyComprimit,   int simbolsUnics, double longitudMitjana){
             this.entropia = entropia;
             this.tamanyComprimit = tamanyComprimit;
+            this.tamanyOriginal = tamanyOriginal;
             this.taxaCompressio = (double)tamanyComprimit/tamanyOriginal*100;
             this.simbolsUnics = simbolsUnics;
             this.longitudMitjana = longitudMitjana;
