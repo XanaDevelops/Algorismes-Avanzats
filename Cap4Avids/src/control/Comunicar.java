@@ -43,4 +43,7 @@ public interface Comunicar {
         throw new UnsupportedOperationException("Not supported yet.");
 
     }
+    default void estadistiquesLLestes(){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

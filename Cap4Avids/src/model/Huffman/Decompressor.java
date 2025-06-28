@@ -41,6 +41,8 @@ public class Decompressor extends Proces {
     }
 
     public void decompressFile() throws IOException {
+        long time = System.nanoTime();
+
         Path srcPath = Path.of(src);
         try (InputStream fis = new BufferedInputStream(Files.newInputStream(srcPath));
              DataInputStream dis = new DataInputStream(fis)) {
@@ -61,9 +63,10 @@ public class Decompressor extends Proces {
             String fileName = src.split("/")[src.split("/").length - 1];
             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
             System.out.println("fileName = " + fileName);
+            String outputFile = outputFolder+"/"+ fileName+ "."+ new String(h.originalExtension);
             try (BitInputStream bitIn = new BitInputStream(fis);
                  OutputStream fosOut = new BufferedOutputStream(
-                         new FileOutputStream(outputFolder+"/"+ fileName+ "."+ new String(h.originalExtension)))) {
+                         new FileOutputStream(outputFile))) {
                 int written = 0;
                 while (written < h.originalBytes) {
                     DecodeNode node = root;
@@ -83,7 +86,12 @@ public class Decompressor extends Proces {
                     fosOut.flush();
                 }
             }
+            time = System.nanoTime()-time;
+            Dades.informacio info = new Dades.informacio(Files.size(Path.of(outputFile)),Files.size(srcPath),h.uniqueSymbols);
+            info.setTempsDecompressio(time);
+            dades.setInfo(info);
         }
+
     }
 
 

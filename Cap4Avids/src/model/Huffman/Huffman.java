@@ -148,6 +148,8 @@ public class Huffman implements Runnable {
 
     private Node treeRoot;
 
+
+
     private double entropia = -1;
 
     private final ConcurrentHashMap<Long, String> table = new ConcurrentHashMap<>();

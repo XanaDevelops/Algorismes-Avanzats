@@ -29,7 +29,9 @@ public class Finestra extends JFrame implements Comunicar {
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1000, 600);
-        setLocationRelativeTo(null);
+//        setLocationRelativeTo(null);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(40,60);
         setLayout(new BorderLayout());
 
         // Barra d'eines
