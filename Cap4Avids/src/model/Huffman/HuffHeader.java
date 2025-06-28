@@ -32,42 +32,6 @@ public class HuffHeader {
 
     }
 
-    public void loadCodeLengths(Map<Long, String> table){
-        this.codeLengths = new TreeMap<>();
-        for (Map.Entry<Long, String> entry : table.entrySet()) {
-
-        }
-    }
-    public long bytesHeader(){
-
-                int total = 0;
-                // 1. byte[] magicN
-                total += magicN.length;
-                // 2. short byteSize
-                total += 2;
-                // 3. short extensionLength
-                total += 2;
-                // 4. byte[] originalExtension
-                if (originalExtension != null) {
-                    total += originalExtension.length;
-                }
-
-                // 5. int uniqueSymbols
-                total += 4;
-
-                // 6. Map<Long, Integer> codeLengths
-                if (codeLengths != null) {
-                    for (Map.Entry<Long, Integer> entry : codeLengths.entrySet()) {
-                        total += 8; // long key
-                        total += 4; // int value
-                    }
-                }
-
-                // 8. long originalBytes
-                total += 8;
-
-                return total;
-    }
 
     public static void write(HuffHeader h, DataOutputStream dos) throws IOException {
         dos.write(h.magicN);
@@ -84,7 +48,6 @@ public class HuffHeader {
         dos.flush();
     }
 
-    @SuppressWarnings("unchecked")
     public static HuffHeader read(DataInputStream dis) throws IOException {
         HuffHeader h = new HuffHeader();
         dis.readFully(h.magicN);
@@ -97,11 +60,12 @@ public class HuffHeader {
         dis.readFully(h.originalExtension);
         h.uniqueSymbols = dis.readInt();
         Callable<? extends Number> call = getReadCallable(dis, h);
-        h.codeLengths = new TreeMap<>();
+        h.codeLengths = new TreeMap<>(Long::compareUnsigned);
         for (int i = 0; i < h.uniqueSymbols; i++) {
             try {
                 Number sym =  call.call();
                 Integer len = dis.readInt();
+
                 h.codeLengths.put(sym.longValue(), len);
             } catch (Exception e) {
                 throw new RuntimeException(e);

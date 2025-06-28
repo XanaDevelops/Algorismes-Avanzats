@@ -5,6 +5,13 @@ def main() -> None:
         for i in range(256):
             barr.extend([i]*(i+1))
         file.write(bytes(barr))
+    with open("testAllSmall.txt", "wb") as file:
+        barr = bytearray()
+
+        for i in range(256):
+            barr.extend([i])
+        file.write(bytes(barr))
+        
     with open("testHB.txt", "wb") as file:
         barr = bytearray()
         
