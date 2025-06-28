@@ -9,7 +9,6 @@ public interface Comunicar {
      * Envia un missatge
      * @param s El missatge
      */
-    public void comunicar(String s);
 
     default void eliminarFitxer(File file, boolean descomprimir) {
         throw new UnsupportedOperationException("Not supported yet.");
