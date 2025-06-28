@@ -95,6 +95,7 @@ public class Main implements Comunicar {
         String path  = parts.length > 1 ? parts[1] : null;
 
         switch (cmd) {         //TODO: exportar esto
+            case "Carregar" -> carregarFitxers(path);
             case "Eliminar"-> {
                 assert path != null;
                 removeFitxer(path, path.endsWith(".huf"));
