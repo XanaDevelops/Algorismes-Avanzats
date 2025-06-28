@@ -78,16 +78,18 @@ public class Finestra extends JFrame implements Comunicar {
                 fc.setMultiSelectionEnabled(true);
                 if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                     for (File f : fc.getSelectedFiles()) {
-                        Main.instance.comunicar("Carregar;" + f.getAbsolutePath());
+                        boolean esDescomprimir = f.getName().endsWith(".huf");
+                        principal.afegirEnEspera(Dades.getTaskId(), f, esDescomprimir);
                     }
+                    actualitzar();
                 }
             }
             case "Eliminar" -> {
                 File f = aComprimir.getSelectedFile();
-                principal.comunicar("Eliminar;" + f.getAbsolutePath());
+                if (f != null) principal.eliminarFitxer(f, false);
 
                 f = aDescomprimir.getSelectedFile();
-                principal.comunicar("Eliminar;" + f.getAbsolutePath());
+                if (f != null) principal.eliminarFitxer(f, true);
 
             }
             case "Comprimir" -> {
@@ -104,19 +106,14 @@ public class Finestra extends JFrame implements Comunicar {
             }
 
             case "Mostrar Arbre" -> {
-                // FinestraArbre dlg = new FinestraArbre();
-                //dlg.mostra();
-                Main.instance.comunicar(nom);
+                System.err.println("TODO: " + nom);
             }
 
             case "Veure Arbre" -> {
                 File sel = aComprimir.getSelectedFile();
                 this.visualitzar(sel);
             }
-            default -> {
-                // Comprimir, Descomprimir, Guardar
-                Main.instance.comunicar(nom);
-            }
+            default -> System.err.println("Acció no reconeguda: " + nom);
         }
     }
 
