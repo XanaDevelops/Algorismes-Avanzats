@@ -9,6 +9,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Compressor extends Proces {
@@ -45,9 +46,12 @@ public class Compressor extends Proces {
         Map<Long, Integer> codeLengths = new TreeMap<>();
         int totalUnicSymbols = 0;
         List<Long> symbols = new ArrayList<>();
+        double longitudMitjana = 0;
+        Map<Long, Long> freqs = huffman.getFreqs();
         for (Map.Entry<Long, String> e : table.entrySet()) {
             long sym = e.getKey(); //byte positiu
             codeLengths.put(sym, e.getValue().length());
+            longitudMitjana+=e.getValue().length()*freqs.get(sym);
             symbols.add(sym);
             totalUnicSymbols++;
         }
@@ -61,7 +65,9 @@ public class Compressor extends Proces {
 
         fileName = fileName.substring(0, fileName.lastIndexOf('.'));
         System.out.println("File: " +outputFolder +"\\"+ fileName + Dades.EXTENSIO);
-        try (OutputStream fos = Files.newOutputStream(Path.of(outputFolder +"\\"+ fileName + Dades.EXTENSIO));
+        String outputPath = outputFolder +"\\"+ fileName + Dades.EXTENSIO;
+        Path outputFile = Path.of(outputPath);
+        try (OutputStream fos = Files.newOutputStream(outputFile);
              BufferedOutputStream bufOut = new BufferedOutputStream(fos);
              DataOutputStream dos = new DataOutputStream(bufOut);
              BitOutputStream bitOut = new BitOutputStream(bufOut)) {
@@ -70,11 +76,8 @@ public class Compressor extends Proces {
             //guardar l'extensió original de l'arxiu
             HuffHeader huffH = new HuffHeader();
 
-//            dos.write(Dades.magicNumbers);
-
             //guardar el tamany de les paraules comprimides
             huffH.byteSize= (short) huffman.getByteSize();
-//            dos.writeShort(huffman.getByteSize());
 
             Path inputPath = Path.of(this.inputPath);
             String[] extension = this.inputPath.split("\\.", 2);
@@ -94,6 +97,7 @@ public class Compressor extends Proces {
                 case 4 -> Long.class;
                 default -> Byte.class;
             };
+
             HuffHeader.write(huffH, dos);
             dos.flush();
 
@@ -116,12 +120,16 @@ public class Compressor extends Proces {
                 }
             }
             bitOut.flush();
+            time = System.nanoTime() - time;
+            System.err.println("end " + id);
+            Dades.informacio info = new Dades.informacio(huffman.getEntropia(), Files.size(inputPath),Files.size(outputFile),totalUnicSymbols,longitudMitjana);
+            info.setTempsCompressio(time);
+            dades.setInfo(info);
+//        data.addTempsCompressio(time, fileName, huffman.getTipusCua);
         }
 
 
-        time = System.nanoTime() - time;
-        System.err.println("end " + id);
-//        data.addTempsCompressio(time, fileName, huffman.getTipusCua);
+
     }
 
 

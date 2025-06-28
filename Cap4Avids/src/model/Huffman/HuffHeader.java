@@ -38,6 +38,36 @@ public class HuffHeader {
 
         }
     }
+    public long bytesHeader(){
+
+                int total = 0;
+                // 1. byte[] magicN
+                total += magicN.length;
+                // 2. short byteSize
+                total += 2;
+                // 3. short extensionLength
+                total += 2;
+                // 4. byte[] originalExtension
+                if (originalExtension != null) {
+                    total += originalExtension.length;
+                }
+
+                // 5. int uniqueSymbols
+                total += 4;
+
+                // 6. Map<Long, Integer> codeLengths
+                if (codeLengths != null) {
+                    for (Map.Entry<Long, Integer> entry : codeLengths.entrySet()) {
+                        total += 8; // long key
+                        total += 4; // int value
+                    }
+                }
+
+                // 8. long originalBytes
+                total += 8;
+
+                return total;
+    }
 
     public static void write(HuffHeader h, DataOutputStream dos) throws IOException {
         dos.write(h.magicN);
