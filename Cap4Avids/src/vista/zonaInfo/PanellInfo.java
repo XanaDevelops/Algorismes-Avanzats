@@ -1,4 +1,4 @@
-package vista;
+package vista.zonaInfo;
 
 import control.Comunicar;
 import control.Main;

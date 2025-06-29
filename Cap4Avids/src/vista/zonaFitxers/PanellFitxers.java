@@ -1,8 +1,9 @@
-package vista;
+package vista.zonaFitxers;
 
 import control.Comunicar;
 import control.Main;
 import model.Dades;
+import vista.Finestra;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
