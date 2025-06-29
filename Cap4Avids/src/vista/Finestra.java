@@ -3,6 +3,8 @@ package vista;
 import control.Comunicar;
 import control.Main;
 import model.Dades;
+import vista.zonaArbre.VistaArbreHuffman;
+import vista.zonaFitxers.PanellFitxers;
 
 import javax.swing.*;
 import java.awt.*;
