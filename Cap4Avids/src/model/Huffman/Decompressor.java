@@ -8,11 +8,15 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Decompressor extends Proces {
 
     private final String src;
     private final String outputFolder;
+
+    private final ByteArrayOutputStream[] fileChunks = new ByteArrayOutputStream[N_THREADS];
 
     public Decompressor(int id, String src, String outputFolder) {
         super(id);
@@ -61,37 +65,71 @@ public class Decompressor extends Proces {
             String fileName = src.split("/")[src.split("/").length - 1];
             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
             System.out.println("fileName = " + fileName);
-            try (BitInputStream bitIn = new BitInputStream(fis);
-                 OutputStream fosOut = new BufferedOutputStream(
-                         new FileOutputStream(outputFolder+"/"+ fileName+ "."+ new String(h.originalExtension)))) {
-                int written = 0;
-                while (written < h.originalBytes) {
-                    DecodeNode node = root;
-                    while (!node.isLeaf()) {
-                        boolean bit = bitIn.readBit();
-                        node = bit ? node.right : node.left;
+            try (OutputStream fosOut = new BufferedOutputStream(
+                         new FileOutputStream(outputFolder+"/"+ fileName+ "."+ new String(h.originalExtension)))){
+                byte[] bytes = fis.readAllBytes();
+                int lastIni = 0;
+                for (int i = 0; i < h.bitTamChunks.length; i++) {
+                    if(h.bitTamChunks[i] == 0){
+                        continue;
                     }
-                    //fosOut.write(node.symbol & 0xFF);
-                    //written++;
-                    long aux = node.symbol;
-                    for(int j = 0; j < h.byteSize && written < h.originalBytes; j++){
-                        int bits = (int) ((aux & (0xFFL << (8*(h.byteSize-j-1)))) >> (8* (h.byteSize-j-1)));
-                        fosOut.write(bits);
-                        written++;
-                    }
-                    //DEBUG
-                    fosOut.flush();
+                    int byteIni = lastIni;
+                    int finalI = i;
+                    executar(() -> {
+                        decode(finalI, bytes, byteIni, root, h.bitTamChunks[finalI], h.byteSize);
+                    });
+                    lastIni = (h.bitTamChunks[i] >> 3) + byteIni + ((h.bitTamChunks[i] % 8) == 0 ? 0 : 1) ;
                 }
+                waitAll();
+
+                long remainWrite = h.originalBytes;
+                for(ByteArrayOutputStream fileChunk : fileChunks) {
+                    if(fileChunk != null){
+                        remainWrite -= fileChunk.size();
+                        if(remainWrite < 0){
+                            byte[] chunk = fileChunk.toByteArray();
+                            fosOut.write(chunk, 0, (int) (chunk.length + remainWrite));
+                        }else {
+                            fileChunk.writeTo(fosOut);
+                        }
+                        System.out.println(remainWrite);
+                    }
+                }
+
+
+                //DEBUG
+                fosOut.flush();
             }
         }
     }
 
-    private void decode(int id, byte[] arr, int ini, int fi, DecodeNode root, int bitCap) {
+    private void decode(int id, byte[] arr, int ini, DecodeNode root, int bitCap, int byteSize) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try(ByteArrayInputStream bais = new ByteArrayInputStream(arr);
-            BitInputStream bis = new BitInputStream(bais)){
+            BitInputStream bis = new BitInputStream(bais)) {
             bais.skip(ini);
+            int read = 0;
+            while (read < bitCap) {
+                DecodeNode node = root;
+                while (!node.isLeaf() && read < bitCap) {
+                    boolean bit = bis.readBit();
+                    read++;
+                    node = bit ? node.right : node.left;
+                }
+
+                long aux = node.symbol;
+                for (int i = 0; i < byteSize; i++) {
+                    int bits = (int) ((aux & (0xFFL << (8 * (byteSize - i - 1)))) >> (8 * (byteSize - i - 1)));
+                    bos.write(bits);
+                }
+            }
+        }catch (EOFException e){
+            e.printStackTrace();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            fileChunks[id] = bos;
         }
     }
 

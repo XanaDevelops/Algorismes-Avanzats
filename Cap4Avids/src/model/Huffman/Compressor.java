@@ -115,8 +115,8 @@ public class Compressor extends Proces {
 
                 waitAll();
 
-                System.arraycopy(chunksSizes, 0, huffH.bitTamChunks, 0, chunksSizes.length);
-
+                //System.arraycopy(chunksSizes, 0, huffH.bitTamChunks, 0, chunksSizes.length);
+                huffH.bitTamChunks = chunksSizes;
                 HuffHeader.write(huffH, dos);
                 dos.flush();
 
@@ -124,7 +124,6 @@ public class Compressor extends Proces {
                     if(fileChunk == null) {
                         continue;
                     }
-                    System.err.println("S: " + fileChunk.size());
                     fileChunk.writeTo(bufOut);
                 }
             }

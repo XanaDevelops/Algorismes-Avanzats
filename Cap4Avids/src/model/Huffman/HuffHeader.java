@@ -16,7 +16,7 @@ import static model.Dades.magicNumbers;
 
 public class HuffHeader {
 
-    public static final int N_CHUNKS = 16;
+    public static final int N_CHUNKS = 2;
 
     public  final byte[] magicN = new byte[magicNumbers.length];
     public short byteSize;
