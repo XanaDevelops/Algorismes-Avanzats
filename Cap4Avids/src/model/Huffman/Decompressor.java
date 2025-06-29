@@ -45,6 +45,8 @@ public class Decompressor extends Proces {
     }
 
     public void decompressFile() throws IOException {
+        long time = System.nanoTime();
+
         Path srcPath = Path.of(src);
         try (InputStream fis = new BufferedInputStream(Files.newInputStream(srcPath));
              DataInputStream dis = new DataInputStream(fis)) {
@@ -65,8 +67,9 @@ public class Decompressor extends Proces {
             String fileName = src.split("/")[src.split("/").length - 1];
             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
             System.out.println("fileName = " + fileName);
+            String outputFile = outputFolder+"/"+ fileName+ "."+ new String(h.originalExtension);
             try (OutputStream fosOut = new BufferedOutputStream(
-                         new FileOutputStream(outputFolder+"/"+ fileName+ "."+ new String(h.originalExtension)))){
+                         new FileOutputStream(outputFile))) {
                 byte[] bytes = fis.readAllBytes();
                 int lastIni = 0;
                 for (int i = 0; i < h.bitTamChunks.length; i++) {
@@ -98,6 +101,10 @@ public class Decompressor extends Proces {
                 //DEBUG
                 fosOut.flush();
             }
+            time = System.nanoTime()-time;
+            Dades.informacio info = new Dades.informacio(Files.size(Path.of(outputFile)),Files.size(srcPath),h.uniqueSymbols);
+            info.setTempsDecompressio(time);
+            dades.setInfo(info);
         }
     }
 
@@ -121,10 +128,7 @@ public class Decompressor extends Proces {
                     bos.write(bits);
                 }
             }
-        }catch (EOFException e){
-            e.printStackTrace();
-
-        } catch (IOException e) {
+        }catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
             fileChunks[id] = bos;
