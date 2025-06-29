@@ -18,7 +18,7 @@ public abstract class Proces implements Runnable, Comunicar {
     protected final Dades dades = Main.instance.getDades();
 
     //protected final int N_THREADS = Runtime.getRuntime().availableProcessors();
-    protected final int N_THREADS = 2;
+    protected final int N_THREADS = HuffHeader.N_CHUNKS;
 
     protected final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(N_THREADS);
     protected final ArrayList<Future<?>> futures = new ArrayList<>();

@@ -16,11 +16,11 @@ import static model.Dades.magicNumbers;
 
 public class HuffHeader {
 
-    public static final int N_CHUNKS = 2;
+    public static final int N_CHUNKS = 16;
 
     public  final byte[] magicN = new byte[magicNumbers.length];
-    public short byteSize;
-    public short extensionLength;
+    public byte byteSize;
+    public byte extensionLength;
     public byte[] originalExtension;
     public int uniqueSymbols;
     public Map<Long, Integer> codeLengths;
@@ -37,8 +37,8 @@ public class HuffHeader {
 
     public static void write(HuffHeader h, DataOutputStream dos) throws IOException {
         dos.write(h.magicN);
-        dos.writeShort(h.byteSize);
-        dos.writeShort(h.extensionLength);
+        dos.writeByte(h.byteSize);
+        dos.writeByte(h.extensionLength);
         dos.write(h.originalExtension);
         dos.writeInt(h.uniqueSymbols);
         Consumer<Long> call = getWriteConsumer(dos, h);
@@ -61,8 +61,8 @@ public class HuffHeader {
         if (!Arrays.equals(h.magicN, magicNumbers)) {
             return null;
         }
-        h.byteSize = dis.readShort();
-        h.extensionLength = dis.readShort();
+        h.byteSize = dis.readByte();
+        h.extensionLength = dis.readByte();
         h.originalExtension = new byte[h.extensionLength];
         dis.readFully(h.originalExtension);
         h.uniqueSymbols = dis.readInt();

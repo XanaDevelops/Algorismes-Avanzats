@@ -75,14 +75,14 @@ public class Compressor extends Proces {
 //            dos.write(Dades.magicNumbers);
 
             //guardar el tamany de les paraules comprimides
-            huffH.byteSize= (short) huffman.getByteSize();
+            huffH.byteSize= (byte) huffman.getByteSize();
 //            dos.writeShort(huffman.getByteSize());
 
             Path inputPath = Path.of(this.inputPath);
             String[] extension = this.inputPath.split("\\.", 2);
             byte[] extensionBytes = extension[1].getBytes(StandardCharsets.UTF_8);
             //tamany de l'extensió
-            huffH.extensionLength= (short) extensionBytes.length;
+            huffH.extensionLength= (byte) extensionBytes.length;
             //l'extensió en sí
              huffH.originalExtension = extensionBytes;
              huffH.uniqueSymbols = totalUnicSymbols;
@@ -115,7 +115,6 @@ public class Compressor extends Proces {
 
                 waitAll();
 
-                //System.arraycopy(chunksSizes, 0, huffH.bitTamChunks, 0, chunksSizes.length);
                 huffH.bitTamChunks = chunksSizes;
                 HuffHeader.write(huffH, dos);
                 dos.flush();
@@ -138,7 +137,6 @@ public class Compressor extends Proces {
     }
 
     private void comprimir(int id, byte[] arr, int ini, int fi, Map<Long, byte[]> canonCodes, int byteSize) {
-        System.err.println("CC: "+ id+", ini: "+ini+", fi: "+fi + " arr.length: "+arr.length);
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream(Math.max(fi-ini, 0));
              BitOutputStream bos2 = new BitOutputStream(bos)) {
             for (int i = ini; i < arr.length && i<fi; i+=byteSize) {

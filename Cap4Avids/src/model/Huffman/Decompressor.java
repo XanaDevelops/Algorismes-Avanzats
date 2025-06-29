@@ -92,10 +92,8 @@ public class Decompressor extends Proces {
                         }else {
                             fileChunk.writeTo(fosOut);
                         }
-                        System.out.println(remainWrite);
                     }
                 }
-
 
                 //DEBUG
                 fosOut.flush();
