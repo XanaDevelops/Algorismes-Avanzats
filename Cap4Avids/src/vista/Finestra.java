@@ -17,12 +17,12 @@ public class Finestra extends JFrame implements Comunicar {
 
     private final PanellFitxers aComprimir;
     private final PanellFitxers aDescomprimir;
-
+    private PanellInfo panellInfo;
 
     private final String[] nomsBtn = {"Carregar", "Comprimir", "Descomprimir", "Mostrar Arbre"};
     private final JButton[] botons = new JButton[nomsBtn.length];
 
-    private final JPanel panellVisualitzador;
+//    private final JPanel panellVisualitzador;
     public Finestra() {
         super("Compressor Huffman");
 
@@ -60,16 +60,20 @@ public class Finestra extends JFrame implements Comunicar {
         JSplitPane splitFitxers = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, aComprimir, aDescomprimir);
         splitFitxers.setResizeWeight(0.5);
 
-        // Panell de visualització de l'arbre (dreta)
-        panellVisualitzador = new JPanel(new BorderLayout());
-        panellVisualitzador.setBorder(BorderFactory.createTitledBorder("Arbre de Huffman"));
-        panellVisualitzador.add(new JLabel("Selecciona un fitxer .huf i fes clic a 'Veure Arbre'"), BorderLayout.CENTER);
+        // Panell de visualització de l'arbre (dreta) --> se posa en finestra separada
+//        panellVisualitzador = new JPanel(new BorderLayout());
+//        panellVisualitzador.setBorder(BorderFactory.createTitledBorder("Arbre de Huffman"));
+//        panellVisualitzador.add(new JLabel("Selecciona un fitxer .huf i fes clic a 'Veure Arbre'"), BorderLayout.CENTER);
+//
+//        // Panell principal
+//        JSplitPane splitPrincipal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitFitxers, panellVisualitzador);
+//        splitPrincipal.setResizeWeight(0.6);
+//        add(splitPrincipal, BorderLayout.CENTER);
 
-        // Panell principal
-        JSplitPane splitPrincipal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitFitxers, panellVisualitzador);
+        panellInfo = new PanellInfo();
+        JSplitPane splitPrincipal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitFitxers, panellInfo);
         splitPrincipal.setResizeWeight(0.6);
         add(splitPrincipal, BorderLayout.CENTER);
-
         setVisible(true);
     }
 
@@ -120,14 +124,14 @@ public class Finestra extends JFrame implements Comunicar {
         }
     }
 
-    private void mostrarArbre(VistaArbreHuffman v) {
-        SwingUtilities.invokeLater(() -> {
-            panellVisualitzador.removeAll();
-            panellVisualitzador.add(new JScrollPane(v), BorderLayout.CENTER);
-            panellVisualitzador.revalidate();
-            panellVisualitzador.repaint();
-        });
-    }
+//    private void mostrarArbre(VistaArbreHuffman v) {
+//        SwingUtilities.invokeLater(() -> {
+//            panellVisualitzador.removeAll();
+//            panellVisualitzador.add(new JScrollPane(v), BorderLayout.CENTER);
+//            panellVisualitzador.revalidate();
+//            panellVisualitzador.repaint();
+//        });
+//    }
 
     private void mostrarMissatge(String missatge) {
         JOptionPane.showMessageDialog(this, missatge, "Informació", JOptionPane.INFORMATION_MESSAGE);
@@ -188,6 +192,10 @@ public class Finestra extends JFrame implements Comunicar {
         aDescomprimir.refresh();
     }
 
+    @Override
+    public void estadistiquesLLestes() {
+        this.panellInfo.estadistiquesLLestes();
+    }
     public JButton[] getBotons() {
         return botons;
     }
