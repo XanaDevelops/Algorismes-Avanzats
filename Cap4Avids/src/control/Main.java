@@ -39,14 +39,13 @@ public class Main implements Comunicar {
 
     }
 
-    @Override
     public void comprimir(int id, String fileIn, String folderOut, Huffman.WordSize wordSize, Huffman.TipusCua tipusCua) {
         executar(id, new Compressor(id, wordSize, tipusCua, fileIn, folderOut));
     }
 
     @Override
     public void descomprimir(int id, String fileIn, String folderOut) {
-        executar(id, new Decompressor(id, fileIn, folderOut));
+        executar(id, new Decompressor(id, fileIn, folderOut)); // torna a ser la ruta completa
     }
 
     @Override
