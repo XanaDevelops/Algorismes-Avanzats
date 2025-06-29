@@ -152,6 +152,7 @@ public class PanellFitxers extends JPanel {
     }
 
     public File getSelectedFile() {
-        return llistaFitxers.getSelectedValue().getFile();
+        ElementFitxerLlista selected = llistaFitxers.getSelectedValue();
+        return selected != null ? selected.getFile() : null ;
     }
 }

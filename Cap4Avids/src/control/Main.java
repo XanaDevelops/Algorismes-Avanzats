@@ -5,11 +5,9 @@ import model.Huffman.Compressor;
 import model.Huffman.Decompressor;
 import model.Huffman.Huffman;
 import vista.Finestra;
-import vista.FinestraInfo;
-import vista.PanellInfo;
+import vista.zonaInfo.FinestraInfo;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.Executors;

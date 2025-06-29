@@ -100,7 +100,7 @@ public class Finestra extends JFrame implements Comunicar {
                 if (msg != null) Main.instance.comprimir(Dades.getTaskId(), sel.getAbsolutePath(), msg.carpetaDesti, msg.wordSize, msg.tipusCua);
             }
             case "Descomprimir" -> {
-                File sel = aComprimir.getSelectedFile();
+                File sel = aDescomprimir.getSelectedFile();
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.DECOMPRESS, sel);
                 DialegExecucio.DEResult msg = dlg.mostra();
                 if (msg != null) Main.instance.descomprimir(Dades.getTaskId(),sel.getAbsolutePath(), msg.carpetaDesti);
@@ -111,7 +111,9 @@ public class Finestra extends JFrame implements Comunicar {
             }
 
             case "Veure Arbre" -> {
-                File sel = aComprimir.getSelectedFile();
+                File sel = aComprimir.getSelectedFile() != null ?
+                        aComprimir.getSelectedFile() :
+                        aDescomprimir.getSelectedFile();
                 this.visualitzar(sel);
             }
             default -> System.err.println("Acció no reconeguda: " + nom);
@@ -182,7 +184,6 @@ public class Finestra extends JFrame implements Comunicar {
     public void paint(Graphics g) {
         super.paint(g);
 
-        //TODO: check
         aComprimir.refresh(); //o .refresh()
         aDescomprimir.refresh();
     }
