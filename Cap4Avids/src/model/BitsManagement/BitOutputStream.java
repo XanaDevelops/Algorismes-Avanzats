@@ -12,6 +12,7 @@ public  class BitOutputStream implements Closeable, Flushable {
     private final OutputStream out;
     private int currentByte = 0;
     private int bitPos = 0;
+    private int writenBits = 0;
 
     public BitOutputStream(OutputStream out) {
         this.out = out;
@@ -27,6 +28,8 @@ public  class BitOutputStream implements Closeable, Flushable {
             bitPos = 0;
             currentByte = 0;
         }
+
+        writenBits++;
     }
 
     public void writeBits(String bits) throws IOException {
@@ -43,6 +46,10 @@ public  class BitOutputStream implements Closeable, Flushable {
             currentByte = 0;
         }
         out.flush();
+    }
+
+    public int size(){
+        return writenBits;
     }
 
     @Override

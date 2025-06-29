@@ -15,8 +15,8 @@ public class Compressor extends Proces {
     private final String inputPath;
     private final String outputFolder;
 
-    private final ArrayList<Boolean>[] fileChunks = new ArrayList[N_THREADS];
-
+    private final ByteArrayOutputStream[] fileChunks = new ByteArrayOutputStream[N_THREADS];
+    private final int[] chunksSizes = new int[N_THREADS];
 
     public Compressor(int id, Huffman.WordSize wordSize, Huffman.TipusCua cua, String inputPath, String outputFolder) {
         super(id);
@@ -79,13 +79,13 @@ public class Compressor extends Proces {
             HuffHeader huffH = new HuffHeader();
 
             //guardar el tamany de les paraules comprimides
-            huffH.byteSize= (short) huffman.getByteSize();
+            huffH.byteSize= (byte) huffman.getByteSize();
 
             Path inputPath = Path.of(this.inputPath);
             String[] extension = this.inputPath.split("\\.", 2);
             byte[] extensionBytes = extension[1].getBytes(StandardCharsets.UTF_8);
             //tamany de l'extensió
-            huffH.extensionLength= (short) extensionBytes.length;
+            huffH.extensionLength= (byte) extensionBytes.length;
             //l'extensió en sí
              huffH.originalExtension = extensionBytes;
              huffH.uniqueSymbols = totalUnicSymbols;
@@ -100,15 +100,13 @@ public class Compressor extends Proces {
                 default -> Byte.class;
             };
 
-            HuffHeader.write(huffH, dos);
-            dos.flush();
 
             //Escriure la codificació del contingut de l'arxiu d'entrada
             try (InputStream fis = new BufferedInputStream(Files.newInputStream(inputPath))) {
                 byte[] bfis = fis.readAllBytes();
-                int split = ((bfis.length/huffH.byteSize) / N_THREADS)*huffH.byteSize;
-                System.err.println("C: split = " + split + ", bytes = " + bfis.length + ", " + (split*N_THREADS));
-                for (int i = 0; i < N_THREADS - 1; i++) {
+                int split = Math.max(((bfis.length/huffH.byteSize) / N_THREADS)*huffH.byteSize, 256);
+                //System.err.println("C: split = " + split + ", bytes = " + bfis.length + ", " + (split*N_THREADS));
+                for (int i = 0; i < N_THREADS - 1 && i * split < bfis.length; i++) {
                     int finalI = i;
                     executar(() -> {
                         comprimir(finalI, bfis, finalI*split, (finalI+1)*split, canonCodes, huffH.byteSize);
@@ -119,10 +117,16 @@ public class Compressor extends Proces {
                 });
 
                 waitAll();
-                for(ArrayList<Boolean> fileChunk : fileChunks) {
-                    for(Boolean b : fileChunk) {
-                        bitOut.writeBit(b);
+
+                huffH.bitTamChunks = chunksSizes;
+                HuffHeader.write(huffH, dos);
+                dos.flush();
+
+                for(ByteArrayOutputStream fileChunk : fileChunks) {
+                    if(fileChunk == null) {
+                        continue;
                     }
+                    fileChunk.writeTo(bufOut);
                 }
             }
             bitOut.flush();
@@ -133,33 +137,36 @@ public class Compressor extends Proces {
             dades.setInfo(info);
 //        data.addTempsCompressio(time, fileName, huffman.getTipusCua);
         }
-
-
-
     }
 
     private void comprimir(int id, byte[] arr, int ini, int fi, Map<Long, byte[]> canonCodes, int byteSize) {
-        ArrayList<Boolean> fileChunk = new ArrayList<>();
-        for (int i = ini; i < arr.length && i<fi; i+=byteSize) {
-            long b = (long) arr[i] & (0xFFL);
-            for (int j = 1; j < byteSize; j++) {
-                b <<= 8;
-                int aux;
-                if((i+j)>=arr.length)
-                    aux = 0;
-                else{
-                    aux = arr[i+j];
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(Math.max(fi-ini, 0));
+             BitOutputStream bos2 = new BitOutputStream(bos)) {
+            for (int i = ini; i < arr.length && i<fi; i+=byteSize) {
+                long b = (long) arr[i] & (0xFFL);
+                for (int j = 1; j < byteSize; j++) {
+                    b <<= 8;
+                    int aux;
+                    if((i+j)>=arr.length)
+                        aux = 0;
+                    else{
+                        aux = arr[i+j];
+                    }
+                    b |= (long) aux & (0xFFL);
                 }
-                b |= (long) aux & (0xFFL);
-            }
 
-            byte[] codeBits = canonCodes.get(b);
-            assert codeBits != null;
-            for (byte codeBit : codeBits) {
-                fileChunk.add(codeBit == 1);
+                byte[] codeBits = canonCodes.get(b);
+                assert codeBits != null;
+                for (byte codeBit : codeBits) {
+                    bos2.writeBit(codeBit == 1);
+                }
             }
+            chunksSizes[id] = bos2.size();
+            bos2.flush();
+            fileChunks[id] = bos;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        fileChunks[id] = fileChunk;
     }
 
 
