@@ -100,4 +100,14 @@ public class Dades {
     public static int getTaskId(){
         return taskId++;
     }
+
+    public int getIdFromFile(File file, boolean esDescomprimit) {
+        Map<Integer, File> map = esDescomprimit ? aComprimir : aDescomprimir;
+        for (Map.Entry<Integer, File> entry : map.entrySet()) {
+            if (entry.getValue().equals(file)) {
+                return entry.getKey();
+            }
+        }
+        return -1; // No trobat
+    }
 }
