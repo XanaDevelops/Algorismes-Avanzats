@@ -28,6 +28,11 @@ public interface Comunicar {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    default void  actualitzarProgres(int id, int percentatge){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
     default void arrancar(int id){
         throw new UnsupportedOperationException("Not supported yet.");
     }

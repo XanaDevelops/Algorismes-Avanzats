@@ -155,4 +155,8 @@ public class PanellFitxers extends JPanel {
         ElementFitxerLlista selected = llistaFitxers.getSelectedValue();
         return selected != null ? selected.getFile() : null ;
     }
+
+    public ElementFitxerLlista getElementFitxer(int id) {
+        return elementFitxers.get(id);
+    }
 }

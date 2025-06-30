@@ -4,6 +4,7 @@ import control.Comunicar;
 import control.Main;
 import model.Dades;
 import vista.zonaArbre.VistaArbreHuffman;
+import vista.zonaFitxers.ElementFitxerLlista;
 import vista.zonaFitxers.PanellFitxers;
 import vista.zonaInfo.PanellInfo;
 
@@ -23,7 +24,7 @@ public class Finestra extends JFrame implements Comunicar {
     private final String[] nomsBtn = {"Carregar", "Comprimir", "Descomprimir", "Mostrar Arbre"};
     private final JButton[] botons = new JButton[nomsBtn.length];
 
-//    private final JPanel panellVisualitzador;
+    //    private final JPanel panellVisualitzador;
     public Finestra() {
         super("Compressor Huffman");
 
@@ -34,7 +35,7 @@ public class Finestra extends JFrame implements Comunicar {
         setSize(1000, 600);
 //        setLocationRelativeTo(null);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(40,60);
+        setLocation(40, 60);
         setLayout(new BorderLayout());
 
         // Barra d'eines
@@ -102,13 +103,14 @@ public class Finestra extends JFrame implements Comunicar {
                 File sel = aComprimir.getSelectedFile();
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.COMPRESS, sel);
                 DialegExecucio.DEResult msg = dlg.mostra();
-                if (msg != null) Main.instance.comprimir(Dades.getTaskId(), sel.getAbsolutePath(), msg.carpetaDesti, msg.wordSize, msg.tipusCua);
+                if (msg != null)
+                    Main.instance.comprimir(Dades.getTaskId(), sel.getAbsolutePath(), msg.carpetaDesti, msg.wordSize, msg.tipusCua);
             }
             case "Descomprimir" -> {
                 File sel = aDescomprimir.getSelectedFile();
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.DECOMPRESS, sel);
                 DialegExecucio.DEResult msg = dlg.mostra();
-                if (msg != null) Main.instance.descomprimir(Dades.getTaskId(),sel.getAbsolutePath(), msg.carpetaDesti);
+                if (msg != null) Main.instance.descomprimir(Dades.getTaskId(), sel.getAbsolutePath(), msg.carpetaDesti);
             }
 
             case "Mostrar Arbre" -> {
@@ -162,7 +164,7 @@ public class Finestra extends JFrame implements Comunicar {
     }
 
     @Override
-    public void actualitzar(){
+    public void actualitzar() {
         repaint();
         //TODO: check
         aComprimir.refresh(); //o .refresh()
@@ -185,6 +187,7 @@ public class Finestra extends JFrame implements Comunicar {
         }
         actualitzar();
     }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -197,7 +200,20 @@ public class Finestra extends JFrame implements Comunicar {
     public void estadistiquesLLestes() {
         this.panellInfo.estadistiquesLLestes();
     }
+
     public JButton[] getBotons() {
         return botons;
+    }
+
+    @Override
+    public void actualitzarProgres(int id, int percentatge) {
+        SwingUtilities.invokeLater(() -> {
+            ElementFitxerLlista e = aComprimir.getElementFitxer(id);
+            if (e == null) e = aDescomprimir.getElementFitxer(id);
+            if (e != null) {
+                e.setProgress(percentatge);
+            }
+        });
+
     }
 }

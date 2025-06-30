@@ -145,4 +145,9 @@ public class Main implements Comunicar {
     public Dades getDades(){
         return dades;
     }
+
+    @Override
+    public void actualitzarProgres(int id, int percentatge) {
+        finestra.actualitzarProgres(id, percentatge);
+    }
 }
