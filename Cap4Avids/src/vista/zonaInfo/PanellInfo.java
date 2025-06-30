@@ -27,9 +27,9 @@ public class PanellInfo extends JPanel implements Comunicar {
                 return false; // cel·les no editables
             }
         };
-        for (int i = 0; i < 5; i++) {
+        /*for (int i = 0; i < 5; i++) {
             model.addRow(new Object[]{"", ""});
-        }
+        }*/
         table = new JTable(model);
         scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createTitledBorder("Estadístiques"));
@@ -38,12 +38,23 @@ public class PanellInfo extends JPanel implements Comunicar {
         setVisible(true);
     }
 
+    private void clearEstadistiques(){
+        model.setRowCount(0); // limpiar tabla
+        revalidate();
+        repaint();
+
+    }
+
     @Override
     public void estadistiquesLLestes() {
         Dades.Informacio info = Main.instance.getDades().getInfo();
-        if (info == null) return;
+        if (info == null) {
+            clearEstadistiques();
+            return;
+        }
 
         model.setRowCount(0); // limpiar tabla
+
 
         Map<String, Object> data = new LinkedHashMap<>();
 

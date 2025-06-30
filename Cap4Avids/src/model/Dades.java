@@ -15,7 +15,7 @@ public class Dades {
     private static int taskId = 0;
 
     public Dades(){
-
+        info = null;
     }
     public void setInfo(Informacio info){
         this.info = info;
