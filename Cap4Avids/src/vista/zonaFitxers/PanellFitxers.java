@@ -99,15 +99,20 @@ public class PanellFitxers extends JPanel {
 
     public void refresh() {
         SwingUtilities.invokeLater(() -> {
-            model.clear();
-            elementFitxers.clear();
-
             Map<Integer, File> src = esDescomprimit ? dades.getAComprimir() : dades.getADescomprimir();
 
+            for (int id : elementFitxers.keySet().toArray(new Integer[0])) {
+                if (!src.containsKey(id)) {
+                    ElementFitxerLlista e = elementFitxers.remove(id);
+                    model.removeElement(e);
+                }
+            }
+
             src.forEach((k, v) -> {
-                ElementFitxerLlista e = new ElementFitxerLlista(v, v.toPath(), k);
-                elementFitxers.put(k, e);
-                model.addElement(e);
+                ElementFitxerLlista e = elementFitxers.get(k);
+                if (e == null) {
+                    afegirElementFitxer(v, k);
+                }
             });
 
             llistaFitxers.clearSelection();
@@ -115,14 +120,18 @@ public class PanellFitxers extends JPanel {
         });
     }
 
-    private void carregarFitxer(File f) {
-        int newId = Dades.getTaskId();
-        elementFitxers.put(newId, new ElementFitxerLlista(f, f.toPath(), newId));
-        System.out.println(f);
-        Main.instance.getFinestra().afegirEnEspera(newId, f, esDescomprimit);
-
+    public void afegirElementFitxer(File f, int id) {
+        ElementFitxerLlista e = new ElementFitxerLlista(f, f.toPath(), id);
+        elementFitxers.put(id, e);
+        model.addElement(e);
     }
 
+    private void carregarFitxer(File f) {
+        int id = Main.instance.afegirEnEspera(f);
+        if (id >= 0) {
+            afegirElementFitxer(f, id);
+        }
+    }
     private void obrirSelector() {
         JFileChooser fc = new JFileChooser();
         if (!esDescomprimit) fc.setFileFilter(new javax.swing.filechooser
