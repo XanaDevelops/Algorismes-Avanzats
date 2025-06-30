@@ -5,7 +5,6 @@ import model.Huffman.Compressor;
 import model.Huffman.Decompressor;
 import model.Huffman.Huffman;
 import vista.Finestra;
-import vista.zonaInfo.FinestraInfo;
 
 import javax.swing.*;
 import java.io.File;
@@ -110,7 +109,7 @@ public class Main implements Comunicar {
     }
 
     public void removeFitxer(File file, boolean descomprimir) {
-        if (!descomprimir) {
+        if (descomprimir) {
             dades.removeAComprimir(file);
         } else {
             dades.removeADescomprimir(file);

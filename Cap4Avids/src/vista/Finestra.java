@@ -5,6 +5,7 @@ import control.Main;
 import model.Dades;
 import vista.zonaArbre.VistaArbreHuffman;
 import vista.zonaFitxers.PanellFitxers;
+import vista.zonaInfo.PanellInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,10 +92,10 @@ public class Finestra extends JFrame implements Comunicar {
             }
             case "Eliminar" -> {
                 File f = aComprimir.getSelectedFile();
-                if (f != null) principal.eliminarFitxer(f, false);
+                if (f != null) principal.eliminarFitxer(f, true);
 
                 f = aDescomprimir.getSelectedFile();
-                if (f != null) principal.eliminarFitxer(f, true);
+                if (f != null) principal.eliminarFitxer(f, false);
 
             }
             case "Comprimir" -> {
