@@ -1,8 +1,9 @@
-package vista;
+package vista.zonaFitxers;
 
 import control.Comunicar;
 import control.Main;
 import model.Dades;
+import vista.Finestra;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -99,16 +100,16 @@ public class PanellFitxers extends JPanel {
     public void refresh() {
         SwingUtilities.invokeLater(() -> {
             model.clear();
-            System.err.println(elementFitxers.size());
+            elementFitxers.clear();
+
             Map<Integer, File> src = esDescomprimit ? dades.getAComprimir() : dades.getADescomprimir();
+
             src.forEach((k, v) -> {
-                ElementFitxerLlista e = elementFitxers.get(k);
-                if (e == null) {
-                    return;
-                }
+                ElementFitxerLlista e = new ElementFitxerLlista(v, v.toPath(), k);
+                elementFitxers.put(k, e);
                 model.addElement(e);
-                System.err.println(e);
-                    });
+            });
+
             llistaFitxers.clearSelection();
             actualitzaBotons();
         });
@@ -136,7 +137,7 @@ public class PanellFitxers extends JPanel {
 
     private void eliminarSeleccionats() {
         File f = getSelectedFile();
-        Main.instance.comunicar("Eliminar;" + f.getAbsolutePath());
+        Main.instance.eliminarFitxer(f, esDescomprimit);
 
         refresh();
     }
@@ -151,6 +152,7 @@ public class PanellFitxers extends JPanel {
     }
 
     public File getSelectedFile() {
-        return llistaFitxers.getSelectedValue().getFile();
+        ElementFitxerLlista selected = llistaFitxers.getSelectedValue();
+        return selected != null ? selected.getFile() : null ;
     }
 }

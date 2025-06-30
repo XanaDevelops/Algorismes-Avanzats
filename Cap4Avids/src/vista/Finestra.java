@@ -3,6 +3,8 @@ package vista;
 import control.Comunicar;
 import control.Main;
 import model.Dades;
+import vista.zonaArbre.VistaArbreHuffman;
+import vista.zonaFitxers.PanellFitxers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -82,16 +84,17 @@ public class Finestra extends JFrame implements Comunicar {
                 fc.setMultiSelectionEnabled(true);
                 if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                     for (File f : fc.getSelectedFiles()) {
-                        Main.instance.comunicar("Carregar;" + f.getAbsolutePath());
+                        principal.carregarFitxer(f);
                     }
+                    actualitzar();
                 }
             }
             case "Eliminar" -> {
                 File f = aComprimir.getSelectedFile();
-                principal.comunicar("Eliminar;" + f.getAbsolutePath());
+                if (f != null) principal.eliminarFitxer(f, false);
 
                 f = aDescomprimir.getSelectedFile();
-                principal.comunicar("Eliminar;" + f.getAbsolutePath());
+                if (f != null) principal.eliminarFitxer(f, true);
 
             }
             case "Comprimir" -> {
@@ -101,26 +104,23 @@ public class Finestra extends JFrame implements Comunicar {
                 if (msg != null) Main.instance.comprimir(Dades.getTaskId(), sel.getAbsolutePath(), msg.carpetaDesti, msg.wordSize, msg.tipusCua);
             }
             case "Descomprimir" -> {
-                File sel = aComprimir.getSelectedFile();
+                File sel = aDescomprimir.getSelectedFile();
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.DECOMPRESS, sel);
                 DialegExecucio.DEResult msg = dlg.mostra();
                 if (msg != null) Main.instance.descomprimir(Dades.getTaskId(),sel.getAbsolutePath(), msg.carpetaDesti);
             }
 
             case "Mostrar Arbre" -> {
-                // FinestraArbre dlg = new FinestraArbre();
-                //dlg.mostra();
-                Main.instance.comunicar(nom);
+                System.err.println("TODO: " + nom);
             }
 
             case "Veure Arbre" -> {
-                File sel = aComprimir.getSelectedFile();
+                File sel = aComprimir.getSelectedFile() != null ?
+                        aComprimir.getSelectedFile() :
+                        aDescomprimir.getSelectedFile();
                 this.visualitzar(sel);
             }
-            default -> {
-                // Comprimir, Descomprimir, Guardar
-                Main.instance.comunicar(nom);
-            }
+            default -> System.err.println("Acció no reconeguda: " + nom);
         }
     }
 
@@ -163,35 +163,33 @@ public class Finestra extends JFrame implements Comunicar {
     @Override
     public void actualitzar(){
         repaint();
-    }
-
-    @Override
-    public void arrancar(int id) {
-        Comunicar.super.arrancar(id);
-    }
-
-    @Override
-    public void finalitzar(int id) {
-        Comunicar.super.finalitzar(id);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-
         //TODO: check
         aComprimir.refresh(); //o .refresh()
         aDescomprimir.refresh();
     }
 
-    /**
-     * Envia un missatge
-     *
-     * @param s El missatge
-     */
     @Override
-    public void comunicar(String s) {
-        System.err.println("Finestra: " + s);
+    public void arrancar(int id) {
+        JButton[] botons = getBotons();
+        for (JButton boto : botons) {
+            boto.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void finalitzar(int id) {
+        JButton[] botons = getBotons();
+        for (JButton boto : botons) {
+            boto.setEnabled(true);
+        }
+        actualitzar();
+    }
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+
+        aComprimir.refresh(); //o .refresh()
+        aDescomprimir.refresh();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package vista;
+package vista.zonaInfo;
 
 import control.Comunicar;
 import control.Main;
@@ -86,7 +86,4 @@ public class PanellInfo extends JPanel implements Comunicar {
         repaint();
     }
 
-    @Override
-    public void comunicar(String s) {
-    }
 }

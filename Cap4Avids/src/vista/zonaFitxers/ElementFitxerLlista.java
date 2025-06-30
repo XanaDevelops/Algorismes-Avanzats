@@ -1,4 +1,4 @@
-package vista;
+package vista.zonaFitxers;
 
 import javax.swing.*;
 import java.awt.*;

@@ -5,6 +5,7 @@ import model.Huffman.Compressor;
 import model.Huffman.Decompressor;
 import model.Huffman.Huffman;
 import vista.Finestra;
+import vista.zonaInfo.FinestraInfo;
 
 import javax.swing.*;
 import java.io.File;
@@ -46,7 +47,7 @@ public class Main implements Comunicar {
 
     @Override
     public void descomprimir(int id, String fileIn, String folderOut) {
-        executar(id, new Decompressor(id, fileIn, folderOut));
+        executar(id, new Decompressor(id, fileIn, folderOut)); // torna a ser la ruta completa
     }
 
     @Override
@@ -61,13 +62,17 @@ public class Main implements Comunicar {
 
     @Override
     public void arrancar(int id) {
-        finestra.arrancar(id);
+        SwingUtilities.invokeLater(() -> {
+            finestra.arrancar(id);
+        });
     }
 
     @Override
     public void finalitzar(int id) {
         processos.remove(id);
-        finestra.finalitzar(id);
+        SwingUtilities.invokeLater(() -> {
+            finestra.finalitzar(id);
+        });
     }
 
     @Override
@@ -81,26 +86,36 @@ public class Main implements Comunicar {
         processos.put(id, comunicar);
     }
 
-    /**
-     * Envia un missatge
-     *
-     * @param s El missatge
-     */
+
     @Override
-    public void comunicar(String s) {
-        String[] parts = s.split(";");
-        String cmd  = parts[0];
-        String path  = parts.length > 1 ? parts[1] : null;
+    public void eliminarFitxer(File file, boolean descomprimir) {
+        removeFitxer(file, descomprimir);
+    }
 
-        switch (cmd) {         //TODO: exportar esto
-            case "Eliminar"-> {
-                assert path != null;
-                removeFitxer(path, path.endsWith(".huf"));
-            }
-            case "Guardar"->System.out.println("Esperant per guardar");
-
-            default -> System.err.println("WARNING: Main reb missatge?: " + s);
+    @Override
+    public void carregarFitxer(File f) {
+        if (f == null) return;
+        String nom = f.getName().toLowerCase();
+        if (nom.endsWith(".huf")) {
+            dades.addComprimit(Dades.getTaskId(), f);
+            finestra.actualitzar();
+        } else if (nom.endsWith(".txt") || nom.endsWith(".bin")) {
+            dades.addDescomprimit(Dades.getTaskId(), f);
+            finestra.actualitzar();
+        } else {
+            JOptionPane.showMessageDialog(finestra,
+                    "Extensió no vàlida: " + f.getName(),
+                    "Error", JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    public void removeFitxer(File file, boolean descomprimir) {
+        if (!descomprimir) {
+            dades.removeAComprimir(file);
+        } else {
+            dades.removeADescomprimir(file);
+        }
+        finestra.actualitzar();
     }
 
     /**

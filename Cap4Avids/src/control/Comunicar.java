@@ -5,11 +5,16 @@ import model.Huffman.Huffman;
 import java.io.File;
 
 public interface Comunicar {
-    /**
-     * Envia un missatge
-     * @param s El missatge
-     */
-    public void comunicar(String s);
+
+    default void eliminarFitxer(File file, boolean descomprimir) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    default void carregarFitxer(File file) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
 
     default void afegirEnEspera(int id, File file, boolean aComprimir){
         throw new UnsupportedOperationException("Not supported yet.");
