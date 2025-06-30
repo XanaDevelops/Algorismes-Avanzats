@@ -125,7 +125,7 @@ public class Main implements Comunicar {
     }
 
     @Override
-    public void actualitzarProgres(int id, int percentatge) {
-        finestra.actualitzarProgres(id, percentatge);
+    public void actualitzarProgres(int id, boolean On) {
+        finestra.actualitzarProgres(id, On);
     }
 }

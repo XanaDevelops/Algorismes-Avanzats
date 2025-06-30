@@ -116,7 +116,6 @@ public class Compressor extends Proces {
                 });
 
                 waitAll();
-                updateProgress(90);
 
                 huffH.bitTamChunks = chunksSizes;
                 HuffHeader.write(huffH, dos);
@@ -131,7 +130,6 @@ public class Compressor extends Proces {
             }
             bitOut.flush();
             time = System.nanoTime() - time;
-            updateProgress(100);
             System.err.println("end " + id);
             Dades.Informacio info = new Dades.Informacio(huffman.getEntropia(), Files.size(inputPath),Files.size(outputFile),totalUnicSymbols,longitudMitjana);
             info.setTempsCompressio(time);

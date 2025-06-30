@@ -89,7 +89,6 @@ public class Decompressor extends Proces {
                     lastIni = (h.bitTamChunks[i] >> 3) + byteIni + ((h.bitTamChunks[i] % 8) == 0 ? 0 : 1) ;
                 }
                 waitAll();
-                updateProgress(80);
 
                 long remainWrite = h.originalBytes;
                 for(ByteArrayOutputStream fileChunk : fileChunks) {
@@ -108,7 +107,6 @@ public class Decompressor extends Proces {
                 fosOut.flush();
             }
             time = System.nanoTime()-time;
-            updateProgress(100);
             Dades.Informacio info = new Dades.Informacio(Files.size(Path.of(outputFile)),Files.size(srcPath),h.uniqueSymbols);
             info.setTempsDecompressio(time);
             dades.setInfo(info);

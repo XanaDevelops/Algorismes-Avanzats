@@ -10,12 +10,6 @@ public interface Comunicar {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    default void carregarFitxer(File file) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-
-
     default int afegirEnEspera(File file){
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -28,7 +22,7 @@ public interface Comunicar {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    default void  actualitzarProgres(int id, int percentatge){
+    default void  actualitzarProgres(int id, boolean On){
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

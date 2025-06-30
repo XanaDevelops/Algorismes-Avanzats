@@ -3,7 +3,6 @@ package vista;
 import control.Comunicar;
 import control.Main;
 import model.Dades;
-import vista.zonaArbre.VistaArbreHuffman;
 import vista.zonaFitxers.ElementFitxerLlista;
 import vista.zonaFitxers.PanellFitxers;
 import vista.zonaInfo.PanellInfo;
@@ -11,6 +10,8 @@ import vista.zonaInfo.PanellInfo;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Finestra extends JFrame implements Comunicar {
 
@@ -86,7 +87,16 @@ public class Finestra extends JFrame implements Comunicar {
                 fc.setMultiSelectionEnabled(true);
                 if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                     for (File f : fc.getSelectedFiles()) {
-                        principal.carregarFitxer(f);
+                        int id = principal.afegirEnEspera(f);
+                        if (id >= 0) {
+                            // Ara avisa el panell corresponent
+                            boolean comprimit = f.getName().toLowerCase().endsWith(".huf");
+                            if (comprimit) {
+                                aDescomprimir.afegirElementFitxer(f, id);
+                            } else {
+                                aComprimir.afegirElementFitxer(f, id);
+                            }
+                        }
                     }
                     actualitzar();
                 }
@@ -101,16 +111,18 @@ public class Finestra extends JFrame implements Comunicar {
             }
             case "Comprimir" -> {
                 File sel = aComprimir.getSelectedFile();
+                int id = dades.getIdFromFile(sel, true);
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.COMPRESS, sel);
                 DialegExecucio.DEResult msg = dlg.mostra();
                 if (msg != null)
-                    Main.instance.comprimir(Dades.getTaskId(), sel.getAbsolutePath(), msg.carpetaDesti, msg.wordSize, msg.tipusCua);
+                    Main.instance.comprimir(id, sel.getAbsolutePath(), msg.carpetaDesti, msg.wordSize, msg.tipusCua);
             }
             case "Descomprimir" -> {
                 File sel = aDescomprimir.getSelectedFile();
+                int id = dades.getIdFromFile(sel, false);
                 DialegExecucio dlg = new DialegExecucio(this, DialegExecucio.Tipus.DECOMPRESS, sel);
                 DialegExecucio.DEResult msg = dlg.mostra();
-                if (msg != null) Main.instance.descomprimir(Dades.getTaskId(), sel.getAbsolutePath(), msg.carpetaDesti);
+                if (msg != null) Main.instance.descomprimir(id, sel.getAbsolutePath(), msg.carpetaDesti);
             }
 
             case "Mostrar Arbre" -> {
@@ -159,8 +171,8 @@ public class Finestra extends JFrame implements Comunicar {
 
 
     @Override
-    public void afegirEnEspera(int id, File file, boolean aComprimir) {
-        Main.instance.afegirEnEspera(id, file, aComprimir);
+    public int afegirEnEspera(File file) {
+        return Main.instance.afegirEnEspera(file);
     }
 
     @Override
@@ -205,15 +217,5 @@ public class Finestra extends JFrame implements Comunicar {
         return botons;
     }
 
-    @Override
-    public void actualitzarProgres(int id, int percentatge) {
-        SwingUtilities.invokeLater(() -> {
-            ElementFitxerLlista e = aComprimir.getElementFitxer(id);
-            if (e == null) e = aDescomprimir.getElementFitxer(id);
-            if (e != null) {
-                e.setProgress(percentatge);
-            }
-        });
 
-    }
 }
