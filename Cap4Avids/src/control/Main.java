@@ -50,13 +50,22 @@ public class Main implements Comunicar {
     }
 
     @Override
-    public void afegirEnEspera(int id, File file, boolean aComprimir) {
-        if(aComprimir){
-            dades.addDescomprimit(id, file);
-        }else{
+    public int afegirEnEspera(File file) {
+        int id = Dades.getTaskId();
+        if (file == null) return -1;
+        String nom = file.getName().toLowerCase();
+        if (nom.endsWith(".huf")) {
             dades.addComprimit(id, file);
+        }else if(nom.endsWith(".txt") ||  nom.endsWith(".bin")){
+            dades.addDescomprimit(id, file);
+        } else {
+            JOptionPane.showMessageDialog(finestra,
+                    "Extensió no vàlida: " + file.getName(),
+                    "Error", JOptionPane.WARNING_MESSAGE);
+            return -1;
         }
         finestra.actualitzar();
+        return id;
     }
 
     @Override
@@ -91,23 +100,6 @@ public class Main implements Comunicar {
         removeFitxer(file, descomprimir);
     }
 
-    @Override
-    public void carregarFitxer(File f) {
-        if (f == null) return;
-        String nom = f.getName().toLowerCase();
-        if (nom.endsWith(".huf")) {
-            dades.addComprimit(Dades.getTaskId(), f);
-            finestra.actualitzar();
-        } else if (nom.endsWith(".txt") || nom.endsWith(".bin")) {
-            dades.addDescomprimit(Dades.getTaskId(), f);
-            finestra.actualitzar();
-        } else {
-            JOptionPane.showMessageDialog(finestra,
-                    "Extensió no vàlida: " + f.getName(),
-                    "Error", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
     public void removeFitxer(File file, boolean descomprimir) {
         if (descomprimir) {
             dades.removeAComprimir(file);
@@ -117,24 +109,10 @@ public class Main implements Comunicar {
         finestra.actualitzar();
     }
 
-    /**
-     * Elimina un fitxer
-     */
-    private void removeFitxer(String arg, boolean descomprimir) {
-        assert arg != null;
-        File f = new File(arg);
-        if (!descomprimir) {
-            dades.removeAComprimir(f);
-        } else {
-            dades.removeADescomprimir(f);
-        }
-        finestra.actualitzar();
-    }
-
     @Override
     public void estadistiquesLLestes() {
 
-       this.finestra.estadistiquesLLestes();
+        this.finestra.estadistiquesLLestes();
     }
 
 

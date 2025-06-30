@@ -16,7 +16,7 @@ public interface Comunicar {
 
 
 
-    default void afegirEnEspera(int id, File file, boolean aComprimir){
+    default int afegirEnEspera(File file){
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
