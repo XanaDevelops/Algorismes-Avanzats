@@ -7,7 +7,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class Compressor extends Proces {
@@ -132,7 +131,7 @@ public class Compressor extends Proces {
             bitOut.flush();
             time = System.nanoTime() - time;
             System.err.println("end " + id);
-            Dades.informacio info = new Dades.informacio(huffman.getEntropia(), Files.size(inputPath),Files.size(outputFile),totalUnicSymbols,longitudMitjana);
+            Dades.Informacio info = new Dades.Informacio(huffman.getEntropia(), Files.size(inputPath),Files.size(outputFile),totalUnicSymbols,longitudMitjana);
             info.setTempsCompressio(time);
             dades.setInfo(info);
 //        data.addTempsCompressio(time, fileName, huffman.getTipusCua);

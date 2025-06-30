@@ -11,20 +11,20 @@ public class Dades {
     private final Map<Integer, File> aDescomprimir = new HashMap<>();
     public static final String EXTENSIO = ".huf";
     public static final byte[] magicNumbers = new byte[]{0x4B, 0x49,0x42};
-    public informacio info;
+    public Informacio info;
     private static int taskId = 0;
 
     public Dades(){
 
     }
-    public void setInfo(informacio info){
+    public void setInfo(Informacio info){
         this.info = info;
         Main.instance.estadistiquesLLestes();
     }
-    public informacio getInfo(){
+    public Informacio getInfo(){
         return info;
     }
-    public static class informacio{
+    public static class Informacio {
         public double entropia;
         public long tamanyOriginal;
         public final long tamanyComprimit;
@@ -33,7 +33,7 @@ public class Dades {
         public  double longitudMitjana;
         public  Long tempsCompressio;
         public  Long tempsDecompressio;
-        public informacio(double entropia, long tamanyOriginal, long tamanyComprimit,   int simbolsUnics, double longitudMitjana){
+        public Informacio(double entropia, long tamanyOriginal, long tamanyComprimit, int simbolsUnics, double longitudMitjana){
             this.entropia = entropia;
             this.tamanyComprimit = tamanyComprimit;
             this.tamanyOriginal = tamanyOriginal;
@@ -41,7 +41,7 @@ public class Dades {
             this.simbolsUnics = simbolsUnics;
             this.longitudMitjana = longitudMitjana;
         }
-        public informacio(long tamanyOriginal, long tamanyComprimit, int simbolsUnics){
+        public Informacio(long tamanyOriginal, long tamanyComprimit, int simbolsUnics){
             this.tamanyOriginal= tamanyOriginal;
             this.tamanyComprimit = tamanyComprimit;
             this.simbolsUnics = simbolsUnics;

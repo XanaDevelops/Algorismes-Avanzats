@@ -8,8 +8,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 public class Decompressor extends Proces {
 
@@ -102,7 +100,7 @@ public class Decompressor extends Proces {
                 fosOut.flush();
             }
             time = System.nanoTime()-time;
-            Dades.informacio info = new Dades.informacio(Files.size(Path.of(outputFile)),Files.size(srcPath),h.uniqueSymbols);
+            Dades.Informacio info = new Dades.Informacio(Files.size(Path.of(outputFile)),Files.size(srcPath),h.uniqueSymbols);
             info.setTempsDecompressio(time);
             dades.setInfo(info);
         }

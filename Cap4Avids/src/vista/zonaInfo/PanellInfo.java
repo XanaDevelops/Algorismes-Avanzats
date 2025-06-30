@@ -40,14 +40,14 @@ public class PanellInfo extends JPanel implements Comunicar {
 
     @Override
     public void estadistiquesLLestes() {
-        Dades.informacio info = Main.instance.getDades().getInfo();
+        Dades.Informacio info = Main.instance.getDades().getInfo();
         if (info == null) return;
 
         model.setRowCount(0); // limpiar tabla
 
         Map<String, Object> data = new LinkedHashMap<>();
 
-        for (Field field : Dades.informacio.class.getDeclaredFields()) {
+        for (Field field : Dades.Informacio.class.getDeclaredFields()) {
             field.setAccessible(true);
             try {
                 Object value = field.get(info);

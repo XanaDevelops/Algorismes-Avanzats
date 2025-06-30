@@ -35,7 +35,7 @@ public class Main implements Comunicar {
 //        SwingUtilities.invokeLater(() -> finestra = new Finestra());
         finestra = new Finestra();
         finestra.setVisible(true);
-        dades.setInfo(new Dades.informacio(12.2, 120, 100,32,9 ));
+        dades.setInfo(new Dades.Informacio(12.2, 120, 100,32,9 ));
 
     }
 
