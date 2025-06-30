@@ -62,10 +62,17 @@ public class Decompressor extends Proces {
             symbolList.sort(Long::compareUnsigned);
             Map<Long, byte[]> canonCodes = Huffman.generateCanonicalCodes(h.codeLengths, symbolList);
             DecodeNode root = buildDecodingTree(canonCodes);
-            String fileName = src.split("/")[src.split("/").length - 1];
+
+
+
+
+            File inputFile = new File(src);
+            String fileName = inputFile.getName();
             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+
             System.out.println("fileName = " + fileName);
             String outputFile = outputFolder+"/"+ fileName+ "."+ new String(h.originalExtension);
+
             try (OutputStream fosOut = new BufferedOutputStream(
                          new FileOutputStream(outputFile))) {
                 byte[] bytes = fis.readAllBytes();
