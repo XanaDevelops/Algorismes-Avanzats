@@ -3,6 +3,7 @@ package vista;
 import control.Comunicar;
 import control.Main;
 import model.Dades;
+import vista.zonaArbre.VistaArbreHuffman;
 import vista.zonaFitxers.ElementFitxerLlista;
 import vista.zonaFitxers.PanellFitxers;
 import vista.zonaInfo.PanellInfo;
@@ -125,10 +126,6 @@ public class Finestra extends JFrame implements Comunicar {
                 if (msg != null) Main.instance.descomprimir(id, sel.getAbsolutePath(), msg.carpetaDesti);
             }
 
-            case "Mostrar Arbre" -> {
-                System.err.println("TODO: " + nom);
-            }
-
             case "Veure Arbre" -> {
                 File sel = aComprimir.getSelectedFile() != null ?
                         aComprimir.getSelectedFile() :
@@ -156,10 +153,21 @@ public class Finestra extends JFrame implements Comunicar {
     public void visualitzar(File seleccionat) {
         if (seleccionat != null && seleccionat.getName().endsWith(".huf")) {
             try {
-                // get arbre
-                // var arbre = Main.instance.getDades().getTree();
-                // var v = new VistaArbreHuffman(arbre);
-                // mostrarArbre(v);
+                // TODO: Obtenir l'arrel de l'arbre de Huffman del fitxer seleccionat
+                // Huffman.Node arbre = Main.instance.getDades().getArbre();
+
+                // Substituir null per l'arbre real
+                // VistaArbreHuffman vista = new VistaArbreHuffman(arbre);
+
+                VistaArbreHuffman vista = new VistaArbreHuffman(null); // De moment null
+
+                JFrame finestraArbre = new JFrame("Visualització de l'arbre de Huffman");
+                finestraArbre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                finestraArbre.getContentPane().add(new JScrollPane(vista));
+                finestraArbre.pack();
+                finestraArbre.setLocationRelativeTo(this);
+                finestraArbre.setVisible(true);
+
             } catch (Exception e) {
                 mostrarMissatge("Error en carregar l'arbre de Huffman.");
                 e.printStackTrace();
@@ -168,6 +176,7 @@ public class Finestra extends JFrame implements Comunicar {
             mostrarMissatge("Selecciona exactament un fitxer .huf per visualitzar l'arbre.");
         }
     }
+
 
 
     @Override
