@@ -2,7 +2,6 @@ package vista.zonaFitxers;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
@@ -10,13 +9,20 @@ import java.nio.file.Path;
 
 public class ElementFitxerLlista extends JPanel {
     private final File file;
-    private Path otherPath;
     private final int id;
     private final JLabel filePathLabel;
     private final JLabel otherPathLabel;
     private final JProgressBar progressBar;
-    private final JButton removeButton;
-    private final JButton showTreeButton;
+    private Path otherPath;
+
+    private Timer animacioTimer;
+    private boolean actiu = false;
+    private boolean haFinalitzat = false;
+
+    static {
+        UIManager.put("ProgressBar.repaintInterval", 20);
+        UIManager.put("ProgressBar.cycleTime", 1000);
+    }
 
     public ElementFitxerLlista(File file, Path otherPath, int id) {
         this.file = file;
@@ -24,7 +30,7 @@ public class ElementFitxerLlista extends JPanel {
         this.id = id;
 
         setLayout(new BorderLayout(5, 5));
-        setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         // Panel de rutas
         JPanel pathsPanel = new JPanel(new GridLayout(2, 1));
@@ -37,16 +43,13 @@ public class ElementFitxerLlista extends JPanel {
         // Barra de progreso
         progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true);
+        progressBar.setForeground(Color.GREEN);
         add(progressBar, BorderLayout.SOUTH);
 
         // Botones
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-        removeButton = new JButton("Cancelar");
-        showTreeButton = new JButton("Mostrar arbre");
-        buttonsPanel.add(removeButton);
         buttonsPanel.add(Box.createVerticalStrut(5));
-        buttonsPanel.add(showTreeButton);
         add(buttonsPanel, BorderLayout.EAST);
 
         addComponentListener(new ComponentAdapter() {
@@ -64,13 +67,11 @@ public class ElementFitxerLlista extends JPanel {
         int availWidth = label.getWidth();
         String ell = "...";
 
-        // Si cabe entero
         if (fm.stringWidth(fullPath) <= availWidth) {
             label.setText(fullPath);
             return;
         }
 
-        // Búsqueda binaria para el prefijo máximo
         int low = 0, high = fullPath.length(), mid;
         String best = ell + fileName;
         while (low <= high) {
@@ -104,23 +105,35 @@ public class ElementFitxerLlista extends JPanel {
         return id;
     }
 
-    public int getProgress() {
-        return progressBar.getValue();
+    public void iniciarAnimacio() {
+        actiu = true;
+        haFinalitzat = false;
+
+        progressBar.setValue(0);
+        progressBar.setStringPainted(false);
+        progressBar.setForeground(Color.GREEN);
+
+        if (animacioTimer != null) animacioTimer.stop();
+
+        animacioTimer = new Timer(50, e -> tick());
+        animacioTimer.start();
     }
 
-    public void setProgress(int value) {
-        progressBar.setValue(value);
-        if (value >= progressBar.getMaximum()) {
-            removeButton.setEnabled(false);
+    private void tick() {
+        if (!actiu || haFinalitzat) return;
+
+        int n = progressBar.getValue() + 4;
+        if (n > progressBar.getMaximum()) n = progressBar.getMinimum();
+        progressBar.setValue(n);
+    }
+
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        if (animacioTimer != null) {
+            animacioTimer.stop();
+            animacioTimer = null;
         }
-    }
-
-    public void addRemoveListener(ActionListener listener) {
-        removeButton.addActionListener(listener);
-    }
-
-    public void addShowTreeListener(ActionListener listener) {
-        showTreeButton.addActionListener(listener);
     }
 
     @Override

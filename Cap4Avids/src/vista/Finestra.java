@@ -10,8 +10,6 @@ import vista.zonaInfo.PanellInfo;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Finestra extends JFrame implements Comunicar {
 
@@ -189,7 +187,12 @@ public class Finestra extends JFrame implements Comunicar {
         for (JButton boto : botons) {
             boto.setEnabled(false);
         }
-    }
+        ElementFitxerLlista e = aComprimir.getElementFitxer(id);
+        if (e == null) e = aDescomprimir.getElementFitxer(id);
+
+        if (e != null) e.iniciarAnimacio();
+        actualitzar();
+        }
 
     @Override
     public void finalitzar(int id) {
@@ -197,6 +200,12 @@ public class Finestra extends JFrame implements Comunicar {
         for (JButton boto : botons) {
             boto.setEnabled(true);
         }
+
+        ElementFitxerLlista e = aComprimir.getElementFitxer(id);
+        if (e == null) e = aDescomprimir.getElementFitxer(id);
+
+        if (e != null) e.removeNotify();
+
         actualitzar();
     }
 
