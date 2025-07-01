@@ -1,19 +1,19 @@
 package vista.zonaArbre;
 
 import model.Huffman.Huffman;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class VistaArbreHuffman extends JPanel {
+
     private final Huffman.Node arrel;
     private final int NODE_DIAMETRE = 30;
     private final int ESPAI_VERTICAL = 50;
-    private final int AMPLADA_BASE = 1200; // Ample per defecte, pot ajustar-se dinàmicament
+    private final int AMPLADA_BASE = 1200;
 
     public VistaArbreHuffman(Huffman.Node arrel) {
         this.arrel = arrel;
-        setBackground(Color.WHITE); // Millora visual
+        setBackground(Color.WHITE);
     }
 
     @Override
