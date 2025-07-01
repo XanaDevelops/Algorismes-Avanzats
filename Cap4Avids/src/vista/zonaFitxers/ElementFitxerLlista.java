@@ -1,5 +1,7 @@
 package vista.zonaFitxers;
 
+import control.Main;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -115,37 +117,38 @@ public class ElementFitxerLlista extends JPanel {
 
         if (animacioTimer != null) animacioTimer.stop();
 
-        animacioTimer = new Timer(50, e -> tick());
+        animacioTimer = new Timer(500, e -> tick());
         animacioTimer.start();
     }
 
     private void tick() {
         if (!actiu || haFinalitzat) return;
-
+        System.err.println("tick");
         int n = progressBar.getValue() + 4;
         if (n > progressBar.getMaximum()) n = progressBar.getMinimum();
         progressBar.setValue(n);
+        Main.instance.getFinestra().actualitzar();
     }
-
-    @Override
-    public void removeNotify() {
-        super.removeNotify();
-        if (animacioTimer != null) {
-            animacioTimer.stop();
-            animacioTimer = null;
-        }
-    }
-
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        SwingUtilities.invokeLater(() -> {
-            Container parent = getParent();
-            if (parent != null) {
-                setPreferredSize(new Dimension(parent.getWidth(), getPreferredSize().height));
-                revalidate();
-                repaint();
-            }
-        });
-    }
+//
+//    @Override
+//    public void removeNotify() {
+//        super.removeNotify();
+//        if (animacioTimer != null) {
+//            animacioTimer.stop();
+//            animacioTimer = null;
+//        }
+//    }
+//
+//    @Override
+//    public void addNotify() {
+//        super.addNotify();
+//        SwingUtilities.invokeLater(() -> {
+//            Container parent = getParent();
+//            if (parent != null) {
+//                setPreferredSize(new Dimension(parent.getWidth(), getPreferredSize().height));
+//                revalidate();
+//                repaint();
+//            }
+//        });
+//    }
 }
