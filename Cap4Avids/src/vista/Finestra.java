@@ -126,7 +126,7 @@ public class Finestra extends JFrame implements Comunicar {
                 if (msg != null) Main.instance.descomprimir(id, sel.getAbsolutePath(), msg.carpetaDesti);
             }
 
-            case "Veure Arbre" -> {
+            case "Mostrar Arbre" -> {
                 File sel = aComprimir.getSelectedFile() != null ?
                         aComprimir.getSelectedFile() :
                         aDescomprimir.getSelectedFile();
