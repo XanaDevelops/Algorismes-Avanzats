@@ -157,7 +157,7 @@ public class Finestra extends JFrame implements Comunicar {
     @Override
     public void visualitzar(File seleccionat) {
         if (seleccionat != null && seleccionat.getName().endsWith(".huf")) {
-            try {
+            Thread.startVirtualThread(() -> {try {
 
                 VistaArbreHuffman vista = new VistaArbreHuffman(seleccionat.getAbsolutePath()); // De moment null
 
@@ -165,13 +165,14 @@ public class Finestra extends JFrame implements Comunicar {
                 finestraArbre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 finestraArbre.getContentPane().add(new JScrollPane(vista));
                 finestraArbre.pack();
+                finestraArbre.setSize(1600, 1000);
                 finestraArbre.setLocationRelativeTo(this);
                 finestraArbre.setVisible(true);
 
             } catch (Exception e) {
                 mostrarMissatge("Error en carregar l'arbre de Huffman.");
                 e.printStackTrace();
-            }
+            }});
         } else {
             mostrarMissatge("Selecciona exactament un fitxer .huf per visualitzar l'arbre.");
         }
