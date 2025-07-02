@@ -3,6 +3,7 @@ package vista;
 import control.Comunicar;
 import control.Main;
 import model.Dades;
+import vista.zonaArbre.VistaArbreHuffman;
 import vista.zonaFitxers.ElementFitxerLlista;
 import vista.zonaFitxers.PanellFitxers;
 import vista.zonaInfo.PanellInfo;
@@ -131,10 +132,6 @@ public class Finestra extends JFrame implements Comunicar {
             }
 
             case "Mostrar Arbre" -> {
-                System.err.println("TODO: " + nom);
-            }
-
-            case "Veure Arbre" -> {
                 File sel = aComprimir.getSelectedFile() != null ?
                         aComprimir.getSelectedFile() :
                         aDescomprimir.getSelectedFile();
@@ -160,15 +157,22 @@ public class Finestra extends JFrame implements Comunicar {
     @Override
     public void visualitzar(File seleccionat) {
         if (seleccionat != null && seleccionat.getName().endsWith(".huf")) {
-            try {
-                // get arbre
-                // var arbre = Main.instance.getDades().getTree();
-                // var v = new VistaArbreHuffman(arbre);
-                // mostrarArbre(v);
+            Thread.startVirtualThread(() -> {try {
+
+                VistaArbreHuffman vista = new VistaArbreHuffman(seleccionat.getAbsolutePath()); // De moment null
+
+                JFrame finestraArbre = new JFrame("Visualització de l'arbre de Huffman");
+                finestraArbre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                finestraArbre.getContentPane().add(new JScrollPane(vista));
+                finestraArbre.pack();
+                finestraArbre.setSize(1600, 1000);
+                finestraArbre.setLocationRelativeTo(this);
+                finestraArbre.setVisible(true);
+
             } catch (Exception e) {
                 mostrarMissatge("Error en carregar l'arbre de Huffman.");
                 e.printStackTrace();
-            }
+            }});
         } else {
             mostrarMissatge("Selecciona exactament un fitxer .huf per visualitzar l'arbre.");
         }
@@ -178,6 +182,7 @@ public class Finestra extends JFrame implements Comunicar {
         aComprimir.ferTicks();
         aDescomprimir.ferTicks();
     }
+
 
 
     @Override
