@@ -62,7 +62,7 @@ public class ResultatsGen {
     }
 
     @Test
-    public void test() throws IOException {
+    public void test() throws IOException, InterruptedException {
         System.out.println("HUFFMAN " + Arrays.toString(Huffman.TipusCua.values()));
         for(int i: bytesSizes){
             String txt = getTXT(i);
@@ -74,8 +74,8 @@ public class ResultatsGen {
                 long end = System.nanoTime();
                 long m = getMem();
                 System.gc();
-                System.gc();
-                System.out.print((end - start) + "ns, " + m + "B\t\t");
+                Thread.sleep(10);
+                System.out.print((end - start) + " ns, " + m + " KB\t\t");
             }
             System.out.println();
         }
@@ -89,8 +89,8 @@ public class ResultatsGen {
             Decompressor d = new Decompressor(-1, getHUF(i), basePath);
             d.decompressFile();
             Dades.Informacio inf2 = Main.instance.getDades().getInfo();
-            System.out.println("C: " + inf.tempsCompressio + "ns, " + "D: " + inf2.tempsDecompressio+"ns, "+
-                    inf.tamanyComprimit + "B, " + (1-(inf.tamanyComprimit/(double)inf.tamanyOriginal)));
+            System.out.println("C: "+i+": " + inf.tempsCompressio + "ns, " + "D: " + inf2.tempsDecompressio+"ns, "+
+                    inf.tamanyComprimit + "B, " + ((1-(inf.tamanyComprimit/(double)inf.tamanyOriginal))*100));
         }
 
         System.out.println("COMPARATIVA BYTES");
