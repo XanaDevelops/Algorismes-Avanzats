@@ -10,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tests/res/check" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/tests/res/check" />
       <excludeFolder url="file://$MODULE_DIR$/tests/result" />
+      <excludeFolder url="file://$MODULE_DIR$/docs" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
