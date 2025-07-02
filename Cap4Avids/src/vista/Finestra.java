@@ -158,12 +158,6 @@ public class Finestra extends JFrame implements Comunicar {
     public void visualitzar(File seleccionat) {
         if (seleccionat != null && seleccionat.getName().endsWith(".huf")) {
             try {
-                // TODO: Obtenir l'arrel de l'arbre de Huffman del fitxer seleccionat
-                // Huffman.Node arbre = Main.instance.getDades().getArbre();
-
-                // Substituir null per l'arbre real
-                // VistaArbreHuffman vista = new VistaArbreHuffman(arbre);
-                System.out.println("file seleccionado: " + seleccionat.getAbsolutePath());
 
                 VistaArbreHuffman vista = new VistaArbreHuffman(seleccionat.getAbsolutePath()); // De moment null
 

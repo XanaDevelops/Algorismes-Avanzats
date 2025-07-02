@@ -128,7 +128,6 @@ public class Decompressor extends Proces {
                     }
                 }
 
-                //DEBUG
                 fosOut.flush();
             }
             time = System.nanoTime()-time;

@@ -4,12 +4,10 @@ import model.Dades;
 import model.Huffman.Decompressor;
 import model.Huffman.HuffHeader;
 import model.Huffman.Huffman;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -17,121 +15,171 @@ import java.util.List;
 
 public class VistaArbreHuffman extends JPanel {
 
-    //    private final Huffman.Node arrel;
-    private   Decompressor.DecodeNode arrel;
+    private Decompressor.DecodeNode arrel;
     private final int NODE_DIAMETRE = 30;
-    private final int ESPAI_VERTICAL = 50;
-    private final int AMPLADA_BASE = 1200;
-    private  String src;
+    private final int ESPAI_VERTICAL = 60;
+    private final int AMPLADA_BASE = 100;
+    // Espaciamiento y márgenes para la nueva distribución
+        private final int GAP_H = 100;
+    private final int MARGIN_X = 100;
+    private final int MARGIN_Y = 100;
 
-    public VistaArbreHuffman(Decompressor.DecodeNode arrel) {
-        this.arrel = arrel;
-        setBackground(Color.WHITE);
-    }
+    private String src;
+
+    // Estructuras auxiliares para contar hojas y asignar X
+    private Map<Decompressor.DecodeNode, Integer> hojaCount = new HashMap<>();
+    private Map<Decompressor.DecodeNode, Integer> posX = new HashMap<>();
+    private int contador;
 
     public VistaArbreHuffman(String src) {
-        this.arrel = null;
         this.src = src;
         setArrel();
         setBackground(Color.WHITE);
     }
 
-
     @Override
     public Dimension getPreferredSize() {
-        int profunditat = calcularProfunditat(arrel);
-        int alçada = profunditat * ESPAI_VERTICAL + 100;
-        int amplada = Math.max(AMPLADA_BASE, (int) Math.pow(2, profunditat) * NODE_DIAMETRE);
-        return new Dimension(amplada, alçada);
+        if (arrel == null) {
+            return new Dimension(AMPLADA_BASE, ESPAI_VERTICAL * 2);
+        }
+
+        // Recalcular hojaCount para obtener total de hojas
+        hojaCount.clear();
+        contarHojas(arrel);
+        int totalHojas = hojaCount.getOrDefault(arrel, 1);
+
+        int width  = MARGIN_X * 2 + totalHojas * GAP_H;
+        int profundidad = calcularProfunditat(arrel);
+        int height = MARGIN_Y * 2 + profundidad * ESPAI_VERTICAL;
+
+        return new Dimension(width, height);
     }
 
     private int calcularProfunditat(Decompressor.DecodeNode node) {
         if (node == null) return 0;
-        return 1 + Math.max(calcularProfunditat(node.getLeft()), calcularProfunditat(node.getRight()));
+        return 1 + Math.max(
+                calcularProfunditat(node.getLeft()),
+                calcularProfunditat(node.getRight())
+        );
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (arrel != null) {
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            int width = getPreferredSize().width;
-//            pintarArbre(g2, arrel, width / 2, 40, width / 4);
-            pintarArbre(g2, arrel, width / 2, 40, width / 6,"0");
-        }
+    protected void paintComponent(Graphics gg) {
+        super.paintComponent(gg);
+        if (arrel == null) return;
+
+        Graphics2D g2 = (Graphics2D) gg;
+        g2.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON
+        );
+
+        // Fase 1: contar hojas
+        hojaCount.clear();
+        contador = 0;
+        contarHojas(arrel);
+
+        // Fase 2: calcular posición X
+        posX.clear();
+        calcularX(arrel);
+
+        // Pintar árbol desde nivel 0 y ruta vacía
+        pintarArbre(g2, arrel, 0, "");
     }
 
-    private void pintarArbre(Graphics2D g, Decompressor.DecodeNode node, int x, int y, int separacioX, String path) {
+    // Fase 1: contar hojas de cada subárbol
+    private int contarHojas(Decompressor.DecodeNode node) {
+        if (node == null) return 0;
+        if (node.isLeaf()) {
+            hojaCount.put(node, 1);
+            return 1;
+        }
+        int izq = contarHojas(node.getLeft());
+        int der = contarHojas(node.getRight());
+        hojaCount.put(node, izq + der);
+        return izq + der;
+    }
+
+    // Fase 2: asignar X mediante recorrido in-order
+    private void calcularX(Decompressor.DecodeNode node) {
         if (node == null) return;
 
-
-
-        String label = node.isLeaf()
-                ? String.format("%d (%s)", node.getSymbol(), path)
-                : String.valueOf(path);
-
-        g.setColor(Color.CYAN);
-        g.fillOval(x - NODE_DIAMETRE / 2, y - NODE_DIAMETRE / 2, NODE_DIAMETRE, NODE_DIAMETRE);
-        g.setColor(Color.BLACK);
-        g.drawOval(x - NODE_DIAMETRE / 2, y - NODE_DIAMETRE / 2, NODE_DIAMETRE, NODE_DIAMETRE);
-        g.drawString(label, x - NODE_DIAMETRE / 2, y - NODE_DIAMETRE);
-
-        if (node.getLeft() != null) {
-            int childX = x - separacioX;
-            int childY = y + ESPAI_VERTICAL;
-            g.drawLine(x, y, childX, childY);
-            pintarArbre(g, node.getLeft(), childX, childY, separacioX / 2, path+"1");
-        }
-
-        if (node.getRight() != null) {
-            int childX = x + separacioX;
-            int childY = y + ESPAI_VERTICAL;
-            g.drawLine(x, y, childX, childY);
-            pintarArbre(g, node.getRight(), childX, childY, separacioX / 2, path+"0");
+        if (node.isLeaf()) {
+            posX.put(node, contador++);
+        } else {
+            calcularX(node.getLeft());
+            calcularX(node.getRight());
+            int xIzq = posX.get(node.getLeft());
+            int xDer = posX.get(node.getRight());
+            posX.put(node, (xIzq + xDer) / 2);
         }
     }
 
+    // Pintado basado en posX y nivel
+    private void pintarArbre(Graphics2D g,
+                             Decompressor.DecodeNode node,
+                             int nivel,
+                             String path) {
+        if (node == null) return;
+
+        int idx = posX.get(node);
+        int x   = MARGIN_X + idx * GAP_H;
+        int y   = MARGIN_Y + nivel * ESPAI_VERTICAL;
+
+        if (node.getLeft() != null) {
+            int idxL   = posX.get(node.getLeft());
+            int childX = MARGIN_X + idxL * GAP_H;
+            int childY = MARGIN_Y + (nivel + 1) * ESPAI_VERTICAL;
+            g.drawLine(x, y, childX, childY);
+            pintarArbre(g, node.getLeft(), nivel + 1, path + "1");
+        }
+        if (node.getRight() != null) {
+            int idxR   = posX.get(node.getRight());
+            int childX = MARGIN_X + idxR * GAP_H;
+            int childY = MARGIN_Y + (nivel + 1) * ESPAI_VERTICAL;
+            g.drawLine(x, y, childX, childY);
+            pintarArbre(g, node.getRight(), nivel + 1, path + "0");
+        }
+
+        // Dibujar nodo
+        g.setColor(Color.CYAN);
+        g.fillOval(
+                x - NODE_DIAMETRE/2, y - NODE_DIAMETRE/2,
+                NODE_DIAMETRE, NODE_DIAMETRE
+        );
+        g.setColor(Color.BLACK);
+        g.drawOval(
+                x - NODE_DIAMETRE/2, y - NODE_DIAMETRE/2,
+                NODE_DIAMETRE, NODE_DIAMETRE
+        );
+
+        // Etiqueta: símbolo y ruta si es hoja
+        String label = node.isLeaf()
+                ? String.format("%s (%s)", (char) node.getSymbol(), path)
+                : path;
+        g.drawString(label, x - NODE_DIAMETRE/2, y - NODE_DIAMETRE);
+    }
+
+    // Lectura de archivo y construcción del árbol
     private void setArrel() {
         Path srcPath = Path.of(src);
         Decompressor d = new Decompressor();
-        try (InputStream fis = new BufferedInputStream(Files.newInputStream(srcPath));
-             DataInputStream dis = new DataInputStream(fis)) {
-
+        try (
+                InputStream fis = new BufferedInputStream(Files.newInputStream(srcPath));
+                DataInputStream dis = new DataInputStream(fis)
+        ) {
             HuffHeader h = HuffHeader.read(dis);
-
             if (!Arrays.equals(Objects.requireNonNull(h).magicN, Dades.magicNumbers)) {
                 System.err.println("Not a valid file");
-                //comunicar, etc, etc
                 return;
             }
-
             List<Long> symbolList = new ArrayList<>(h.codeLengths.keySet());
             symbolList.sort(Long::compareUnsigned);
             Map<Long, byte[]> canonCodes = Huffman.generateCanonicalCodes(h.codeLengths, symbolList);
-            this.arrel = d.buildDecodingTree(canonCodes);
-
-//            Map<Long, String> huffmanCodes = new HashMap<>();
-//            generateHuffmanCodification(root, "",huffmanCodes);
+            arrel = d.buildDecodingTree(canonCodes);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-    }
-    private void generateHuffmanCodification(Decompressor.DecodeNode node, String path, Map<Long, String> huffmanCodes) {
-        {
-            if (node == null) return;
-
-            // node fulla : assignar-li la seva codificació
-            if (node.isLeaf()) {
-                huffmanCodes.put(node.getSymbol(), path);
-                return;
-            }
-
-            generateHuffmanCodification(node.getLeft(), path + "0", huffmanCodes);
-            generateHuffmanCodification(node.getRight(), path + "1", huffmanCodes);
-        }
-
     }
 }
