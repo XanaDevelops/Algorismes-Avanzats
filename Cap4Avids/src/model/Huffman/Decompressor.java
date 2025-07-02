@@ -11,8 +11,8 @@ import java.util.*;
 
 public class Decompressor extends Proces {
 
-    private final String src;
-    private final String outputFolder;
+    private  String src;
+    private  String outputFolder;
 
     private final ByteArrayOutputStream[] fileChunks = new ByteArrayOutputStream[N_THREADS];
 
@@ -22,6 +22,9 @@ public class Decompressor extends Proces {
         this.outputFolder = outputFolder;
     }
 
+    public Decompressor() {
+        super(1);
+    }
 
 
     @Override
@@ -33,12 +36,36 @@ public class Decompressor extends Proces {
         }
     }
 
-    private static class DecodeNode {
+    public static class DecodeNode {
         DecodeNode left, right;
         long symbol;
 
-        boolean isLeaf() {
+        public boolean isLeaf() {
             return left == null && right == null;
+        }
+
+        public long getSymbol() {
+            return symbol;
+        }
+
+        public void setSymbol(long symbol) {
+            this.symbol = symbol;
+        }
+
+        public DecodeNode getRight() {
+            return right;
+        }
+
+        public void setRight(DecodeNode right) {
+            this.right = right;
+        }
+
+        public DecodeNode getLeft() {
+            return left;
+        }
+
+        public void setLeft(DecodeNode left) {
+            this.left = left;
         }
     }
 
@@ -64,8 +91,6 @@ public class Decompressor extends Proces {
             DecodeNode root = buildDecodingTree(canonCodes);
 
 
-
-
             File inputFile = new File(src);
             String fileName = inputFile.getName();
             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
@@ -74,7 +99,7 @@ public class Decompressor extends Proces {
             String outputFile = outputFolder+"/"+ fileName+ "."+ new String(h.originalExtension);
 
             try (OutputStream fosOut = new BufferedOutputStream(
-                         new FileOutputStream(outputFile))) {
+                    new FileOutputStream(outputFile))) {
                 byte[] bytes = fis.readAllBytes();
                 int lastIni = 0;
                 for (int i = 0; i < h.bitTamChunks.length; i++) {
@@ -141,7 +166,7 @@ public class Decompressor extends Proces {
     }
 
 
-    private DecodeNode buildDecodingTree(Map<Long, byte[]> codes) {
+    public DecodeNode buildDecodingTree(Map<Long, byte[]> codes) {
         DecodeNode root = new DecodeNode();
         for (Map.Entry<Long, byte[]> entry : codes.entrySet()) {
             byte[] code = entry.getValue();
