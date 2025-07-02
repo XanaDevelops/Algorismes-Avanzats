@@ -58,20 +58,18 @@ public class VistaArbreHuffman extends JPanel {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             int width = getPreferredSize().width;
 //            pintarArbre(g2, arrel, width / 2, 40, width / 4);
-            pintarArbre(g2, arrel, width / 2, 40, width / 4,"0");
+            pintarArbre(g2, arrel, width / 2, 40, width / 6,"0");
         }
     }
 
     private void pintarArbre(Graphics2D g, Decompressor.DecodeNode node, int x, int y, int separacioX, String path) {
         if (node == null) return;
 
-//        String label = node.isLeaf()
-//                ? String.format("%d (%c)", node.getVal(), (char) node.getByteVal())
-//                : String.valueOf(node.getVal());
+
 
         String label = node.isLeaf()
-                ? String.format("%d (%c)", node.getSymbol(), path)
-                : String.valueOf(node.getSymbol());
+                ? String.format("%d (%s)", node.getSymbol(), path)
+                : String.valueOf(path);
 
         g.setColor(Color.CYAN);
         g.fillOval(x - NODE_DIAMETRE / 2, y - NODE_DIAMETRE / 2, NODE_DIAMETRE, NODE_DIAMETRE);

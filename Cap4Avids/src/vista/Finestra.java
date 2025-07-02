@@ -163,8 +163,9 @@ public class Finestra extends JFrame implements Comunicar {
 
                 // Substituir null per l'arbre real
                 // VistaArbreHuffman vista = new VistaArbreHuffman(arbre);
+                System.out.println("file seleccionado: " + seleccionat.getAbsolutePath());
 
-                VistaArbreHuffman vista = new VistaArbreHuffman(File.pathSeparator); // De moment null
+                VistaArbreHuffman vista = new VistaArbreHuffman(seleccionat.getAbsolutePath()); // De moment null
 
                 JFrame finestraArbre = new JFrame("Visualització de l'arbre de Huffman");
                 finestraArbre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
