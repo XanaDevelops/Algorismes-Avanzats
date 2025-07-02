@@ -58,8 +58,4 @@ public abstract class Proces implements Runnable, Comunicar {
     public void aturar(int id) {
         aturar = true;
     }
-
-    public void updateProgress(boolean On) {
-        Main.instance.actualitzarProgres(id, On);
-    }
 }

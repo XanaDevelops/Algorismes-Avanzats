@@ -123,9 +123,4 @@ public class Main implements Comunicar {
     public Dades getDades(){
         return dades;
     }
-
-    @Override
-    public void actualitzarProgres(int id, boolean On) {
-        finestra.actualitzarProgres(id, On);
-    }
 }
