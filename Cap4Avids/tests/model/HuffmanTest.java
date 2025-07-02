@@ -20,7 +20,7 @@ class HuffmanTest {
     void testFileAll() {
         Huffman huffman = new Huffman("tests/res/testAll.txt");
         huffman.run();
-        Map<Long, Long> freqs = huffman.getFreqs();
+        Map<Long, Long> freqs = huffman.getAbsFreqs();
         for (Map.Entry<Long, Long> e : freqs.entrySet()) {
             assertEquals(e.getKey()+1, e.getValue());
         }
@@ -37,7 +37,7 @@ class HuffmanTest {
 
         Huffman huffman2 = new Huffman("tests/res/testAll.txt", Huffman.TipusCua.FIB_HEAP);
         huffman2.run();
-        Map<Long, Long> freqs2 = huffman.getFreqs();
+        Map<Long, Long> freqs2 = huffman.getAbsFreqs();
         for (Map.Entry<Long, Long> e : freqs2.entrySet()) {
             assertEquals(e.getKey()+1, e.getValue());
         }
@@ -49,12 +49,12 @@ class HuffmanTest {
     void testFileABC(){
         Huffman huffman = new Huffman("tests/res/testABC.txt");
         huffman.run();
-        System.out.println(huffman.getFreqs());
+        System.out.println(huffman.getAbsFreqs());
         System.out.println(huffman.getTable());
 
         Huffman huffman2 = new Huffman("tests/res/testABC.txt", Huffman.TipusCua.FIB_HEAP);
         huffman2.run();
-        System.out.println(huffman2.getFreqs());
+        System.out.println(huffman2.getAbsFreqs());
         System.out.println(huffman2.getTable());
 
         System.out.println("\n");
@@ -65,12 +65,12 @@ class HuffmanTest {
     void testFileABC2(){
         Huffman huffman = new Huffman("tests/res/testABC2.txt");
         huffman.run();
-        System.out.println(huffman.getFreqs());
+        System.out.println(huffman.getAbsFreqs());
         System.out.println(huffman.getTable());
 
         Huffman huffman2 = new Huffman("tests/res/testABC2.txt", Huffman.TipusCua.FIB_HEAP);
         huffman2.run();
-        System.out.println(huffman2.getFreqs());
+        System.out.println(huffman2.getAbsFreqs());
         System.out.println(huffman2.getTable());
 
         System.out.println("\n");
@@ -81,7 +81,7 @@ class HuffmanTest {
     void testFileABC3(){
         Huffman huffman = new Huffman("tests/res/testABC3.txt");
         huffman.run();
-        System.out.println(huffman.getFreqs());
+        System.out.println(huffman.getAbsFreqs());
         System.out.println(huffman.getTable());
         System.out.println(huffman.getEntropia());
 
@@ -97,14 +97,14 @@ class HuffmanTest {
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(huffman.getFreqs());
+        System.out.println(huffman.getAbsFreqs());
         System.out.println(huffman.getTable());
     }
     @Test
     void test16Bits(){
         Huffman huffman = new Huffman("tests/res/testA.txt", Huffman.WordSize.BIT16);
         huffman.run();
-        System.out.println(huffman.getFreqs().entrySet().stream()
+        System.out.println(huffman.getAbsFreqs().entrySet().stream()
                 .map(e -> String.format("{0x%X=0x%X}", e.getKey(), e.getValue()))
                 .collect(Collectors.joining(", ")));
         System.out.println(huffman.getTable().entrySet().stream()
@@ -115,7 +115,7 @@ class HuffmanTest {
     void test32Bits(){
         Huffman huffman = new Huffman("tests/res/testA.txt", Huffman.WordSize.BIT32);
         huffman.run();
-        System.out.println(huffman.getFreqs().entrySet().stream()
+        System.out.println(huffman.getAbsFreqs().entrySet().stream()
                 .map(e -> String.format("{0x%X=0x%X}", e.getKey(), e.getValue()))
                 .collect(Collectors.joining(", ")));
         System.out.println(huffman.getTable().entrySet().stream()
@@ -126,7 +126,7 @@ class HuffmanTest {
     void test64Bits(){
         Huffman huffman = new Huffman("tests/res/testA.txt", Huffman.WordSize.BIT64);
         huffman.run();
-        System.out.println(huffman.getFreqs().entrySet().stream()
+        System.out.println(huffman.getAbsFreqs().entrySet().stream()
                 .map(e -> String.format("{0x%X=0x%X}", e.getKey(), e.getValue()))
                 .collect(Collectors.joining(", ")));
         System.out.println(huffman.getTable().entrySet().stream()
@@ -135,7 +135,7 @@ class HuffmanTest {
 
         huffman = new Huffman("tests/res/testAll.txt", Huffman.WordSize.BIT64);
         huffman.run();
-        System.out.println(huffman.getFreqs().entrySet().stream()
+        System.out.println(huffman.getAbsFreqs().entrySet().stream()
                 .map(e -> String.format("{0x%X=0x%X}", e.getKey(), e.getValue()))
                 .collect(Collectors.joining(", ")));
         System.out.println(huffman.getTable().entrySet().stream()

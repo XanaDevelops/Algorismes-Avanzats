@@ -48,7 +48,7 @@ public class Compressor extends Proces {
         int totalUnicSymbols = 0;
         List<Long> symbols = new ArrayList<>();
         double longitudMitjana = 0;
-        Map<Long, Long> freqs = huffman.getFreqs();
+        Map<Long, Double> freqs = huffman.getRelFreqs();
         for (Map.Entry<Long, String> e : table.entrySet()) {
             long sym = e.getKey(); //byte positiu
             codeLengths.put(sym, e.getValue().length());

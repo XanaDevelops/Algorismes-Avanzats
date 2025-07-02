@@ -1,6 +1,5 @@
 package model.Huffman;
 
-import jdk.jfr.Unsigned;
 import model.cues.FibonacciHeap;
 import model.cues.RankPairingHeap;
 
@@ -152,6 +151,7 @@ public class Huffman implements Runnable {
 
 
     private double entropia = -1;
+    private long total = 0;
 
     private final ConcurrentHashMap<Long, String> table = new ConcurrentHashMap<>();
 
@@ -259,7 +259,7 @@ public class Huffman implements Runnable {
 
         //esperar
         joinAll();
-        long total = 0;
+        total = 0;
         for (int i = 0; i < N_THREADS; i++) {
 //            for (long j = 0; j < (1L << (8*byteSize)); j++) {
 //                //freqs.set(j, freqs.get(j) +  acumulators[i].get(j));
@@ -350,7 +350,15 @@ public class Huffman implements Runnable {
      * Retorna array de frequencies absolutes
      * @return Array on a[byte] = freq
      */
-    public final Map<Long, Long> getFreqs() {
+    public final Map<Long, Long> getAbsFreqs() {
+        return freqs;
+    }
+
+    public final Map<Long, Double> getRelFreqs(){
+        Map<Long, Double> freqs = new HashMap<>();
+        for(Map.Entry<Long, Long> e : this.freqs.entrySet()) {
+            freqs.put(e.getKey(), e.getValue()/(double)total);
+        }
         return freqs;
     }
 
