@@ -7,7 +7,10 @@ import model.Huffman.Huffman;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -15,19 +18,16 @@ import java.util.List;
 
 public class VistaArbreHuffman extends JPanel {
 
-    private Decompressor.DecodeNode arrel;
-    private final int NODE_DIAMETRE = 30;
+    private final int DIAMETRE_NODE = 30;
     private final int ESPAI_VERTICAL = 60;
     private final int AMPLADA_BASE = 100;
-    // Espaciamiento y márgenes para la nueva distribución
-        private final int GAP_H = 100;
+    private final int GAP_H = 100;
     private final int MARGIN_X = 100;
     private final int MARGIN_Y = 100;
-
+    private Decompressor.DecodeNode arrel;
     private String src;
 
-    // Estructuras auxiliares para contar hojas y asignar X
-    private Map<Decompressor.DecodeNode, Integer> hojaCount = new HashMap<>();
+    private Map<Decompressor.DecodeNode, Integer> contadorNodes = new HashMap<>();
     private Map<Decompressor.DecodeNode, Integer> posX = new HashMap<>();
     private int contador;
 
@@ -37,24 +37,33 @@ public class VistaArbreHuffman extends JPanel {
         setBackground(Color.WHITE);
     }
 
+    /**
+     * Retorna la mida preferida del panell segons la mida de l'arbre.
+     *
+     * @return dimensió preferida del panell
+     */
     @Override
     public Dimension getPreferredSize() {
         if (arrel == null) {
             return new Dimension(AMPLADA_BASE, ESPAI_VERTICAL * 2);
         }
+        contadorNodes.clear();
+        contarFulles(arrel);
+        int totalHojas = contadorNodes.getOrDefault(arrel, 1);
 
-        // Recalcular hojaCount para obtener total de hojas
-        hojaCount.clear();
-        contarHojas(arrel);
-        int totalHojas = hojaCount.getOrDefault(arrel, 1);
-
-        int width  = MARGIN_X * 2 + totalHojas * GAP_H;
+        int width = MARGIN_X * 2 + totalHojas * GAP_H;
         int profundidad = calcularProfunditat(arrel);
         int height = MARGIN_Y * 2 + profundidad * ESPAI_VERTICAL;
 
         return new Dimension(width, height);
     }
 
+    /**
+     * Calcula la profunditat de l'arbre a partir d’un node.
+     *
+     * @param node node arrel
+     * @return profunditat màxima
+     */
     private int calcularProfunditat(Decompressor.DecodeNode node) {
         if (node == null) return 0;
         return 1 + Math.max(
@@ -69,38 +78,42 @@ public class VistaArbreHuffman extends JPanel {
         if (arrel == null) return;
 
         Graphics2D g2 = (Graphics2D) gg;
-        g2.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON
-        );
+        g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Fase 1: contar hojas
-        hojaCount.clear();
+        contadorNodes.clear();
         contador = 0;
-        contarHojas(arrel);
+        contarFulles(arrel);
 
-        // Fase 2: calcular posición X
+        //calcualr posicions horizontals
         posX.clear();
         calcularX(arrel);
-
-        // Pintar árbol desde nivel 0 y ruta vacía
         pintarArbre(g2, arrel, 0, "");
     }
 
-    // Fase 1: contar hojas de cada subárbol
-    private int contarHojas(Decompressor.DecodeNode node) {
+    /**
+     * Compta el nombre de fulles a partir d’un node donat
+     * i guarda el nombre en el map contadorNodes.
+     *
+     * @param node node actual
+     * @return nombre de fulles descendents
+     */
+    private int contarFulles(Decompressor.DecodeNode node) {
         if (node == null) return 0;
         if (node.isLeaf()) {
-            hojaCount.put(node, 1);
+            contadorNodes.put(node, 1);
             return 1;
         }
-        int izq = contarHojas(node.getLeft());
-        int der = contarHojas(node.getRight());
-        hojaCount.put(node, izq + der);
-        return izq + der;
+        int esquerra = contarFulles(node.getLeft());
+        int dreta = contarFulles(node.getRight());
+        contadorNodes.put(node, esquerra + dreta);
+        return esquerra + dreta;
     }
 
-    // Fase 2: asignar X mediante recorrido in-order
+    /**
+     * Calcula la posició X dels nodes en l’arbre (ordenació horitzontal).
+     *
+     * @param node node actual
+     */
     private void calcularX(Decompressor.DecodeNode node) {
         if (node == null) return;
 
@@ -115,52 +128,54 @@ public class VistaArbreHuffman extends JPanel {
         }
     }
 
-    // Pintado basado en posX y nivel
-    private void pintarArbre(Graphics2D g,
-                             Decompressor.DecodeNode node,
-                             int nivel,
-                             String path) {
+    /**
+     * Pinta l’arbre recursivament a partir d’un node.
+     * Mostra les connexions, els cercles dels nodes i les etiquetes.
+     *
+     * @param g     graphics2D
+     * @param node  node actual
+     * @param nivel profunditat actual
+     * @param path  cadena binària del camí recorregut
+     */
+    private void pintarArbre(Graphics2D g, Decompressor.DecodeNode node, int nivel, String path) {
         if (node == null) return;
 
         int idx = posX.get(node);
-        int x   = MARGIN_X + idx * GAP_H;
-        int y   = MARGIN_Y + nivel * ESPAI_VERTICAL;
+        int x = MARGIN_X + idx * GAP_H;
+        int y = MARGIN_Y + nivel * ESPAI_VERTICAL;
 
         if (node.getLeft() != null) {
-            int idxL   = posX.get(node.getLeft());
+            int idxL = posX.get(node.getLeft());
             int childX = MARGIN_X + idxL * GAP_H;
             int childY = MARGIN_Y + (nivel + 1) * ESPAI_VERTICAL;
             g.drawLine(x, y, childX, childY);
             pintarArbre(g, node.getLeft(), nivel + 1, path + "1");
         }
         if (node.getRight() != null) {
-            int idxR   = posX.get(node.getRight());
+            int idxR = posX.get(node.getRight());
             int childX = MARGIN_X + idxR * GAP_H;
             int childY = MARGIN_Y + (nivel + 1) * ESPAI_VERTICAL;
             g.drawLine(x, y, childX, childY);
             pintarArbre(g, node.getRight(), nivel + 1, path + "0");
         }
 
-        // Dibujar nodo
+        //dibuixar el node
         g.setColor(Color.CYAN);
-        g.fillOval(
-                x - NODE_DIAMETRE/2, y - NODE_DIAMETRE/2,
-                NODE_DIAMETRE, NODE_DIAMETRE
-        );
+        g.fillOval(x - DIAMETRE_NODE / 2, y - DIAMETRE_NODE / 2, DIAMETRE_NODE, DIAMETRE_NODE);
         g.setColor(Color.BLACK);
-        g.drawOval(
-                x - NODE_DIAMETRE/2, y - NODE_DIAMETRE/2,
-                NODE_DIAMETRE, NODE_DIAMETRE
-        );
+        g.drawOval(x - DIAMETRE_NODE / 2, y - DIAMETRE_NODE / 2, DIAMETRE_NODE, DIAMETRE_NODE);
 
-        // Etiqueta: símbolo y ruta si es hoja
+        // Etiqueta: simbol(si és fulla) i la seva codificació
         String label = node.isLeaf()
                 ? String.format("%s (%s)", (char) node.getSymbol(), path)
                 : path;
-        g.drawString(label, x - NODE_DIAMETRE/2, y - NODE_DIAMETRE);
+        g.drawString(label, x - DIAMETRE_NODE / 2, y - DIAMETRE_NODE);
     }
 
-    // Lectura de archivo y construcción del árbol
+    /**
+     * Construeix l’arbre de descompressió de Huffman a partir
+     * del header del fitxer especificat. Actualitza el valor d'arrel
+     */
     private void setArrel() {
         Path srcPath = Path.of(src);
         Decompressor d = new Decompressor();
