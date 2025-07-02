@@ -51,7 +51,7 @@ public class Huffman implements Runnable {
         }
     }
 
-    public static final boolean DO_CONCURRENT = true;
+
     public static class Node implements Comparable<Node> {
         public long val;
         public long byteVal;
@@ -213,13 +213,10 @@ public class Huffman implements Runnable {
             table.put(node.byteVal, val);
         } else {
             final int fdeep = dbgval;
-            if (DO_CONCURRENT) {
-                if (node.left != null) addConcurrent(() -> createTable(node.left, val + "0", fdeep+1));
-                if (node.right != null) addConcurrent(() -> createTable(node.right, val + "1", fdeep+1));
-            }else{
-                if (node.left != null) createTable(node.left, val + "0", dbgval+1);
-                if (node.right != null) createTable(node.right, val + "1", dbgval+1);
-            }
+
+            if (node.left != null) addConcurrent(() -> createTable(node.left, val + "0", fdeep+1));
+            if (node.right != null) addConcurrent(() -> createTable(node.right, val + "1", fdeep+1));
+
 
         }
     }
