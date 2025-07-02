@@ -30,3 +30,5 @@ bin/
 
 tests/res/check/
 *.huf
+
+lorem*.*
