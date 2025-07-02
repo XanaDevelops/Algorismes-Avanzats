@@ -96,10 +96,12 @@ public class PanellFitxers extends JPanel {
     }
 
     public void ferTicks(){
+        int i = llistaFitxers.getSelectedIndex();
         for(ElementFitxerLlista e: elementFitxers.values()){
             e.tick();
         }
-        revalidate();
+        repaint();
+        llistaFitxers.setSelectedIndex(i);
     }
 
 
@@ -121,7 +123,7 @@ public class PanellFitxers extends JPanel {
                 }
             });
 
-            llistaFitxers.clearSelection();
+            //llistaFitxers.clearSelection();
             actualitzaBotons();
         });
     }

@@ -37,7 +37,7 @@ public class Compressor extends Proces {
      */
 
     public void compressFile() throws IOException {
-        System.err.println("comprimint " + inputPath + " to " + outputFolder);
+        //System.err.println("comprimint " + inputPath + " to " + outputFolder);
         System.err.println("settings bytes: " + huffman.getByteSize());
 
         huffman.run();
@@ -130,7 +130,7 @@ public class Compressor extends Proces {
             }
             bitOut.flush();
             time = System.nanoTime() - time;
-            System.err.println("end " + id);
+            //System.err.println("end " + id);
             Dades.Informacio info = new Dades.Informacio(huffman.getEntropia(), Files.size(inputPath),Files.size(outputFile),totalUnicSymbols,longitudMitjana);
             info.setTempsCompressio(time);
             dades.setInfo(info);
