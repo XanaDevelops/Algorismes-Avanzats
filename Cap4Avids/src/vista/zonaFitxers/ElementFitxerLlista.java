@@ -1,5 +1,7 @@
 package vista.zonaFitxers;
 
+import control.Main;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -15,7 +17,6 @@ public class ElementFitxerLlista extends JPanel {
     private final JProgressBar progressBar;
     private Path otherPath;
 
-    private Timer animacioTimer;
     private boolean actiu = false;
     private boolean haFinalitzat = false;
 
@@ -42,7 +43,8 @@ public class ElementFitxerLlista extends JPanel {
 
         // Barra de progreso
         progressBar = new JProgressBar(0, 100);
-        progressBar.setStringPainted(true);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(false);
         progressBar.setForeground(Color.GREEN);
         add(progressBar, BorderLayout.SOUTH);
 
@@ -108,44 +110,20 @@ public class ElementFitxerLlista extends JPanel {
     public void iniciarAnimacio() {
         actiu = true;
         haFinalitzat = false;
-
-        progressBar.setValue(0);
-        progressBar.setStringPainted(false);
-        progressBar.setForeground(Color.GREEN);
-
-        if (animacioTimer != null) animacioTimer.stop();
-
-        animacioTimer = new Timer(50, e -> tick());
-        animacioTimer.start();
     }
 
-    private void tick() {
+    public void finalizar() {
+        actiu = false;
+        haFinalitzat = true;
+        progressBar.setValue(progressBar.getMaximum());
+    }
+
+    public void tick() {
         if (!actiu || haFinalitzat) return;
 
         int n = progressBar.getValue() + 4;
         if (n > progressBar.getMaximum()) n = progressBar.getMinimum();
         progressBar.setValue(n);
-    }
-
-    @Override
-    public void removeNotify() {
-        super.removeNotify();
-        if (animacioTimer != null) {
-            animacioTimer.stop();
-            animacioTimer = null;
-        }
-    }
-
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        SwingUtilities.invokeLater(() -> {
-            Container parent = getParent();
-            if (parent != null) {
-                setPreferredSize(new Dimension(parent.getWidth(), getPreferredSize().height));
-                revalidate();
-                repaint();
-            }
-        });
+        Main.instance.getFinestra().actualitzar();
     }
 }

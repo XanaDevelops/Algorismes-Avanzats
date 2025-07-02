@@ -95,6 +95,12 @@ public class PanellFitxers extends JPanel {
         actualitzaBotons();
     }
 
+    public void ferTicks(){
+        for(ElementFitxerLlista e: elementFitxers.values()){
+            e.tick();
+        }
+        revalidate();
+    }
 
 
     public void refresh() {

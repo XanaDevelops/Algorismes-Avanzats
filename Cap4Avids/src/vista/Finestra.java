@@ -23,6 +23,8 @@ public class Finestra extends JFrame implements Comunicar {
     private final String[] nomsBtn = {"Carregar", "Comprimir", "Descomprimir", "Mostrar Arbre"};
     private final JButton[] botons = new JButton[nomsBtn.length];
 
+    private final Timer timer = new Timer(50, _ -> this.tickBarresCarrega());
+
     //    private final JPanel panellVisualitzador;
     public Finestra() {
         super("Compressor Huffman");
@@ -31,7 +33,7 @@ public class Finestra extends JFrame implements Comunicar {
         dades = Main.instance.getDades();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1000, 600);
+        setSize(1200, 600);
 //        setLocationRelativeTo(null);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(40, 60);
@@ -73,9 +75,14 @@ public class Finestra extends JFrame implements Comunicar {
 
         panellInfo = new PanellInfo();
         JSplitPane splitPrincipal = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitFitxers, panellInfo);
+
         splitPrincipal.setResizeWeight(0.6);
         add(splitPrincipal, BorderLayout.CENTER);
         setVisible(true);
+
+        SwingUtilities.invokeLater(() -> splitPrincipal.setDividerLocation(0.75));
+
+        timer.start();
     }
 
     private void gestioBotons(String nom) {
@@ -167,6 +174,11 @@ public class Finestra extends JFrame implements Comunicar {
         }
     }
 
+    private void tickBarresCarrega(){
+        aComprimir.ferTicks();
+        aDescomprimir.ferTicks();
+    }
+
 
     @Override
     public int afegirEnEspera(File file) {
@@ -204,7 +216,7 @@ public class Finestra extends JFrame implements Comunicar {
         ElementFitxerLlista e = aComprimir.getElementFitxer(id);
         if (e == null) e = aDescomprimir.getElementFitxer(id);
 
-        if (e != null) e.removeNotify();
+        if (e != null) e.finalizar();
 
         actualitzar();
     }
