@@ -27,3 +27,8 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+tests/res/check/
+*.huf
+
+lorem*.*
